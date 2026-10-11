@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   CIPHER_KEY,
   CIPHER_TEXT,
@@ -45,6 +45,38 @@ export function Game() {
   const [modal, setModal] = useState<Modal>(null);
   const [ending, setEnding] = useState<Ending>(null);
   const [tab, setTab] = useState<"cena" | "caderno">("cena");
+  const [soundOn, setSoundOn] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const audio = new Audio("/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3");
+    audio.loop = true;
+    audio.volume = 0.28;
+    audioRef.current = audio;
+
+    const startMusic = () => {
+      void audio.play().catch(() => {
+        // O navegador pode bloquear o áudio até uma interação explícita.
+      });
+    };
+
+    window.addEventListener("pointerdown", startMusic, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", startMusic);
+      audio.pause();
+      audio.src = "";
+      audioRef.current = null;
+    };
+  }, []);
+
+  const toggleSound = () => {
+    setSoundOn((current) => {
+      const next = !current;
+      if (next) void audioRef.current?.play().catch(() => undefined);
+      else audioRef.current?.pause();
+      return next;
+    });
+  };
 
   const has = (d: DocId) => s.docs.includes(d);
   const done = (p: PuzzleId) => s.solved.includes(p);
@@ -350,7 +382,17 @@ export function Game() {
           </p>
           <h1 className="font-display text-3xl">Turno da Noite</h1>
         </div>
-        <p className="font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={toggleSound}
+            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            aria-label={soundOn ? "Desligar música" : "Ligar música"}
+          >
+            Som: {soundOn ? "ligado" : "desligado"}
+          </button>
+          <p className="font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
+        </div>
       </header>
 
       <nav className="mt-4 flex flex-wrap gap-2 font-mono text-sm">
