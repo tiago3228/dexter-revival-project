@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { recordCaseCompletion } from "./achievements";
 
 type Clue = { id: string; title: string; place: string; text: string };
@@ -28,7 +28,6 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
   const [finished, setFinished] = useState(false);
   const [showJane, setShowJane] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const clues = useMemo(() => CLUES.filter((clue) => found.includes(clue.id)), [found]);
   const allCoreClues = ["call", "ledger", "feather"].every((id) => found.includes(id));
   const connectionsSolved = selectedClues.includes("call+ledger") && selectedClues.includes("feather+ledger");
 
