@@ -159,6 +159,11 @@ export function Game() {
     }
     audioRef.current = audio;
 
+    if (soundOnRef.current) {
+      // Tenta o autoplay; navegadores que o bloquearem aguardam a primeira interação.
+      void audio.play().catch(() => undefined);
+    }
+
     const startMusic = () => {
       if (!soundOnRef.current) return;
       void audio.play().catch(() => {
@@ -1067,7 +1072,7 @@ function IntroScreen({
 }) {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0d0d0f] px-4 py-5 text-white sm:px-8 sm:py-8">
-      <section className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+      <section className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center sm:max-w-[60rem]">
         <div className="mb-3 flex w-full justify-end">
           <button
             type="button"
@@ -1082,7 +1087,7 @@ function IntroScreen({
         <img
           src="/images/tela-inicial.webp"
           alt="Arte original da tela inicial de Dexter"
-          className="max-h-[54vh] w-full object-contain sm:max-h-[58vh]"
+          className="max-h-[54vh] w-full object-contain sm:max-h-[54vh]"
         />
         <div className="mt-4 flex w-full flex-col items-center border-t-4 border-[#a71925] bg-[#171719] px-5 py-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.35)] sm:mt-5 sm:px-10 sm:py-8">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#e0d8d4] sm:text-xs sm:tracking-[0.32em]">
