@@ -262,8 +262,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   }, [soundOn]);
   useEffect(() => {
     if (ambientRef.current) {
-      ambientRef.current.gains[0].gain.value = 0.045 * volume;
-      ambientRef.current.gains[1].gain.value = 0.012 * volume;
+      const [gainAmbient, gainDetail] = ambientRef.current.gains;
+      if (gainAmbient) gainAmbient.gain.value = 0.045 * volume;
+      if (gainDetail) gainDetail.gain.value = 0.012 * volume;
     }
   }, [volume]);
 
@@ -407,7 +408,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       setReportOpen(true);
       return;
     }
-    window.setTimeout(() => setObjective(next), 900);
+    window.setTimeout(() => setObjective(next as Objective), 900);
   };
 
   const finishAlternate = (
@@ -622,7 +623,6 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                     className="mt-3 w-full"
                     controls
                     autoPlay
-                    volume={volume}
                     onPlay={() => {
                       startAmbient();
                       playSfx("play");
@@ -923,7 +923,6 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               <audio
                 controls
                 className="w-full"
-                volume={volume}
                 src={opened.audio}
                 onPlay={() => {
                   startAmbient();
@@ -1247,14 +1246,14 @@ function InvestigationBoard({
 }: {
   onFeedback?: (kind: "success" | "error" | "connection" | "table") => void;
 }) {
-  const suspects = [
+  const suspects: [string, string][] = [
     ["Monica Monroe", "esposa · viagem de negócios"],
     ["Richard Stevens", "primo · sócio minoritário"],
     ["Daniel Thompson", "advogado rival · criptografia"],
     ["Emily Parker", "ex-secretária · demitida"],
     ["Jacob Kline", "cliente · registro militar"],
   ];
-  const clues = [
+  const clues: [string, string][] = [
     ["Faturas de hotel", "Daniel e Monica fora de Greenfield"],
     ["SMS de Richard", "chantagem de 50 mil dólares"],
     ["Diário de Emily", "motivo e acesso à casa"],
@@ -1303,6 +1302,7 @@ function InvestigationBoard({
       return;
     }
     const correct = isRequiredConnection(suspect, clue);
+    const narration = dexterNarrations[`${suspect}|${clue}`];
     const nextCorrectCount = correctConnections.length + (correct ? 1 : 0);
     setConnections((current) => [...current, { suspect, clue }]);
     setScore((current) => Math.max(0, current + (correct ? 100 : -25)));
@@ -1311,7 +1311,7 @@ function InvestigationBoard({
         ? {
             kind: "correct",
             text: "Conexão confirmada. Essa evidência sustenta a cadeia do crime.",
-            narration: dexterNarrations[`${suspect}|${clue}`],
+            ...(narration !== undefined ? { narration } : {}),
           }
         : {
             kind: "wrong",
