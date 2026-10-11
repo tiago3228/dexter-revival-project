@@ -24,7 +24,7 @@ type PuzzleId =
   | "rede"
   | "segredo"
   | "reacao";
-type ImageId = "blood-trail";
+type ImageId = "blood-trail" | "autopsy-report" | "glove-bag" | "harry-notebook";
 type Modal =
   | { kind: "doc"; id: DocId }
   | { kind: "puzzle"; id: PuzzleId }
@@ -318,6 +318,20 @@ export function Game() {
             Ver fotografia da cena e descrição
           </span>
         </button>
+        <button
+          type="button"
+          onClick={() => setModal({ kind: "image", id: "autopsy-report" })}
+          className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/evidence-autopsy-report.jpg"
+            alt="Relatório do legista sobre a bancada do laboratório"
+            className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Ver relatório do legista e descrição
+          </span>
+        </button>
         <p>
           No quadro branco, Debra escreveu com força:{" "}
           <Hot onClick={() => setModal({ kind: "puzzle", id: "contradicao" })}>
@@ -369,6 +383,22 @@ export function Game() {
             num saco plástico sem etiqueta.
           </p>
         )}
+        {done("fechadura") && (
+          <button
+            type="button"
+            onClick={() => setModal({ kind: "image", id: "glove-bag" })}
+            className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+          >
+            <img
+              src="/images/evidence-glove-bag.jpg"
+              alt="Luva de couro ensacada como evidência"
+              className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
+            />
+            <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+              Ver luva ensacada e descrição
+            </span>
+          </button>
+        )}
       </>
     ),
     apartamento: (
@@ -381,6 +411,20 @@ export function Game() {
           </Hot>
           .
         </p>
+        <button
+          type="button"
+          onClick={() => setModal({ kind: "image", id: "harry-notebook" })}
+          className="group mt-2 block w-full max-w-xl touch-manipulation border border-border bg-black/20 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/evidence-harry-notebook.jpg"
+            alt="Caderno antigo de Harry sobre a mesa do apartamento"
+            className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Ver caderno de Harry e descrição
+          </span>
+        </button>
         {has("codigo") && !done("segredo") && (
           <p>
             O filtro do ar-condicionado parece ter sido recolocado às pressas. Atrás dele há um{" "}
@@ -581,6 +625,73 @@ export function Game() {
                   onClick={() => setModal({ kind: "puzzle", id: "sangue" })}
                 >
                   Examinar as manchas
+                </button>
+              </>
+            )}
+            {modal.kind === "image" && modal.id === "autopsy-report" && (
+              <>
+                <h2 className="font-display text-2xl">Relatório do legista</h2>
+                <img
+                  src="/images/evidence-autopsy-report.jpg"
+                  alt="Relatório do legista ampliado sobre a bancada do laboratório"
+                  className="mt-4 max-h-[55vh] w-full object-contain"
+                />
+                <p className="mt-4 text-sm leading-relaxed">
+                  A folha registra temperatura, ferimentos e duas fotografias de evidência. Um dos
+                  números foi rasurado no original; compare o formulário com a tabela de
+                  resfriamento antes de tirar qualquer conclusão.
+                </p>
+                <button
+                  type="button"
+                  className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                  onClick={() =>
+                    addDoc("legista", "Você lê o relatório do legista. Um número foi rasurado.")
+                  }
+                >
+                  Ler relatório no Caderno
+                </button>
+              </>
+            )}
+            {modal.kind === "image" && modal.id === "glove-bag" && (
+              <>
+                <h2 className="font-display text-2xl">Luva ensacada</h2>
+                <img
+                  src="/images/evidence-glove-bag.jpg"
+                  alt="Luva de couro manchada ensacada como evidência"
+                  className="mt-4 max-h-[55vh] w-full object-contain"
+                />
+                <p className="mt-4 text-sm leading-relaxed">
+                  A luva tem sangue seco no dorso e um recibo do Porto de Miami ao lado. A etiqueta
+                  do saco está vazia — alguém retirou a identificação antes de guardar a peça.
+                </p>
+                <button
+                  type="button"
+                  className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                  onClick={() => setModal({ kind: "puzzle", id: "luva" })}
+                >
+                  Examinar a luva
+                </button>
+              </>
+            )}
+            {modal.kind === "image" && modal.id === "harry-notebook" && (
+              <>
+                <h2 className="font-display text-2xl">Caderno de Harry</h2>
+                <img
+                  src="/images/evidence-harry-notebook.jpg"
+                  alt="Caderno antigo de Harry ampliado sobre a mesa do apartamento"
+                  className="mt-4 max-h-[55vh] w-full object-contain"
+                />
+                <p className="mt-4 text-sm leading-relaxed">
+                  A capa está gasta nas bordas, mas o caderno foi colocado de propósito no centro da
+                  mesa. As anotações de Harry lembram que o Código começa antes da ação: observar,
+                  confirmar e só então decidir.
+                </p>
+                <button
+                  type="button"
+                  className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                  onClick={() => addDoc("codigo", "Você relê o Código, como Harry ensinou.")}
+                >
+                  Reler o Código no Caderno
                 </button>
               </>
             )}
