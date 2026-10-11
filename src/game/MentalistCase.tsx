@@ -7,9 +7,24 @@ type Difficulty = "investigador" | "detetive" | "dexter";
 type Clue = { id: string; title: string; place: string; text: string };
 
 const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: string }[] = [
-  { id: "investigador", title: "Investigador", subtitle: "Fácil", details: "Pistas mais orientadas, dicas de Jane e requisitos mais acessíveis." },
-  { id: "detetive", title: "Detetive", subtitle: "Normal", details: "Cruze evidências, examine contradições e escolha cuidadosamente os suspeitos." },
-  { id: "dexter", title: "Dexter", subtitle: "Difícil", details: "Investigue tudo, interrogue todos e resolva conexões sem depender de dicas." },
+  {
+    id: "investigador",
+    title: "Investigador",
+    subtitle: "Fácil",
+    details: "Pistas mais orientadas, dicas de Jane e requisitos mais acessíveis.",
+  },
+  {
+    id: "detetive",
+    title: "Detetive",
+    subtitle: "Normal",
+    details: "Cruze evidências, examine contradições e escolha cuidadosamente os suspeitos.",
+  },
+  {
+    id: "dexter",
+    title: "Dexter",
+    subtitle: "Difícil",
+    details: "Investigue tudo, interrogue todos e resolva conexões sem depender de dicas.",
+  },
 ];
 
 const CLUES: Clue[] = [
@@ -184,7 +199,9 @@ export function MentalistCase({
     }
   };
 
-  const allCoreClues = (difficulty === "dexter" ? CLUES.map((clue) => clue.id) : ["call", "ledger", "feather"]).every((id) => found.includes(id));
+  const allCoreClues = (
+    difficulty === "dexter" ? CLUES.map((clue) => clue.id) : ["call", "ledger", "feather"]
+  ).every((id) => found.includes(id));
   const connectionsSolved =
     selectedClues.includes("call+ledger") && selectedClues.includes("feather+ledger");
 
@@ -264,7 +281,13 @@ export function MentalistCase({
     const correctActions = found.length + selectedClues.length + interviewed.length + 1;
     recordCaseCompletion({
       caseId: "mentalist",
-      score: Math.max(0, 100 - mistakes * (difficulty === "investigador" ? 5 : 8) - (hint ? 12 : 0) - (difficulty === "dexter" ? 0 : difficulty === "detetive" ? 5 : 10)),
+      score: Math.max(
+        0,
+        100 -
+          mistakes * (difficulty === "investigador" ? 5 : 8) -
+          (hint ? 12 : 0) -
+          (difficulty === "dexter" ? 0 : difficulty === "detetive" ? 5 : 10),
+      ),
       hints: hint ? 1 : 0,
       mistakes,
       correctConclusion: true,
@@ -286,7 +309,7 @@ export function MentalistCase({
               Arquivo confidencial · Crossover
             </p>
             <h1 className="mt-2 font-display text-3xl sm:text-5xl">
-              Red John: O Sorriso Escarlate
+              O Mentalista: O Caso Red John
             </h1>
             <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
               Dexter Morgan precisa recorrer a Patrick Jane quando uma assinatura de Red John surge
@@ -301,6 +324,25 @@ export function MentalistCase({
             ← Voltar aos capítulos
           </button>
         </header>
+
+        <figure className="mx-auto mt-6 w-full max-w-5xl overflow-hidden border border-primary/40 bg-black/80 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+          <div className="relative aspect-[3/2] w-full">
+            <img
+              src="/images/red-john-investigation.webp"
+              alt="Dexter Morgan e Patrick Jane analisam o sorriso de Red John em um quadro de investigação"
+              width={1536}
+              height={1024}
+              className="h-full w-full object-contain"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10 shadow-[inset_0_0_60px_rgba(0,0,0,0.4)]"
+            />
+          </div>
+          <figcaption className="border-t border-primary/25 bg-black/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:px-4">
+            Arquivo de cena · Dexter Morgan + Patrick Jane
+          </figcaption>
+        </figure>
 
         <div className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3">
           <button
@@ -340,201 +382,222 @@ export function MentalistCase({
 
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
-        <section className="mt-6 overflow-hidden border border-primary/40 bg-card/40">
-          <img src="/images/red-john-investigation.webp" alt="Dexter Morgan e Patrick Jane analisam juntos o sorriso vermelho de Red John numa parede coberta de pistas" onError={(event) => { event.currentTarget.style.display = "none"; }} className="block max-h-[560px] w-full object-cover object-center" />
+        <section className="mt-6 border border-primary/40 bg-card/40">
           <div className="p-4 sm:p-6">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-            Briefing · Dexter + Patrick Jane
-          </p>
-          <p className="mt-3 leading-relaxed">
-            Uma testemunha ligada a uma antiga investigação foi encontrada morta, e o sorriso
-            vermelho reapareceu. Dexter percebe que o assassino conhece procedimentos policiais por
-            dentro. Jane aceita ajudar, mas avisa: uma boa leitura comportamental só vale quando é
-            confirmada por evidências.
-          </p>
-          <button
-            onClick={() => {
-              startAmbient();
-              setShowJane((current) => !current);
-            }}
-            className="mt-4 min-h-10 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-          >
-            {showJane ? "Ocultar análise de Jane" : "Ouvir a análise inicial de Patrick Jane"}
-          </button>
-          {showJane && (
-            <blockquote className="mt-4 border-l-2 border-primary pl-4 text-sm italic">
-              “Não procure o suspeito mais assustador. Procure quem sabe o que a polícia vai fazer
-              antes de a polícia decidir fazê-lo. E depois prove.” — Patrick Jane
-            </blockquote>
-          )}
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+              Briefing · Dexter + Patrick Jane
+            </p>
+            <p className="mt-3 leading-relaxed">
+              Uma testemunha ligada a uma antiga investigação foi encontrada morta, e o sorriso
+              vermelho reapareceu. Dexter percebe que o assassino conhece procedimentos policiais
+              por dentro. Jane aceita ajudar, mas avisa: uma boa leitura comportamental só vale
+              quando é confirmada por evidências.
+            </p>
+            <button
+              onClick={() => {
+                startAmbient();
+                setShowJane((current) => !current);
+              }}
+              className="mt-4 min-h-10 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+            >
+              {showJane ? "Ocultar análise de Jane" : "Ouvir a análise inicial de Patrick Jane"}
+            </button>
+            {showJane && (
+              <blockquote className="mt-4 border-l-2 border-primary pl-4 text-sm italic">
+                “Não procure o suspeito mais assustador. Procure quem sabe o que a polícia vai fazer
+                antes de a polícia decidir fazê-lo. E depois prove.” — Patrick Jane
+              </blockquote>
+            )}
           </div>
         </section>
 
         {difficulty === null ? (
           <section className="mt-6 border border-primary/50 bg-card/40 p-4 sm:p-6">
-            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Seleção de dificuldade</p>
-            <h2 className="mt-2 font-display text-2xl sm:text-3xl">Escolha como vai caçar Red John</h2>
-            <p className="mt-2 text-sm text-muted-foreground">A dificuldade altera os requisitos para fechar o caso e a pontuação final.</p>
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+              Seleção de dificuldade
+            </p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl">
+              Escolha como vai caçar Red John
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              A dificuldade altera os requisitos para fechar o caso e a pontuação final.
+            </p>
             <div className="mt-5 grid gap-3 md:grid-cols-3">
               {DIFFICULTIES.map((item) => (
-                <button key={item.id} onClick={() => setDifficulty(item.id)} className="min-h-40 border border-border bg-background/40 p-4 text-left transition hover:border-primary hover:bg-primary/5">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">{item.subtitle}</span>
+                <button
+                  key={item.id}
+                  onClick={() => setDifficulty(item.id)}
+                  className="min-h-40 border border-border bg-background/40 p-4 text-left transition hover:border-primary hover:bg-primary/5"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                    {item.subtitle}
+                  </span>
                   <span className="mt-2 block font-display text-2xl">{item.title}</span>
                   <span className="mt-2 block text-sm text-muted-foreground">{item.details}</span>
-                  <span className="mt-4 block font-mono text-xs uppercase tracking-wider text-primary">Selecionar →</span>
+                  <span className="mt-4 block font-mono text-xs uppercase tracking-wider text-primary">
+                    Selecionar →
+                  </span>
                 </button>
               ))}
             </div>
           </section>
         ) : (
-        <>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border border-primary/40 bg-primary/5 p-3">
-          <p className="font-mono text-xs uppercase tracking-wider text-primary">Dificuldade: {DIFFICULTIES.find((item) => item.id === difficulty)?.title}</p>
-          <button onClick={() => setDifficulty(null)} className="min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary">Trocar dificuldade</button>
-        </div>
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="border border-border bg-card/30 p-4 sm:p-6">
-            <h2 className="font-display text-2xl">1. Recolha de evidências</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Examine cada local e adicione os itens ao quadro. Leia o texto completo antes de
-              concluir.
-            </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {CLUES.map((clue) => (
-                <article
-                  key={clue.id}
-                  className={`border p-4 ${found.includes(clue.id) ? "border-primary bg-primary/5" : "border-border bg-background/40"}`}
-                >
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
-                    {clue.place}
+          <>
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border border-primary/40 bg-primary/5 p-3">
+              <p className="font-mono text-xs uppercase tracking-wider text-primary">
+                Dificuldade: {DIFFICULTIES.find((item) => item.id === difficulty)?.title}
+              </p>
+              <button
+                onClick={() => setDifficulty(null)}
+                className="min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+              >
+                Trocar dificuldade
+              </button>
+            </div>
+            <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <section className="border border-border bg-card/30 p-4 sm:p-6">
+                <h2 className="font-display text-2xl">1. Recolha de evidências</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Examine cada local e adicione os itens ao quadro. Leia o texto completo antes de
+                  concluir.
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {CLUES.map((clue) => (
+                    <article
+                      key={clue.id}
+                      className={`border p-4 ${found.includes(clue.id) ? "border-primary bg-primary/5" : "border-border bg-background/40"}`}
+                    >
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                        {clue.place}
+                      </p>
+                      <h3 className="mt-2 font-display text-lg">{clue.title}</h3>
+                      {found.includes(clue.id) && (
+                        <p className="mt-2 text-sm leading-relaxed">{clue.text}</p>
+                      )}
+                      <button
+                        onClick={() => collect(clue.id)}
+                        disabled={found.includes(clue.id)}
+                        className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary disabled:opacity-50"
+                      >
+                        {found.includes(clue.id) ? "Coletada" : "Examinar evidência"}
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <div className="space-y-6">
+                <section className="border border-border bg-card/30 p-4 sm:p-6">
+                  <h2 className="font-display text-2xl">2. Quadro de conexões</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Colete as evidências primeiro. Depois, cruze os registros.
                   </p>
-                  <h3 className="mt-2 font-display text-lg">{clue.title}</h3>
-                  {found.includes(clue.id) && (
-                    <p className="mt-2 text-sm leading-relaxed">{clue.text}</p>
+                  <div className="mt-4 grid gap-2">
+                    <button
+                      disabled={!found.includes("call") || !found.includes("ledger")}
+                      onClick={() => connect("call+ledger")}
+                      className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40"
+                    >
+                      Registro telefônico + livro de acesso
+                    </button>
+                    <button
+                      disabled={!found.includes("feather") || !found.includes("ledger")}
+                      onClick={() => connect("feather+ledger")}
+                      className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40"
+                    >
+                      Fibra de uniforme + livro de acesso
+                    </button>
+                  </div>
+                  <p className="mt-3 font-mono text-xs text-muted-foreground">
+                    Conexões confirmadas: {selectedClues.length}/2 necessárias
+                  </p>
+                </section>
+
+                <section className="border border-border bg-card/30 p-4 sm:p-6">
+                  <h2 className="font-display text-2xl">3. Interrogatórios</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Fale com pelo menos dois suspeitos e observe o que cada um sabe antes de ser
+                    perguntado.
+                  </p>
+                  <div className="mt-4 space-y-3">
+                    {SUSPECTS.map((suspect) => (
+                      <article key={suspect.id} className="border border-border p-3">
+                        <p className="font-display text-lg">{suspect.name}</p>
+                        <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                          {suspect.role}
+                        </p>
+                        <p className="mt-2 text-sm">{suspect.detail}</p>
+                        <button
+                          onClick={() => interview(suspect.id)}
+                          className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+                        >
+                          {interviewed.includes(suspect.id) ? "Rever depoimento" : "Interrogar"}
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="border border-primary/50 bg-card/40 p-4 sm:p-6">
+                  <h2 className="font-display text-2xl">4. Conclusão conjunta</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Dexter exige provas materiais. Jane ajuda a interpretar os comportamentos, mas a
+                    decisão final é sua.
+                  </p>
+                  <div className="mt-4 space-y-3">
+                    {SUSPECTS.map((suspect) => (
+                      <label
+                        key={suspect.id}
+                        className="flex cursor-pointer items-start gap-3 border border-border p-3"
+                      >
+                        <input
+                          type="radio"
+                          name="red-john-suspect"
+                          value={suspect.id}
+                          checked={answer === suspect.id}
+                          onChange={() => setAnswer(suspect.id)}
+                          className="mt-1 accent-primary"
+                        />
+                        <span>
+                          <strong>{suspect.name}</strong>
+                          <span className="block text-xs text-muted-foreground">
+                            {suspect.role}
+                          </span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <label className="mt-4 flex items-start gap-3 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={hint}
+                      onChange={(event) => setHint(event.target.checked)}
+                      className="mt-1 accent-primary"
+                    />{" "}
+                    Usar uma dica de Patrick Jane (reduz a pontuação)
+                  </label>
+                  {hint && (
+                    <p className="mt-2 border-l-2 border-primary pl-3 text-sm">
+                      A ligação interna, a fibra de uniforme e o livro adulterado convergem para
+                      alguém que controla os recursos locais.
+                    </p>
                   )}
                   <button
-                    onClick={() => collect(clue.id)}
-                    disabled={found.includes(clue.id)}
-                    className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary disabled:opacity-50"
+                    onClick={accuse}
+                    disabled={finished}
+                    className="mt-5 min-h-12 w-full border border-primary bg-primary/10 px-4 py-3 font-mono text-xs uppercase tracking-wider text-primary hover:bg-primary/20 disabled:opacity-50"
                   >
-                    {found.includes(clue.id) ? "Coletada" : "Examinar evidência"}
+                    {finished ? "Conclusão registrada" : "Confirmar acusação"}
                   </button>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <div className="space-y-6">
-            <section className="border border-border bg-card/30 p-4 sm:p-6">
-              <h2 className="font-display text-2xl">2. Quadro de conexões</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Colete as evidências primeiro. Depois, cruze os registros.
-              </p>
-              <div className="mt-4 grid gap-2">
-                <button
-                  disabled={!found.includes("call") || !found.includes("ledger")}
-                  onClick={() => connect("call+ledger")}
-                  className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40"
-                >
-                  Registro telefônico + livro de acesso
-                </button>
-                <button
-                  disabled={!found.includes("feather") || !found.includes("ledger")}
-                  onClick={() => connect("feather+ledger")}
-                  className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40"
-                >
-                  Fibra de uniforme + livro de acesso
-                </button>
-              </div>
-              <p className="mt-3 font-mono text-xs text-muted-foreground">
-                Conexões confirmadas: {selectedClues.length}/2 necessárias
-              </p>
-            </section>
-
-            <section className="border border-border bg-card/30 p-4 sm:p-6">
-              <h2 className="font-display text-2xl">3. Interrogatórios</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Fale com pelo menos dois suspeitos e observe o que cada um sabe antes de ser
-                perguntado.
-              </p>
-              <div className="mt-4 space-y-3">
-                {SUSPECTS.map((suspect) => (
-                  <article key={suspect.id} className="border border-border p-3">
-                    <p className="font-display text-lg">{suspect.name}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
-                      {suspect.role}
+                  {finished && (
+                    <p className="mt-3 text-sm font-semibold">
+                      {answer === "mcallister" ? "Caso resolvido." : "A acusação falhou."}
                     </p>
-                    <p className="mt-2 text-sm">{suspect.detail}</p>
-                    <button
-                      onClick={() => interview(suspect.id)}
-                      className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
-                    >
-                      {interviewed.includes(suspect.id) ? "Rever depoimento" : "Interrogar"}
-                    </button>
-                  </article>
-                ))}
+                  )}
+                </section>
               </div>
-            </section>
-
-            <section className="border border-primary/50 bg-card/40 p-4 sm:p-6">
-              <h2 className="font-display text-2xl">4. Conclusão conjunta</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Dexter exige provas materiais. Jane ajuda a interpretar os comportamentos, mas a
-                decisão final é sua.
-              </p>
-              <div className="mt-4 space-y-3">
-                {SUSPECTS.map((suspect) => (
-                  <label
-                    key={suspect.id}
-                    className="flex cursor-pointer items-start gap-3 border border-border p-3"
-                  >
-                    <input
-                      type="radio"
-                      name="red-john-suspect"
-                      value={suspect.id}
-                      checked={answer === suspect.id}
-                      onChange={() => setAnswer(suspect.id)}
-                      className="mt-1 accent-primary"
-                    />
-                    <span>
-                      <strong>{suspect.name}</strong>
-                      <span className="block text-xs text-muted-foreground">{suspect.role}</span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <label className="mt-4 flex items-start gap-3 text-sm">
-                <input
-                  type="checkbox"
-                  checked={hint}
-                  onChange={(event) => setHint(event.target.checked)}
-                  className="mt-1 accent-primary"
-                />{" "}
-                Usar uma dica de Patrick Jane (reduz a pontuação)
-              </label>
-              {hint && (
-                <p className="mt-2 border-l-2 border-primary pl-3 text-sm">
-                  A ligação interna, a fibra de uniforme e o livro adulterado convergem para alguém
-                  que controla os recursos locais.
-                </p>
-              )}
-              <button
-                onClick={accuse}
-                disabled={finished}
-                className="mt-5 min-h-12 w-full border border-primary bg-primary/10 px-4 py-3 font-mono text-xs uppercase tracking-wider text-primary hover:bg-primary/20 disabled:opacity-50"
-              >
-                {finished ? "Conclusão registrada" : "Confirmar acusação"}
-              </button>
-              {finished && (
-                <p className="mt-3 text-sm font-semibold">
-                  {answer === "mcallister" ? "Caso resolvido." : "A acusação falhou."}
-                </p>
-              )}
-            </section>
-          </div>
-        </div>
-
-        </>
+            </div>
+          </>
         )}
 
         {feedback && (

@@ -1405,7 +1405,7 @@ function MainMenu({
     },
     mentalist: {
       index: "CAPÍTULO 04 · MIAMI / CBI",
-      title: "Red John: O Sorriso Escarlate",
+      title: "O Mentalista: O Caso Red John",
       detail: "Conectando as evidências de Dexter e Patrick Jane.",
     },
   };
@@ -1419,7 +1419,7 @@ function MainMenu({
     ortega: "Turno da Noite · Caso Ortega",
     monroe: "O Caso Monroe",
     painscreek: "Painscreek Case",
-    mentalist: "Red John: O Sorriso Escarlate",
+    mentalist: "O Mentalista: O Caso Red John",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -1860,7 +1860,7 @@ function MainMenu({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Capítulo 04 · Miami / CBI
             </p>
-            <h2 className="mt-3 font-display text-3xl">Red John: O Sorriso Escarlate</h2>
+            <h2 className="mt-3 font-display text-3xl">O Mentalista: O Caso Red John</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Dexter precisa da mente de Patrick Jane para seguir a assinatura de Red John, cruzar
               registros policiais e identificar quem manipula a investigação por dentro.
