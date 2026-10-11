@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { caesar } from "./data";
 
 type Objective = 1 | 2 | 3 | 4;
@@ -126,10 +126,84 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [decoded, setDecoded] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Objective[]>([]);
+  const [soundOn, setSoundOn] = useState(true);
+  const [mistakes, setMistakes] = useState(0);
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
+  const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
+  const [reportOpen, setReportOpen] = useState(false);
+  const ambientRef = useRef<{
+    context: AudioContext;
+    sources: AudioScheduledSourceNode[];
+  } | null>(null);
 
   useEffect(() => {
-    return () => window.speechSynthesis?.cancel();
+    return () => {
+      window.speechSynthesis?.cancel();
+      ambientRef.current?.sources.forEach((source) => source.stop());
+      void ambientRef.current?.context.close();
+    };
   }, []);
+
+  useEffect(() => {
+    if (!soundOn && ambientRef.current) {
+      ambientRef.current.sources.forEach((source) => source.stop());
+      void ambientRef.current.context.close();
+      ambientRef.current = null;
+    }
+  }, [soundOn]);
+
+  const startAmbient = (force = false) => {
+    if ((!soundOn && !force) || ambientRef.current || typeof window === "undefined") return;
+    const context = new AudioContext();
+    const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) data[i] = (Math.random() * 2 - 1) * 0.22;
+    const rain = context.createBufferSource();
+    rain.buffer = buffer;
+    rain.loop = true;
+    const rainFilter = context.createBiquadFilter();
+    rainFilter.type = "lowpass";
+    rainFilter.frequency.value = 1800;
+    const rainGain = context.createGain();
+    rainGain.gain.value = 0.045;
+    rain.connect(rainFilter).connect(rainGain).connect(context.destination);
+    const hum = context.createOscillator();
+    hum.type = "sine";
+    hum.frequency.value = 58;
+    const humGain = context.createGain();
+    humGain.gain.value = 0.012;
+    hum.connect(humGain).connect(context.destination);
+    rain.start();
+    hum.start();
+    ambientRef.current = { context, sources: [rain, hum] };
+  };
+
+  const playSfx = (kind: "paper" | "play" | "success" | "error" | "warning") => {
+    if (!soundOn || typeof window === "undefined") return;
+    startAmbient();
+    const context = ambientRef.current?.context ?? new AudioContext();
+    const tones = {
+      paper: [280],
+      play: [440, 660],
+      success: [392, 523, 659],
+      error: [220, 165],
+      warning: [180, 220],
+    }[kind];
+    tones.forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = context.currentTime + index * 0.08;
+      oscillator.type = kind === "error" ? "sawtooth" : "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(kind === "paper" ? 0.04 : 0.07, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.14);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.16);
+    });
+  };
 
   const availableDocs = DOCUMENTS.filter((doc) => {
     if (objective === 1) return ["email-client", "diary-early"].includes(doc.id);
@@ -139,13 +213,37 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     return ["jacob-sms", "military", "diary-final", "sms-richard", "receipt"].includes(doc.id);
   });
 
+  const reportPoints = Math.max(
+    0,
+    Math.min(
+      100,
+      completed.length * 20 +
+        Math.min(20, documentsOpened.length * 2) +
+        Math.min(10, testimoniesHeard.length * 2) -
+        mistakes * 4 -
+        hintsUsed * 3,
+    ),
+  );
+  const reportRank =
+    reportPoints >= 90
+      ? "Investigador de Elite"
+      : reportPoints >= 75
+        ? "Detetive Principal"
+        : reportPoints >= 55
+          ? "Analista de Campo"
+          : "Investigação Incompleta";
+
   const complete = (next: number, message: string) => {
+    playSfx("success");
     setCompleted((prev) => (prev.includes(objective) ? prev : [...prev, objective]));
     setAnswer(message);
     setOpened(null);
     setAudio(null);
     setHintConfirmed(false);
-    if (next > 4) return;
+    if (next > 4) {
+      setReportOpen(true);
+      return;
+    }
     window.setTimeout(() => setObjective(next), 900);
   };
 
@@ -164,6 +262,8 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         5,
         "Caso Monroe solucionado: Emily matou Jonathan e Richard estava trabalhando com ela.",
       );
+    playSfx("error");
+    setMistakes((value) => value + 1);
     setAnswer(
       "Essa hipótese ainda não fecha todas as pistas. Volte aos documentos e compare fatos independentes.",
     );
@@ -194,6 +294,22 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
           >
             Voltar ao Turno da Noite
+          </button>
+          <button
+            onClick={() => {
+              setSoundOn((value) => !value);
+              if (!soundOn) startAmbient(true);
+            }}
+            className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary"
+          >
+            Ambiente: {soundOn ? "ligado" : "desligado"}
+          </button>
+          <button
+            disabled={completed.length < 4}
+            onClick={() => setReportOpen(true)}
+            className="min-h-11 border border-border px-4 py-2 font-mono text-xs disabled:opacity-40"
+          >
+            Relatório final
           </button>
         </div>
         <div className="mt-5 grid grid-cols-4 gap-2">
@@ -231,13 +347,21 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
-                    onClick={() => setOpened(testimony)}
+                    onClick={() => {
+                      startAmbient();
+                      playSfx("paper");
+                      setOpened(testimony);
+                    }}
                     className="min-h-10 border border-border px-3 py-2 font-mono text-xs hover:border-primary"
                   >
                     Ler depoimento
                   </button>
                   <button
-                    onClick={() => setAudio(audio === testimony.id ? null : testimony.id)}
+                    onClick={() => {
+                      startAmbient();
+                      playSfx("play");
+                      setAudio(audio === testimony.id ? null : testimony.id);
+                    }}
                     className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
                   >
                     {audio === testimony.id ? "Ocultar áudio" : "Ouvir depoimento"}
@@ -248,6 +372,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                     className="mt-3 w-full"
                     controls
                     autoPlay
+                    onPlay={() => {
+                      startAmbient();
+                      playSfx("play");
+                      setTestimoniesHeard((prev) =>
+                        prev.includes(testimony.id) ? prev : [...prev, testimony.id],
+                      );
+                    }}
                     src={testimony.audio}
                     aria-label={`Áudio do depoimento de ${testimony.title}`}
                   />
@@ -262,6 +393,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               <div className="flex gap-2">
                 <button
                   onClick={() => {
+                    playSfx("warning");
                     setShowHint(true);
                     setHintConfirmed(false);
                   }}
@@ -275,7 +407,14 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               {availableDocs.map((doc) => (
                 <button
                   key={doc.id}
-                  onClick={() => setOpened(doc)}
+                  onClick={() => {
+                    startAmbient();
+                    playSfx("paper");
+                    setDocumentsOpened((prev) =>
+                      prev.includes(doc.id) ? prev : [...prev, doc.id],
+                    );
+                    setOpened(doc);
+                  }}
                   className="border border-border p-3 text-left text-sm hover:border-primary"
                 >
                   {doc.title}
@@ -309,6 +448,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                 onClick={() => {
                   const value = Number(key);
                   if (!key) return;
+                  playSfx("play");
                   setDecoded(caesar("QDR SRVVR WH YHU HVVD VHPDQD, HVWRX IRUD GD FLGDGH", -value));
                 }}
                 className="border border-border px-4 py-2 font-mono text-xs hover:border-primary"
@@ -416,9 +556,67 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               <p className="mb-2 font-mono text-xs text-muted-foreground">
                 Você escolhe: ler e ouvir, só ler ou só ouvir.
               </p>
-              <audio controls className="w-full" src={opened.audio} />
+              <audio
+                controls
+                className="w-full"
+                src={opened.audio}
+                onPlay={() => {
+                  startAmbient();
+                  playSfx("play");
+                }}
+              />
             </div>
           )}
+        </Overlay>
+      )}
+      {reportOpen && (
+        <Overlay onClose={() => setReportOpen(false)}>
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+            Relatório final · Arquivo Greenfield
+          </p>
+          <h2 className="mt-2 font-display text-3xl">O Caso Monroe</h2>
+          <div className="mt-5 border border-primary/60 bg-primary/5 p-5">
+            <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              Classificação do investigador
+            </p>
+            <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+              <p className="font-display text-2xl text-primary">{reportRank}</p>
+              <p className="font-mono text-3xl text-primary">{reportPoints}/100</p>
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <ReportMetric label="Objetivos" value={`${completed.length}/4`} />
+            <ReportMetric label="Documentos" value={String(documentsOpened.length)} />
+            <ReportMetric label="Áudios" value={String(testimoniesHeard.length)} />
+            <ReportMetric label="Erros / dicas" value={`${mistakes} / ${hintsUsed}`} />
+          </div>
+          <section className="mt-6 border-t border-border pt-5 text-sm leading-relaxed">
+            <h3 className="font-display text-xl">Conclusão registrada</h3>
+            <p className="mt-3">
+              Emily Parker matou Jonathan Monroe e Richard Stevens trabalhou com ela. Richard mentiu
+              sobre o álibi porque Amara estava em Nova York; o dinheiro desaparecido e a chantagem
+              ligavam Richard ao crime. Emily tinha acesso à casa, motivo financeiro e raiva
+              documentada no diário.
+            </p>
+          </section>
+          <section className="mt-5 border-t border-border pt-5 text-sm leading-relaxed">
+            <h3 className="font-display text-xl">Três provas principais</h3>
+            <ol className="mt-3 list-decimal space-y-2 pl-5">
+              <li>
+                O jornal coloca Amara em uma gala em Nova York, desmontando o álibi de Richard.
+              </li>
+              <li>O SMS apagado mostra Richard chantageando Jonathan por cinquenta mil dólares.</li>
+              <li>
+                O diário de Emily registra motivo, conhecimento do local e ódio direto contra
+                Jonathan.
+              </li>
+            </ol>
+          </section>
+          <p className="mt-6 border-l-2 border-primary pl-3 text-xs leading-relaxed text-muted-foreground">
+            Este relatório separa evidências observadas de conclusão investigativa. A classificação
+            considera objetivos resolvidos, documentos consultados, depoimentos ouvidos, erros e
+            dicas utilizadas.
+          </p>
         </Overlay>
       )}
       {showHint && (
@@ -432,7 +630,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               </p>
               <button
                 onClick={() => {
+                  playSfx("warning");
                   setHintConfirmed(true);
+                  setHintsUsed((value) => value + 1);
                   speak(HINTS[objective]);
                 }}
                 className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary"
@@ -475,6 +675,17 @@ function Choice({
           {label}
         </button>
       ))}
+    </div>
+  );
+}
+
+function ReportMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border border-border bg-background/50 p-3">
+      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1 font-mono text-lg text-foreground">{value}</p>
     </div>
   );
 }
