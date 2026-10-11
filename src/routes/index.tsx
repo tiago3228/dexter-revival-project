@@ -8,12 +8,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Investigue o caso Ortega na delegacia de Miami: dez puzzles lógicos, nenhum marcador na tela.",
+          "Investigue o caso Ortega na delegacia de Miami: treze puzzles lógicos, nenhum marcador na tela.",
       },
       { property: "og:title", content: "Dexter: Turno da Noite" },
       {
         property: "og:description",
-        content: "Protótipo jogável de investigação noir com dez puzzles encadeados.",
+        content: "Protótipo jogável de investigação noir com treze puzzles encadeados.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

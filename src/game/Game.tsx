@@ -15,13 +15,16 @@ import {
 
 type PuzzleId =
   | "sangue"
+  | "relatorio"
   | "hora"
   | "contradicao"
   | "janela"
   | "fechadura"
   | "cifra"
   | "luva"
+  | "vestigio"
   | "rede"
+  | "caderno"
   | "segredo"
   | "reacao";
 type ImageId = "blood-trail" | "autopsy-report" | "glove-bag" | "harry-notebook";
@@ -74,6 +77,7 @@ export function Game() {
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     const audio = new Audio("/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3");
@@ -93,6 +97,8 @@ export function Game() {
       audio.pause();
       audio.src = "";
       audioRef.current = null;
+      void sfxRef.current?.close();
+      sfxRef.current = null;
     };
   }, []);
 
@@ -105,28 +111,73 @@ export function Game() {
     });
   };
 
+  const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
+    if (!soundOn || typeof window === "undefined") return;
+    const context = sfxRef.current ?? new AudioContext();
+    sfxRef.current = context;
+    void context.resume();
+    const profiles = {
+      click: [{ frequency: 520, duration: 0.06, delay: 0 }],
+      evidence: [
+        { frequency: 330, duration: 0.1, delay: 0 },
+        { frequency: 494, duration: 0.18, delay: 0.08 },
+      ],
+      success: [
+        { frequency: 392, duration: 0.1, delay: 0 },
+        { frequency: 523, duration: 0.1, delay: 0.09 },
+        { frequency: 659, duration: 0.18, delay: 0.18 },
+      ],
+      error: [
+        { frequency: 220, duration: 0.12, delay: 0 },
+        { frequency: 165, duration: 0.2, delay: 0.11 },
+      ],
+    } as const;
+    const now = context.currentTime;
+    profiles[kind].forEach(({ frequency, duration, delay }) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = now + delay;
+      oscillator.type = kind === "error" ? "sawtooth" : "sine";
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.07, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.02);
+    });
+  };
+
+  const openImage = (id: ImageId) => {
+    playSfx("evidence");
+    setModal({ kind: "image", id });
+  };
+
   const has = (d: DocId) => s.docs.includes(d);
   const done = (p: PuzzleId) => s.solved.includes(p);
 
   const hint = !done("sangue")
     ? "No laboratório, clique na miniatura 'Ver fotografia da cena e descrição'. Observe as características das gotas: a forma delas indica o ritmo do movimento."
-    : !done("hora")
-      ? "Compare a temperatura registrada com a temperatura normal e a tabela encontrada no laboratório."
-      : !done("contradicao")
-        ? "Cruze o depoimento de Ruiz com um registro oficial de horário. Uma frase não combina com o que está no papel."
-        : !done("janela")
-          ? "Os registros da sala de evidências revelam um padrão de ronda. Não é preciso adivinhar: observe os horários."
-          : !done("fechadura")
-            ? "Uma anotação encontrada no laboratório descreve a regra da fechadura. Leia os documentos antes de tentar."
-            : !done("cifra")
-              ? "A mensagem pede uma chave numérica. Procure uma data que já apareceu durante a investigação."
-              : !done("rede")
-                ? "Uma rede só é confiável quando nome, endereço e horário apontam para a mesma história."
-                : !done("segredo")
-                  ? "O Código de Harry fala em não deixar pontas soltas. Examine lugares pessoais com cuidado."
-                  : !done("reacao")
-                    ? "Uma mensagem anônima pode ser uma armadilha. Preserve as provas verificáveis antes de reagir."
-                    : "Compare tamanho, tipo sanguíneo e localização. A evidência mais chamativa nem sempre é a mais confiável.";
+    : !done("relatorio")
+      ? "Examine o relatório do legista e marque o campo que não combina com as medições da cena."
+      : !done("hora")
+        ? "Compare a temperatura registrada com a temperatura normal e a tabela encontrada no laboratório."
+        : !done("contradicao")
+          ? "Cruze o depoimento de Ruiz com um registro oficial de horário. Uma frase não combina com o que está no papel."
+          : !done("janela")
+            ? "Os registros da sala de evidências revelam um padrão de ronda. Não é preciso adivinhar: observe os horários."
+            : !done("fechadura")
+              ? "Uma anotação encontrada no laboratório descreve a regra da fechadura. Leia os documentos antes de tentar."
+              : !done("cifra")
+                ? "A mensagem pede uma chave numérica. Procure uma data que já apareceu durante a investigação."
+                : !done("rede")
+                  ? "Uma rede só é confiável quando nome, endereço e horário apontam para a mesma história."
+                  : !done("segredo")
+                    ? "O Código de Harry fala em não deixar pontas soltas. Examine lugares pessoais com cuidado."
+                    : !done("reacao")
+                      ? "Uma mensagem anônima pode ser uma armadilha. Preserve as provas verificáveis antes de reagir."
+                      : "Compare tamanho, tipo sanguíneo e localização. A evidência mais chamativa nem sempre é a mais confiável.";
 
   function narrate(
     text: string,
@@ -161,17 +212,22 @@ export function Game() {
   }
 
   const addDoc = (d: DocId, text: string) => {
+    playSfx("evidence");
     if (has(d)) return setModal({ kind: "doc", id: d });
     narrate(text, { docs: [...s.docs, d] });
     setModal({ kind: "doc", id: d });
   };
 
   const solve = (p: PuzzleId, text: string, extra: Partial<ReturnType<typeof initial>> = {}) => {
+    playSfx("success");
     narrate(text, { solved: [...s.solved, p], ...extra });
     setModal(null);
   };
 
-  const fail = (text: string, minutes = 30, susp = 0) => narrate(text, {}, minutes, susp);
+  const fail = (text: string, minutes = 30, susp = 0) => {
+    playSfx("error");
+    narrate(text, {}, minutes, susp);
+  };
 
   const go = (loc: LocationId) => {
     if (loc === s.loc) return;
@@ -197,7 +253,7 @@ export function Game() {
             onClick={() =>
               done("sangue")
                 ? addDoc("versoFoto", "Você vira a foto do banheiro. Há algo escrito no verso.")
-                : setModal({ kind: "image", id: "blood-trail" })
+                : openImage("blood-trail")
             }
           >
             fotos da cena
@@ -306,7 +362,7 @@ export function Game() {
         </p>
         <button
           type="button"
-          onClick={() => setModal({ kind: "image", id: "blood-trail" })}
+          onClick={() => openImage("blood-trail")}
           className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
         >
           <img
@@ -320,7 +376,7 @@ export function Game() {
         </button>
         <button
           type="button"
-          onClick={() => setModal({ kind: "image", id: "autopsy-report" })}
+          onClick={() => openImage("autopsy-report")}
           className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
         >
           <img
@@ -386,7 +442,7 @@ export function Game() {
         {done("fechadura") && (
           <button
             type="button"
-            onClick={() => setModal({ kind: "image", id: "glove-bag" })}
+            onClick={() => openImage("glove-bag")}
             className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
           >
             <img
@@ -413,7 +469,7 @@ export function Game() {
         </p>
         <button
           type="button"
-          onClick={() => setModal({ kind: "image", id: "harry-notebook" })}
+          onClick={() => openImage("harry-notebook")}
           className="group mt-2 block w-full max-w-xl touch-manipulation border border-border bg-black/20 p-2 text-left hover:border-primary"
         >
           <img
@@ -644,11 +700,9 @@ export function Game() {
                 <button
                   type="button"
                   className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
-                  onClick={() =>
-                    addDoc("legista", "Você lê o relatório do legista. Um número foi rasurado.")
-                  }
+                  onClick={() => setModal({ kind: "puzzle", id: "relatorio" })}
                 >
-                  Ler relatório no Caderno
+                  Analisar o campo rasurado
                 </button>
               </>
             )}
@@ -667,9 +721,9 @@ export function Game() {
                 <button
                   type="button"
                   className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
-                  onClick={() => setModal({ kind: "puzzle", id: "luva" })}
+                  onClick={() => setModal({ kind: "puzzle", id: "vestigio" })}
                 >
-                  Examinar a luva
+                  Cruzar os vestígios
                 </button>
               </>
             )}
@@ -689,9 +743,9 @@ export function Game() {
                 <button
                   type="button"
                   className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
-                  onClick={() => addDoc("codigo", "Você relê o Código, como Harry ensinou.")}
+                  onClick={() => setModal({ kind: "puzzle", id: "caderno" })}
                 >
-                  Reler o Código no Caderno
+                  Aplicar o Código
                 </button>
               </>
             )}
@@ -699,7 +753,7 @@ export function Game() {
             {modal.kind === "acusar" && (
               <Accuse
                 onPick={(who) => {
-                  const all = s.solved.length === 10;
+                  const all = s.solved.length === 13;
                   if (who === "ruiz" && all)
                     setEnding({
                       good: true,
@@ -927,6 +981,34 @@ function Puzzle({
             </button>
           )}
         </div>
+      </>
+    );
+  }
+
+  if (id === "relatorio") {
+    return (
+      <>
+        <h2 className="font-display text-2xl">Campo rasurado</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          O relatório tem um campo alterado à caneta. Qual informação deve ser tratada como suspeita
+          antes de cruzar os números com a tabela?
+        </p>
+        <Choice
+          options={[
+            { label: "A identidade da vítima", value: "vitima" },
+            { label: "A hora estimada da morte", value: "hora" },
+            { label: "O local do apartamento", value: "local" },
+            { label: "O tipo de evidência fotografada", value: "evidencia" },
+          ]}
+          onPick={(v) =>
+            v === "hora"
+              ? solve(
+                  "relatorio",
+                  "A rasura está na hora estimada da morte. O campo não deve ser aceito sozinho: agora a temperatura precisa ser comparada com a tabela do laboratório.",
+                )
+              : fail("Você marca um campo intacto. A rasura está em outro lugar do formulário.", 10)
+          }
+        />
       </>
     );
   }
@@ -1178,6 +1260,85 @@ function Puzzle({
               : fail(
                   "Os endereços não fecham. Você mistura pessoas que só aparecem no mesmo papel.",
                   20,
+                )
+          }
+        />
+      </>
+    );
+  }
+
+  if (id === "vestigio") {
+    return (
+      <>
+        <h2 className="font-display text-2xl">O que a luva prova?</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A luva traz três pistas diferentes. Escolha a leitura que respeita o tamanho, o sangue e o
+          recibo sem transformar uma coincidência em certeza.
+        </p>
+        <Choice
+          options={[
+            {
+              label: "O recibo basta para provar que Tellez usou a luva",
+              value: "recibo",
+            },
+            {
+              label:
+                "Tamanho M aproxima a luva de Ruiz, mas o sangue O− é da vítima e o recibo não identifica quem tocou nela",
+              value: "cruzar",
+            },
+            {
+              label: "A luva pertence a Teresa porque ela trabalhava à noite",
+              value: "teresa",
+            },
+          ]}
+          onPick={(v) =>
+            v === "cruzar"
+              ? solve(
+                  "vestigio",
+                  "Você separa fato de suposição: tamanho, sangue e recibo precisam ser cruzados com fichas e ponto do porto antes de apontar um culpado.",
+                )
+              : fail(
+                  "Uma única pista não basta. O Código exige cruzar o vestígio com documentos independentes.",
+                  15,
+                )
+          }
+        />
+      </>
+    );
+  }
+
+  if (id === "caderno") {
+    return (
+      <>
+        <h2 className="font-display text-2xl">A ordem do Código</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Harry não ensinou apenas regras; ensinou uma ordem de trabalho. Qual sequência evita uma
+          acusação precipitada?
+        </p>
+        <Choice
+          options={[
+            {
+              label: "Observar → confirmar → reunir prova → decidir",
+              value: "certa",
+            },
+            {
+              label: "Escolher um suspeito → procurar uma prova → ignorar contradições",
+              value: "atalho",
+            },
+            {
+              label: "Acusar → observar a reação → ajustar a história depois",
+              value: "reacao",
+            },
+          ]}
+          onPick={(v) =>
+            v === "certa"
+              ? solve(
+                  "caderno",
+                  "O caderno reorganiza a noite: primeiro observe, depois confirme, reúna a prova e só então decida. O Código continua sendo um método, não um palpite.",
+                )
+              : fail(
+                  "Harry teria chamado isso de atalho. Você está tentando encaixar as pistas depois de escolher a resposta.",
+                  15,
                 )
           }
         />
