@@ -260,7 +260,9 @@ export function Game() {
   }
 
   if (caseMode === "painscreek") {
-    return <DexterCase onBack={() => setShowMenu(true)} />;
+    return (
+      <DexterCase onBack={() => setShowMenu(true)} soundOn={soundOn} onToggleSound={toggleSound} />
+    );
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { getInterrogationRanking } from "./interrogationRanking";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
@@ -15,6 +16,7 @@ type SavedInvestigation = {
   found: string[];
   confirmedConnections: string[];
   interviewedSuspects: string[];
+  interrogationMistakes: number;
   activeLocation: string;
   safeOpen: boolean;
   depotOpen: boolean;
@@ -155,7 +157,8 @@ const SUSPECTS = [
     interrogationEvidence: "log",
     interrogationPrompt: "Que registro derruba o álibi de que Renner não retornou ao posto?",
     interrogationResponse:
-      "Renner evita explicar o retorno às 22h06 e insiste que deixou o posto às 21h10. O livro mantém a contradição registrada.",
+      "Eu deixei o posto às nove e dez. Esse registro das vinte e duas e seis não prova que eu voltei ao cais.",
+    interrogationAudio: "/audio/dexter/interrogations/paul-renner.mp3",
   },
   {
     name: "Dr. Henry Vale",
@@ -171,7 +174,8 @@ const SUSPECTS = [
     interrogationPrompt:
       "Qual documento registra o vestígio azul que põe a análise forense em foco?",
     interrogationResponse:
-      "Vale confirma que o laudo é preliminar. A tinta azul está documentada, mas o recibo ainda é necessário para ligar Eleanor ao depósito.",
+      "O laudo era preliminar. A tinta azul foi registrada, mas isso não determina de onde veio, nem quem tocou no recibo.",
+    interrogationAudio: "/audio/dexter/interrogations/henry-vale.mp3",
   },
   {
     name: "Pastor Matthew Cole",
@@ -186,7 +190,8 @@ const SUSPECTS = [
     interrogationPrompt:
       "Qual gravação cita o sino quebrado e põe em dúvida a localização do encontro?",
     interrogationResponse:
-      "Cole reconhece que o sino estava quebrado naquela semana e não pode confirmar o local pela gravação. A fita enfraquece a versão, sem identificar por si só quem esteve lá.",
+      "O sino estava quebrado, sim. A gravação não prova onde a conversa aconteceu, nem quem esteve no cais.",
+    interrogationAudio: "/audio/dexter/interrogations/matthew-cole.mp3",
   },
 ];
 
@@ -240,6 +245,11 @@ function readSavedInvestigation(): SavedInvestigation | null {
             SUSPECTS.some((person) => person.name === name),
           )
         : [],
+      interrogationMistakes:
+        typeof saved.interrogationMistakes === "number" &&
+        Number.isFinite(saved.interrogationMistakes)
+          ? Math.max(0, Math.floor(saved.interrogationMistakes))
+          : 0,
       activeLocation: LOCATIONS.find((item) => item.id === saved.activeLocation)?.id ?? "house",
       safeOpen: saved.safeOpen === true,
       depotOpen: saved.depotOpen === true,
@@ -266,7 +276,15 @@ function readSavedInvestigation(): SavedInvestigation | null {
   }
 }
 
-export function DexterCase({ onBack }: { onBack: () => void }) {
+export function DexterCase({
+  onBack,
+  soundOn,
+  onToggleSound,
+}: {
+  onBack: () => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+}) {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 1024,
   );
@@ -292,10 +310,19 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [interviewedSuspects, setInterviewedSuspects] = useState<string[]>(
     () => initialSave?.interviewedSuspects ?? [],
   );
+  const [interrogationMistakes, setInterrogationMistakes] = useState(
+    () => initialSave?.interrogationMistakes ?? 0,
+  );
+  const [lastInterrogatedSuspect, setLastInterrogatedSuspect] = useState<string | null>(null);
   const [selectedInterrogationEvidence, setSelectedInterrogationEvidence] = useState<
     Record<string, string>
   >({});
   const [interrogationFeedback, setInterrogationFeedback] = useState<Record<string, string>>({});
+  const interrogationSfxRefs = useRef<Record<"success" | "error", HTMLAudioElement | null>>({
+    success: null,
+    error: null,
+  });
+  const interrogationVoiceRefs = useRef<Record<string, HTMLAudioElement | null>>({});
   const [selectedConnectionEvidence, setSelectedConnectionEvidence] = useState<string[]>([]);
   const [connectionMessage, setConnectionMessage] = useState("");
   const [activeLocation, setActiveLocation] = useState(
@@ -322,6 +349,20 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [hintsUsed, setHintsUsed] = useState<string[]>(() => initialSave?.hintsUsed ?? []);
   const [mistakes, setMistakes] = useState(() => initialSave?.mistakes ?? 0);
 
+  useEffect(
+    () => () => {
+      Object.values(interrogationSfxRefs.current).forEach((audio) => audio?.pause());
+      Object.values(interrogationVoiceRefs.current).forEach((audio) => audio?.pause());
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (soundOn) return;
+    Object.values(interrogationSfxRefs.current).forEach((audio) => audio?.pause());
+    Object.values(interrogationVoiceRefs.current).forEach((audio) => audio?.pause());
+  }, [soundOn]);
+
   useEffect(() => {
     if (!difficulty) {
       window.localStorage.removeItem(SAVE_KEY);
@@ -334,6 +375,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       found,
       confirmedConnections,
       interviewedSuspects,
+      interrogationMistakes,
       activeLocation,
       safeOpen,
       depotOpen,
@@ -354,6 +396,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     found,
     confirmedConnections,
     interviewedSuspects,
+    interrogationMistakes,
     activeLocation,
     safeOpen,
     depotOpen,
@@ -380,6 +423,10 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   );
   const allFound = found.length === EVIDENCE.length;
   const score = Math.max(0, 100 - hintsUsed.length * 15 - mistakes * 5);
+  const { score: interrogationScore, rank: interrogationRank } = getInterrogationRanking(
+    interviewedSuspects.length,
+    interrogationMistakes,
+  );
   const finalRank =
     suspect !== "Paul Renner"
       ? "Investigação inconclusiva"
@@ -404,6 +451,29 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   };
   const inspectEvidence = (id: string) =>
     setFound((current) => (current.includes(id) ? current : [...current, id]));
+  const stopInterrogationVoices = (exceptName?: string) => {
+    Object.entries(interrogationVoiceRefs.current).forEach(([name, audio]) => {
+      if (name !== exceptName && audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    });
+  };
+  const playInterrogationSfx = (kind: "success" | "error") => {
+    if (!soundOn || typeof window === "undefined") return;
+    const path =
+      kind === "success"
+        ? "/audio/dexter/sfx/interrogation-confirmation.mp3"
+        : "/audio/dexter/sfx/interrogation-mismatch.mp3";
+    let audio = interrogationSfxRefs.current[kind];
+    if (!audio) {
+      audio = new Audio(path);
+      interrogationSfxRefs.current[kind] = audio;
+    }
+    audio.volume = kind === "success" ? 0.36 : 0.3;
+    audio.currentTime = 0;
+    void audio.play().catch(() => undefined);
+  };
   const toggleConnectionEvidence = (id: string) => {
     setSelectedConnectionEvidence((current) =>
       current.includes(id)
@@ -439,9 +509,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     if (!evidenceId || interviewedSuspects.includes(person.name)) return;
 
     if (evidenceId === person.interrogationEvidence) {
+      stopInterrogationVoices();
       setInterviewedSuspects((current) =>
         current.includes(person.name) ? current : [...current, person.name],
       );
+      setLastInterrogatedSuspect(person.name);
+      playInterrogationSfx("success");
       setInterrogationFeedback((current) => {
         const next = { ...current };
         delete next[person.name];
@@ -450,7 +523,10 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       return;
     }
 
+    stopInterrogationVoices();
     setMistakes((current) => current + 1);
+    setInterrogationMistakes((current) => current + 1);
+    playInterrogationSfx("error");
     setInterrogationFeedback((current) => ({
       ...current,
       [person.name]:
@@ -484,6 +560,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     setFound([]);
     setConfirmedConnections([]);
     setInterviewedSuspects([]);
+    setInterrogationMistakes(0);
+    setLastInterrogatedSuspect(null);
     setSelectedInterrogationEvidence({});
     setInterrogationFeedback({});
     setSelectedConnectionEvidence([]);
@@ -511,13 +589,23 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     return (
       <main className="min-h-screen bg-background px-4 py-10 text-foreground sm:px-10 sm:py-16">
         <div className="mx-auto max-w-4xl">
-          <button
-            type="button"
-            onClick={onBack}
-            className="mb-8 min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-          >
-            ← VOLTAR AOS CASOS
-          </button>
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+            >
+              ← VOLTAR AOS CASOS
+            </button>
+            <button
+              type="button"
+              onClick={onToggleSound}
+              aria-pressed={soundOn}
+              className="min-h-11 border border-border px-4 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            >
+              Som: {soundOn ? "ligado" : "desligado"}
+            </button>
+          </div>
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
             Arquivo especial · Greybridge, Flórida
           </p>
@@ -558,13 +646,23 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
           <div>
-            <button
-              type="button"
-              onClick={onBack}
-              className="mb-4 min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-            >
-              ← VOLTAR AOS CASOS
-            </button>
+            <div className="mb-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={onBack}
+                className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+              >
+                ← VOLTAR AOS CASOS
+              </button>
+              <button
+                type="button"
+                onClick={onToggleSound}
+                aria-pressed={soundOn}
+                className="min-h-11 border border-border px-4 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+              >
+                Som: {soundOn ? "ligado" : "desligado"}
+              </button>
+            </div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Caso 03 · Greybridge, Flórida · 1998
             </p>
@@ -585,6 +683,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               EVIDÊNCIAS: {found.length}/{EVIDENCE.length}
             </p>
             <p className="mt-2">PONTUAÇÃO: {score}/100</p>
+            <p className="mt-2">INTERROGATÓRIOS: {interrogationScore}/100</p>
+            <p className="mt-1 text-[10px] text-primary">{interrogationRank.toUpperCase()}</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">
+              {interviewedSuspects.length}/3 acertos · {interrogationMistakes} erros
+            </p>
             <p className="mt-2 text-[10px] text-primary">SALVAMENTO AUTOMÁTICO ATIVO</p>
             <button className="mt-3 underline hover:text-primary" onClick={() => resetCase()}>
               Reiniciar / trocar dificuldade
@@ -947,6 +1050,29 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                           <p className="mt-2 text-sm text-muted-foreground">
                             {person.interrogationResponse}
                           </p>
+                          <audio
+                            ref={(element) => {
+                              interrogationVoiceRefs.current[person.name] = element;
+                            }}
+                            className="mt-3 w-full"
+                            controls
+                            autoPlay={soundOn && lastInterrogatedSuspect === person.name}
+                            muted={!soundOn}
+                            preload="auto"
+                            src={person.interrogationAudio}
+                            aria-label={`Dublagem do depoimento de ${person.name}`}
+                            onPlay={() => {
+                              stopInterrogationVoices(person.name);
+                              setLastInterrogatedSuspect((current) =>
+                                current === person.name ? null : current,
+                              );
+                            }}
+                          />
+                          {!soundOn && (
+                            <p className="mt-2 text-xs text-muted-foreground">
+                              Ative o som para ouvir a dublagem e os efeitos.
+                            </p>
+                          )}
                         </div>
                       ) : (
                         <>
@@ -1399,6 +1525,13 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 <p className="mt-2 font-display text-2xl">{finalRank}</p>
                 <p className="mt-2 text-sm">
                   Pontuação: <strong>{score}/100</strong>
+                </p>
+                <p className="mt-2 text-sm">
+                  Ranking dos interrogatórios: <strong>{interrogationRank}</strong>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {interrogationScore}/100 · {interviewedSuspects.length}/3 respostas corretas ·{" "}
+                  {interrogationMistakes} tentativas incorretas.
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Dicas: {hintsUsed.length} × 15 = {hintsUsed.length * 15} pontos · erros:{" "}
