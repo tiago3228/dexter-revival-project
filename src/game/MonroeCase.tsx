@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { caesar } from "./data";
 import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { finishCaseTimer } from "./caseTimer";
 
 type Objective = 1 | 2 | 3 | 4;
@@ -608,6 +609,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           ))}
         </div>
       </header>
+
+      <CaseHeroImage
+        src="/images/monroe-investigation.webp"
+        alt="Mesa de investigação com documentos e objetos ligados ao caso Monroe em Greenfield"
+        caption="Dossiê de cena · Greenfield · Caso Monroe"
+      />
 
       <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 

@@ -1,8 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   applyCasePerformance,
   emptyAchievementProgress,
+  loadAchievementProgress,
   type AchievementProgress,
 } from "@/game/achievements";
 
@@ -59,6 +60,24 @@ describe("game achievements", () => {
     expect(imperfect.unlockedIds).not.toContain("master-interrogator");
   });
 
+  it("unlocks the Red John profiler trophy only after three accurate confrontations", () => {
+    const perfect = applyCasePerformance(emptyAchievementProgress(), {
+      ...performance,
+      caseId: "mentalist",
+      correctInterrogations: 3,
+      interrogationMistakes: 0,
+    });
+    const imperfect = applyCasePerformance(emptyAchievementProgress(), {
+      ...performance,
+      caseId: "mentalist",
+      correctInterrogations: 3,
+      interrogationMistakes: 1,
+    });
+
+    expect(perfect.unlockedIds).toContain("red-john-profiler");
+    expect(imperfect.unlockedIds).not.toContain("red-john-profiler");
+  });
+
   it("unlocks the collection trophy only after all four chapters are completed", () => {
     let progress = emptyAchievementProgress();
     progress = applyCasePerformance(progress, performance);
@@ -87,6 +106,8 @@ describe("game achievements", () => {
       ...performance,
       caseId: "mentalist",
       score: 90,
+      correctInterrogations: 3,
+      interrogationMistakes: 0,
     });
 
     expect(progress.unlockedIds).toContain("blood-slide-box");
@@ -98,6 +119,44 @@ describe("game achievements", () => {
       interrogationMistakes: 0,
     });
     expect(incomplete.unlockedIds).not.toContain("blood-slide-box");
+
+    let imperfectRedJohn = emptyAchievementProgress();
+    imperfectRedJohn = applyCasePerformance(imperfectRedJohn, { ...performance, score: 95 });
+    imperfectRedJohn = applyCasePerformance(imperfectRedJohn, {
+      ...performance,
+      caseId: "monroe",
+      score: 92,
+    });
+    imperfectRedJohn = applyCasePerformance(imperfectRedJohn, {
+      ...performance,
+      caseId: "painscreek",
+      score: 91,
+      correctInterrogations: 3,
+      interrogationMistakes: 0,
+    });
+    imperfectRedJohn = applyCasePerformance(imperfectRedJohn, {
+      ...performance,
+      caseId: "mentalist",
+      score: 93,
+      correctInterrogations: 2,
+      interrogationMistakes: 0,
+    });
+    expect(imperfectRedJohn.unlockedIds).not.toContain("blood-slide-box");
+  });
+
+  it("revalidates legacy saves before displaying the legendary trophy", () => {
+    const oldProgress: AchievementProgress = {
+      unlockedIds: ["blood-slide-box", "master-interrogator"],
+      completedCases: ["ortega", "monroe", "painscreek", "mentalist"],
+      bestScores: { ortega: 95, monroe: 92, painscreek: 91, mentalist: 95 },
+      caseStats: {},
+    };
+    vi.spyOn(window.localStorage, "getItem").mockReturnValue(JSON.stringify(oldProgress));
+
+    const restored = loadAchievementProgress();
+
+    expect(restored.unlockedIds).not.toContain("blood-slide-box");
+    vi.restoreAllMocks();
   });
 
   it("never lowers a chapter's stored best score", () => {

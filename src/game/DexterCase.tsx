@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { getInterrogationRanking } from "./interrogationRanking";
 
@@ -635,6 +636,11 @@ export function DexterCase({
             conviver com uma mentira. Escolha a dificuldade antes de iniciar. A verdade central é a
             mesma em todos os modos.
           </p>
+          <CaseHeroImage
+            src="/images/painscreek-investigation.webp"
+            alt="Investigador diante de uma cidade abandonada e da mansão Whitmore em Greybridge"
+            caption="Arquivo de cena · Greybridge · 1998"
+          />
           <h2 className="mt-10 font-display text-2xl">Como você vai investigar?</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             {DIFFICULTIES.map((item) => (
@@ -712,6 +718,12 @@ export function DexterCase({
             </button>
           </div>
         </div>
+
+        <CaseHeroImage
+          src="/images/painscreek-investigation.webp"
+          alt="Investigador diante de uma cidade abandonada e da mansão Whitmore em Greybridge"
+          caption="Arquivo de cena · Greybridge · 1998"
+        />
 
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 

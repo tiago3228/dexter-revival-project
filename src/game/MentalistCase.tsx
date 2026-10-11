@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { finishCaseTimer } from "./caseTimer";
+import { getInterrogationRanking } from "./interrogationRanking";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
+type SuspectId = "mcallister" | "bertram" | "stiles";
 type Clue = { id: string; title: string; place: string; text: string };
 
 const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: string }[] = [
@@ -66,27 +69,51 @@ const CLUES: Clue[] = [
   },
 ];
 
-const SUSPECTS = [
+const SUSPECTS: {
+  id: SuspectId;
+  name: string;
+  role: string;
+  detail: string;
+  correctEvidence: string;
+}[] = [
   {
     id: "mcallister",
     name: "Thomas McAllister",
     role: "Xerife do condado",
     detail:
       "Acesso a registros, uniformes e recursos locais. Seu nome aparece parcialmente no livro de acesso.",
+    correctEvidence: "ledger",
   },
   {
     id: "bertram",
     name: "Gale Bertram",
     role: "Diretor do CBI",
     detail: "Poderia manipular investigações e tinha contato com os principais investigadores.",
+    correctEvidence: "call",
   },
   {
     id: "stiles",
     name: "Bret Stiles",
     role: "Líder da Visualize",
     detail: "Possui influência e seguidores capazes de obter informações confidenciais.",
+    correctEvidence: "photo",
   },
 ];
+
+const SUSPECT_DIALOGUES: Record<SuspectId, string> = {
+  mcallister:
+    "Eu não entrei no gabinete depois das 20h. Se o livro diz outra coisa, alguém alterou o registro. Confira quem tinha acesso antes de transformar suspeita em acusação.",
+  bertram:
+    "Eu compartilhei informações com o gabinete do xerife; isso não significa que estive em Miami. Uma ligação para uma linha interna não prova quem a fez.",
+  stiles:
+    "Influência não é presença. A vítima investigava uma rede de proteção, mas uma fotografia antiga não prova quem estava na sala naquela noite.",
+};
+
+const SUSPECT_VOICE_PATHS: Record<SuspectId, string> = {
+  mcallister: "/audio/mentalist/interrogations/thomas-mcallister.mp3",
+  bertram: "/audio/mentalist/interrogations/gale-bertram.mp3",
+  stiles: "/audio/mentalist/interrogations/bret-stiles.mp3",
+};
 
 export function MentalistCase({
   onBack,
@@ -101,6 +128,12 @@ export function MentalistCase({
   const [found, setFound] = useState<string[]>([]);
   const [selectedClues, setSelectedClues] = useState<string[]>([]);
   const [interviewed, setInterviewed] = useState<string[]>([]);
+  const [correctInterrogations, setCorrectInterrogations] = useState<SuspectId[]>([]);
+  const [interrogationMistakes, setInterrogationMistakes] = useState(0);
+  const [selectedInterviewEvidence, setSelectedInterviewEvidence] = useState<
+    Partial<Record<SuspectId, string>>
+  >({});
+  const [interrogationAudioOn, setInterrogationAudioOn] = useState(true);
   const [answer, setAnswer] = useState("");
   const [hint, setHint] = useState(false);
   const [mistakes, setMistakes] = useState(0);
@@ -121,6 +154,25 @@ export function MentalistCase({
     sources: AudioScheduledSourceNode[];
     gains: GainNode[];
   } | null>(null);
+  const interrogationVoiceRef = useRef<HTMLAudioElement | null>(null);
+  const interrogationSfxRefs = useRef<Record<"success" | "error", HTMLAudioElement | null>>({
+    success: null,
+    error: null,
+  });
+
+  useEffect(
+    () => () => {
+      interrogationVoiceRef.current?.pause();
+      Object.values(interrogationSfxRefs.current).forEach((audio) => audio?.pause());
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (interrogationAudioOn) return;
+    interrogationVoiceRef.current?.pause();
+    Object.values(interrogationSfxRefs.current).forEach((audio) => audio?.pause());
+  }, [interrogationAudioOn]);
 
   const stopAmbient = useCallback(() => {
     const ambient = ambientRef.current;
@@ -204,6 +256,11 @@ export function MentalistCase({
   ).every((id) => found.includes(id));
   const connectionsSolved =
     selectedClues.includes("call+ledger") && selectedClues.includes("feather+ledger");
+  const requiredInterviews = difficulty === "dexter" ? 3 : difficulty === "investigador" ? 1 : 2;
+  const interrogationRanking = getInterrogationRanking(
+    correctInterrogations.length,
+    interrogationMistakes,
+  );
 
   const collect = (id: string) => {
     startAmbient();
@@ -237,31 +294,75 @@ export function MentalistCase({
     }
   };
 
-  const interview = (id: string) => {
+  const playInterrogationSfx = (kind: "success" | "error") => {
+    if (!interrogationAudioOn || typeof window === "undefined") return;
+    const source =
+      kind === "success"
+        ? "/audio/mentalist/sfx/evidence-confirmed.mp3"
+        : "/audio/mentalist/sfx/evidence-mismatch.mp3";
+    let audio = interrogationSfxRefs.current[kind];
+    if (!audio) {
+      audio = new Audio(source);
+      interrogationSfxRefs.current[kind] = audio;
+    }
+    audio.volume = kind === "success" ? 0.3 : 0.26;
+    audio.currentTime = 0;
+    void audio.play().catch(() => undefined);
+  };
+
+  const playSuspectVoice = (id: SuspectId) => {
+    if (!interrogationAudioOn || typeof window === "undefined") return;
+    interrogationVoiceRef.current?.pause();
+    const audio = new Audio(SUSPECT_VOICE_PATHS[id]);
+    audio.volume = 0.86;
+    interrogationVoiceRef.current = audio;
+    void audio.play().catch(() => undefined);
+  };
+
+  const interview = (id: SuspectId) => {
     startAmbient();
+    const suspect = SUSPECTS.find((person) => person.id === id);
+    const evidenceId = selectedInterviewEvidence[id];
+    if (!suspect || !evidenceId || !found.includes(evidenceId)) {
+      setHarryLine("Escolha primeiro uma evidência coletada e só então confronte o suspeito.");
+      setFeedback("Selecione uma peça do quadro de evidências para iniciar o interrogatório.");
+      return;
+    }
+
+    const evidence = CLUES.find((clue) => clue.id === evidenceId);
+    const isRelevant = evidenceId === suspect.correctEvidence;
     if (!interviewed.includes(id)) setInterviewed((current) => [...current, id]);
-    const lines: Record<string, string> = {
-      mcallister:
-        "McAllister diz que não entrou no gabinete depois das 20h. Ao responder, pergunta quem teve acesso ao livro — antes de Dexter mencionar o registro apagado.",
-      bertram:
-        "Bertram admite que a investigação foi compartilhada com o gabinete do xerife, mas afirma que não esteve em Miami naquela noite.",
-      stiles:
-        "Stiles diz que influência não é o mesmo que presença. Ele confirma que a vítima estava investigando uma rede interna de proteção.",
-    };
-    setHarryLine("Observe o que o suspeito sabe antes de você apresentar a evidência.");
-    setFeedback(lines[id] ?? "");
+    playInterrogationSfx(isRelevant ? "success" : "error");
+    playSuspectVoice(id);
+
+    if (isRelevant) {
+      setCorrectInterrogations((current) => (current.includes(id) ? current : [...current, id]));
+      setHarryLine(
+        "Boa escolha. A peça é pertinente ao depoimento; ainda é uma linha de investigação, não prova de culpa isolada.",
+      );
+      setFeedback(
+        `${suspect.name}: “${SUSPECT_DIALOGUES[id]}” Evidência em foco: ${evidence?.title}. A conexão é relevante e deve ser confirmada com outras fontes.`,
+      );
+      return;
+    }
+
+    setInterrogationMistakes((current) => current + 1);
+    setMistakes((current) => current + 1);
+    setHarryLine("Uma pista pode parecer suspeita sem responder ao que o depoimento afirma.");
+    setFeedback(
+      `${suspect.name}: “${SUSPECT_DIALOGUES[id]}” ${evidence?.title ?? "A evidência escolhida"} não confronta diretamente esta declaração. A tentativa foi registrada como erro; reavalie as provas.`,
+    );
   };
 
   const accuse = () => {
     startAmbient();
-    const requiredInterviews = difficulty === "dexter" ? 3 : difficulty === "investigador" ? 1 : 2;
     if (!allCoreClues || !connectionsSolved || interviewed.length < requiredInterviews) {
       setHarryLine(
         "Uma acusação não substitui o trabalho que ainda falta. Complete as conexões e os depoimentos.",
       );
       setMistakes((current) => current + 1);
       setFeedback(
-        "Ainda faltam elementos: reúna a fibra, o registro de acesso e o telefonema; confirme as conexões e interrogue pelo menos dois suspeitos.",
+        `Ainda faltam elementos: reúna a fibra, o registro de acesso e o telefonema; confirme as conexões e interrogue pelo menos ${requiredInterviews} ${requiredInterviews === 1 ? "suspeito" : "suspeitos"}.`,
       );
       return;
     }
@@ -278,22 +379,26 @@ export function MentalistCase({
     setHarryLine(
       "Você fez o comportamento coincidir com evidências verificáveis. É assim que se evita uma suspeita vazia.",
     );
-    const correctActions = found.length + selectedClues.length + interviewed.length + 1;
+    const baseScore = Math.max(
+      0,
+      100 -
+        mistakes * (difficulty === "investigador" ? 5 : 8) -
+        (hint ? 12 : 0) -
+        (difficulty === "dexter" ? 0 : difficulty === "detetive" ? 5 : 10),
+    );
+    const finalScore = Math.round((baseScore + interrogationRanking.score) / 2);
+    const correctActions = found.length + selectedClues.length + correctInterrogations.length + 1;
     recordCaseCompletion({
       caseId: "mentalist",
-      score: Math.max(
-        0,
-        100 -
-          mistakes * (difficulty === "investigador" ? 5 : 8) -
-          (hint ? 12 : 0) -
-          (difficulty === "dexter" ? 0 : difficulty === "detetive" ? 5 : 10),
-      ),
+      score: finalScore,
       hints: hint ? 1 : 0,
       mistakes,
       correctConclusion: true,
       elapsedSeconds: finishCaseTimer("mentalist"),
       correctActions,
       totalActions: correctActions + mistakes,
+      correctInterrogations: correctInterrogations.length,
+      interrogationMistakes,
     });
     setFeedback(
       "DEXTER: A autoridade que controlava a cena tentou controlar também a narrativa. JANE: Exatamente. Thomas McAllister é Red John.",
@@ -325,24 +430,11 @@ export function MentalistCase({
           </button>
         </header>
 
-        <figure className="mx-auto mt-6 w-full max-w-5xl overflow-hidden border border-primary/40 bg-black/80 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-          <div className="relative aspect-[3/2] w-full">
-            <img
-              src="/images/red-john-investigation.webp"
-              alt="Dexter Morgan e Patrick Jane analisam o sorriso de Red John em um quadro de investigação"
-              width={1536}
-              height={1024}
-              className="h-full w-full object-contain"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10 shadow-[inset_0_0_60px_rgba(0,0,0,0.4)]"
-            />
-          </div>
-          <figcaption className="border-t border-primary/25 bg-black/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground sm:px-4">
-            Arquivo de cena · Dexter Morgan + Patrick Jane
-          </figcaption>
-        </figure>
+        <CaseHeroImage
+          src="/images/red-john-investigation.webp"
+          alt="Dexter Morgan e Patrick Jane analisam o sorriso de Red John em um quadro de investigação"
+          caption="Arquivo de cena · Dexter Morgan + Patrick Jane"
+        />
 
         <div className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3">
           <button
@@ -352,6 +444,14 @@ export function MentalistCase({
             className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
           >
             Trilha: {soundOn ? "ligada" : "desligada"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setInterrogationAudioOn((enabled) => !enabled)}
+            aria-pressed={interrogationAudioOn}
+            className="min-h-10 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+          >
+            Vozes e efeitos: {interrogationAudioOn ? "ligados" : "desligados"}
           </button>
           <button
             type="button"
@@ -379,6 +479,23 @@ export function MentalistCase({
             O som ambiente e a trilha podem tocar separadamente ou juntos.
           </p>
         </div>
+
+        <section
+          className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-primary/40 bg-primary/5 px-4 py-3"
+          aria-live="polite"
+          aria-label="Pontuação e ranking dos interrogatórios"
+        >
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+              Ranking de interrogatório
+            </p>
+            <p className="mt-1 font-display text-lg">{interrogationRanking.rank}</p>
+          </div>
+          <p className="font-mono text-xs text-muted-foreground">
+            {interrogationRanking.score}/100 · {correctInterrogations.length}/3 escolhas relevantes
+            · {interrogationMistakes} erros
+          </p>
+        </section>
 
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
@@ -516,8 +633,8 @@ export function MentalistCase({
                 <section className="border border-border bg-card/30 p-4 sm:p-6">
                   <h2 className="font-display text-2xl">3. Interrogatórios</h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Fale com pelo menos dois suspeitos e observe o que cada um sabe antes de ser
-                    perguntado.
+                    Escolha uma evidência já coletada para confrontar cada suspeito. O ranking
+                    premia a peça mais pertinente; uma pista isolada não prova culpa.
                   </p>
                   <div className="mt-4 space-y-3">
                     {SUSPECTS.map((suspect) => (
@@ -527,11 +644,38 @@ export function MentalistCase({
                           {suspect.role}
                         </p>
                         <p className="mt-2 text-sm">{suspect.detail}</p>
+                        <label className="mt-3 block">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                            Evidência para confronto
+                          </span>
+                          <select
+                            value={selectedInterviewEvidence[suspect.id] ?? ""}
+                            onChange={(event) =>
+                              setSelectedInterviewEvidence((current) => ({
+                                ...current,
+                                [suspect.id]: event.target.value,
+                              }))
+                            }
+                            className="mt-2 min-h-10 w-full border border-border bg-background px-3 py-2 text-sm"
+                          >
+                            <option value="">Selecione uma evidência coletada</option>
+                            {CLUES.filter((clue) => found.includes(clue.id)).map((clue) => (
+                              <option key={clue.id} value={clue.id}>
+                                {clue.title}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
                         <button
                           onClick={() => interview(suspect.id)}
-                          className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+                          disabled={!selectedInterviewEvidence[suspect.id]}
+                          className="mt-3 min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary disabled:cursor-not-allowed disabled:opacity-40"
                         >
-                          {interviewed.includes(suspect.id) ? "Rever depoimento" : "Interrogar"}
+                          {correctInterrogations.includes(suspect.id)
+                            ? "Rever depoimento correto"
+                            : interviewed.includes(suspect.id)
+                              ? "Tentar novo confronto"
+                              : "Interrogar"}
                         </button>
                       </article>
                     ))}
@@ -612,7 +756,11 @@ export function MentalistCase({
           <span>
             EVIDÊNCIAS COLETADAS: {found.length}/{CLUES.length}
           </span>
-          <span>INTERROGATÓRIOS: {interviewed.length}/3</span>
+          <span>CONFRONTAÇÕES CORRETAS: {correctInterrogations.length}/3</span>
+          <span>
+            RANKING: {interrogationRanking.rank} · {interrogationRanking.score}/100
+          </span>
+          <span>DEPOIMENTOS OUVIDOS: {interviewed.length}/3</span>
           <span>ERROS: {mistakes}</span>
           <span>CONEXÕES: {selectedClues.length}/2</span>
         </footer>

@@ -23,6 +23,7 @@ import {
   type CaseId,
 } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
 
@@ -975,6 +976,12 @@ export function Game() {
         </div>
       </header>
 
+      <CaseHeroImage
+        src="/images/ortega-investigation.webp"
+        alt="Dexter examina evidências forenses em um laboratório de Miami à noite"
+        caption="Arquivo de cena · Miami Metro · Caso Ortega"
+      />
+
       <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
       <nav className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs sm:flex sm:flex-wrap sm:text-sm">
@@ -1758,7 +1765,7 @@ function MainMenu({
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
                   {bloodSlideUnlocked
                     ? "Conquistado"
-                    : "Bloqueado · requer excelência nos três capítulos"}
+                    : "Bloqueado · requer excelência nos quatro capítulos e interrogatórios perfeitos"}
                 </p>
               </div>
             </section>
@@ -1889,40 +1896,20 @@ function MainMenu({
 
 function BloodSlideBoxIcon({ locked }: { locked: boolean }) {
   return (
-    <svg
-      viewBox="0 0 160 112"
-      role="img"
-      aria-label={locked ? "Caixa de lâminas ainda bloqueada" : "Caixa de lâminas conquistada"}
-      className={`h-24 w-32 shrink-0 ${locked ? "opacity-40 grayscale" : ""}`}
-      xmlns="http://www.w3.org/2000/svg"
+    <figure
+      className={`relative m-0 flex h-32 w-28 shrink-0 items-center justify-center overflow-hidden border border-primary/40 bg-black/70 p-2 ${locked ? "opacity-50 grayscale" : "shadow-[0_0_32px_rgba(166,58,62,0.28)]"}`}
     >
-      <path
-        d="M25 44V20c0-4 3-7 7-7h96c4 0 7 3 7 7v24L80 61 25 44Z"
-        fill="#181515"
-        stroke="#a63a3e"
-        strokeWidth="2"
+      <img
+        src="/images/dexter-items/blood-slides-box-open.webp"
+        alt={
+          locked
+            ? "Caixa de lâminas de sangue; troféu máximo bloqueado"
+            : "Caixa de lâminas de sangue conquistada"
+        }
+        loading="eager"
+        className="h-full w-full object-contain"
       />
-      <path
-        d="m25 44 55 17 55-17v49c0 5-4 9-9 9H34c-5 0-9-4-9-9V44Z"
-        fill="#241b1b"
-        stroke="#d0a7a3"
-        strokeWidth="2"
-      />
-      <path d="m25 44 55 17 55-17" fill="none" stroke="#d0a7a3" strokeWidth="2" />
-      <rect x="34" y="66" width="92" height="24" rx="3" fill="#100d0d" stroke="#6e292d" />
-      <rect x="40" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
-      <rect x="56" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
-      <rect x="72" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
-      <rect x="88" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
-      <rect x="104" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
-      <circle cx="45.5" cy="77" r="3" fill="#a91e27" />
-      <circle cx="61.5" cy="77" r="3" fill="#a91e27" />
-      <circle cx="77.5" cy="77" r="3" fill="#a91e27" />
-      <circle cx="93.5" cy="77" r="3" fill="#a91e27" />
-      <circle cx="109.5" cy="77" r="3" fill="#a91e27" />
-      <path d="M68 100h24" stroke="#d0a7a3" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="80" cy="51" r="3" fill="#bc3539" />
-    </svg>
+    </figure>
   );
 }
 

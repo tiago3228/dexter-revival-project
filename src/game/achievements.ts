@@ -35,7 +35,13 @@ export const ACHIEVEMENTS = [
   {
     id: "master-interrogator",
     title: "Mestre dos depoimentos",
-    description: "Acerte os três interrogatórios do Caso Dexter sem errar.",
+    description: "Acerte os três interrogatórios do Caso Painscreek sem errar.",
+    tier: "Ouro",
+  },
+  {
+    id: "red-john-profiler",
+    title: "Leitura do Sorriso Escarlate",
+    description: "Acerte as três confrontações do Caso Red John sem errar.",
     tier: "Ouro",
   },
   {
@@ -48,7 +54,7 @@ export const ACHIEVEMENTS = [
     id: "blood-slide-box",
     title: "Caixa de lâminas de sangue",
     description:
-      "Conclua os quatro capítulos com 90 pontos ou mais em cada um e acerte os três interrogatórios do Caso Dexter sem erros.",
+      "Conclua os quatro capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
     tier: "Lendário",
   },
 ] as const;
@@ -136,13 +142,23 @@ export function loadAchievementProgress(): AchievementProgress {
         };
       }
     }
+    const unlockedIds = Array.isArray(saved.unlockedIds)
+      ? [...new Set(saved.unlockedIds.filter(isAchievementId))]
+      : [];
+    const completedCases = Array.isArray(saved.completedCases)
+      ? [...new Set(saved.completedCases.filter(isCaseId))]
+      : [];
+    const qualifiesForLegendary =
+      CASE_IDS.every((caseId) => completedCases.includes(caseId)) &&
+      CASE_IDS.every((caseId) => (bestScores[caseId] ?? 0) >= 90) &&
+      unlockedIds.includes("master-interrogator") &&
+      unlockedIds.includes("red-john-profiler");
+
     return {
-      unlockedIds: Array.isArray(saved.unlockedIds)
-        ? [...new Set(saved.unlockedIds.filter(isAchievementId))]
-        : [],
-      completedCases: Array.isArray(saved.completedCases)
-        ? [...new Set(saved.completedCases.filter(isCaseId))]
-        : [],
+      unlockedIds: qualifiesForLegendary
+        ? unlockedIds
+        : unlockedIds.filter((id) => id !== "blood-slide-box"),
+      completedCases,
       bestScores,
       caseStats,
     };
@@ -177,6 +193,7 @@ export function applyCasePerformance(
     [performance.caseId]: Math.max(progress.bestScores[performance.caseId] ?? -1, score),
   };
   const unlocked = new Set(progress.unlockedIds);
+  unlocked.delete("blood-slide-box");
   const previousStats = progress.caseStats[performance.caseId];
   const caseStats = {
     ...progress.caseStats,
@@ -203,10 +220,22 @@ export function applyCasePerformance(
   ) {
     unlocked.add("master-interrogator");
   }
+  if (
+    performance.caseId === "mentalist" &&
+    performance.correctInterrogations === 3 &&
+    performance.interrogationMistakes === 0
+  ) {
+    unlocked.add("red-john-profiler");
+  }
   const allCasesCompleted = CASE_IDS.every((caseId) => completedCases.includes(caseId));
   if (allCasesCompleted) unlocked.add("all-cases");
   const allEliteScores = CASE_IDS.every((caseId) => (bestScores[caseId] ?? 0) >= 90);
-  if (allCasesCompleted && allEliteScores && unlocked.has("master-interrogator")) {
+  if (
+    allCasesCompleted &&
+    allEliteScores &&
+    unlocked.has("master-interrogator") &&
+    unlocked.has("red-john-profiler")
+  ) {
     unlocked.add("blood-slide-box");
   }
 
