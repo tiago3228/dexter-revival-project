@@ -96,6 +96,36 @@ const LOCATIONS = [
   },
 ];
 
+const SUSPECTS = [
+  {
+    name: "Paul Renner",
+    role: "Xerife-adjunto",
+    motive: "Controlava os registros oficiais e tinha acesso à investigação original.",
+    alibi: "Declarou ter deixado o posto às 21h10 e não ter retornado naquela noite.",
+    contradiction: "A segunda assinatura no livro de entrada e o recibo da caixa 19 contradizem sua versão.",
+    required: ["log", "receipt"],
+    evidenceLabel: "Livro de entrada + recibo do depósito",
+  },
+  {
+    name: "Dr. Henry Vale",
+    role: "Médico legista",
+    motive: "Tinha acesso ao relatório preliminar e poderia influenciar a leitura da cena.",
+    alibi: "A documentação médica situa seu trabalho no hospital, mas não explica a tinta azul encontrada sob as unhas.",
+    contradiction: "O vestígio físico liga Eleanor ao recibo do depósito, sem colocar Vale no local.",
+    required: ["autopsy", "receipt"],
+    evidenceLabel: "Relatório preliminar + recibo do depósito",
+  },
+  {
+    name: "Pastor Matthew Cole",
+    role: "Responsável pela capela",
+    motive: "Conhecia a capela e poderia reconhecer o detalhe sonoro da gravação.",
+    alibi: "A fita parece situar a conversa perto do sino da capela.",
+    contradiction: "O sino estava quebrado naquela semana; o áudio não deve ser interpretado como uma confirmação literal do local.",
+    required: ["tape", "log"],
+    evidenceLabel: "Transcrição da fita + livro de entrada",
+  },
+];
+
 const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: string }[] = [
   {
     id: "investigador",
@@ -526,6 +556,46 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
         </section>
 
         <section className="mt-6 border border-border p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Quadro de suspeitos</p>
+              <h2 className="mt-2 font-display text-2xl">Versões sob suspeita</h2>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground">{SUSPECTS.filter((person) => person.required.every((id) => found.includes(id))).length}/3 PERFIS CRUZADOS</p>
+          </div>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">Compare o que cada pessoa poderia saber com o que as evidências realmente demonstram. Um motivo não prova culpa: procure contradições verificáveis antes de acusar.</p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-3">
+            {SUSPECTS.map((person) => {
+              const profileComplete = person.required.every((id) => found.includes(id));
+              return (
+                <article key={person.name} className="flex flex-col border border-border bg-card/30 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-display text-xl">{person.name}</h3>
+                      <p className="mt-1 text-xs text-muted-foreground">{person.role}</p>
+                    </div>
+                    <span className={`font-mono text-[10px] ${profileComplete ? "text-primary" : "text-muted-foreground"}`}>{profileComplete ? "CRUZADO" : "INCOMPLETO"}</span>
+                  </div>
+                  {profileComplete ? (
+                    <>
+                      <p className="mt-4 text-sm"><strong>Possível motivo</strong><br />{person.motive}</p>
+                      <p className="mt-3 text-sm"><strong>Versão / contexto</strong><br />{person.alibi}</p>
+                      <p className="mt-3 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground"><strong>Contradição a avaliar</strong><br />{person.contradiction}</p>
+                      <p className="mt-auto pt-4 font-mono text-[10px] text-primary">BASE: {person.evidenceLabel}</p>
+                    </>
+                  ) : (
+                    <div className="mt-4 flex-1 border-t border-border pt-4">
+                      <p className="text-sm text-muted-foreground">Perfil parcialmente oculto. Registre as evidências necessárias para cruzar esta versão.</p>
+                      <p className="mt-3 font-mono text-[10px] text-muted-foreground">EVIDÊNCIAS NECESSÁRIAS: {person.required.filter((id) => !found.includes(id)).length}</p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-6 border border-border p-4 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
             Bancada de análise
           </p>
@@ -804,6 +874,37 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                       ? "Arquivo completo: todas as evidências foram examinadas."
                       : "O caso foi resolvido, mas ainda existem evidências não examinadas neste arquivo."}
                   </p>
+                  <div className="mt-5 border-t border-border pt-4">
+                    <h4 className="font-display text-xl">Relatório de encerramento</h4>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">Reconstrução temporal</p>
+                        <p className="mt-1 text-sm">{timelineSolved ? "Validada — o registro de retorno contradiz a versão oficial." : "Não validada."}</p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">Análise forense</p>
+                        <p className="mt-1 text-sm">{forensicSolved ? "Validada — tinta azul e recibo estabelecem uma conexão material." : "Não validada."}</p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">Mecanismos</p>
+                        <p className="mt-1 text-sm">{Number(safeOpen) + Number(depotOpen)}/2 abertos</p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">Disciplina investigativa</p>
+                        <p className="mt-1 text-sm">{hintsUsed.length} dicas · {mistakes} erros · {score}/100 pontos</p>
+                      </div>
+                    </div>
+                    <h4 className="mt-5 font-display text-lg">Cadeia de evidências</h4>
+                    <ul className="mt-2 space-y-2 text-sm">
+                      {EVIDENCE.map((item) => (
+                        <li key={item.id} className="flex gap-2">
+                          <span className={found.includes(item.id) ? "text-primary" : "text-muted-foreground"}>{found.includes(item.id) ? "✓" : "○"}</span>
+                          <span><strong>{item.title}</strong> — {found.includes(item.id) ? "examinada" : "não examinada"} <span className="text-muted-foreground">({item.location})</span></span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-4 text-sm leading-relaxed text-muted-foreground">A classificação mede a disciplina da partida: cada dica aberta custa 15 pontos e cada resposta incorreta custa 5. A pontuação não substitui a qualidade da prova; uma acusação correta exige que as duas deduções e os dois mecanismos tenham sido concluídos.</p>
+                  </div>
                 </>
               ) : (
                 <>
