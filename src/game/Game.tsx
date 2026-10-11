@@ -14,6 +14,7 @@ import {
 } from "./data";
 import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
+import { MentalistCase } from "./MentalistCase";
 import {
   ACHIEVEMENTS,
   CASE_IDS,
@@ -136,7 +137,7 @@ export function Game() {
     const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek">("ortega");
+  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek" | "mentalist">("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -294,6 +295,10 @@ export function Game() {
     return (
       <DexterCase onBack={() => setShowMenu(true)} soundOn={soundOn} onToggleSound={toggleSound} />
     );
+  }
+
+  if (caseMode === "mentalist") {
+    return <MentalistCase onBack={() => setShowMenu(true)} />;
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
@@ -1240,7 +1245,7 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (nextCase: "ortega" | "monroe" | "painscreek") => void;
+  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist") => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
@@ -1271,6 +1276,11 @@ function MainMenu({
       index: "CAPÍTULO 03 · GREYBRIDGE",
       title: "The Painscreek Case",
       detail: "Abrindo os arquivos forenses de Greybridge.",
+    },
+    mentalist: {
+      index: "CAPÍTULO 04 · MIAMI / CBI",
+      title: "Red John: O Sorriso Escarlate",
+      detail: "Conectando as evidências de Dexter e Patrick Jane.",
     },
   };
 
@@ -1551,7 +1561,7 @@ function MainMenu({
             </div>
           </section>
         )}
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <button
             type="button"
             disabled={transitionChapter !== null}
@@ -1615,9 +1625,29 @@ function MainMenu({
               {chapterStatus("painscreek")}
             </span>
           </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("mentalist")}
+            className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+              Capítulo 04 · Miami / CBI
+            </p>
+            <h2 className="mt-3 font-display text-3xl">Red John: O Sorriso Escarlate</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Dexter precisa da mente de Patrick Jane para seguir a assinatura de Red John, cruzar registros policiais e identificar quem manipula a investigação por dentro.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
+              Abrir capítulo →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("mentalist")}
+            </span>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 03</p>
+          <p>ARQUIVOS DISPONÍVEIS: 04</p>
           <p className="mt-2">
             CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
           </p>
