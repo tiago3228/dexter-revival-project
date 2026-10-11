@@ -391,6 +391,95 @@ export function Game() {
   const has = (d: DocId) => s.docs.includes(d);
   const done = (p: PuzzleId) => s.solved.includes(p);
 
+  const nextObjective = (() => {
+    if (s.solved.length >= 14) {
+      return {
+        title: "Concluir a investigação",
+        detail: "Abra o quadro do alvo na cena do Apartamento de Dexter e escolha quem será acusado.",
+        location: "apartamento" as LocationId,
+        action: "Abrir o quadro do alvo",
+      };
+    }
+    if (!done("sangue")) {
+      return {
+        title: "Examinar a cena do crime",
+        detail: "No Laboratório forense, abra a fotografia da trilha de sangue e observe a sequência das gotas.",
+        location: "lab" as LocationId,
+        action: "Ver fotografia da cena",
+      };
+    }
+    if (!done("relatorio")) {
+      return {
+        title: "Conferir o relatório do legista",
+        detail: "Ainda no Laboratório forense, examine o relatório e identifique o campo incompatível com as medições.",
+        location: "lab" as LocationId,
+        action: "Examinar relatório",
+      };
+    }
+    if (!done("hora")) {
+      return {
+        title: "Reconstruir a hora da morte",
+        detail: "Cruze a temperatura do relatório com a tabela de resfriamento e resolva o enigma da hora.",
+        location: "lab" as LocationId,
+        action: "Comparar os registros",
+      };
+    }
+    if (!done("contradicao")) {
+      return {
+        title: "Conferir os depoimentos",
+        detail: "Na Homicídios, compare o relato de Carlos Ruiz com os registros oficiais de horário.",
+        location: "corredor" as LocationId,
+        action: "Investigar depoimentos",
+      };
+    }
+    if (!done("janela") || !done("fechadura") || !done("luva")) {
+      return {
+        title: "Examinar a sala de evidências",
+        detail: "Leia o registro de rondas e investigue o armário 17. A fechadura e a luva dependem das pistas encontradas antes.",
+        location: "evidencias" as LocationId,
+        action: "Investigar armário 17",
+      };
+    }
+    if (!done("cifra")) {
+      return {
+        title: "Decifrar o bilhete",
+        detail: "Volte ao Laboratório forense e use a mensagem encontrada no armário 17. Procure a chave nos documentos.",
+        location: "lab" as LocationId,
+        action: "Decifrar mensagem",
+      };
+    }
+    if (!done("rede") || !done("reacao")) {
+      return {
+        title: "Cruzar nomes e endereços",
+        detail: "No Laboratório forense, conecte os nomes, endereços e horários; depois examine a reação deixada na bancada.",
+        location: "lab" as LocationId,
+        action: "Cruzar as pistas",
+      };
+    }
+    if (!done("vestigio") || !done("lamina")) {
+      return {
+        title: "Confirmar os vestígios físicos",
+        detail: "Compare a luva, as fichas sanguíneas e os documentos. Não confunda uma suspeita com uma prova conclusiva.",
+        location: "evidencias" as LocationId,
+        action: "Analisar vestígios",
+      };
+    }
+    if (!done("segredo") || !done("caderno")) {
+      return {
+        title: "Revisar o Código de Harry",
+        detail: "No Apartamento de Dexter, examine o caderno e o compartimento oculto antes de fechar as pontas soltas.",
+        location: "apartamento" as LocationId,
+        action: "Revisar o Código",
+      };
+    }
+    return {
+      title: "Revisar as evidências restantes",
+      detail: "Consulte o Caderno e retorne aos locais com pistas pendentes. Resolva os enigmas restantes antes de acusar.",
+      location: s.loc,
+      action: "Abrir Caderno",
+    };
+  })();
+
   const hint = !done("sangue")
     ? "No laboratório, clique na miniatura 'Ver fotografia da cena e descrição'. Observe as características das gotas: a forma delas indica o ritmo do movimento."
     : !done("relatorio")
@@ -982,8 +1071,124 @@ export function Game() {
         caption="Arquivo de cena · Miami Metro · Caso Ortega"
       />
 
+      <section
+        aria-labelledby="case-guide-title"
+        className="mt-5 border border-primary/40 bg-card/70 p-4 sm:p-5"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+              Briefing · objetivo atual
+            </p>
+            <h2 id="case-guide-title" className="mt-1 font-display text-2xl">
+              {nextObjective.title}
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              {nextObjective.detail}
+            </p>
+          </div>
+          <div className="grid min-w-[140px] grid-cols-2 gap-2 sm:min-w-[190px]">
+            <div className="border border-border bg-background/70 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                Enigmas
+              </p>
+              <p className="mt-1 font-mono text-xl text-primary">{s.solved.length}/14</p>
+            </div>
+            <div className="border border-border bg-background/70 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                Documentos
+              </p>
+              <p className="mt-1 font-mono text-xl text-primary">{s.docs.length}/20</p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="mt-4 h-1.5 overflow-hidden bg-muted"
+          role="progressbar"
+          aria-label="Progresso dos enigmas"
+          aria-valuemin={0}
+          aria-valuemax={14}
+          aria-valuenow={s.solved.length}
+        >
+          <div
+            className="h-full bg-primary transition-all"
+            style={{ width: `${Math.min(100, (s.solved.length / 14) * 100)}%` }}
+          />
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              number: "01",
+              title: "Investigar",
+              text: "Escolha um local e examine fotos, objetos e textos destacados.",
+              complete: s.docs.length > 0,
+            },
+            {
+              number: "02",
+              title: "Analisar",
+              text: "Resolva os enigmas e consulte os documentos no Caderno.",
+              complete: s.solved.length > 0,
+            },
+            {
+              number: "03",
+              title: "Cruzar provas",
+              text: "Compare horários, depoimentos e vestígios antes de tirar conclusões.",
+              complete: done("rede") && done("vestigio") && done("lamina"),
+            },
+            {
+              number: "04",
+              title: "Concluir",
+              text: s.solved.length >= 14
+                ? "Todos os enigmas foram resolvidos. Você já pode abrir o quadro do alvo."
+                : "A acusação conclusiva fica disponível após resolver os 14 enigmas.",
+              complete: s.solved.length >= 14,
+            },
+          ].map((step) => (
+            <div
+              key={step.number}
+              className={`border p-3 ${step.complete ? "border-primary/50 bg-primary/5" : "border-border bg-background/40"}`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs text-primary">{step.number}</span>
+                <h3 className="font-mono text-xs uppercase tracking-wider">{step.title}</h3>
+                {step.complete && <span className="ml-auto text-xs text-primary" aria-label="Etapa iniciada ou concluída">✓</span>}
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{step.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              if (s.solved.length >= 14) {
+                setS((current) => ({ ...current, loc: "apartamento" }));
+                setTab("cena");
+                setModal({ kind: "acusar" });
+                return;
+              }
+              if (s.loc !== nextObjective.location) go(nextObjective.location);
+              else if (nextObjective.location === "lab" && !done("sangue")) openImage("blood-trail");
+              else if (nextObjective.location === "lab" && !done("relatorio")) openImage("autopsy-report");
+              else if (nextObjective.location === "corredor") setModal({ kind: "puzzle", id: "contradicao" });
+              else if (nextObjective.location === "evidencias") setModal({ kind: "puzzle", id: done("janela") ? "fechadura" : "janela" });
+              else setTab("caderno");
+            }}
+            className="min-h-11 border border-primary bg-primary/10 px-4 py-2 font-mono text-xs text-primary hover:bg-primary/20"
+          >
+            {nextObjective.action} →
+          </button>
+          <p className="text-xs text-muted-foreground">
+            Clique nos nomes dos locais para se deslocar; textos sublinhados e cartões de imagem abrem pistas e enigmas.
+          </p>
+        </div>
+      </section>
+
       <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
+      <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        Locais da investigação · selecione para explorar
+      </p>
       <nav className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs sm:flex sm:flex-wrap sm:text-sm">
         {(Object.keys(LOCATION_NAMES) as LocationId[]).map((l) => (
           <button
