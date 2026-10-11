@@ -1065,7 +1065,7 @@ function MainMenu({
             />
           </label>
         </section>
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
           <button
             onClick={() => onSelect("ortega")}
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
@@ -1098,10 +1098,23 @@ function MainMenu({
               Abrir dossiê →
             </span>
           </button>
+          <article className="border border-border/70 bg-card/30 p-6 text-left opacity-85 sm:p-8">
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              Próximo arquivo · Painscreek
+            </p>
+            <h2 className="mt-3 font-display text-3xl">Dexter: The Painscreek Case</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Uma investigação de exploração, documentos ocultos e dedução em uma cidade que guarda
+              seus próprios segredos. A base do caso ainda está sendo preparada.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-muted-foreground">
+              Arquivo em preparação · aguarde a liberação
+            </span>
+          </article>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
           <p>ARQUIVOS DISPONÍVEIS: 02</p>
-          <p className="mt-2">NOVOS CASOS: em preparação · sem data de liberação</p>
+          <p className="mt-2">PRÓXIMO CASO: Dexter: The Painscreek Case · em preparação</p>
         </div>
       </div>
     </main>
