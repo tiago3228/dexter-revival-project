@@ -7,38 +7,114 @@ type Evidence = {
   title: string;
   body: string;
   audio?: string;
+  image?: string;
+};
+
+const FULL_TRANSCRIPTS = {
+  monica: `Detetive Johnson: Bom dia, Sra. Monroe. Poderia descrever como encontrou o corpo?
+Monica Monroe: Eu estava fora da cidade em uma viagem de negócios entre os dias 18 e 21 de maio. Quando retornei no dia 21, encontrei a porta do escritório aberta e Jonathan caído no chão. Liguei imediatamente para a polícia.
+Detetive Johnson: Como descreveria seu casamento?
+Monica Monroe: Tínhamos problemas financeiros e dificuldade para passar tempo juntos, mas tentávamos conversar e resolver as coisas. Eu não consigo acreditar que ele se foi.
+Detetive Johnson: Jonathan tinha algum plano naquela noite?
+Monica Monroe: Disse que trabalharia até tarde no escritório, como era costume. Normalmente só chegava em casa depois das 22h.
+Detetive Johnson: Ele tinha inimigos?
+Monica Monroe: Mencionava rivalidades profissionais, mas não consigo pensar em ninguém específico que desejasse machucá-lo.
+Detetive Johnson: O que havia no cofre e qual era a combinação?
+Monica Monroe: Guardávamos nossas economias. A combinação era a data do nosso aniversário de casamento: 0405.
+Detetive Johnson: O que sabe sobre Daniel Thompson?
+Monica Monroe: Eles eram amigos antigos da faculdade. Competiam profissionalmente, mas já os vi bebendo e rindo juntos.
+Detetive Johnson: Você sabia de algum caso extraconjugal?
+Monica Monroe: Não. Tenho certeza de que Jonathan não se relacionava com outras mulheres.
+Detetive Johnson: Onde estava na noite do assassinato?
+Monica Monroe: Em uma viagem de negócios, hospedada no Luxe Hotel, em São Francisco. Sou coordenadora de eventos.
+Detetive Johnson: Funcionários falaram de um cliente secreto que visitava a casa. Sabe quem era?
+Monica Monroe: Jonathan não falava de negócios em casa. Alguns clientes foram à nossa casa, mas não lembro nomes ou rostos.
+Detetive Johnson: Alguém tinha motivo forte para prejudicá-lo?
+Monica Monroe: Não consigo imaginar ninguém. Ele tinha uma carreira exigente, mas era um bom homem.`,
+  richard: `Detetive Johnson: Quando foi a última vez que viu Jonathan?
+Richard Stevens: Na semana passada, no escritório, durante uma conversa sobre um caso.
+Detetive Johnson: Qual era a relação entre vocês?
+Richard Stevens: Somos primos e sou sócio minoritário. Tivemos divergências sobre estratégias, mas trabalhávamos próximos e nos dávamos bem.
+Detetive Johnson: Quem tinha rancor de Jonathan?
+Richard Stevens: Emily Parker, a ex-secretária demitida recentemente, e Daniel Thompson, o advogado concorrente. Vi Daniel discutir com Jonathan em frente ao tribunal.
+Detetive Johnson: Também soubemos de conflitos entre você e Jonathan.
+Richard Stevens: Isso não é verdade. Estávamos em excelentes termos. Parece fofoca sem fundamento.
+Detetive Johnson: Onde estava na noite do assassinato?
+Richard Stevens: Em casa com minha namorada, Amara Verns. Jantamos e assistimos a um filme. Ela pode confirmar.
+Detetive Johnson: Obrigado. Talvez precisemos conversar novamente.
+Richard Stevens: Estarei à disposição.`,
+  daniel: `Detetive Johnson: Quando foi a última vez que viu Jonathan?
+Daniel Thompson: Nós nos conhecíamos da faculdade e nos enfrentávamos no tribunal.
+Detetive Johnson: Vocês eram amigos?
+Daniel Thompson: Éramos rivais profissionais, membros do mesmo clube de criptografia. Trocávamos mensagens usando subtração de letras ou Cifra de César.
+Detetive Johnson: E a discussão em frente ao tribunal?
+Daniel Thompson: Foi apenas verbal. Tínhamos interpretações diferentes sobre a lei, nada físico.
+Detetive Johnson: Existiam conflitos pessoais?
+Daniel Thompson: Era um choque de egos, mas depois bebíamos juntos. Nossas disputas permaneciam profissionais.
+Detetive Johnson: Quem poderia querer prejudicá-lo?
+Daniel Thompson: Jonathan criava inimigos. Sei que ele discutia com um sócio júnior; pergunte ao Richard.
+Detetive Johnson: Qual é seu álibi?
+Daniel Thompson: Eu estava em uma conferência jurídica em São Francisco, hospedado no Hotel Carvelle. Fui de carro; levei pouco mais de quatro horas.
+Detetive Johnson: Você possui arma de fogo?
+Daniel Thompson: Absolutamente não. Sou advogado, não assassino de aluguel.`,
+  emily: `Detetive Johnson: Quando viu Jonathan pela última vez?
+Emily Parker: Em 18 de maio, quando ele me demitiu. Eu era a secretária dele.
+Detetive Johnson: Por que foi demitida?
+Emily Parker: Ele me acusou injustamente de lidar mal com documentos confidenciais. Trabalhei anos para ele e fui dispensada sem explicação. Liguei todos os dias tentando recuperar meu emprego, mas ele não retornou.
+Detetive Johnson: Presenciou conflitos entre Jonathan e outras pessoas?
+Emily Parker: Jonathan e Monica brigavam constantemente. Eu ouvia os gritos através da porta: Monica falava do casamento e ele respondia sobre o acordo pré-nupcial.
+Detetive Johnson: Jonathan tinha inimigos?
+Emily Parker: Pessoas contra quem ele advogou poderiam estar irritadas. Pelo casamento em crise, eu não me surpreenderia se Monica estivesse envolvida.
+Detetive Johnson: Onde estava na noite do crime?
+Emily Parker: No meu apartamento, exceto por uma saída de cerca de uma hora para fazer compras no Telways.
+Detetive Johnson: Qual a distância até a casa dos Monroe?
+Emily Parker: Cerca de 35 minutos. Já fui lá várias vezes quando Jonathan esquecia documentos.
+Detetive Johnson: Alguém a acompanhava?
+Emily Parker: Não. Fiz compras sozinha, mas conversei com a caixa.`,
+  jacob: `Detetive Johnson: Quando viu Jonathan pela última vez?
+Jacob Kline: No dia 16 de maio, na casa dele. Eu queria contratá-lo para um assunto delicado, mas desisti. Era um processo por lesão corporal que acabou arquivado.
+Detetive Johnson: Falou com ele depois disso?
+Jacob Kline: Não. Não havia necessidade de continuar falando.
+Detetive Johnson: Conhece Monica?
+Jacob Kline: Apenas de encontros breves quando visitei Jonathan. Ela parecia simpática.
+Detetive Johnson: Onde estava na noite de 20 de maio?
+Jacob Kline: Em casa. Normalmente já estou dormindo às oito da noite.
+Detetive Johnson: Alguém confirma?
+Jacob Kline: Não. Moro sozinho.
+Detetive Johnson: O que acha que aconteceu?
+Jacob Kline: Espero que encontrem o responsável. Provavelmente foi alguém que precisava de dinheiro. É perigoso manter dinheiro vivo no cofre de casa.`,
 };
 
 const TESTIMONIES: Evidence[] = [
   {
     id: "monica",
     title: "Depoimento — Monica Monroe",
-    audio: "/audio/monroe/monica-monroe.wav",
-    body: "Estive fora da cidade entre 18 e 21 de maio, hospedada no Luxe Hotel, em São Francisco. Quando voltei, encontrei Jonathan morto. Nosso casamento tinha problemas financeiros, mas não sei quem desejaria machucá-lo. Não conheço o cliente secreto.",
+    audio: "/audio/monroe/monica-monroe-full.wav",
+    body: FULL_TRANSCRIPTS.monica,
   },
   {
     id: "richard",
     title: "Depoimento — Richard Stevens",
-    audio: "/audio/monroe/richard-stevens.wav",
-    body: "Sou primo de Jonathan e sócio minoritário do escritório. Tivemos divergências, mas estávamos bem. Na noite do crime, eu estava em casa com Amara Verns. Ela pode confirmar. Emily Parker e Daniel Thompson tinham problemas com Jonathan.",
+    audio: "/audio/monroe/richard-stevens-full.wav",
+    body: FULL_TRANSCRIPTS.richard,
   },
   {
     id: "daniel",
     title: "Depoimento — Daniel J. Thompson",
-    audio: "/audio/monroe/daniel-thompson.wav",
-    body: "Jonathan e eu éramos rivais profissionais, mas nossas discussões eram apenas verbais. Eu estava em uma conferência jurídica em São Francisco, hospedado no Hotel Carvelle. Fui de carro e não possuo arma.",
+    audio: "/audio/monroe/daniel-thompson-full.wav",
+    body: FULL_TRANSCRIPTS.daniel,
   },
   {
     id: "emily",
     title: "Depoimento — Emily Parker",
-    audio: "/audio/monroe/emily-parker.wav",
-    body: "Jonathan me demitiu em 18 de maio e achei a decisão injusta. Na noite do crime, fiquei no meu apartamento, saindo por cerca de uma hora para comprar comida no Telways. Fui sozinha.",
+    audio: "/audio/monroe/emily-parker-full.wav",
+    body: FULL_TRANSCRIPTS.emily,
   },
   {
     id: "jacob",
     title: "Depoimento — Jacob Kline",
-    audio: "/audio/monroe/jacob-kline.wav",
-    body: "Pensei em contratar Jonathan para um assunto delicado, mas desisti. Na noite do crime, estava em casa e moro sozinho. Normalmente já estou dormindo às oito. Não tenho ninguém para confirmar isso.",
+    audio: "/audio/monroe/jacob-kline-full.wav",
+    body: FULL_TRANSCRIPTS.jacob,
   },
 ];
 
@@ -46,56 +122,67 @@ const DOCUMENTS: Evidence[] = [
   {
     id: "email-client",
     title: "E-mail de Jonathan para Daniel",
+    image: "/images/monroe/page-17.jpg",
     body: "Um novo cliente potencial, que vende lâmpadas de 200 watts, quer manter a identidade em segredo. Ele aparece com frequência na casa de Jonathan. O advogado pede que Daniel tenha o nome do cliente caso algo aconteça. Abaixo, há a mensagem cifrada: MHJWATCAOB EKDSLMIHNOES.",
   },
   {
     id: "diary-early",
     title: "Página recuperada do diário de Emily",
+    image: "/images/monroe/page-17.jpg",
     body: "Emily relata dívidas, um carro de quinze anos quebrado e a esperança de começar a ganhar dinheiro real em breve. Ela escreve que está aberta a novas oportunidades.",
   },
   {
     id: "hotel-carvelle",
     title: "Fatura do Hotel Carvelle",
+    image: "/images/monroe/page-19.jpg",
     body: "Hóspede: Daniel J. Thompson. Entrada em 18/05/2023, saída em 21/05/2023. Há cobrança de quarto para 20/05.",
   },
   {
     id: "hotel-luxe",
     title: "Fatura do Luxe Hotel",
+    image: "/images/monroe/page-19.jpg",
     body: "Hóspede: Monica Monroe. Entrada em 18/05/2023, saída em 21/05/2023. Suite Deluxe registrada em 20/05.",
   },
   {
     id: "receipt",
     title: "Recibo do supermercado Telways",
+    image: "/images/monroe/page-20.jpg",
     body: "20/05/2023 às 20:20. Compras pagas em dinheiro por Emily Parker. O mercado fica a aproximadamente 35 minutos da casa dos Monroe.",
   },
   {
     id: "newspaper",
     title: "Jornal local — gala em Nova York",
+    image: "/images/monroe/page-23.jpg",
     body: "A edição de 22 de maio mostra Amara Verns em uma gala beneficente em Nova York no dia 20 de maio, ao lado de outras convidadas.",
   },
   {
     id: "sms-richard",
     title: "SMS apagado de Richard",
+    image: "/images/monroe/page-27.jpg",
     body: "Eu sei exatamente o que você fez. Se quiser que eu fique calado, vai te custar 50 mil. Me encontre hoje à noite às 20h, você sabe onde!",
   },
   {
     id: "draft",
     title: "Rascunho não enviado para Daniel",
+    image: "/images/monroe/page-28.jpg",
     body: "Jonathan escreve que está sentindo um clima estranho e pede que Daniel guarde algo que ele mostrou no escritório. O restante foi substituído por símbolos.",
   },
   {
     id: "jacob-sms",
     title: "SMS encontrado no celular de Jacob",
+    image: "/images/monroe/page-30.jpg",
     body: "Eu odeio estar tão longe de você. Tudo vai melhorar em breve. Só precisamos passar por essa última noite. Até logo, meu leão! Enviado às 19:30 de 20 de maio.",
   },
   {
     id: "military",
     title: "Registro militar de Jacob Kline",
+    image: "/images/monroe/page-30.jpg",
     body: "Sargento do Exército, médico de combate, baixa em 17/08/2022. Marca identificadora: grande tatuagem de um leão no peito.",
   },
   {
     id: "diary-final",
     title: "Última página do diário de Emily",
+    image: "/images/monroe/page-30.jpg",
     body: "Emily escreve que esteve lá desde o começo, conhece o lugar por dentro e por fora, e sente tanto ódio de Jonathan que poderia matá-lo. A página termina rasgada.",
   },
 ];
@@ -132,6 +219,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
   const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
   const [reportOpen, setReportOpen] = useState(false);
+  const [finalVerdict, setFinalVerdict] = useState<
+    "emily-richard" | "jacob-daniel" | "monica-alone" | null
+  >(null);
   const ambientRef = useRef<{
     context: AudioContext;
     sources: AudioScheduledSourceNode[];
@@ -232,6 +322,40 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         : reportPoints >= 55
           ? "Analista de Campo"
           : "Investigação Incompleta";
+  const verdictTitle =
+    finalVerdict === "emily-richard"
+      ? "Solução sustentada pelas provas"
+      : finalVerdict === "jacob-daniel"
+        ? "Hipótese alternativa: pista falsa"
+        : finalVerdict === "monica-alone"
+          ? "Hipótese alternativa: sem fechamento"
+          : "Conclusão pendente";
+  const verdictSummary =
+    finalVerdict === "emily-richard"
+      ? "Emily Parker matou Jonathan Monroe e Richard Stevens trabalhou com ela. Richard mentiu sobre o álibi porque Amara estava em Nova York; o dinheiro desaparecido e a chantagem ligavam Richard ao crime. Emily tinha acesso à casa, motivo financeiro e raiva documentada no diário."
+      : finalVerdict === "jacob-daniel"
+        ? "A hipótese não se sustenta: o registro militar e o SMS de Jacob não provam presença na casa, enquanto a fatura de Daniel confirma sua viagem. O relatório marca a conclusão como não corroborada."
+        : finalVerdict === "monica-alone"
+          ? "A crise financeira e o conhecimento do cofre tornam Monica relevante, mas o hotel confirma sua viagem. O relatório registra que essa hipótese não explica a chantagem de Richard nem a participação de Emily."
+          : "Nenhum veredicto final foi registrado.";
+  const verdictProofs =
+    finalVerdict === "emily-richard"
+      ? [
+          "O jornal coloca Amara em uma gala em Nova York, desmontando o álibi de Richard.",
+          "O SMS apagado mostra Richard chantageando Jonathan por cinquenta mil dólares.",
+          "O diário de Emily registra motivo, conhecimento do local e ódio direto contra Jonathan.",
+        ]
+      : finalVerdict === "jacob-daniel"
+        ? [
+            "O registro militar confirma a identidade de Jacob, mas não sua presença no crime.",
+            "A fatura do Hotel Carvelle dá suporte ao álibi de Daniel.",
+            "A hipótese não explica o SMS de chantagem enviado por Richard.",
+          ]
+        : [
+            "A fatura do Luxe Hotel coloca Monica fora da cidade.",
+            "O SMS de Richard aponta para chantagem e dinheiro desaparecido.",
+            "A demissão e o diário de Emily continuam sem explicação nessa hipótese.",
+          ];
 
   const complete = (next: number, message: string) => {
     playSfx("success");
@@ -247,6 +371,17 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     window.setTimeout(() => setObjective(next), 900);
   };
 
+  const finishAlternate = (
+    verdict: "emily-richard" | "jacob-daniel" | "monica-alone",
+    message: string,
+  ) => {
+    playSfx(verdict === "emily-richard" ? "success" : "error");
+    setFinalVerdict(verdict);
+    setCompleted((prev) => (prev.includes(4) ? prev : [...prev, 4]));
+    setAnswer(message);
+    setReportOpen(true);
+  };
+
   const checkChoice = (value: string) => {
     if (objective === 1 && value === "jacob")
       return complete(2, "Objetivo 1 resolvido: o cliente secreto era Jacob Kline.");
@@ -258,9 +393,19 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         "Objetivo 3 resolvido: Richard sabia do dinheiro desaparecido e ia encontrar Jonathan.",
       );
     if (objective === 4 && value === "emily-richard")
-      return complete(
-        5,
+      return finishAlternate(
+        "emily-richard",
         "Caso Monroe solucionado: Emily matou Jonathan e Richard estava trabalhando com ela.",
+      );
+    if (objective === 4 && value === "jacob-daniel")
+      return finishAlternate(
+        "jacob-daniel",
+        "Hipótese registrada: você apontou Jacob e Daniel, mas o relatório mostrará as contradições dessa leitura.",
+      );
+    if (objective === 4 && value === "monica-alone")
+      return finishAlternate(
+        "monica-alone",
+        "Hipótese registrada: você apontou Monica sozinha, mas o relatório mostrará quais provas ficaram sem explicação.",
       );
     playSfx("error");
     setMistakes((value) => value + 1);
@@ -417,6 +562,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                   }}
                   className="border border-border p-3 text-left text-sm hover:border-primary"
                 >
+                  {doc.image && (
+                    <img
+                      src={doc.image}
+                      alt={`Página original do PDF: ${doc.title}`}
+                      className="mb-3 h-32 w-full object-cover object-top opacity-80"
+                    />
+                  )}
                   {doc.title}
                 </button>
               ))}
@@ -550,6 +702,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       {opened && (
         <Overlay onClose={() => setOpened(null)}>
           <h2 className="font-display text-2xl">{opened.title}</h2>
+          {opened.image && (
+            <img
+              src={opened.image}
+              alt={`Página original do PDF: ${opened.title}`}
+              className="mt-4 max-h-[55vh] w-full object-contain"
+            />
+          )}
           <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">{opened.body}</p>
           {opened.audio && (
             <div className="mt-5">
@@ -591,25 +750,15 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             <ReportMetric label="Erros / dicas" value={`${mistakes} / ${hintsUsed}`} />
           </div>
           <section className="mt-6 border-t border-border pt-5 text-sm leading-relaxed">
-            <h3 className="font-display text-xl">Conclusão registrada</h3>
-            <p className="mt-3">
-              Emily Parker matou Jonathan Monroe e Richard Stevens trabalhou com ela. Richard mentiu
-              sobre o álibi porque Amara estava em Nova York; o dinheiro desaparecido e a chantagem
-              ligavam Richard ao crime. Emily tinha acesso à casa, motivo financeiro e raiva
-              documentada no diário.
-            </p>
+            <h3 className="font-display text-xl">{verdictTitle}</h3>
+            <p className="mt-3">{verdictSummary}</p>
           </section>
           <section className="mt-5 border-t border-border pt-5 text-sm leading-relaxed">
             <h3 className="font-display text-xl">Três provas principais</h3>
             <ol className="mt-3 list-decimal space-y-2 pl-5">
-              <li>
-                O jornal coloca Amara em uma gala em Nova York, desmontando o álibi de Richard.
-              </li>
-              <li>O SMS apagado mostra Richard chantageando Jonathan por cinquenta mil dólares.</li>
-              <li>
-                O diário de Emily registra motivo, conhecimento do local e ódio direto contra
-                Jonathan.
-              </li>
+              {verdictProofs.map((proof) => (
+                <li key={proof}>{proof}</li>
+              ))}
             </ol>
           </section>
           <p className="mt-6 border-l-2 border-primary pl-3 text-xs leading-relaxed text-muted-foreground">

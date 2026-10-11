@@ -111,6 +111,7 @@ export function Game() {
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
+  const [showMenu, setShowMenu] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<AudioContext | null>(null);
 
@@ -137,8 +138,19 @@ export function Game() {
     };
   }, []);
 
+  if (showMenu) {
+    return (
+      <MainMenu
+        onSelect={(nextCase) => {
+          setCaseMode(nextCase);
+          setShowMenu(false);
+        }}
+      />
+    );
+  }
+
   if (caseMode === "monroe") {
-    return <MonroeCase onBack={() => setCaseMode("ortega")} />;
+    return <MonroeCase onBack={() => setShowMenu(true)} />;
   }
 
   const toggleSound = () => {
@@ -633,10 +645,10 @@ export function Game() {
           </button>
           <button
             type="button"
-            onClick={() => setCaseMode("monroe")}
+            onClick={() => setShowMenu(true)}
             className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
-            Caso Monroe
+            Menu principal
           </button>
           <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
         </div>
@@ -948,6 +960,63 @@ export function Game() {
         </div>
       )}
     </Shell>
+  );
+}
+
+function MainMenu({ onSelect }: { onSelect: (nextCase: "ortega" | "monroe") => void }) {
+  return (
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
+      <div className="mx-auto max-w-5xl">
+        <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+          Dexter · Arquivos de investigação
+        </p>
+        <h1 className="mt-3 max-w-3xl font-display text-5xl leading-tight sm:text-7xl">
+          Escolha seu caso
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          Entre em um arquivo, examine documentos, ouça depoimentos e construa uma conclusão que
+          sobreviva às provas.
+        </p>
+        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          <button
+            onClick={() => onSelect("ortega")}
+            className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+              Episódio 1 · Miami
+            </p>
+            <h2 className="mt-3 font-display text-3xl">Turno da Noite</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Reconstrua o caso Ortega durante um turno em Homicídios. Sangue, documentos e o Código
+              de Harry esperam por você.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
+              Abrir arquivo →
+            </span>
+          </button>
+          <button
+            onClick={() => onSelect("monroe")}
+            className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+              Arquivo Greenfield · 20/05/2023
+            </p>
+            <h2 className="mt-3 font-display text-3xl">O Caso Monroe</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Um dossiê em quatro objetivos, com interrogatórios completos, áudios opcionais, cifras
+              e relatório final alternativo.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
+              Abrir dossiê →
+            </span>
+          </button>
+        </div>
+        <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
+          <p>ARQUIVOS DISPONÍVEIS: 02</p>
+          <p className="mt-2">NOVOS CASOS: em preparação · sem data de liberação</p>
+        </div>
+      </div>
+    </main>
   );
 }
 
