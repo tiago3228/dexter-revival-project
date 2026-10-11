@@ -3,7 +3,14 @@ import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
 import { finishCaseTimer } from "./caseTimer";
 
+type Difficulty = "investigador" | "detetive" | "dexter";
 type Clue = { id: string; title: string; place: string; text: string };
+
+const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: string }[] = [
+  { id: "investigador", title: "Investigador", subtitle: "Fácil", details: "Pistas mais orientadas, dicas de Jane e requisitos mais acessíveis." },
+  { id: "detetive", title: "Detetive", subtitle: "Normal", details: "Cruze evidências, examine contradições e escolha cuidadosamente os suspeitos." },
+  { id: "dexter", title: "Dexter", subtitle: "Difícil", details: "Investigue tudo, interrogue todos e resolva conexões sem depender de dicas." },
+];
 
 const CLUES: Clue[] = [
   {
@@ -75,6 +82,7 @@ export function MentalistCase({
   soundOn: boolean;
   onToggleSound: () => void;
 }) {
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [found, setFound] = useState<string[]>([]);
   const [selectedClues, setSelectedClues] = useState<string[]>([]);
   const [interviewed, setInterviewed] = useState<string[]>([]);
@@ -176,7 +184,7 @@ export function MentalistCase({
     }
   };
 
-  const allCoreClues = ["call", "ledger", "feather"].every((id) => found.includes(id));
+  const allCoreClues = (difficulty === "dexter" ? CLUES.map((clue) => clue.id) : ["call", "ledger", "feather"]).every((id) => found.includes(id));
   const connectionsSolved =
     selectedClues.includes("call+ledger") && selectedClues.includes("feather+ledger");
 
@@ -229,7 +237,8 @@ export function MentalistCase({
 
   const accuse = () => {
     startAmbient();
-    if (!allCoreClues || !connectionsSolved || interviewed.length < 2) {
+    const requiredInterviews = difficulty === "dexter" ? 3 : difficulty === "investigador" ? 1 : 2;
+    if (!allCoreClues || !connectionsSolved || interviewed.length < requiredInterviews) {
       setHarryLine(
         "Uma acusação não substitui o trabalho que ainda falta. Complete as conexões e os depoimentos.",
       );
@@ -255,7 +264,7 @@ export function MentalistCase({
     const correctActions = found.length + selectedClues.length + interviewed.length + 1;
     recordCaseCompletion({
       caseId: "mentalist",
-      score: Math.max(0, 100 - mistakes * 8 - (hint ? 12 : 0)),
+      score: Math.max(0, 100 - mistakes * (difficulty === "investigador" ? 5 : 8) - (hint ? 12 : 0) - (difficulty === "dexter" ? 0 : difficulty === "detetive" ? 5 : 10)),
       hints: hint ? 1 : 0,
       mistakes,
       correctConclusion: true,
@@ -331,7 +340,9 @@ export function MentalistCase({
 
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
-        <section className="mt-6 border border-primary/40 bg-card/40 p-4 sm:p-6">
+        <section className="mt-6 overflow-hidden border border-primary/40 bg-card/40">
+          <img src="/images/red-john-investigation.webp" alt="Dexter Morgan e Patrick Jane analisam juntos o sorriso vermelho de Red John numa parede coberta de pistas" className="block max-h-[560px] w-full object-cover object-center" />
+          <div className="p-4 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
             Briefing · Dexter + Patrick Jane
           </p>
@@ -356,8 +367,31 @@ export function MentalistCase({
               antes de a polícia decidir fazê-lo. E depois prove.” — Patrick Jane
             </blockquote>
           )}
+          </div>
         </section>
 
+        {difficulty === null ? (
+          <section className="mt-6 border border-primary/50 bg-card/40 p-4 sm:p-6">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Seleção de dificuldade</p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl">Escolha como vai caçar Red John</h2>
+            <p className="mt-2 text-sm text-muted-foreground">A dificuldade altera os requisitos para fechar o caso e a pontuação final.</p>
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              {DIFFICULTIES.map((item) => (
+                <button key={item.id} onClick={() => setDifficulty(item.id)} className="min-h-40 border border-border bg-background/40 p-4 text-left transition hover:border-primary hover:bg-primary/5">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">{item.subtitle}</span>
+                  <span className="mt-2 block font-display text-2xl">{item.title}</span>
+                  <span className="mt-2 block text-sm text-muted-foreground">{item.details}</span>
+                  <span className="mt-4 block font-mono text-xs uppercase tracking-wider text-primary">Selecionar →</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : (
+        <>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border border-primary/40 bg-primary/5 p-3">
+          <p className="font-mono text-xs uppercase tracking-wider text-primary">Dificuldade: {DIFFICULTIES.find((item) => item.id === difficulty)?.title}</p>
+          <button onClick={() => setDifficulty(null)} className="min-h-9 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary">Trocar dificuldade</button>
+        </div>
         <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="border border-border bg-card/30 p-4 sm:p-6">
             <h2 className="font-display text-2xl">1. Recolha de evidências</h2>
@@ -499,6 +533,9 @@ export function MentalistCase({
             </section>
           </div>
         </div>
+
+        </>
+        )}
 
         {feedback && (
           <p
