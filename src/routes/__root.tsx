@@ -78,14 +78,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Dexter — The Game | Investigação Criminal" },
+      {
+        name: "description",
+        content:
+          "Entre no universo de Dexter Morgan, investigue cenas de crime, reúna evidências e descubra a verdade.",
+      },
+      { name: "author", content: "Dexter — The Game" },
+      { property: "og:title", content: "Dexter — The Game | Investigação Criminal" },
+      {
+        property: "og:description",
+        content:
+          "Entre no universo de Dexter Morgan, investigue cenas de crime, reúna evidências e descubra a verdade.",
+      },
       { property: "og:type", content: "website" },
+      { name: "og:site_name", content: "Dexter — The Game" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
