@@ -110,8 +110,16 @@ export function Game() {
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
-  const [musicVolume, setMusicVolume] = useState(0.28);
-  const [ambientVolume, setAmbientVolume] = useState(0.28);
+  const [musicVolume, setMusicVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.28;
+    const saved = Number(window.localStorage.getItem("dexter-music-volume"));
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
+  });
+  const [ambientVolume, setAmbientVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.28;
+    const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
+  });
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -143,6 +151,14 @@ export function Game() {
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = musicVolume;
   }, [musicVolume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("dexter-music-volume", String(musicVolume));
+  }, [musicVolume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("dexter-ortega-ambient-volume", String(ambientVolume));
+  }, [ambientVolume]);
 
   const toggleSound = () => {
     setSoundOn((current) => {

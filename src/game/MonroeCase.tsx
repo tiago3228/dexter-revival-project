@@ -214,7 +214,11 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [answer, setAnswer] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Objective[]>([]);
   const [soundOn, setSoundOn] = useState(true);
-  const [volume, setVolume] = useState(0.65);
+  const [volume, setVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.65;
+    const saved = Number(window.localStorage.getItem("dexter-monroe-ambient-volume"));
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.65;
+  });
   const [mistakes, setMistakes] = useState(0);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
@@ -258,6 +262,10 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       ambientRef.current.gains[0].gain.value = 0.045 * volume;
       ambientRef.current.gains[1].gain.value = 0.012 * volume;
     }
+  }, [volume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("dexter-monroe-ambient-volume", String(volume));
   }, [volume]);
 
   useEffect(() => {
