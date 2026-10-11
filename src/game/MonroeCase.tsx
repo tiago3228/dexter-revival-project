@@ -801,13 +801,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             Homicídios · Arquivo Greenfield
           </p>
           <h2 className="mt-2 font-display text-3xl">O Caso Monroe</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-[0.85fr_1.15fr]">
-            <img
-              src="/images/monroe/page-4.jpg"
-              alt="Página original do PDF com a apresentação do Caso Monroe"
-              onClick={() => openZoom("/images/monroe/page-4.jpg", "Apresentação do Caso Monroe")}
-              className="max-h-[38rem] w-full cursor-zoom-in object-contain object-top"
-            />
+          <div className="mt-4">
             <div className="text-sm leading-relaxed">
               <p>
                 Você foi convocado para auxiliar em um caso de grande repercussão. O advogado
