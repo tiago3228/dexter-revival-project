@@ -20,7 +20,7 @@
 
 1. A campanha principal deve preservar a história efetivamente presente em `Dexter: The Game (2009)`.
 2. Os nomes dos SWFs indicam uma relação estrutural com cenas, locais ou personagens, mas não provam sozinhos uma missão, ordem ou acontecimento.
-3. A inspiração de *The Painscreek Killings* será aplicada à exploração, aos documentos, à conexão de pistas e à dedução — nunca à cópia de conteúdo, mapas, personagens ou textos.
+3. A inspiração de _The Painscreek Killings_ será aplicada à exploração, aos documentos, à conexão de pistas e à dedução — nunca à cópia de conteúdo, mapas, personagens ou textos.
 4. A fase-piloto pode demonstrar a nova filosofia investigativa, mas deve ser identificada como conteúdo novo até que exista prova de correspondência com o original.
 5. Cada episódio deve ter uma cronologia secreta, um mapa de evidências e puzzles justos. Esses elementos só podem ser preenchidos com fatos confirmados ou com conteúdo novo claramente rotulado.
 6. A meta de **6 a 10 puzzles por episódio** é uma regra de planejamento do remaster, não uma afirmação sobre a quantidade original.
@@ -60,31 +60,31 @@
 
 **Arquivos de cena identificados:**
 
-| Arquivo | Leitura estrutural segura | Estado narrativo |
-|---|---|---|
-| `dex001_apt_dex_master.swf` | Cena associada nominalmente ao apartamento de Dexter | `[HIPÓTESE]` local jogável ou evento; ordem e conteúdo `[PENDENTE]` |
-| `dex001_glade_donovan_kr_master.swf` | Variante nominal associada a Glade/Donovan, com sufixo `kr` | `[HIPÓTESE]` variante de cena ou estado; significado de `kr` `[PENDENTE]` |
-| `dex001_glade_donovan_master.swf` | Cena associada nominalmente a Glade/Donovan | `[PENDENTE]` conteúdo interno |
-| `dex001_hotel_hooker_master.swf` | Cena nominalmente associada a hotel/hooker | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_hotel_jaw_master.swf` | Cena nominalmente associada a hotel/Jaw | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_house_jaw_master.swf` | Cena nominalmente associada a casa/Jaw | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_house_rita_master.swf` | Cena nominalmente associada a casa/Rita | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_park_band_master.swf` | Cena nominalmente associada a parque/band | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_park_bayfront_itk_master.swf` | Variante nominalmente associada a parque/bayfront/ITK | `[HIPÓTESE]` variante de estado, minijogo ou evento; confirmar |
-| `dex001_park_bayfront_master.swf` | Cena nominalmente associada a parque/bayfront | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_park_test_master.swf` | Arquivo nominalmente associado a teste de parque | `[HIPÓTESE]` cena de teste/desenvolvimento; confirmar se entra no fluxo final |
-| `dex001_pimp_alley_master.swf` | Cena nominalmente associada a beco/Pimp | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_pimp_apt_master.swf` | Cena nominalmente associada a apartamento/Pimp | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_pimp_garage_master.swf` | Cena nominalmente associada a garagem/Pimp | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_pimp_garagenight_kr_master.swf` | Variante nominalmente associada a garagem noturna/Pimp | `[HIPÓTESE]` variante de estado ou evento; confirmar |
-| `dex001_pimp_garagenight_master.swf` | Cena nominalmente associada a garagem noturna/Pimp | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_pimp_sergei_kr_master.swf` | Variante nominalmente associada a Pimp/Sergei | `[HIPÓTESE]` variante de estado ou evento; confirmar |
-| `dex001_pimp_sergei_master.swf` | Cena nominalmente associada a Pimp/Sergei | `[PENDENTE]` conteúdo e papel na campanha |
-| `dex001_police_morgue_master.swf` | Cena nominalmente associada ao necrotério da polícia | `[PENDENTE]` conteúdo, evidências e ordem |
-| `dex001_police_station_master.swf` | Cena nominalmente associada à delegacia | `[CONFIRMADO]` há ligação estrutural com carregamento de conversas; narrativa `[PENDENTE]` |
-| `dex001_projects_jawex_master.swf` | Cena nominalmente associada a projetos/Jaw/ex | `[PENDENTE]` significado de `jawex` e conteúdo |
-| `dex001_projects_jawin_kr_master.swf` | Variante nominalmente associada a projetos/Jaw/in | `[HIPÓTESE]` variante de estado ou evento; confirmar |
-| `dex001_projects_jawin_master.swf` | Cena nominalmente associada a projetos/Jaw/in | `[PENDENTE]` significado e conteúdo |
+| Arquivo                                 | Leitura estrutural segura                                   | Estado narrativo                                                                           |
+| --------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `dex001_apt_dex_master.swf`             | Cena associada nominalmente ao apartamento de Dexter        | `[HIPÓTESE]` local jogável ou evento; ordem e conteúdo `[PENDENTE]`                        |
+| `dex001_glade_donovan_kr_master.swf`    | Variante nominal associada a Glade/Donovan, com sufixo `kr` | `[HIPÓTESE]` variante de cena ou estado; significado de `kr` `[PENDENTE]`                  |
+| `dex001_glade_donovan_master.swf`       | Cena associada nominalmente a Glade/Donovan                 | `[PENDENTE]` conteúdo interno                                                              |
+| `dex001_hotel_hooker_master.swf`        | Cena nominalmente associada a hotel/hooker                  | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_hotel_jaw_master.swf`           | Cena nominalmente associada a hotel/Jaw                     | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_house_jaw_master.swf`           | Cena nominalmente associada a casa/Jaw                      | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_house_rita_master.swf`          | Cena nominalmente associada a casa/Rita                     | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_park_band_master.swf`           | Cena nominalmente associada a parque/band                   | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_park_bayfront_itk_master.swf`   | Variante nominalmente associada a parque/bayfront/ITK       | `[HIPÓTESE]` variante de estado, minijogo ou evento; confirmar                             |
+| `dex001_park_bayfront_master.swf`       | Cena nominalmente associada a parque/bayfront               | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_park_test_master.swf`           | Arquivo nominalmente associado a teste de parque            | `[HIPÓTESE]` cena de teste/desenvolvimento; confirmar se entra no fluxo final              |
+| `dex001_pimp_alley_master.swf`          | Cena nominalmente associada a beco/Pimp                     | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_pimp_apt_master.swf`            | Cena nominalmente associada a apartamento/Pimp              | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_pimp_garage_master.swf`         | Cena nominalmente associada a garagem/Pimp                  | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_pimp_garagenight_kr_master.swf` | Variante nominalmente associada a garagem noturna/Pimp      | `[HIPÓTESE]` variante de estado ou evento; confirmar                                       |
+| `dex001_pimp_garagenight_master.swf`    | Cena nominalmente associada a garagem noturna/Pimp          | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_pimp_sergei_kr_master.swf`      | Variante nominalmente associada a Pimp/Sergei               | `[HIPÓTESE]` variante de estado ou evento; confirmar                                       |
+| `dex001_pimp_sergei_master.swf`         | Cena nominalmente associada a Pimp/Sergei                   | `[PENDENTE]` conteúdo e papel na campanha                                                  |
+| `dex001_police_morgue_master.swf`       | Cena nominalmente associada ao necrotério da polícia        | `[PENDENTE]` conteúdo, evidências e ordem                                                  |
+| `dex001_police_station_master.swf`      | Cena nominalmente associada à delegacia                     | `[CONFIRMADO]` há ligação estrutural com carregamento de conversas; narrativa `[PENDENTE]` |
+| `dex001_projects_jawex_master.swf`      | Cena nominalmente associada a projetos/Jaw/ex               | `[PENDENTE]` significado de `jawex` e conteúdo                                             |
+| `dex001_projects_jawin_kr_master.swf`   | Variante nominalmente associada a projetos/Jaw/in           | `[HIPÓTESE]` variante de estado ou evento; confirmar                                       |
+| `dex001_projects_jawin_master.swf`      | Cena nominalmente associada a projetos/Jaw/in               | `[PENDENTE]` significado e conteúdo                                                        |
 
 > **Cuidado:** `jaw`, `pimp`, `Donovan`, `Rita`, `Sergei`, `hooker`, `bayfront`, `ITK`, `jawin` e `jawex` são pistas dos nomes de arquivos. Não serão tratados como personagens, culpados, vítimas, capítulos ou objetivos confirmados até que os bytes dos SWFs, XMLs, vídeos, diálogos ou comportamento executado sustentem essa conclusão.
 
@@ -92,15 +92,15 @@
 
 Esta é uma **organização de pesquisa**, não uma ordem de campanha.
 
-| Bloco de investigação | Arquivos candidatos | O que pode ser investigado | Estado |
-|---|---|---|---|
-| Delegacia e perícia | `police_station`, `police_morgue` | entrada narrativa, evidências, conversas, laudos e transições | locais `[HIPÓTESE]`; conteúdo `[PENDENTE]` |
-| Apartamento e residência | `apt_dex`, `house_rita`, `house_jaw` | exploração doméstica, documentos, conversas e pistas pessoais | conteúdo `[PENDENTE]` |
-| Parque/bayfront | `park_band`, `park_bayfront`, `park_bayfront_itk`, `park_test` | espaço externo, investigação ambiental e variantes | conteúdo `[PENDENTE]` |
-| Hotel | `hotel_hooker`, `hotel_jaw` | cenas de hotel, personagens e possíveis eventos | conteúdo `[PENDENTE]` |
-| Pimp e garagem | `pimp_alley`, `pimp_apt`, `pimp_garage`, `pimp_garagenight`, variantes `kr` | cadeia de locais, minijogos e possíveis confrontos | conteúdo `[PENDENTE]` |
-| Projetos e Jaw | `projects_jawex`, `projects_jawin`, variante `kr` | área/estado ligado a Jaw | significado narrativo `[PENDENTE]` |
-| Glade/Donovan | `glade_donovan`, variante `kr` | eventos associados a Donovan; cisterna indicada no XML | eventos de gameplay parcialmente confirmados; narrativa `[PENDENTE]` |
+| Bloco de investigação    | Arquivos candidatos                                                         | O que pode ser investigado                                    | Estado                                                               |
+| ------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Delegacia e perícia      | `police_station`, `police_morgue`                                           | entrada narrativa, evidências, conversas, laudos e transições | locais `[HIPÓTESE]`; conteúdo `[PENDENTE]`                           |
+| Apartamento e residência | `apt_dex`, `house_rita`, `house_jaw`                                        | exploração doméstica, documentos, conversas e pistas pessoais | conteúdo `[PENDENTE]`                                                |
+| Parque/bayfront          | `park_band`, `park_bayfront`, `park_bayfront_itk`, `park_test`              | espaço externo, investigação ambiental e variantes            | conteúdo `[PENDENTE]`                                                |
+| Hotel                    | `hotel_hooker`, `hotel_jaw`                                                 | cenas de hotel, personagens e possíveis eventos               | conteúdo `[PENDENTE]`                                                |
+| Pimp e garagem           | `pimp_alley`, `pimp_apt`, `pimp_garage`, `pimp_garagenight`, variantes `kr` | cadeia de locais, minijogos e possíveis confrontos            | conteúdo `[PENDENTE]`                                                |
+| Projetos e Jaw           | `projects_jawex`, `projects_jawin`, variante `kr`                           | área/estado ligado a Jaw                                      | significado narrativo `[PENDENTE]`                                   |
+| Glade/Donovan            | `glade_donovan`, variante `kr`                                              | eventos associados a Donovan; cisterna indicada no XML        | eventos de gameplay parcialmente confirmados; narrativa `[PENDENTE]` |
 
 ## 6. Fase-piloto “Turno da Noite”
 
@@ -119,15 +119,15 @@ Esta é uma **organização de pesquisa**, não uma ordem de campanha.
 
 ### 6.2 Os sete puzzles encadeados
 
-| Nº | Puzzle | Tipo | Dificuldade | Pistas necessárias | Solução prevista | Consequência |
-|---:|---|---|---|---|---|---|
-| 1 | Ordem das gotas e caminho da vítima | forense/investigação | fácil | foto da cena e verso marcado | reconstruir o trajeto até o armário 17 | libera a busca documental seguinte |
-| 2 | Hora real da morte | cálculo forense | intermediária | dados de temperatura e relatório | `(37 − 30,4) ÷ 1,5 ≈ 22h30`; relatório aponta 01h00 | revela adulteração do laudo |
-| 3 | Contradição de Ruiz | dedução/documentos | fácil | depoimento e livro de detenção | Ruiz não poderia estar no bar às 21h | ele passa a ser suspeito verificável |
-| 4 | Janela de circulação de Doakes | exploração/furtividade | intermediária | rotina e registros do café | reconhecer janelas aproximadas de 00h40, 02h40 e 04h40 | ações arriscadas elevam a pressão narrativa |
-| 5 | Fechadura do armário | mecanismo | intermediária | regra visual dos pinos e soma | ordem decrescente sem repetição, total 14: 5-4-3-2 | abre o acesso ao próximo documento |
-| 6 | Mensagem cifrada | criptografia | intermediária | data do primeiro crime | cifra de César com chave 7 | indica o armazém nove das docas |
-| 7 | Luva plantada | prova plantada/dedução | difícil | tamanho da luva e ponto do porto | tamanho M não corresponde a Tellez; ponto do porto contradiz a acusação | separa culpado real de bode expiatório |
+|  Nº | Puzzle                              | Tipo                   | Dificuldade   | Pistas necessárias               | Solução prevista                                                        | Consequência                                |
+| --: | ----------------------------------- | ---------------------- | ------------- | -------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------- |
+|   1 | Ordem das gotas e caminho da vítima | forense/investigação   | fácil         | foto da cena e verso marcado     | reconstruir o trajeto até o armário 17                                  | libera a busca documental seguinte          |
+|   2 | Hora real da morte                  | cálculo forense        | intermediária | dados de temperatura e relatório | `(37 − 30,4) ÷ 1,5 ≈ 22h30`; relatório aponta 01h00                     | revela adulteração do laudo                 |
+|   3 | Contradição de Ruiz                 | dedução/documentos     | fácil         | depoimento e livro de detenção   | Ruiz não poderia estar no bar às 21h                                    | ele passa a ser suspeito verificável        |
+|   4 | Janela de circulação de Doakes      | exploração/furtividade | intermediária | rotina e registros do café       | reconhecer janelas aproximadas de 00h40, 02h40 e 04h40                  | ações arriscadas elevam a pressão narrativa |
+|   5 | Fechadura do armário                | mecanismo              | intermediária | regra visual dos pinos e soma    | ordem decrescente sem repetição, total 14: 5-4-3-2                      | abre o acesso ao próximo documento          |
+|   6 | Mensagem cifrada                    | criptografia           | intermediária | data do primeiro crime           | cifra de César com chave 7                                              | indica o armazém nove das docas             |
+|   7 | Luva plantada                       | prova plantada/dedução | difícil       | tamanho da luva e ponto do porto | tamanho M não corresponde a Tellez; ponto do porto contradiz a acusação | separa culpado real de bode expiatório      |
 
 ### 6.3 Finais da fase-piloto
 
@@ -176,15 +176,15 @@ A ficha abaixo será preenchida somente após a evidência correspondente ser en
 
 A meta inicial é generosa, mas não definitiva:
 
-| Categoria | Meta por episódio | Regra de uso |
-|---|---:|---|
-| Investigação ambiental | 1–2 | observar cenário sem marcador brilhante |
-| Documentos e camadas escondidas | 1–2 | verso, últimas páginas, objetos dentro de objetos |
-| Dedução/contradição | 1–2 | exigir duas fontes independentes |
-| Cronologia/cálculo forense | 1 | registrar premissas no caderno |
-| Criptografia ou mecanismo | 1 | chave dedutível no mundo |
-| Puzzle encadeado | 1–2 | desbloquear pista em outro local |
-| Forense/minijogo original | 1 | preservar apenas quando fizer sentido |
+| Categoria                       | Meta por episódio | Regra de uso                                      |
+| ------------------------------- | ----------------: | ------------------------------------------------- |
+| Investigação ambiental          |               1–2 | observar cenário sem marcador brilhante           |
+| Documentos e camadas escondidas |               1–2 | verso, últimas páginas, objetos dentro de objetos |
+| Dedução/contradição             |               1–2 | exigir duas fontes independentes                  |
+| Cronologia/cálculo forense      |                 1 | registrar premissas no caderno                    |
+| Criptografia ou mecanismo       |                 1 | chave dedutível no mundo                          |
+| Puzzle encadeado                |               1–2 | desbloquear pista em outro local                  |
+| Forense/minijogo original       |                 1 | preservar apenas quando fizer sentido             |
 
 Isso produz aproximadamente **6–10 desafios por episódio**, mas a contagem final só será fixada quando a duração e o número real de episódios forem confirmados.
 

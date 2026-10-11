@@ -14,7 +14,10 @@ export type DocId =
   | "fichas"
   | "registro"
   | "bilhete"
-  | "codigo";
+  | "codigo"
+  | "rede"
+  | "compartimento"
+  | "reacao";
 
 export const DOCS: Record<DocId, { title: string; body: string }> = {
   legista: {
@@ -27,8 +30,7 @@ export const DOCS: Record<DocId, { title: string; body: string }> = {
   },
   tabela: {
     title: "Tabela de resfriamento corporal (parede do laboratório)",
-    body:
-      "Temperatura normal do corpo: 37,0 °C.\nEm ambiente climatizado, o corpo perde em média 1,5 °C por hora nas primeiras 12 horas.",
+    body: "Temperatura normal do corpo: 37,0 °C.\nEm ambiente climatizado, o corpo perde em média 1,5 °C por hora nas primeiras 12 horas.",
   },
   masuka: {
     title: "Post-it de Masuka",
@@ -38,49 +40,42 @@ export const DOCS: Record<DocId, { title: string; body: string }> = {
   },
   microscopio: {
     title: "Resultado do microscópio",
-    body:
-      "Amostra do banheiro: sangue tipo O−, compatível com a vítima.\nNenhum outro tipo sanguíneo encontrado na cena.",
+    body: "Amostra do banheiro: sangue tipo O−, compatível com a vítima.\nNenhum outro tipo sanguíneo encontrado na cena.",
   },
   versoFoto: {
     title: "Verso da foto do banheiro",
-    body: "Escrito à mão, quase apagado: \"Armário 17 — o que a polícia não viu está lá.\"",
+    body: 'Escrito à mão, quase apagado: "Armário 17 — o que a polícia não viu está lá."',
   },
   depRuiz: {
     title: "Depoimento — Carlos Ruiz (ex-namorado)",
-    body:
-      "\"Eu estava no bar Tropicana desde as 21h. Fiquei lá até depois da meia-noite. Não saí nenhuma vez. Pode perguntar pra qualquer um.\"",
+    body: '"Eu estava no bar Tropicana desde as 21h. Fiquei lá até depois da meia-noite. Não saí nenhuma vez. Pode perguntar pra qualquer um."',
   },
   depTellez: {
     title: "Depoimento — Marco Tellez (vizinho)",
-    body:
-      "\"Eu trabalho de noite no porto. Entrei às 20h e saí às 4h. Quando cheguei em casa, já tinha polícia no prédio.\"",
+    body: '"Eu trabalho de noite no porto. Entrei às 20h e saí às 4h. Quando cheguei em casa, já tinha polícia no prédio."',
   },
   depTeresa: {
     title: "Depoimento — Teresa Vidal (bartender do Tropicana)",
-    body:
-      "\"O Carlos? Chegou tarde, bem depois das 23h, com a camisa molhada como se tivesse lavado alguma coisa. Pediu um rum duplo.\"",
+    body: '"O Carlos? Chegou tarde, bem depois das 23h, com a camisa molhada como se tivesse lavado alguma coisa. Pediu um rum duplo."',
   },
   detencao: {
     title: "Livro de detenção da delegacia — noite do crime",
-    body:
-      "20:40 — Carlos Ruiz detido para averiguação (briga de trânsito).\n22:05 — Carlos Ruiz liberado sem acusação.\nObs.: a delegacia fica a 10 minutos do apto 4B.",
+    body: "20:40 — Carlos Ruiz detido para averiguação (briga de trânsito).\n22:05 — Carlos Ruiz liberado sem acusação.\nObs.: a delegacia fica a 10 minutos do apto 4B.",
   },
   ponto: {
     title: "Fax: ponto eletrônico do Porto de Miami",
-    body:
-      "Funcionário: Marco Tellez.\nEntrada 19:58 — Saída 04:02.\nNenhuma saída intermediária registrada. Câmera do portão confirma.",
+    body: "Funcionário: Marco Tellez.\nEntrada 19:58 — Saída 04:02.\nNenhuma saída intermediária registrada. Câmera do portão confirma.",
   },
   fichas: {
     title: "Fichas dos envolvidos",
-    body:
-      "Carlos Ruiz — tipo sanguíneo O+. Luvas: tamanho M.\nMarco Tellez — tipo sanguíneo A+. Mãos grandes, usa luvas tamanho GG (ficha do porto).\nTeresa Vidal — tipo sanguíneo B+.",
+    body: "Carlos Ruiz — tipo sanguíneo O+. Luvas: tamanho M.\nMarco Tellez — tipo sanguíneo A+. Mãos grandes, usa luvas tamanho GG (ficha do porto).\nTeresa Vidal — tipo sanguíneo B+.",
   },
   registro: {
     title: "Registro de entrada da sala de evidências",
     body:
       "Doakes faz a ronda da sala a noite toda, mas sai sempre no mesmo padrão:\n" +
       "00:40 saída (café) — 01:10 retorno\n02:40 saída (café) — 03:10 retorno\n" +
-      "Anotação do plantão: \"Ele repete isso a cada duas horas, igual relógio.\"",
+      'Anotação do plantão: "Ele repete isso a cada duas horas, igual relógio."',
   },
   bilhete: {
     title: "Bilhete cifrado (dentro do armário 17)",
@@ -88,8 +83,23 @@ export const DOCS: Record<DocId, { title: string; body: string }> = {
   },
   codigo: {
     title: "O Código de Harry",
+    body: "1. Tenha certeza de que a pessoa matou.\n2. Tenha prova que a polícia não consegue usar.\n3. Nunca acuse sem fechar cada ponta solta.\n4. Não seja pego.",
+  },
+  rede: {
+    title: "Mapa de nomes, datas e endereços",
     body:
-      "1. Tenha certeza de que a pessoa matou.\n2. Tenha prova que a polícia não consegue usar.\n3. Nunca acuse sem fechar cada ponta solta.\n4. Não seja pego.",
+      "Carlos Ruiz — apartamento 4B, Little Havana — ex-namorado de Lucía.\n" +
+      "Teresa Vidal — bar Tropicana, South Beach — bartender no turno da noite.\n" +
+      "Marco Tellez — Porto de Miami, armazém 9 — vizinho de Lucía.\n\n" +
+      "O relatório do legista cita as docas como local de um caso semelhante em 7 de março. O endereço de Ruiz fica no caminho entre a delegacia e o armazém 9.",
+  },
+  compartimento: {
+    title: "Compartimento oculto",
+    body: "Atrás do filtro do ar-condicionado há uma fotografia dobrada e um recibo de lavanderia. A fotografia mostra a camisa de Carlos Ruiz molhada na noite do crime. O recibo marca 22:18, dez minutos antes da hora real da morte.",
+  },
+  reacao: {
+    title: "O caso mudou de lugar",
+    body: "Quando você volta ao laboratório, a cópia da foto não está mais na bancada. No lugar, alguém deixou uma anotação: 'Você está olhando para o homem errado.' A tinta ainda está fresca. O culpado sabe que alguém está reconstruindo a noite.",
   },
 };
 
