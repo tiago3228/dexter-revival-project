@@ -1097,9 +1097,107 @@ function MainMenu({
   soundOn: boolean;
   onToggleSound: () => void;
 }) {
+  const [showReflections, setShowReflections] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
+
+  const closeVideo = () => setActiveVideo(null);
+
+  useEffect(() => {
+    if (activeVideo === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeVideo();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activeVideo]);
+
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
+      {activeVideo !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-3 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Reflexões de Dexter Morgan — Parte ${activeVideo}`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeVideo();
+          }}
+        >
+          <div className="flex max-h-full w-full max-w-6xl flex-col">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-white sm:text-base">
+                Reflexões de Dexter Morgan · Parte {activeVideo}
+              </h2>
+              <button
+                type="button"
+                onClick={closeVideo}
+                className="min-h-11 border border-white/40 px-4 py-2 font-mono text-xs uppercase tracking-wider text-white hover:border-red-500 hover:bg-red-950"
+              >
+                Fechar ✕
+              </button>
+            </div>
+            <video
+              key={activeVideo}
+              className="max-h-[78vh] w-full flex-1 bg-black"
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              src={activeVideo === 1
+                ? "/videos/Reflexoes-Seriado-Dexter-Dublado-1-Renato-1080p-h264.mp4"
+                : "/videos/Reflexoes-Seriado-Dexter-Dublado-2-Renato-1080p-h264.mp4"}
+            >
+              Seu navegador não suporta reprodução de vídeo.
+            </video>
+            <p className="mt-3 text-center text-xs text-white/60">
+              Para fechar, use o botão acima ou pressione Esc.
+            </p>
+          </div>
+        </div>
+      )}
       <div className="mx-auto max-w-5xl">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary sm:text-sm">
+            Dexter · Passageiro Sombrio
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowReflections((visible) => !visible)}
+            aria-expanded={showReflections}
+            className="min-h-11 border border-primary bg-primary/10 px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:text-sm"
+          >
+            Reflexões de Dexter Morgan {showReflections ? "−" : "+"}
+          </button>
+        </div>
+        {showReflections && (
+          <section className="mb-8 border border-primary/50 bg-card/60 p-4 sm:p-6" aria-label="Reflexões de Dexter Morgan">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+              Conteúdo especial
+            </p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl">Reflexões de Dexter Morgan</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Escolha uma parte para assistir. Os vídeos serão carregados aqui quando os arquivos forem adicionados à pasta public/videos.
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setActiveVideo(1)}
+                className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
+              >
+                <span className="block font-mono text-xs uppercase tracking-widest text-primary">Parte 1</span>
+                <span className="mt-1 block font-display text-xl">Reflexões · Episódio 1</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveVideo(2)}
+                className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
+              >
+                <span className="block font-mono text-xs uppercase tracking-widest text-primary">Parte 2</span>
+                <span className="mt-1 block font-display text-xl">Reflexões · Episódio 2</span>
+              </button>
+            </div>
+          </section>
+        )}
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
           Dexter · Arquivos de investigação
         </p>
