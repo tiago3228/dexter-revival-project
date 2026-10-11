@@ -2,6 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
+type SavedInvestigation = {
+  version: 1;
+  difficulty: Difficulty;
+  visited: string[];
+  found: string[];
+  activeLocation: string;
+  safeOpen: boolean;
+  depotOpen: boolean;
+  timelineAnswer: string;
+  timelineSolved: boolean;
+  forensicAnswer: string;
+  forensicSolved: boolean;
+  suspect: string;
+  ending: boolean;
+  accusationSubmitted: boolean;
+  hintsUsed: string[];
+  mistakes: number;
+};
+const SAVE_KEY = "dexter-last-confession-save";
+const isDifficulty = (value: unknown): value is Difficulty =>
+  value === "investigador" || value === "detetive" || value === "dexter";
 
 const EVIDENCE: Evidence[] = [
   {
@@ -118,6 +139,67 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [accusationSubmitted, setAccusationSubmitted] = useState(false);
   const [hintDialog, setHintDialog] = useState<{ id: string; hint: string; revealed: boolean } | null>(null);
   const [hintsUsed, setHintsUsed] = useState<string[]>([]);
+  const [mistakes, setMistakes] = useState(0);
+  const [saveReady, setSaveReady] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(SAVE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<SavedInvestigation>;
+        if (saved.version === 1 && isDifficulty(saved.difficulty)) {
+          setDifficulty(saved.difficulty);
+          setVisited(Array.isArray(saved.visited) ? saved.visited.filter((id): id is string => LOCATIONS.some((item) => item.id === id)) : []);
+          setFound(Array.isArray(saved.found) ? saved.found.filter((id): id is string => EVIDENCE.some((item) => item.id === id)) : []);
+          setActiveLocation(LOCATIONS.some((item) => item.id === saved.activeLocation) ? (saved.activeLocation as string) : "house");
+          setSafeOpen(saved.safeOpen === true);
+          setDepotOpen(saved.depotOpen === true);
+          setTimelineAnswer(typeof saved.timelineAnswer === "string" ? saved.timelineAnswer : "");
+          setTimelineSolved(saved.timelineSolved === true);
+          setForensicAnswer(typeof saved.forensicAnswer === "string" ? saved.forensicAnswer : "");
+          setForensicSolved(saved.forensicSolved === true);
+          setSuspect(typeof saved.suspect === "string" ? saved.suspect : "");
+          setEnding(saved.ending === true);
+          setAccusationSubmitted(saved.accusationSubmitted === true);
+          setHintsUsed(Array.isArray(saved.hintsUsed) ? saved.hintsUsed.filter((id): id is string => ["safe", "depot", "timeline", "forensics"].includes(id)) : []);
+          setMistakes(typeof saved.mistakes === "number" && Number.isFinite(saved.mistakes) ? Math.max(0, Math.floor(saved.mistakes)) : 0);
+        } else {
+          window.localStorage.removeItem(SAVE_KEY);
+        }
+      }
+    } catch {
+      window.localStorage.removeItem(SAVE_KEY);
+    } finally {
+      setSaveReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!saveReady) return;
+    if (!difficulty) {
+      window.localStorage.removeItem(SAVE_KEY);
+      return;
+    }
+    const saved: SavedInvestigation = {
+      version: 1,
+      difficulty,
+      visited,
+      found,
+      activeLocation,
+      safeOpen,
+      depotOpen,
+      timelineAnswer,
+      timelineSolved,
+      forensicAnswer,
+      forensicSolved,
+      suspect,
+      ending,
+      accusationSubmitted,
+      hintsUsed,
+      mistakes,
+    };
+    window.localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
+  }, [saveReady, difficulty, visited, found, activeLocation, safeOpen, depotOpen, timelineAnswer, timelineSolved, forensicAnswer, forensicSolved, suspect, ending, accusationSubmitted, hintsUsed, mistakes]);
 
   useEffect(() => {
     if (difficulty) window.localStorage.setItem("dexter-painscreek-difficulty", difficulty);
@@ -130,7 +212,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     [currentLocation],
   );
   const allFound = found.length === EVIDENCE.length;
-  const score = Math.max(0, 100 - hintsUsed.length * 15);
+  const score = Math.max(0, 100 - hintsUsed.length * 15 - mistakes * 5);
   const finalRank = suspect !== "Paul Renner"
     ? "Investigação inconclusiva"
     : score === 100
@@ -170,12 +252,36 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       );
       setCode("");
     } else {
+      setMistakes((current) => current + 1);
       setCodeMessage(
         difficulty === "investigador"
           ? "Código incorreto. Confira a carta de Eleanor para o cofre ou a foto do cais para a caixa."
           : "Código incorreto. Cruze as anotações e os documentos encontrados.",
       );
     }
+  };
+
+  const resetCase = (nextDifficulty: Difficulty | null = null) => {
+    setDifficulty(nextDifficulty);
+    setVisited([]);
+    setFound([]);
+    setActiveLocation("house");
+    setCode("");
+    setCodeMessage("");
+    setSafeOpen(false);
+    setDepotOpen(false);
+    setTimelineAnswer("");
+    setTimelineSolved(false);
+    setForensicAnswer("");
+    setForensicSolved(false);
+    setSuspect("");
+    setEnding(false);
+    setAccusationSubmitted(false);
+    setHintDialog(null);
+    setHintsUsed([]);
+    setMistakes(0);
+    window.localStorage.removeItem(SAVE_KEY);
+    if (nextDifficulty === null) window.localStorage.removeItem("dexter-painscreek-difficulty");
   };
 
   if (!difficulty) {
@@ -204,7 +310,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             {DIFFICULTIES.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setDifficulty(item.id)}
+                onClick={() => resetCase(item.id)}
                 className="border border-border bg-card/50 p-5 text-left transition hover:border-primary hover:bg-card"
               >
                 <p className="font-mono text-xs uppercase tracking-widest text-primary">
@@ -253,11 +359,13 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <p className="mt-2">
               EVIDÊNCIAS: {found.length}/{EVIDENCE.length}
             </p>
+            <p className="mt-2">PONTUAÇÃO: {score}/100</p>
+            <p className="mt-2 text-[10px] text-primary">{saveReady ? "SALVAMENTO AUTOMÁTICO ATIVO" : "CARREGANDO ARQUIVO..."}</p>
             <button
               className="mt-3 underline hover:text-primary"
-              onClick={() => setDifficulty(null)}
+              onClick={() => resetCase()}
             >
-              Alterar dificuldade
+              Reiniciar / trocar dificuldade
             </button>
           </div>
         </div>
@@ -336,6 +444,58 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             )}
           </section>
         </div>
+
+        <section className="mt-6 border border-border p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Caderno de investigação</p>
+              <h2 className="mt-2 font-display text-2xl">Dossiê de evidências</h2>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground">{found.length} DE {EVIDENCE.length} REGISTRADAS</p>
+          </div>
+          <div className="mt-4 h-1.5 overflow-hidden bg-muted">
+            <div className="h-full bg-primary transition-all" style={{ width: `${(found.length / EVIDENCE.length) * 100}%` }} />
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {EVIDENCE.map((item) => {
+              const registered = found.includes(item.id);
+              const locationId = LOCATIONS.find((location) => location.name === item.location)?.id ?? "house";
+              return (
+                <article key={item.id} className="border border-border bg-card/30 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-medium">{item.title}</h3>
+                    <span className={`shrink-0 font-mono text-[10px] ${registered ? "text-primary" : "text-muted-foreground"}`}>{registered ? "REGISTRADA" : "PENDENTE"}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{item.location}</p>
+                  {registered ? (
+                    <p className="mt-3 whitespace-pre-line text-sm leading-relaxed">{item.body}</p>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted-foreground">Esta evidência ainda não foi examinada.</p>
+                  )}
+                  <button
+                    onClick={() => inspectLocation(locationId)}
+                    className="mt-3 border border-border px-3 py-2 font-mono text-[10px] text-primary hover:border-primary"
+                  >
+                    {activeLocation === locationId ? "LOCAL SELECIONADO" : "SELECIONAR LOCAL"}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: "Locais visitados", value: `${visited.length}/${LOCATIONS.length}` },
+              { label: "Mecanismos abertos", value: `${Number(safeOpen) + Number(depotOpen)}/2` },
+              { label: "Dedução validada", value: `${Number(timelineSolved) + Number(forensicSolved)}/2` },
+              { label: "Penalidades", value: `${hintsUsed.length} dicas · ${mistakes} erros` },
+            ].map((item) => (
+              <div key={item.label} className="border border-border p-3">
+                <p className="text-xs text-muted-foreground">{item.label}</p>
+                <p className="mt-1 font-mono text-sm">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="mt-6 border border-border p-4 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
@@ -472,6 +632,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   disabled={!canSolveTimeline || !timelineAnswer}
                   onClick={() => {
                     if (timelineAnswer === "b") setTimelineSolved(true);
+                    else setMistakes((current) => current + 1);
                   }}
                   className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
@@ -536,6 +697,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   disabled={!canSolveForensics || !forensicAnswer}
                   onClick={() => {
                     if (forensicAnswer === "b") setForensicSolved(true);
+                    else setMistakes((current) => current + 1);
                   }}
                   className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
@@ -632,7 +794,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 <p className="font-mono text-xs uppercase tracking-widest text-primary">Classificação final</p>
                 <p className="mt-2 font-display text-2xl">{finalRank}</p>
                 <p className="mt-2 text-sm">Pontuação: <strong>{score}/100</strong></p>
-                <p className="mt-1 text-xs text-muted-foreground">Dicas utilizadas: {hintsUsed.length} · penalidade: {hintsUsed.length * 15} pontos</p>
+                <p className="mt-1 text-xs text-muted-foreground">Dicas: {hintsUsed.length} × 15 = {hintsUsed.length * 15} pontos · erros: {mistakes} × 5 = {mistakes * 5} pontos de penalidade.</p>
               </div>
             </div>
           )}
@@ -652,7 +814,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {hintDialog.revealed
                   ? hintDialog.hint
-                  : "Só utilize dicas se realmente não conseguir resolver sozinho. Cada dica aberta reduz 15 pontos da sua classificação final."}
+                  : "Só utilize dicas se realmente não conseguir resolver sozinho. Cada dica aberta reduz 15 pontos; cada código ou dedução validada incorretamente reduz mais 5 pontos."}
               </p>
               <div className="mt-6 flex flex-wrap justify-end gap-3">
                 <button
@@ -682,18 +844,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
           <span>DEXTER MORGAN · CADERNO DE INVESTIGAÇÃO</span>
           <button
             onClick={() => {
-              setDifficulty(null);
-              setFound([]);
-              setVisited([]);
-              setSafeOpen(false);
-              setDepotOpen(false);
-              setTimelineSolved(false);
-              setForensicSolved(false);
-              setEnding(false);
-              setAccusationSubmitted(false);
-              setSuspect("");
-              setHintsUsed([]);
-              setHintDialog(null);
+              resetCase();
             }}
             className="underline hover:text-primary"
           >
