@@ -496,7 +496,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             aria-label={`Cena ativa: ${currentLocation.name}`}
             className={`border border-border bg-background p-4 sm:p-5 ${isMobile ? (mobileSceneOpen ? "fixed inset-3 z-50 overflow-y-auto shadow-2xl" : "hidden") : "block"} lg:static lg:z-auto lg:block lg:overflow-visible lg:bg-transparent lg:shadow-none`}
           >
-            <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
+            <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Cena da investigação</p>
               <button
                 type="button"
