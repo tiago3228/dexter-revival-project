@@ -2,6 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
+type SavedInvestigation = {
+  version: 1;
+  difficulty: Difficulty;
+  visited: string[];
+  found: string[];
+  activeLocation: string;
+  safeOpen: boolean;
+  depotOpen: boolean;
+  timelineAnswer: string;
+  timelineSolved: boolean;
+  forensicAnswer: string;
+  forensicSolved: boolean;
+  suspect: string;
+  ending: boolean;
+  accusationSubmitted: boolean;
+  hintsUsed: string[];
+  mistakes: number;
+};
+const SAVE_KEY = "dexter-last-confession-save";
+const isDifficulty = (value: unknown): value is Difficulty =>
+  value === "investigador" || value === "detetive" || value === "dexter";
 
 const EVIDENCE: Evidence[] = [
   {
@@ -75,6 +96,40 @@ const LOCATIONS = [
   },
 ];
 
+const SUSPECTS = [
+  {
+    name: "Paul Renner",
+    role: "Xerife-adjunto",
+    motive: "Controlava os registros oficiais e tinha acesso à investigação original.",
+    alibi: "Declarou ter deixado o posto às 21h10 e não ter retornado naquela noite.",
+    contradiction:
+      "A segunda assinatura no livro de entrada e o recibo da caixa 19 contradizem sua versão.",
+    required: ["log", "receipt"],
+    evidenceLabel: "Livro de entrada + recibo do depósito",
+  },
+  {
+    name: "Dr. Henry Vale",
+    role: "Médico legista",
+    motive: "Tinha acesso ao relatório preliminar e poderia influenciar a leitura da cena.",
+    alibi:
+      "A documentação médica situa seu trabalho no hospital, mas não explica a tinta azul encontrada sob as unhas.",
+    contradiction:
+      "O vestígio físico liga Eleanor ao recibo do depósito, sem colocar Vale no local.",
+    required: ["autopsy", "receipt"],
+    evidenceLabel: "Relatório preliminar + recibo do depósito",
+  },
+  {
+    name: "Pastor Matthew Cole",
+    role: "Responsável pela capela",
+    motive: "Conhecia a capela e poderia reconhecer o detalhe sonoro da gravação.",
+    alibi: "A fita parece situar a conversa perto do sino da capela.",
+    contradiction:
+      "O sino estava quebrado naquela semana; o áudio não deve ser interpretado como uma confirmação literal do local.",
+    required: ["tape", "log"],
+    evidenceLabel: "Transcrição da fita + livro de entrada",
+  },
+];
+
 const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: string }[] = [
   {
     id: "investigador",
@@ -96,25 +151,126 @@ const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: 
   },
 ];
 
+function readSavedInvestigation(): SavedInvestigation | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as Partial<SavedInvestigation>;
+    if (saved.version !== 1 || !isDifficulty(saved.difficulty)) {
+      window.localStorage.removeItem(SAVE_KEY);
+      return null;
+    }
+    return {
+      version: 1,
+      difficulty: saved.difficulty,
+      visited: Array.isArray(saved.visited)
+        ? saved.visited.filter((id): id is string => LOCATIONS.some((item) => item.id === id))
+        : [],
+      found: Array.isArray(saved.found)
+        ? saved.found.filter((id): id is string => EVIDENCE.some((item) => item.id === id))
+        : [],
+      activeLocation: LOCATIONS.find((item) => item.id === saved.activeLocation)?.id ?? "house",
+      safeOpen: saved.safeOpen === true,
+      depotOpen: saved.depotOpen === true,
+      timelineAnswer: typeof saved.timelineAnswer === "string" ? saved.timelineAnswer : "",
+      timelineSolved: saved.timelineSolved === true,
+      forensicAnswer: typeof saved.forensicAnswer === "string" ? saved.forensicAnswer : "",
+      forensicSolved: saved.forensicSolved === true,
+      suspect: typeof saved.suspect === "string" ? saved.suspect : "",
+      ending: saved.ending === true,
+      accusationSubmitted: saved.accusationSubmitted === true,
+      hintsUsed: Array.isArray(saved.hintsUsed)
+        ? saved.hintsUsed.filter((id): id is string =>
+            ["safe", "depot", "timeline", "forensics"].includes(id),
+          )
+        : [],
+      mistakes:
+        typeof saved.mistakes === "number" && Number.isFinite(saved.mistakes)
+          ? Math.max(0, Math.floor(saved.mistakes))
+          : 0,
+    };
+  } catch {
+    window.localStorage.removeItem(SAVE_KEY);
+    return null;
+  }
+}
+
 export function DexterCase({ onBack }: { onBack: () => void }) {
+  const [initialSave] = useState<SavedInvestigation | null>(() => readSavedInvestigation());
   const [difficulty, setDifficulty] = useState<Difficulty | null>(() => {
+    if (initialSave) return initialSave.difficulty;
     if (typeof window === "undefined") return null;
     const saved = window.localStorage.getItem("dexter-painscreek-difficulty");
-    return saved === "investigador" || saved === "detetive" || saved === "dexter" ? saved : null;
+    return isDifficulty(saved) ? saved : null;
   });
-  const [visited, setVisited] = useState<string[]>([]);
-  const [found, setFound] = useState<string[]>([]);
-  const [activeLocation, setActiveLocation] = useState("house");
+  const [visited, setVisited] = useState<string[]>(() => initialSave?.visited ?? []);
+  const [found, setFound] = useState<string[]>(() => initialSave?.found ?? []);
+  const [activeLocation, setActiveLocation] = useState(
+    () => initialSave?.activeLocation ?? "house",
+  );
   const [code, setCode] = useState("");
   const [codeMessage, setCodeMessage] = useState("");
-  const [safeOpen, setSafeOpen] = useState(false);
-  const [depotOpen, setDepotOpen] = useState(false);
-  const [timelineAnswer, setTimelineAnswer] = useState("");
-  const [timelineSolved, setTimelineSolved] = useState(false);
-  const [forensicAnswer, setForensicAnswer] = useState("");
-  const [forensicSolved, setForensicSolved] = useState(false);
-  const [suspect, setSuspect] = useState("");
-  const [ending, setEnding] = useState(false);
+  const [safeOpen, setSafeOpen] = useState(() => initialSave?.safeOpen ?? false);
+  const [depotOpen, setDepotOpen] = useState(() => initialSave?.depotOpen ?? false);
+  const [timelineAnswer, setTimelineAnswer] = useState(() => initialSave?.timelineAnswer ?? "");
+  const [timelineSolved, setTimelineSolved] = useState(() => initialSave?.timelineSolved ?? false);
+  const [forensicAnswer, setForensicAnswer] = useState(() => initialSave?.forensicAnswer ?? "");
+  const [forensicSolved, setForensicSolved] = useState(() => initialSave?.forensicSolved ?? false);
+  const [suspect, setSuspect] = useState(() => initialSave?.suspect ?? "");
+  const [ending, setEnding] = useState(() => initialSave?.ending ?? false);
+  const [accusationSubmitted, setAccusationSubmitted] = useState(
+    () => initialSave?.accusationSubmitted ?? false,
+  );
+  const [hintDialog, setHintDialog] = useState<{
+    id: string;
+    hint: string;
+    revealed: boolean;
+  } | null>(null);
+  const [hintsUsed, setHintsUsed] = useState<string[]>(() => initialSave?.hintsUsed ?? []);
+  const [mistakes, setMistakes] = useState(() => initialSave?.mistakes ?? 0);
+
+  useEffect(() => {
+    if (!difficulty) {
+      window.localStorage.removeItem(SAVE_KEY);
+      return;
+    }
+    const saved: SavedInvestigation = {
+      version: 1,
+      difficulty,
+      visited,
+      found,
+      activeLocation,
+      safeOpen,
+      depotOpen,
+      timelineAnswer,
+      timelineSolved,
+      forensicAnswer,
+      forensicSolved,
+      suspect,
+      ending,
+      accusationSubmitted,
+      hintsUsed,
+      mistakes,
+    };
+    window.localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
+  }, [
+    difficulty,
+    visited,
+    found,
+    activeLocation,
+    safeOpen,
+    depotOpen,
+    timelineAnswer,
+    timelineSolved,
+    forensicAnswer,
+    forensicSolved,
+    suspect,
+    ending,
+    accusationSubmitted,
+    hintsUsed,
+    mistakes,
+  ]);
 
   useEffect(() => {
     if (difficulty) window.localStorage.setItem("dexter-painscreek-difficulty", difficulty);
@@ -127,13 +283,23 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     [currentLocation],
   );
   const allFound = found.length === EVIDENCE.length;
+  const score = Math.max(0, 100 - hintsUsed.length * 15 - mistakes * 5);
+  const finalRank =
+    suspect !== "Paul Renner"
+      ? "Investigação inconclusiva"
+      : score === 100
+        ? "Dexter — Instinto impecável"
+        : score >= 85
+          ? "Investigador de elite"
+          : score >= 70
+            ? "Detetive experiente"
+            : score >= 55
+              ? "Investigador mediano"
+              : "Investigação comprometida";
+  const canSolveTimeline = found.includes("log") && found.includes("tape");
+  const canSolveForensics = found.includes("autopsy") && found.includes("receipt");
   const canAccuse =
-    safeOpen &&
-    depotOpen &&
-    timelineSolved &&
-    forensicSolved &&
-    found.includes("log") &&
-    found.includes("receipt");
+    safeOpen && depotOpen && timelineSolved && forensicSolved && allFound && !accusationSubmitted;
 
   const inspectLocation = (id: string) => {
     setActiveLocation(id);
@@ -153,12 +319,36 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       );
       setCode("");
     } else {
+      setMistakes((current) => current + 1);
       setCodeMessage(
         difficulty === "investigador"
           ? "Código incorreto. Confira a carta de Eleanor para o cofre ou a foto do cais para a caixa."
           : "Código incorreto. Cruze as anotações e os documentos encontrados.",
       );
     }
+  };
+
+  const resetCase = (nextDifficulty: Difficulty | null = null) => {
+    setDifficulty(nextDifficulty);
+    setVisited([]);
+    setFound([]);
+    setActiveLocation("house");
+    setCode("");
+    setCodeMessage("");
+    setSafeOpen(false);
+    setDepotOpen(false);
+    setTimelineAnswer("");
+    setTimelineSolved(false);
+    setForensicAnswer("");
+    setForensicSolved(false);
+    setSuspect("");
+    setEnding(false);
+    setAccusationSubmitted(false);
+    setHintDialog(null);
+    setHintsUsed([]);
+    setMistakes(0);
+    window.localStorage.removeItem(SAVE_KEY);
+    if (nextDifficulty === null) window.localStorage.removeItem("dexter-painscreek-difficulty");
   };
 
   if (!difficulty) {
@@ -187,7 +377,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             {DIFFICULTIES.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setDifficulty(item.id)}
+                onClick={() => resetCase(item.id)}
                 className="border border-border bg-card/50 p-5 text-left transition hover:border-primary hover:bg-card"
               >
                 <p className="font-mono text-xs uppercase tracking-widest text-primary">
@@ -236,11 +426,10 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <p className="mt-2">
               EVIDÊNCIAS: {found.length}/{EVIDENCE.length}
             </p>
-            <button
-              className="mt-3 underline hover:text-primary"
-              onClick={() => setDifficulty(null)}
-            >
-              Alterar dificuldade
+            <p className="mt-2">PONTUAÇÃO: {score}/100</p>
+            <p className="mt-2 text-[10px] text-primary">SALVAMENTO AUTOMÁTICO ATIVO</p>
+            <button className="mt-3 underline hover:text-primary" onClick={() => resetCase()}>
+              Reiniciar / trocar dificuldade
             </button>
           </div>
         </div>
@@ -321,6 +510,153 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
         </div>
 
         <section className="mt-6 border border-border p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Caderno de investigação
+              </p>
+              <h2 className="mt-2 font-display text-2xl">Dossiê de evidências</h2>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground">
+              {found.length} DE {EVIDENCE.length} REGISTRADAS
+            </p>
+          </div>
+          <div className="mt-4 h-1.5 overflow-hidden bg-muted">
+            <div
+              className="h-full bg-primary transition-all"
+              style={{ width: `${(found.length / EVIDENCE.length) * 100}%` }}
+            />
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {EVIDENCE.map((item) => {
+              const registered = found.includes(item.id);
+              const locationId =
+                LOCATIONS.find((location) => location.name === item.location)?.id ?? "house";
+              return (
+                <article key={item.id} className="border border-border bg-card/30 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-medium">{item.title}</h3>
+                    <span
+                      className={`shrink-0 font-mono text-[10px] ${registered ? "text-primary" : "text-muted-foreground"}`}
+                    >
+                      {registered ? "REGISTRADA" : "PENDENTE"}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{item.location}</p>
+                  {registered ? (
+                    <p className="mt-3 whitespace-pre-line text-sm leading-relaxed">{item.body}</p>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      Esta evidência ainda não foi examinada.
+                    </p>
+                  )}
+                  <button
+                    onClick={() => inspectLocation(locationId)}
+                    className="mt-3 border border-border px-3 py-2 font-mono text-[10px] text-primary hover:border-primary"
+                  >
+                    {activeLocation === locationId ? "LOCAL SELECIONADO" : "SELECIONAR LOCAL"}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: "Locais visitados", value: `${visited.length}/${LOCATIONS.length}` },
+              { label: "Mecanismos abertos", value: `${Number(safeOpen) + Number(depotOpen)}/2` },
+              {
+                label: "Dedução validada",
+                value: `${Number(timelineSolved) + Number(forensicSolved)}/2`,
+              },
+              { label: "Penalidades", value: `${hintsUsed.length} dicas · ${mistakes} erros` },
+            ].map((item) => (
+              <div key={item.label} className="border border-border p-3">
+                <p className="text-xs text-muted-foreground">{item.label}</p>
+                <p className="mt-1 font-mono text-sm">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 border border-border p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Quadro de suspeitos
+              </p>
+              <h2 className="mt-2 font-display text-2xl">Versões sob suspeita</h2>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground">
+              {
+                SUSPECTS.filter((person) => person.required.every((id) => found.includes(id)))
+                  .length
+              }
+              /3 PERFIS CRUZADOS
+            </p>
+          </div>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            Compare o que cada pessoa poderia saber com o que as evidências realmente demonstram. Um
+            motivo não prova culpa: procure contradições verificáveis antes de acusar.
+          </p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-3">
+            {SUSPECTS.map((person) => {
+              const profileComplete = person.required.every((id) => found.includes(id));
+              return (
+                <article
+                  key={person.name}
+                  className="flex flex-col border border-border bg-card/30 p-4"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-display text-xl">{person.name}</h3>
+                      <p className="mt-1 text-xs text-muted-foreground">{person.role}</p>
+                    </div>
+                    <span
+                      className={`font-mono text-[10px] ${profileComplete ? "text-primary" : "text-muted-foreground"}`}
+                    >
+                      {profileComplete ? "CRUZADO" : "INCOMPLETO"}
+                    </span>
+                  </div>
+                  {profileComplete ? (
+                    <>
+                      <p className="mt-4 text-sm">
+                        <strong>Possível motivo</strong>
+                        <br />
+                        {person.motive}
+                      </p>
+                      <p className="mt-3 text-sm">
+                        <strong>Versão / contexto</strong>
+                        <br />
+                        {person.alibi}
+                      </p>
+                      <p className="mt-3 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground">
+                        <strong>Contradição a avaliar</strong>
+                        <br />
+                        {person.contradiction}
+                      </p>
+                      <p className="mt-auto pt-4 font-mono text-[10px] text-primary">
+                        BASE: {person.evidenceLabel}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="mt-4 flex-1 border-t border-border pt-4">
+                      <p className="text-sm text-muted-foreground">
+                        Perfil parcialmente oculto. Registre as evidências necessárias para cruzar
+                        esta versão.
+                      </p>
+                      <p className="mt-3 font-mono text-[10px] text-muted-foreground">
+                        EVIDÊNCIAS NECESSÁRIAS:{" "}
+                        {person.required.filter((id) => !found.includes(id)).length}
+                      </p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-6 border border-border p-4 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
             Bancada de análise
           </p>
@@ -333,10 +669,20 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <div className="border border-border bg-card/40 p-4">
               <h3 className="font-medium">Cofre da casa Whitmore {safeOpen && "· ABERTO"}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                {difficulty === "investigador"
-                  ? "Dica: Eleanor escreveu a data-chave na carta que deixou."
-                  : "A carta de Eleanor menciona uma data-chave. Descubra o formato usado no teclado."}
+                Descubra o código usando as evidências reunidas durante a investigação.
               </p>
+              <button
+                onClick={() =>
+                  setHintDialog({
+                    id: "safe",
+                    hint: "Eleanor escreveu a data-chave na carta que deixou. Observe como a data pode ser convertida em quatro dígitos.",
+                    revealed: false,
+                  })
+                }
+                className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+              >
+                DICAS
+              </button>
               {!safeOpen && (
                 <div className="mt-3 flex gap-2">
                   <input
@@ -364,10 +710,20 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <div className="border border-border bg-card/40 p-4">
               <h3 className="font-medium">Depósito do cais {depotOpen && "· ABERTO"}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                {difficulty === "investigador"
-                  ? "Dica: leia o verso da fotografia no arquivo do xerife."
-                  : "A fotografia contém duas referências que devem ser lidas como um único código."}
+                Procure as referências que conectam a fotografia ao depósito do cais.
               </p>
+              <button
+                onClick={() =>
+                  setHintDialog({
+                    id: "depot",
+                    hint: "Leia o verso da fotografia encontrada no arquivo do xerife. As duas referências ali devem ser combinadas em um único código.",
+                    revealed: false,
+                  })
+                }
+                className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+              >
+                DICAS
+              </button>
               {!depotOpen && (
                 <div className="mt-3 flex gap-2">
                   <input
@@ -410,8 +766,26 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               A versão oficial diz que Renner deixou o posto antes do crime e não retornou. O livro
               de entrada tem duas marcações; a fita coloca em dúvida o local do encontro.
             </p>
+            <button
+              onClick={() =>
+                setHintDialog({
+                  id: "timeline",
+                  hint: "Compare as duas marcações do livro de entrada com o detalhe do sino mencionado na fita. Uma dessas informações torna a versão oficial impossível.",
+                  revealed: false,
+                })
+              }
+              className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+            >
+              DICAS
+            </button>
             {!timelineSolved ? (
               <>
+                {!canSolveTimeline && (
+                  <p className="mt-4 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground">
+                    Para validar esta dedução, examine primeiro o Livro de entrada no arquivo do
+                    xerife e a Transcrição da fita na capela.
+                  </p>
+                )}
                 <label className="mt-4 block text-sm" htmlFor="timeline">
                   Qual conclusão é sustentada pelas evidências?
                 </label>
@@ -419,7 +793,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   id="timeline"
                   value={timelineAnswer}
                   onChange={(e) => setTimelineAnswer(e.target.value)}
-                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm"
+                  disabled={!canSolveTimeline}
+                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="">Selecione uma conclusão</option>
                   <option value="a">A fita prova que Eleanor nunca saiu de casa.</option>
@@ -432,10 +807,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   </option>
                 </select>
                 <button
+                  disabled={!canSolveTimeline || !timelineAnswer}
                   onClick={() => {
                     if (timelineAnswer === "b") setTimelineSolved(true);
+                    else setMistakes((current) => current + 1);
                   }}
-                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary"
+                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   CONFERIR DEDUÇÃO
                 </button>
@@ -463,8 +840,26 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               A ausência de sangue no corredor, o detergente nas mãos e a tinta azul sob as unhas
               sugerem que a vítima tocou em algo pouco antes de morrer.
             </p>
+            <button
+              onClick={() =>
+                setHintDialog({
+                  id: "forensics",
+                  hint: "Procure outro item do caso que tenha tinta azul. O vestígio sob as unhas de Eleanor pode conectar a vítima ao depósito.",
+                  revealed: false,
+                })
+              }
+              className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+            >
+              DICAS
+            </button>
             {!forensicSolved ? (
               <>
+                {!canSolveForensics && (
+                  <p className="mt-4 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground">
+                    Para validar a análise, examine o Relatório preliminar no hospital e o Recibo do
+                    depósito no cais.
+                  </p>
+                )}
                 <label className="mt-4 block text-sm" htmlFor="forensics">
                   Qual evidência conecta a vítima ao depósito?
                 </label>
@@ -472,7 +867,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   id="forensics"
                   value={forensicAnswer}
                   onChange={(e) => setForensicAnswer(e.target.value)}
-                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm"
+                  disabled={!canSolveForensics}
+                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="">Selecione uma análise</option>
                   <option value="a">O detergente prova que Eleanor limpou a casa inteira.</option>
@@ -483,10 +879,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   <option value="c">A ausência de sangue prova que a morte foi natural.</option>
                 </select>
                 <button
+                  disabled={!canSolveForensics || !forensicAnswer}
                   onClick={() => {
                     if (forensicAnswer === "b") setForensicSolved(true);
+                    else setMistakes((current) => current + 1);
                   }}
-                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary"
+                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   VALIDAR ANÁLISE
                 </button>
@@ -518,24 +916,28 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             {["Paul Renner", "Dr. Henry Vale", "Pastor Matthew Cole"].map((name) => (
               <button
                 key={name}
+                disabled={!canAccuse || ending || accusationSubmitted}
                 onClick={() => setSuspect(name)}
-                className={`border px-4 py-3 text-sm ${suspect === name ? "border-primary bg-primary/5 text-primary" : "border-border hover:border-primary/60"}`}
+                className={`border px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40 ${suspect === name ? "border-primary bg-primary/5 text-primary" : "border-border hover:border-primary/60"}`}
               >
                 {name}
               </button>
             ))}
           </div>
           <button
-            disabled={!canAccuse || !suspect}
-            onClick={() => setEnding(true)}
+            disabled={!canAccuse || !suspect || ending || accusationSubmitted}
+            onClick={() => {
+              setAccusationSubmitted(true);
+              setEnding(true);
+            }}
             className="mt-5 border border-primary px-5 py-3 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
           >
             FECHAR O CASO
           </button>
-          {!canAccuse && (
+          {!canAccuse && !ending && !accusationSubmitted && (
             <p className="mt-3 text-xs text-muted-foreground">
-              Para concluir, abra os dois mecanismos, resolva a cronologia e a análise forense e
-              registre o livro de entrada e o recibo.
+              Para concluir, examine todas as seis evidências, abra os dois mecanismos e valide a
+              cronologia e a análise forense. A acusação final só poderá ser feita uma vez.
             </p>
           )}
           {ending && (
@@ -560,46 +962,156 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                       ? "Arquivo completo: todas as evidências foram examinadas."
                       : "O caso foi resolvido, mas ainda existem evidências não examinadas neste arquivo."}
                   </p>
+                  <div className="mt-5 border-t border-border pt-4">
+                    <h4 className="font-display text-xl">Relatório de encerramento</h4>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">
+                          Reconstrução temporal
+                        </p>
+                        <p className="mt-1 text-sm">
+                          {timelineSolved
+                            ? "Validada — o registro de retorno contradiz a versão oficial."
+                            : "Não validada."}
+                        </p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">
+                          Análise forense
+                        </p>
+                        <p className="mt-1 text-sm">
+                          {forensicSolved
+                            ? "Validada — tinta azul e recibo estabelecem uma conexão material."
+                            : "Não validada."}
+                        </p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">
+                          Mecanismos
+                        </p>
+                        <p className="mt-1 text-sm">
+                          {Number(safeOpen) + Number(depotOpen)}/2 abertos
+                        </p>
+                      </div>
+                      <div className="border border-border p-3">
+                        <p className="font-mono text-[10px] uppercase text-muted-foreground">
+                          Disciplina investigativa
+                        </p>
+                        <p className="mt-1 text-sm">
+                          {hintsUsed.length} dicas · {mistakes} erros · {score}/100 pontos
+                        </p>
+                      </div>
+                    </div>
+                    <h4 className="mt-5 font-display text-lg">Cadeia de evidências</h4>
+                    <ul className="mt-2 space-y-2 text-sm">
+                      {EVIDENCE.map((item) => (
+                        <li key={item.id} className="flex gap-2">
+                          <span
+                            className={
+                              found.includes(item.id) ? "text-primary" : "text-muted-foreground"
+                            }
+                          >
+                            {found.includes(item.id) ? "✓" : "○"}
+                          </span>
+                          <span>
+                            <strong>{item.title}</strong> —{" "}
+                            {found.includes(item.id) ? "examinada" : "não examinada"}{" "}
+                            <span className="text-muted-foreground">({item.location})</span>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                      A classificação mede a disciplina da partida: cada dica aberta custa 15 pontos
+                      e cada resposta incorreta custa 5. A pontuação não substitui a qualidade da
+                      prova; uma acusação correta exige que as duas deduções e os dois mecanismos
+                      tenham sido concluídos.
+                    </p>
+                  </div>
                 </>
               ) : (
                 <>
                   <p className="font-mono text-xs uppercase tracking-widest text-primary">
                     Conclusão inconsistente
                   </p>
-                  <h3 className="mt-2 font-display text-2xl">
-                    As provas não sustentam essa acusação
-                  </h3>
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    A pessoa escolhida não explica o registro de retorno, o recibo do depósito e o
-                    vestígio de tinta azul ao mesmo tempo. Reavalie as evidências.
+                  <h3 className="mt-2 font-display text-2xl">A acusação não se sustenta</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    Você encerrou a investigação apontando {suspect}, mas as provas não sustentam
+                    essa conclusão. A acusação foi registrada e não pode ser tentada novamente nesta
+                    partida. Se quiser investigar de novo, reinicie o caso e reúna as evidências
+                    antes de decidir.
                   </p>
-                  <button
-                    onClick={() => {
-                      setEnding(false);
-                      setSuspect("");
-                    }}
-                    className="mt-4 border border-border px-4 py-2 font-mono text-xs"
-                  >
-                    REABRIR DEDUÇÃO
-                  </button>
                 </>
               )}
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="font-mono text-xs uppercase tracking-widest text-primary">
+                  Classificação final
+                </p>
+                <p className="mt-2 font-display text-2xl">{finalRank}</p>
+                <p className="mt-2 text-sm">
+                  Pontuação: <strong>{score}/100</strong>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Dicas: {hintsUsed.length} × 15 = {hintsUsed.length * 15} pontos · erros:{" "}
+                  {mistakes} × 5 = {mistakes * 5} pontos de penalidade.
+                </p>
+              </div>
             </div>
           )}
         </section>
+        {hintDialog && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            role="presentation"
+          >
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="hint-dialog-title"
+              className="w-full max-w-md border border-primary/60 bg-background p-6 shadow-2xl"
+            >
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Caderno de investigação
+              </p>
+              <h2 id="hint-dialog-title" className="mt-3 font-display text-2xl">
+                {hintDialog.revealed ? "Dica desbloqueada" : "Antes de pedir uma dica"}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                {hintDialog.revealed
+                  ? hintDialog.hint
+                  : "Só utilize dicas se realmente não conseguir resolver sozinho. Cada dica aberta reduz 15 pontos; cada código ou dedução validada incorretamente reduz mais 5 pontos."}
+              </p>
+              <div className="mt-6 flex flex-wrap justify-end gap-3">
+                <button
+                  onClick={() => setHintDialog(null)}
+                  className="border border-border px-4 py-3 font-mono text-xs transition hover:border-primary"
+                >
+                  {hintDialog.revealed ? "FECHAR" : "VOLTAR"}
+                </button>
+                {!hintDialog.revealed && (
+                  <button
+                    onClick={() => {
+                      if (hintDialog && !hintsUsed.includes(hintDialog.id)) {
+                        setHintsUsed((current) =>
+                          current.includes(hintDialog.id) ? current : [...current, hintDialog.id],
+                        );
+                      }
+                      setHintDialog((current) => (current ? { ...current, revealed: true } : null));
+                    }}
+                    className="border border-primary bg-primary/10 px-4 py-3 font-mono text-xs text-primary transition hover:bg-primary/20"
+                  >
+                    ABRIR DICA
+                  </button>
+                )}
+              </div>
+            </section>
+          </div>
+        )}
         <footer className="mt-8 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-[10px] text-muted-foreground">
           <span>DEXTER MORGAN · CADERNO DE INVESTIGAÇÃO</span>
           <button
             onClick={() => {
-              setDifficulty(null);
-              setFound([]);
-              setVisited([]);
-              setSafeOpen(false);
-              setDepotOpen(false);
-              setTimelineSolved(false);
-              setForensicSolved(false);
-              setEnding(false);
-              setSuspect("");
+              resetCase();
             }}
             className="underline hover:text-primary"
           >

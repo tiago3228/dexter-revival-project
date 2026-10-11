@@ -123,17 +123,28 @@ export function Game() {
   });
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek">("ortega");
   const [showMenu, setShowMenu] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
-    const track =
-      !showMenu && caseMode === "painscreek"
+    const track = showIntro
+      ? "/audio/Abertura - Dexter - Marcos Ramos.mp3"
+      : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
         : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const audio = new Audio(track);
     audio.loop = true;
-    audio.volume = 0.28;
+    audio.volume = musicVolume;
+    if (showIntro) {
+      audio.onerror = () => {
+        // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
+        audio.onerror = null;
+        audio.src = "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+        audio.load();
+        if (soundOn) void audio.play().catch(() => undefined);
+      };
+    }
     audioRef.current = audio;
 
     const startMusic = () => {
@@ -151,7 +162,7 @@ export function Game() {
       void sfxRef.current?.close();
       sfxRef.current = null;
     };
-  }, [caseMode, showMenu]);
+  }, [caseMode, showIntro, showMenu]);
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = musicVolume;
@@ -173,6 +184,10 @@ export function Game() {
       return next;
     });
   };
+
+  if (showIntro) {
+    return <IntroScreen onStart={() => setShowIntro(false)} />;
+  }
 
   if (showMenu) {
     return (
@@ -1014,6 +1029,45 @@ export function Game() {
   );
 }
 
+function IntroScreen({ onStart }: { onStart: () => void }) {
+  return (
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2efea] px-4 py-6 text-[#171719] sm:px-8 sm:py-10">
+      <section className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+        <img
+          src="/images/tela-inicial.jpeg"
+          alt="Arte original da tela inicial de Dexter"
+          className="max-h-[54vh] w-full rounded-sm object-contain sm:max-h-[58vh]"
+        />
+        <div className="mt-5 flex w-full max-w-4xl flex-col items-center border-t-4 border-[#a71925] bg-[#171719] px-5 py-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.22)] sm:mt-7 sm:px-10 sm:py-8">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#e0d8d4] sm:text-xs sm:tracking-[0.32em]">
+            Uma investigação nunca termina na cena do crime
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-black uppercase leading-none tracking-[0.04em] text-white sm:text-6xl">
+            Dexter
+          </h1>
+          <p className="mt-2 font-mono text-lg font-extrabold uppercase tracking-[0.13em] text-[#d52c39] sm:text-2xl">
+            Passageiro Sombrio
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-[#d5d0cd] sm:text-base">
+            Todo segredo deixa vestígios. Toda escolha tem um preço.
+          </p>
+          <button
+            type="button"
+            onClick={onStart}
+            className="mt-6 min-h-12 min-w-52 border-2 border-[#f4ece8] bg-[#b21f2c] px-8 py-3.5 font-mono text-sm font-bold uppercase tracking-[0.28em] text-white shadow-[5px_5px_0_#6f111a] transition hover:bg-[#d12a37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f4ece8]"
+          >
+            Iniciar
+          </button>
+          <p className="mt-6 font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#bcb4b0] sm:text-[10px] sm:tracking-[0.24em]">
+            Investigue <span className="px-1.5 text-[#e13a45]">•</span> Descubra{" "}
+            <span className="px-1.5 text-[#e13a45]">•</span> Decida
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function MainMenu({
   onSelect,
   musicVolume,
@@ -1027,11 +1081,116 @@ function MainMenu({
   soundOn: boolean;
   onToggleSound: () => void;
 }) {
-  const [reflectionsOpen, setReflectionsOpen] = useState(false);
+  const [showReflections, setShowReflections] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
+
+  const closeVideo = () => setActiveVideo(null);
+
+  useEffect(() => {
+    if (activeVideo === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeVideo();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activeVideo]);
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
+      {activeVideo !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-3 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Reflexões de Dexter Morgan — Parte ${activeVideo}`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeVideo();
+          }}
+        >
+          <div className="flex max-h-full w-full max-w-6xl flex-col">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-white sm:text-base">
+                Reflexões de Dexter Morgan · Parte {activeVideo}
+              </h2>
+              <button
+                type="button"
+                onClick={closeVideo}
+                className="min-h-11 border border-white/40 px-4 py-2 font-mono text-xs uppercase tracking-wider text-white hover:border-red-500 hover:bg-red-950"
+              >
+                Fechar ✕
+              </button>
+            </div>
+            <video
+              key={activeVideo}
+              className="max-h-[78vh] w-full flex-1 bg-black"
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              src={
+                activeVideo === 1
+                  ? "/videos/dexter-reflexoes/reflexao-dexter-01.mp4"
+                  : "/videos/dexter-reflexoes/reflexao-dexter-02.mp4"
+              }
+            >
+              Seu navegador não suporta reprodução de vídeo.
+            </video>
+            <p className="mt-3 text-center text-xs text-white/60">
+              Para fechar, use o botão acima ou pressione Esc.
+            </p>
+          </div>
+        </div>
+      )}
       <div className="mx-auto max-w-5xl">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary sm:text-sm">
+            Dexter · Passageiro Sombrio
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowReflections((visible) => !visible)}
+            aria-expanded={showReflections}
+            className="min-h-11 border border-primary bg-primary/10 px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:text-sm"
+          >
+            Reflexões de Dexter Morgan {showReflections ? "−" : "+"}
+          </button>
+        </div>
+        {showReflections && (
+          <section
+            className="mb-8 border border-primary/50 bg-card/60 p-4 sm:p-6"
+            aria-label="Reflexões de Dexter Morgan"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+              Conteúdo especial
+            </p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl">Reflexões de Dexter Morgan</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Escolha uma parte para assistir. Os dois vídeos estão disponíveis nesta seção.
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setActiveVideo(1)}
+                className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
+              >
+                <span className="block font-mono text-xs uppercase tracking-widest text-primary">
+                  Parte 1
+                </span>
+                <span className="mt-1 block font-display text-xl">Reflexões · Episódio 1</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveVideo(2)}
+                className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
+              >
+                <span className="block font-mono text-xs uppercase tracking-widest text-primary">
+                  Parte 2
+                </span>
+                <span className="mt-1 block font-display text-xl">Reflexões · Episódio 2</span>
+              </button>
+            </div>
+          </section>
+        )}
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
           Dexter · Arquivos de investigação
         </p>
@@ -1126,59 +1285,6 @@ function MainMenu({
             </span>
           </button>
         </div>
-        <section className="mt-8 border border-border bg-card/30 p-5 sm:p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-                Conteúdo extra
-              </p>
-              <h2 className="mt-2 font-display text-2xl">Reflexões do Dexter</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Vídeos extras para assistir entre uma investigação e outra.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setReflectionsOpen((open) => !open)}
-              className="min-h-11 border border-primary px-4 py-3 font-mono text-xs text-primary hover:bg-primary/10"
-              aria-expanded={reflectionsOpen}
-            >
-              {reflectionsOpen ? "Fechar reflexões" : "Abrir reflexões"}
-            </button>
-          </div>
-          {reflectionsOpen && (
-            <div className="mt-6 grid gap-5 lg:grid-cols-2">
-              <article className="border border-border bg-background/40 p-3 sm:p-4">
-                <h3 className="font-display text-xl">Reflexão #1</h3>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Seriado Dexter · dublado
-                </p>
-                <video
-                  className="mt-4 aspect-video w-full bg-black"
-                  controls
-                  preload="metadata"
-                  playsInline
-                  src="/videos/dexter-reflexoes/reflexao-dexter-01.mp4"
-                  aria-label="Reflexão do seriado Dexter, vídeo 1"
-                />
-              </article>
-              <article className="border border-border bg-background/40 p-3 sm:p-4">
-                <h3 className="font-display text-xl">Reflexão #2</h3>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Seriado Dexter · dublado
-                </p>
-                <video
-                  className="mt-4 aspect-video w-full bg-black"
-                  controls
-                  preload="metadata"
-                  playsInline
-                  src="/videos/dexter-reflexoes/reflexao-dexter-02.mp4"
-                  aria-label="Reflexão do seriado Dexter, vídeo 2"
-                />
-              </article>
-            </div>
-          )}
-        </section>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
           <p>ARQUIVOS DISPONÍVEIS: 03</p>
           <p className="mt-2">NOVO ARQUIVO: Dexter: The Painscreek Case · disponível</p>
