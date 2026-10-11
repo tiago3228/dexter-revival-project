@@ -1400,7 +1400,7 @@ function MainMenu({
     },
     painscreek: {
       index: "CAPÍTULO 03 · GREYBRIDGE",
-      title: "The Painscreek Case",
+      title: "Painscreek Case",
       detail: "Abrindo os arquivos forenses de Greybridge.",
     },
     mentalist: {
@@ -1418,7 +1418,7 @@ function MainMenu({
   const chapterTitles: Record<CaseId, string> = {
     ortega: "Turno da Noite · Caso Ortega",
     monroe: "O Caso Monroe",
-    painscreek: "The Last Confession",
+    painscreek: "Painscreek Case",
     mentalist: "Red John: O Sorriso Escarlate",
   };
   const formatDuration = (seconds: number) => {
@@ -1839,7 +1839,7 @@ function MainMenu({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Capítulo 03 · Greybridge
             </p>
-            <h2 className="mt-3 font-display text-3xl">Dexter: The Painscreek Case</h2>
+            <h2 className="mt-3 font-display text-3xl">Painscreek Case</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Explore locais, examine documentos, destranque mecanismos e conecte evidências
               forenses para reconstruir um caso arquivado.

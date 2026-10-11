@@ -629,9 +629,7 @@ export function DexterCase({
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
             Arquivo especial · Greybridge, Flórida
           </p>
-          <h1 className="mt-3 font-display text-5xl leading-tight sm:text-7xl">
-            The Last Confession
-          </h1>
+          <h1 className="mt-3 font-display text-5xl leading-tight sm:text-7xl">Painscreek Case</h1>
           <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
             Um caso arquivado, uma gravação desaparecida e uma cidade inteira que aprendeu a
             conviver com uma mentira. Escolha a dificuldade antes de iniciar. A verdade central é a
@@ -686,7 +684,7 @@ export function DexterCase({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Caso 03 · Greybridge, Flórida · 1998
             </p>
-            <h1 className="mt-2 font-display text-4xl sm:text-5xl">The Last Confession</h1>
+            <h1 className="mt-2 font-display text-4xl sm:text-5xl">Painscreek Case</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Dexter Morgan revisita a morte de Eleanor Whitmore depois que uma fita anônima chega
               ao laboratório de Miami Metro.
