@@ -14,6 +14,7 @@ type SavedInvestigation = {
   visited: string[];
   found: string[];
   confirmedConnections: string[];
+  interviewedSuspects: string[];
   activeLocation: string;
   safeOpen: boolean;
   depotOpen: boolean;
@@ -151,6 +152,10 @@ const SUSPECTS = [
       "A segunda assinatura no livro de entrada e o recibo da caixa 19 contradizem sua versão.",
     required: ["log", "receipt"],
     evidenceLabel: "Livro de entrada + recibo do depósito",
+    interrogationEvidence: "log",
+    interrogationPrompt: "Que registro derruba o álibi de que Renner não retornou ao posto?",
+    interrogationResponse:
+      "Renner evita explicar o retorno às 22h06 e insiste que deixou o posto às 21h10. O livro mantém a contradição registrada.",
   },
   {
     name: "Dr. Henry Vale",
@@ -162,6 +167,11 @@ const SUSPECTS = [
       "O vestígio físico liga Eleanor ao recibo do depósito, sem colocar Vale no local.",
     required: ["autopsy", "receipt"],
     evidenceLabel: "Relatório preliminar + recibo do depósito",
+    interrogationEvidence: "autopsy",
+    interrogationPrompt:
+      "Qual documento registra o vestígio azul que põe a análise forense em foco?",
+    interrogationResponse:
+      "Vale confirma que o laudo é preliminar. A tinta azul está documentada, mas o recibo ainda é necessário para ligar Eleanor ao depósito.",
   },
   {
     name: "Pastor Matthew Cole",
@@ -172,6 +182,11 @@ const SUSPECTS = [
       "O sino estava quebrado naquela semana; o áudio não deve ser interpretado como uma confirmação literal do local.",
     required: ["tape", "log"],
     evidenceLabel: "Transcrição da fita + livro de entrada",
+    interrogationEvidence: "tape",
+    interrogationPrompt:
+      "Qual gravação cita o sino quebrado e põe em dúvida a localização do encontro?",
+    interrogationResponse:
+      "Cole reconhece que o sino estava quebrado naquela semana e não pode confirmar o local pela gravação. A fita enfraquece a versão, sem identificar por si só quem esteve lá.",
   },
 ];
 
@@ -218,6 +233,11 @@ function readSavedInvestigation(): SavedInvestigation | null {
       confirmedConnections: Array.isArray(saved.confirmedConnections)
         ? saved.confirmedConnections.filter((id): id is string =>
             EVIDENCE_CONNECTIONS.some((connection) => connection.id === id),
+          )
+        : [],
+      interviewedSuspects: Array.isArray(saved.interviewedSuspects)
+        ? saved.interviewedSuspects.filter((name): name is string =>
+            SUSPECTS.some((person) => person.name === name),
           )
         : [],
       activeLocation: LOCATIONS.find((item) => item.id === saved.activeLocation)?.id ?? "house",
@@ -269,6 +289,13 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [confirmedConnections, setConfirmedConnections] = useState<string[]>(
     () => initialSave?.confirmedConnections ?? [],
   );
+  const [interviewedSuspects, setInterviewedSuspects] = useState<string[]>(
+    () => initialSave?.interviewedSuspects ?? [],
+  );
+  const [selectedInterrogationEvidence, setSelectedInterrogationEvidence] = useState<
+    Record<string, string>
+  >({});
+  const [interrogationFeedback, setInterrogationFeedback] = useState<Record<string, string>>({});
   const [selectedConnectionEvidence, setSelectedConnectionEvidence] = useState<string[]>([]);
   const [connectionMessage, setConnectionMessage] = useState("");
   const [activeLocation, setActiveLocation] = useState(
@@ -306,6 +333,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       visited,
       found,
       confirmedConnections,
+      interviewedSuspects,
       activeLocation,
       safeOpen,
       depotOpen,
@@ -325,6 +353,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     visited,
     found,
     confirmedConnections,
+    interviewedSuspects,
     activeLocation,
     safeOpen,
     depotOpen,
@@ -405,6 +434,29 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     }
     setSelectedConnectionEvidence([]);
   };
+  const interrogateSuspect = (person: (typeof SUSPECTS)[number]) => {
+    const evidenceId = selectedInterrogationEvidence[person.name];
+    if (!evidenceId || interviewedSuspects.includes(person.name)) return;
+
+    if (evidenceId === person.interrogationEvidence) {
+      setInterviewedSuspects((current) =>
+        current.includes(person.name) ? current : [...current, person.name],
+      );
+      setInterrogationFeedback((current) => {
+        const next = { ...current };
+        delete next[person.name];
+        return next;
+      });
+      return;
+    }
+
+    setMistakes((current) => current + 1);
+    setInterrogationFeedback((current) => ({
+      ...current,
+      [person.name]:
+        "Essa evidência não contradiz diretamente o depoimento. A tentativa contou como erro; escolha outra peça e tente novamente.",
+    }));
+  };
   const submitCode = (kind: "safe" | "depot") => {
     const expected = kind === "safe" ? "0427" : "7319";
     if (code.trim() === expected) {
@@ -431,6 +483,9 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     setVisited([]);
     setFound([]);
     setConfirmedConnections([]);
+    setInterviewedSuspects([]);
+    setSelectedInterrogationEvidence({});
+    setInterrogationFeedback({});
     setSelectedConnectionEvidence([]);
     setConnectionMessage("");
     setActiveLocation("house");
@@ -813,21 +868,26 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               </p>
               <h2 className="mt-2 font-display text-2xl">Versões sob suspeita</h2>
             </div>
-            <p className="font-mono text-xs text-muted-foreground">
+            <div className="text-right font-mono text-[10px] text-muted-foreground">
               {
                 SUSPECTS.filter((person) => person.required.every((id) => found.includes(id)))
                   .length
               }
               /3 PERFIS CRUZADOS
-            </p>
+              <p className="mt-1">{interviewedSuspects.length}/3 DEPOIMENTOS REGISTRADOS</p>
+            </div>
           </div>
           <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
             Compare o que cada pessoa poderia saber com o que as evidências realmente demonstram. Um
-            motivo não prova culpa: procure contradições verificáveis antes de acusar.
+            motivo não prova culpa: procure contradições verificáveis antes de acusar. Depois de
+            cruzar um perfil, confronte o depoimento com uma evidência. Entrevistas são opcionais;
+            tentativas incorretas reduzem sua classificação, mas não bloqueiam a acusação.
           </p>
           <div className="mt-4 grid gap-3 lg:grid-cols-3">
-            {SUSPECTS.map((person) => {
+            {SUSPECTS.map((person, index) => {
               const profileComplete = person.required.every((id) => found.includes(id));
+              const selectedEvidence = selectedInterrogationEvidence[person.name] ?? "";
+              const feedback = interrogationFeedback[person.name];
               return (
                 <article
                   key={person.name}
@@ -875,6 +935,68 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                         EVIDÊNCIAS NECESSÁRIAS:{" "}
                         {person.required.filter((id) => !found.includes(id)).length}
                       </p>
+                    </div>
+                  )}
+                  {profileComplete && (
+                    <div className="mt-4 border-t border-border pt-4">
+                      {interviewedSuspects.includes(person.name) ? (
+                        <div role="status" className="border-l-2 border-primary pl-3">
+                          <p className="font-mono text-[10px] uppercase text-primary">
+                            DEPOIMENTO REGISTRADO
+                          </p>
+                          <p className="mt-2 text-sm text-muted-foreground">
+                            {person.interrogationResponse}
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          <label
+                            htmlFor={`interrogation-evidence-${index}`}
+                            className="block text-xs text-muted-foreground"
+                          >
+                            {person.interrogationPrompt}
+                          </label>
+                          <select
+                            id={`interrogation-evidence-${index}`}
+                            value={selectedEvidence}
+                            onChange={(event) => {
+                              setSelectedInterrogationEvidence((current) => ({
+                                ...current,
+                                [person.name]: event.target.value,
+                              }));
+                              setInterrogationFeedback((current) => {
+                                const next = { ...current };
+                                delete next[person.name];
+                                return next;
+                              });
+                            }}
+                            className="mt-2 w-full border border-border bg-background px-3 py-2 text-sm"
+                          >
+                            <option value="">Selecione uma evidência registrada</option>
+                            {EVIDENCE.filter((item) => found.includes(item.id)).map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.title} — {item.location}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            disabled={!selectedEvidence}
+                            onClick={() => interrogateSuspect(person)}
+                            className="mt-3 border border-primary px-3 py-2 font-mono text-[10px] text-primary disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            CONFRONTAR DEPOIMENTO
+                          </button>
+                          {feedback && (
+                            <p
+                              role="status"
+                              className="mt-3 border-l-2 border-border pl-3 text-sm text-muted-foreground"
+                            >
+                              {feedback}
+                            </p>
+                          )}
+                        </>
+                      )}
                     </div>
                   )}
                 </article>
