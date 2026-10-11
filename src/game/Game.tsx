@@ -361,7 +361,7 @@ function Puzzle({ id, s, solve, fail }: { id: PuzzleId; s: ReturnType<typeof ini
               if (inWin) return solve("janela", "Doakes saiu para o café. A sala está vazia.");
               return fail("Você mal toca na fechadura e ouve passos. Doakes: \"Perdeu alguma coisa, Morgan?\"", 10, 1);
             }
-            const w = DOAKES_WINDOWS[Number(v)];
+            const w = DOAKES_WINDOWS[Number(v)]!;
             if (s.clock >= w.end) return fail("Essa janela já passou. Você fica parado olhando o relógio feito um idiota.", 10);
             solve("janela", `Você espera até ${w.label.split(" ")[0]}. Doakes sai para o café, como sempre.`, { clock: Math.max(s.clock, w.start) });
           }}
