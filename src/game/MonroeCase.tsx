@@ -219,6 +219,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
   const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
   const [reportOpen, setReportOpen] = useState(false);
+  const [briefingOpen, setBriefingOpen] = useState(true);
   const [finalVerdict, setFinalVerdict] = useState<
     "emily-richard" | "jacob-daniel" | "monica-alone" | null
   >(null);
@@ -439,6 +440,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
           >
             Voltar ao Turno da Noite
+          </button>
+          <button
+            onClick={() => setBriefingOpen(true)}
+            className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
+          >
+            Briefing do caso
           </button>
           <button
             onClick={() => {
@@ -699,6 +706,58 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         </aside>
       </div>
 
+      {briefingOpen && (
+        <Overlay onClose={() => setBriefingOpen(false)}>
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+            Homicídios · Arquivo Greenfield
+          </p>
+          <h2 className="mt-2 font-display text-3xl">O Caso Monroe</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-[0.85fr_1.15fr]">
+            <img
+              src="/images/monroe/page-4.jpg"
+              alt="Página original do PDF com a apresentação do Caso Monroe"
+              className="max-h-[38rem] w-full object-contain object-top"
+            />
+            <div className="text-sm leading-relaxed">
+              <p>
+                Você foi convocado para auxiliar em um caso de grande repercussão. O advogado
+                Jonathan Monroe foi encontrado morto no escritório de sua casa, em Greenfield,
+                depois de uma noite de trabalho. A ligação para a polícia foi feita por Monica
+                Monroe quando ela voltou de uma viagem em 21 de maio de 2023.
+              </p>
+              <p className="mt-3">
+                O cofre da residência guardava as economias do casal, mas há sinais de que dinheiro
+                desapareceu. Jonathan também mantinha encontros com um cliente não oficial, alguém
+                que não aparece no laptop nem nos arquivos do escritório.
+              </p>
+              <p className="mt-3">
+                O dossiê reúne cinco pessoas de interesse: Monica Monroe, Richard Stevens, Daniel
+                Thompson, Emily Parker e Jacob Kline. Cada depoimento pode ser lido ou ouvido; as
+                faturas, mensagens, páginas de diário e registros visuais precisam ser comparados.
+              </p>
+              <div className="mt-4 border-l-2 border-primary pl-3 text-primary">
+                <p className="font-mono text-xs uppercase tracking-wider">Sua missão</p>
+                <p className="mt-2">
+                  Descobrir o cliente secreto, identificar quem mentiu sobre o álibi, entender o que
+                  essa pessoa sabia e apontar quem matou Jonathan, com quem trabalhou e quais três
+                  provas sustentam a conclusão.
+                </p>
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Nem tudo será evidente à primeira vista. Algumas pistas só fazem sentido quando
+                cruzadas com depoimentos e imagens posteriores. Evite avançar por tentativa e erro:
+                registre o caminho que as provas realmente sustentam.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setBriefingOpen(false)}
+            className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary"
+          >
+            Iniciar investigação
+          </button>
+        </Overlay>
+      )}
       {opened && (
         <Overlay onClose={() => setOpened(null)}>
           <h2 className="font-display text-2xl">{opened.title}</h2>
