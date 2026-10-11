@@ -221,6 +221,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
   const [reportOpen, setReportOpen] = useState(false);
   const [briefingOpen, setBriefingOpen] = useState(true);
+  const [boardOpen, setBoardOpen] = useState(false);
+  const [notes, setNotes] = useState(() =>
+    typeof window === "undefined"
+      ? ""
+      : (window.localStorage.getItem("monroe-investigator-notes") ?? ""),
+  );
   const [zoomedImage, setZoomedImage] = useState<{ src: string; title: string } | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [finalVerdict, setFinalVerdict] = useState<
@@ -253,6 +259,10 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       ambientRef.current.gains[1].gain.value = 0.012 * volume;
     }
   }, [volume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("monroe-investigator-notes", notes);
+  }, [notes]);
 
   const startAmbient = (force = false) => {
     if ((!soundOn && !force) || ambientRef.current || typeof window === "undefined") return;
@@ -465,6 +475,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
           >
             Briefing do caso
+          </button>
+          <button
+            onClick={() => setBoardOpen(true)}
+            className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+          >
+            Quadro de investigação
           </button>
           <button
             onClick={() => {
@@ -736,9 +752,49 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               <p className="mt-4 border-l-2 border-primary pl-3 text-sm text-primary">{answer}</p>
             )}
           </section>
+          <section className="border border-primary/50 bg-primary/5 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Bloco de notas do investigador
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Registre suspeitas, contradições e teorias. Suas anotações ficam salvas neste
+                  navegador.
+                </p>
+              </div>
+              <span className="font-mono text-[10px] text-muted-foreground">
+                {notes.length} caracteres
+              </span>
+            </div>
+            <textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              placeholder="Ex.: Richard diz que estava com Amara. Procurar uma prova independente..."
+              className="mt-4 min-h-48 w-full resize-y border border-border bg-background/80 p-3 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70 focus:border-primary"
+              aria-label="Anotações pessoais da investigação"
+            />
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+              <span className="font-mono text-[10px] text-primary">
+                salvamento automático ativado
+              </span>
+              <button
+                type="button"
+                onClick={() => setNotes("")}
+                className="border border-border px-3 py-2 font-mono text-[10px] text-muted-foreground hover:border-primary hover:text-primary"
+              >
+                Limpar anotações
+              </button>
+            </div>
+          </section>
         </aside>
       </div>
 
+      {boardOpen && (
+        <Overlay className="max-w-6xl" onClose={() => setBoardOpen(false)}>
+          <InvestigationBoard />
+        </Overlay>
+      )}
       {briefingOpen && (
         <Overlay onClose={() => setBriefingOpen(false)}>
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
@@ -953,6 +1009,105 @@ function ReportMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
+function InvestigationBoard() {
+  const suspects = [
+    ["Monica Monroe", "esposa · viagem de negócios"],
+    ["Richard Stevens", "primo · sócio minoritário"],
+    ["Daniel Thompson", "advogado rival · criptografia"],
+    ["Emily Parker", "ex-secretária · demitida"],
+    ["Jacob Kline", "cliente · registro militar"],
+  ];
+  const clues = [
+    ["Faturas de hotel", "Daniel e Monica fora de Greenfield"],
+    ["SMS de Richard", "chantagem de 50 mil dólares"],
+    ["Diário de Emily", "motivo e acesso à casa"],
+    ["Jornal da gala", "Amara em Nova York"],
+  ];
+
+  return (
+    <div>
+      <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+        Quadro de investigação
+      </p>
+      <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-3xl">Conexões do Caso Monroe</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Uma visão de trabalho para cruzar pessoas e evidências. As linhas vermelhas indicam
+            relações investigativas possíveis, não conclusões automáticas.
+          </p>
+        </div>
+        <span className="border border-primary/60 px-3 py-2 font-mono text-[10px] text-primary">
+          NÃO CONFUNDIR HIPÓTESE COM PROVA
+        </span>
+      </div>
+      <div className="mt-5 overflow-auto border border-border bg-[#15100f] p-3 sm:p-6">
+        <div className="relative min-h-[620px] min-w-[920px] bg-[radial-gradient(circle_at_center,#2a1a18_0%,#120d0d_70%)] p-5">
+          <div className="pointer-events-none absolute inset-0 opacity-70">
+            <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
+              <g stroke="#b4232d" strokeWidth="0.35" fill="none">
+                <path d="M10 20 C20 32, 15 48, 15 72" />
+                <path d="M30 20 C35 35, 27 50, 38 72" />
+                <path d="M50 20 C50 38, 55 48, 61 72" />
+                <path d="M70 20 C67 40, 76 51, 84 72" />
+                <path d="M90 20 C82 34, 88 52, 84 72" />
+                <path d="M30 20 C51 27, 69 28, 90 20" />
+                <path d="M10 20 C31 28, 49 28, 70 20" />
+              </g>
+            </svg>
+          </div>
+          <p className="relative z-10 font-mono text-[10px] uppercase tracking-[0.25em] text-red-300/80">
+            Pessoas de interesse
+          </p>
+          <div className="relative z-10 mt-3 grid grid-cols-5 gap-4">
+            {suspects.map(([name, detail]) => (
+              <div
+                key={name}
+                className="border border-red-400/70 bg-[#2b1718]/95 p-3 shadow-[0_0_18px_rgba(180,35,45,0.2)]"
+              >
+                <div className="mb-2 h-10 w-10 rounded-full border border-red-300/70 bg-black/30" />
+                <p className="font-display text-lg text-red-100">{name}</p>
+                <p className="mt-1 font-mono text-[10px] leading-relaxed text-red-200/70">
+                  {detail}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="relative z-10 mt-40">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-300/80">
+              Pistas que exigem cruzamento
+            </p>
+            <div className="mt-3 grid grid-cols-4 gap-5">
+              {clues.map(([name, detail]) => (
+                <div
+                  key={name}
+                  className="border border-amber-200/60 bg-[#33251b]/95 p-3 shadow-[0_0_18px_rgba(216,164,85,0.12)]"
+                >
+                  <p className="font-display text-lg text-amber-100">{name}</p>
+                  <p className="mt-1 font-mono text-[10px] leading-relaxed text-amber-100/70">
+                    {detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative z-10 mt-6 flex items-center justify-center">
+            <div className="border-2 border-red-400 bg-[#3b1418] px-8 py-3 text-center shadow-[0_0_25px_rgba(180,35,45,0.35)]">
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-200/80">
+                Pergunta central
+              </p>
+              <p className="mt-1 font-display text-xl text-red-50">Quem matou Jonathan Monroe?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">
+        Consulte os documentos no dossiê e use o bloco de notas para separar fatos confirmados de
+        teorias.
+      </p>
+    </div>
+  );
+}
 function ImageZoom({
   image,
   zoomLevel,
@@ -1049,14 +1204,22 @@ function ImageZoom({
   );
 }
 
-function Overlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+function Overlay({
+  children,
+  onClose,
+  className = "max-w-xl",
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  className?: string;
+}) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 p-4"
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-xl overflow-auto border border-border bg-card p-6"
+        className={`max-h-[90vh] w-full overflow-auto border border-border bg-card p-6 ${className}`}
         onClick={(event) => event.stopPropagation()}
       >
         {children}
