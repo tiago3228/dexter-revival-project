@@ -136,6 +136,15 @@ export function Game() {
     const audio = new Audio(track);
     audio.loop = true;
     audio.volume = 0.28;
+    if (showIntro) {
+      audio.onerror = () => {
+        // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
+        audio.onerror = null;
+        audio.src = "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+        audio.load();
+        if (soundOn) void audio.play().catch(() => undefined);
+      };
+    }
     audioRef.current = audio;
 
     const startMusic = () => {
