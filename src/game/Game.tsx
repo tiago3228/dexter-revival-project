@@ -26,6 +26,7 @@ type PuzzleId =
   | "reacao";
 type Modal =
   { kind: "doc"; id: DocId } | { kind: "puzzle"; id: PuzzleId } | { kind: "acusar" } | null;
+type InfoModal = "como-jogar" | "dicas" | null;
 type Ending = { title: string; text: string; good: boolean } | null;
 
 const initial = () => ({
@@ -45,6 +46,7 @@ export function Game() {
   const [modal, setModal] = useState<Modal>(null);
   const [ending, setEnding] = useState<Ending>(null);
   const [tab, setTab] = useState<"cena" | "caderno">("cena");
+  const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -80,6 +82,26 @@ export function Game() {
 
   const has = (d: DocId) => s.docs.includes(d);
   const done = (p: PuzzleId) => s.solved.includes(p);
+
+  const hint = !done("sangue")
+    ? "Observe as características das gotas nas fotos. A forma delas indica o ritmo do movimento."
+    : !done("hora")
+      ? "Compare a temperatura registrada com a temperatura normal e a tabela encontrada no laboratório."
+      : !done("contradicao")
+        ? "Cruze o depoimento de Ruiz com um registro oficial de horário. Uma frase não combina com o que está no papel."
+        : !done("janela")
+          ? "Os registros da sala de evidências revelam um padrão de ronda. Não é preciso adivinhar: observe os horários."
+          : !done("fechadura")
+            ? "Uma anotação encontrada no laboratório descreve a regra da fechadura. Leia os documentos antes de tentar."
+            : !done("cifra")
+              ? "A mensagem pede uma chave numérica. Procure uma data que já apareceu durante a investigação."
+              : !done("rede")
+                ? "Uma rede só é confiável quando nome, endereço e horário apontam para a mesma história."
+                : !done("segredo")
+                  ? "O Código de Harry fala em não deixar pontas soltas. Examine lugares pessoais com cuidado."
+                  : !done("reacao")
+                    ? "Uma mensagem anônima pode ser uma armadilha. Preserve as provas verificáveis antes de reagir."
+                    : "Compare tamanho, tipo sanguíneo e localização. A evidência mais chamativa nem sempre é a mais confiável.";
 
   function narrate(
     text: string,
@@ -385,6 +407,20 @@ export function Game() {
         <div className="flex items-center gap-4">
           <button
             type="button"
+            onClick={() => setInfoModal("como-jogar")}
+            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+          >
+            Como jogar
+          </button>
+          <button
+            type="button"
+            onClick={() => setInfoModal("dicas")}
+            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+          >
+            Dicas
+          </button>
+          <button
+            type="button"
             onClick={toggleSound}
             className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
             aria-label={soundOn ? "Desligar música" : "Ligar música"}
@@ -511,6 +547,61 @@ export function Game() {
             <button
               className="mt-6 font-mono text-xs text-muted-foreground hover:text-foreground"
               onClick={() => setModal(null)}
+            >
+              fechar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {infoModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/85 p-4"
+          onClick={() => setInfoModal(null)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-xl overflow-auto border border-border bg-card p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {infoModal === "como-jogar" ? (
+              <>
+                <h2 className="font-display text-2xl">Como jogar</h2>
+                <div className="mt-4 space-y-3 text-sm leading-relaxed">
+                  <p>
+                    Leia tudo com atenção e clique nas frases interativas dentro de cada cena. As
+                    pistas não aparecem como setas ou marcadores brilhantes.
+                  </p>
+                  <p>
+                    Visite os quatro locais, abra o Caderno para rever documentos e conecte nomes,
+                    horários, endereços e objetos.
+                  </p>
+                  <p>
+                    O relógio avança quando você se desloca ou erra. A desconfiança de Doakes
+                    aparece no comportamento dele, não em uma barra na tela.
+                  </p>
+                  <p>
+                    Antes de acusar alguém, siga o Código de Harry: tenha certeza, reúna provas e
+                    feche todas as pontas soltas.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="font-display text-2xl">Dicas sem spoiler</h2>
+                <p className="mt-3 border-l-2 border-primary pl-3 text-sm leading-relaxed text-primary">
+                  Só pegue dicas em último caso, quando você realmente não estiver conseguindo
+                  resolver. Tente observar e cruzar as pistas antes de abrir esta janela.
+                </p>
+                <p className="mt-5 text-sm leading-relaxed">Dica atual: {hint}</p>
+                <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+                  A dica acompanha seu progresso e nunca mostra diretamente a resposta, a combinação
+                  ou o culpado.
+                </p>
+              </>
+            )}
+            <button
+              className="mt-6 font-mono text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => setInfoModal(null)}
             >
               fechar
             </button>
