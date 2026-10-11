@@ -38,7 +38,7 @@ export function Game() {
 
   function narrate(text: string, extra: Partial<ReturnType<typeof initial>> = {}, minutes = 0, susp = 0) {
     setS((prev) => {
-      const clock = prev.clock + minutes;
+      const clock = (extra.clock ?? prev.clock) + minutes;
       const suspicion = prev.suspicion + susp;
       const next = { ...prev, ...extra, clock, suspicion, log: [`${fmtClock(clock)} — ${text}`, ...prev.log] };
       if (suspicion >= 3)
