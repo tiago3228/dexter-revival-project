@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
@@ -197,6 +198,8 @@ function readSavedInvestigation(): SavedInvestigation | null {
 }
 
 export function DexterCase({ onBack }: { onBack: () => void }) {
+  const isMobile = useIsMobile();
+  const [mobileSceneOpen, setMobileSceneOpen] = useState(false);
   const [initialSave] = useState<SavedInvestigation | null>(() => readSavedInvestigation());
   const [difficulty, setDifficulty] = useState<Difficulty | null>(() => {
     if (initialSave) return initialSave.difficulty;
@@ -304,6 +307,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const inspectLocation = (id: string) => {
     setActiveLocation(id);
     setVisited((current) => (current.includes(id) ? current : [...current, id]));
+    if (isMobile) setMobileSceneOpen(true);
   };
   const inspectEvidence = (id: string) =>
     setFound((current) => (current.includes(id) ? current : [...current, id]));
@@ -475,7 +479,28 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             </div>
           </section>
 
-          <section className="border border-border p-4 sm:p-5">
+          {mobileSceneOpen && isMobile && (
+            <button
+              type="button"
+              aria-label="Fechar cena"
+              onClick={() => setMobileSceneOpen(false)}
+              className="fixed inset-0 z-40 bg-black/75 md:hidden"
+            />
+          )}
+          <section
+            aria-label={`Cena ativa: ${currentLocation.name}`}
+            className={`border border-border bg-background p-4 sm:p-5 ${isMobile ? (mobileSceneOpen ? "fixed inset-3 z-50 overflow-y-auto shadow-2xl" : "hidden") : "block"} md:static md:z-auto md:block md:overflow-visible md:bg-transparent md:shadow-none`}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Cena da investigação</p>
+              <button
+                type="button"
+                onClick={() => setMobileSceneOpen(false)}
+                className="min-h-10 shrink-0 border border-border px-3 py-2 font-mono text-xs hover:border-primary"
+              >
+                ← VOLTAR
+              </button>
+            </div>
             <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Cena ativa</p>
             <h2 className="mt-2 font-display text-2xl">{currentLocation.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{currentLocation.description}</p>
