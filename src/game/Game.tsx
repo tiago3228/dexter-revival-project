@@ -101,7 +101,7 @@ export function Game() {
     corredor: (
       <>
         <p>
-          A Homicídios está quase vazia. Na mesa de Debra, uma <Hot onClick={() => { ["depRuiz", "depTellez", "depTeresa"].forEach((d) => !has(d as DocId) && s.docs.push(d as DocId)); addDoc("depRuiz", "Você folheia a pasta de depoimentos do caso Ortega."); }}>pasta de depoimentos</Hot> e as <Hot onClick={() => addDoc("fichas", "Você lê as fichas dos envolvidos.")}>fichas dos envolvidos</Hot>.
+          A Homicídios está quase vazia. Na mesa de Debra, uma <Hot onClick={() => { if (!has("depRuiz")) narrate("Você folheia a pasta de depoimentos do caso Ortega: Ruiz, Tellez e Teresa.", { docs: [...s.docs, "depRuiz", "depTellez", "depTeresa"] }); setModal({ kind: "doc", id: "depRuiz" }); setTab("caderno"); }}>pasta de depoimentos</Hot> e as <Hot onClick={() => addDoc("fichas", "Você lê as fichas dos envolvidos.")}>fichas dos envolvidos</Hot>.
         </p>
         <p>
           No balcão do plantão, o <Hot onClick={() => addDoc("detencao", "Você abre o livro de detenção da noite do crime.")}>livro de detenção</Hot>. O fax ainda cospe uma <Hot onClick={() => addDoc("ponto", "Um fax do Porto de Miami chegou para Debra.")}>folha do porto</Hot>.
