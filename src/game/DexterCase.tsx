@@ -115,6 +115,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [forensicSolved, setForensicSolved] = useState(false);
   const [suspect, setSuspect] = useState("");
   const [ending, setEnding] = useState(false);
+  const [accusationSubmitted, setAccusationSubmitted] = useState(false);
   const [hintDialog, setHintDialog] = useState<{ hint: string; revealed: boolean } | null>(null);
 
   useEffect(() => {
@@ -128,13 +129,15 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     [currentLocation],
   );
   const allFound = found.length === EVIDENCE.length;
+  const canSolveTimeline = found.includes("log") && found.includes("tape");
+  const canSolveForensics = found.includes("autopsy") && found.includes("receipt");
   const canAccuse =
     safeOpen &&
     depotOpen &&
     timelineSolved &&
     forensicSolved &&
-    found.includes("log") &&
-    found.includes("receipt");
+    allFound &&
+    !accusationSubmitted;
 
   const inspectLocation = (id: string) => {
     setActiveLocation(id);
@@ -427,6 +430,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             </button>
             {!timelineSolved ? (
               <>
+                {!canSolveTimeline && (
+                  <p className="mt-4 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground">
+                    Para validar esta dedução, examine primeiro o Livro de entrada no arquivo do xerife e a Transcrição da fita na capela.
+                  </p>
+                )}
                 <label className="mt-4 block text-sm" htmlFor="timeline">
                   Qual conclusão é sustentada pelas evidências?
                 </label>
@@ -434,7 +442,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   id="timeline"
                   value={timelineAnswer}
                   onChange={(e) => setTimelineAnswer(e.target.value)}
-                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm"
+                  disabled={!canSolveTimeline}
+                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="">Selecione uma conclusão</option>
                   <option value="a">A fita prova que Eleanor nunca saiu de casa.</option>
@@ -447,10 +456,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   </option>
                 </select>
                 <button
+                  disabled={!canSolveTimeline || !timelineAnswer}
                   onClick={() => {
                     if (timelineAnswer === "b") setTimelineSolved(true);
                   }}
-                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary"
+                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   CONFERIR DEDUÇÃO
                 </button>
@@ -486,6 +496,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             </button>
             {!forensicSolved ? (
               <>
+                {!canSolveForensics && (
+                  <p className="mt-4 border-l-2 border-primary/60 pl-3 text-sm text-muted-foreground">
+                    Para validar a análise, examine o Relatório preliminar no hospital e o Recibo do depósito no cais.
+                  </p>
+                )}
                 <label className="mt-4 block text-sm" htmlFor="forensics">
                   Qual evidência conecta a vítima ao depósito?
                 </label>
@@ -493,7 +508,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   id="forensics"
                   value={forensicAnswer}
                   onChange={(e) => setForensicAnswer(e.target.value)}
-                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm"
+                  disabled={!canSolveForensics}
+                  className="mt-2 w-full border border-border bg-background px-3 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="">Selecione uma análise</option>
                   <option value="a">O detergente prova que Eleanor limpou a casa inteira.</option>
@@ -504,10 +520,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   <option value="c">A ausência de sangue prova que a morte foi natural.</option>
                 </select>
                 <button
+                  disabled={!canSolveForensics || !forensicAnswer}
                   onClick={() => {
                     if (forensicAnswer === "b") setForensicSolved(true);
                   }}
-                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary"
+                  className="mt-3 border border-primary px-4 py-2 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   VALIDAR ANÁLISE
                 </button>
@@ -539,24 +556,27 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             {["Paul Renner", "Dr. Henry Vale", "Pastor Matthew Cole"].map((name) => (
               <button
                 key={name}
+                disabled={!canAccuse || ending || accusationSubmitted}
                 onClick={() => setSuspect(name)}
-                className={`border px-4 py-3 text-sm ${suspect === name ? "border-primary bg-primary/5 text-primary" : "border-border hover:border-primary/60"}`}
+                className={`border px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40 ${suspect === name ? "border-primary bg-primary/5 text-primary" : "border-border hover:border-primary/60"}`}
               >
                 {name}
               </button>
             ))}
           </div>
           <button
-            disabled={!canAccuse || !suspect}
-            onClick={() => setEnding(true)}
+            disabled={!canAccuse || !suspect || ending || accusationSubmitted}
+            onClick={() => {
+              setAccusationSubmitted(true);
+              setEnding(true);
+            }}
             className="mt-5 border border-primary px-5 py-3 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
           >
             FECHAR O CASO
           </button>
-          {!canAccuse && (
+          {!canAccuse && !ending && !accusationSubmitted && (
             <p className="mt-3 text-xs text-muted-foreground">
-              Para concluir, abra os dois mecanismos, resolva a cronologia e a análise forense e
-              registre o livro de entrada e o recibo.
+              Para concluir, examine todas as seis evidências, abra os dois mecanismos e valide a cronologia e a análise forense. A acusação final só poderá ser feita uma vez.
             </p>
           )}
           {ending && (
@@ -588,21 +608,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                     Conclusão inconsistente
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
-                    As provas não sustentam essa acusação
+                    A acusação não se sustenta
                   </h3>
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    A pessoa escolhida não explica o registro de retorno, o recibo do depósito e o
-                    vestígio de tinta azul ao mesmo tempo. Reavalie as evidências.
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    Você encerrou a investigação apontando {suspect}, mas as provas não sustentam essa conclusão. A acusação foi registrada e não pode ser tentada novamente nesta partida. Se quiser investigar de novo, reinicie o caso e reúna as evidências antes de decidir.
                   </p>
-                  <button
-                    onClick={() => {
-                      setEnding(false);
-                      setSuspect("");
-                    }}
-                    className="mt-4 border border-border px-4 py-2 font-mono text-xs"
-                  >
-                    REABRIR DEDUÇÃO
-                  </button>
                 </>
               )}
             </div>
@@ -656,6 +666,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               setTimelineSolved(false);
               setForensicSolved(false);
               setEnding(false);
+              setAccusationSubmitted(false);
               setSuspect("");
             }}
             className="underline hover:text-primary"
