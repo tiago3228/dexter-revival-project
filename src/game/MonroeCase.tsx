@@ -1025,6 +1025,42 @@ function InvestigationBoard() {
     ["Diário de Emily", "motivo e acesso à casa"],
     ["Jornal da gala", "Amara em Nova York"],
   ];
+  const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
+  const [selectedClue, setSelectedClue] = useState<string | null>(null);
+  const [connections, setConnections] = useState<{ suspect: string; clue: string }[]>([]);
+
+  const connect = (suspect: string | null, clue: string | null) => {
+    if (!suspect || !clue) return;
+    setConnections((current) =>
+      current.some((connection) => connection.suspect === suspect && connection.clue === clue)
+        ? current
+        : [...current, { suspect, clue }],
+    );
+    setSelectedSuspect(null);
+    setSelectedClue(null);
+  };
+
+  const selectSuspect = (name: string) => {
+    if (selectedClue) {
+      connect(name, selectedClue);
+      return;
+    }
+    setSelectedSuspect((current) => (current === name ? null : name));
+  };
+
+  const selectClue = (name: string) => {
+    if (selectedSuspect) {
+      connect(selectedSuspect, name);
+      return;
+    }
+    setSelectedClue((current) => (current === name ? null : name));
+  };
+
+  const removeConnection = (suspect: string, clue: string) => {
+    setConnections((current) =>
+      current.filter((connection) => connection.suspect !== suspect || connection.clue !== clue),
+    );
+  };
 
   return (
     <div>
@@ -1035,26 +1071,44 @@ function InvestigationBoard() {
         <div>
           <h2 className="font-display text-3xl">Conexões do Caso Monroe</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Uma visão de trabalho para cruzar pessoas e evidências. As linhas vermelhas indicam
-            relações investigativas possíveis, não conclusões automáticas.
+            Você está na pele de <strong className="text-foreground">Dexter Morgan</strong>. Cruze
+            pessoas e evidências para construir um caso que sobreviva às provas — e descobrir quem
+            merece ser levado à mesa.
           </p>
         </div>
         <span className="border border-primary/60 px-3 py-2 font-mono text-[10px] text-primary">
-          NÃO CONFUNDIR HIPÓTESE COM PROVA
+          PREPARAR A MESA · UM FATO POR VEZ
         </span>
       </div>
+      <div className="mt-5 border border-primary/40 bg-primary/5 p-4 text-sm">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+          Como Dexter trabalha
+        </p>
+        <p className="mt-2 text-muted-foreground">
+          Selecione um suspeito e depois uma pista para prender um fio vermelho entre os dois. As
+          conexões são suas hipóteses de trabalho; a prova final ainda precisa ser confirmada no
+          dossiê e apresentada no relatório antes de colocar o assassino na mesa de Dexter.
+        </p>
+      </div>
       <div className="mt-5 overflow-auto border border-border bg-[#15100f] p-3 sm:p-6">
-        <div className="relative min-h-[620px] min-w-[920px] bg-[radial-gradient(circle_at_center,#2a1a18_0%,#120d0d_70%)] p-5">
+        <div className="relative min-h-[690px] min-w-[920px] bg-[radial-gradient(circle_at_center,#2a1a18_0%,#120d0d_70%)] p-5">
           <div className="pointer-events-none absolute inset-0 opacity-70">
             <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="none">
               <g stroke="#b4232d" strokeWidth="0.35" fill="none">
-                <path d="M10 20 C20 32, 15 48, 15 72" />
-                <path d="M30 20 C35 35, 27 50, 38 72" />
-                <path d="M50 20 C50 38, 55 48, 61 72" />
-                <path d="M70 20 C67 40, 76 51, 84 72" />
-                <path d="M90 20 C82 34, 88 52, 84 72" />
-                <path d="M30 20 C51 27, 69 28, 90 20" />
-                <path d="M10 20 C31 28, 49 28, 70 20" />
+                {connections.map((connection) => {
+                  const suspectIndex = suspects.findIndex(([name]) => name === connection.suspect);
+                  const clueIndex = clues.findIndex(([name]) => name === connection.clue);
+                  const x1 = 10 + suspectIndex * 20;
+                  const x2 = 12.5 + clueIndex * 25;
+                  return (
+                    <path
+                      key={`${connection.suspect}-${connection.clue}`}
+                      d={`M${x1} 21 C${x1 + (x2 - x1) * 0.2} 34, ${x2 - (x2 - x1) * 0.2} 49, ${x2} 64`}
+                      stroke="#d12d3a"
+                      strokeWidth="0.55"
+                    />
+                  );
+                })}
               </g>
             </svg>
           </div>
@@ -1063,16 +1117,19 @@ function InvestigationBoard() {
           </p>
           <div className="relative z-10 mt-3 grid grid-cols-5 gap-4">
             {suspects.map(([name, detail]) => (
-              <div
+              <button
+                type="button"
                 key={name}
-                className="border border-red-400/70 bg-[#2b1718]/95 p-3 shadow-[0_0_18px_rgba(180,35,45,0.2)]"
+                onClick={() => selectSuspect(name)}
+                className={`min-h-36 border p-3 text-left shadow-[0_0_18px_rgba(180,35,45,0.2)] transition hover:-translate-y-1 ${selectedSuspect === name ? "border-white bg-[#681d25] ring-2 ring-primary" : "border-red-400/70 bg-[#2b1718]/95"}`}
+                aria-pressed={selectedSuspect === name}
               >
                 <div className="mb-2 h-10 w-10 rounded-full border border-red-300/70 bg-black/30" />
                 <p className="font-display text-lg text-red-100">{name}</p>
                 <p className="mt-1 font-mono text-[10px] leading-relaxed text-red-200/70">
                   {detail}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
           <div className="relative z-10 mt-40">
@@ -1081,31 +1138,84 @@ function InvestigationBoard() {
             </p>
             <div className="mt-3 grid grid-cols-4 gap-5">
               {clues.map(([name, detail]) => (
-                <div
+                <button
+                  type="button"
                   key={name}
-                  className="border border-amber-200/60 bg-[#33251b]/95 p-3 shadow-[0_0_18px_rgba(216,164,85,0.12)]"
+                  onClick={() => selectClue(name)}
+                  className={`min-h-28 border p-3 text-left shadow-[0_0_18px_rgba(216,164,85,0.12)] transition hover:-translate-y-1 ${selectedClue === name ? "border-white bg-[#67431f] ring-2 ring-primary" : "border-amber-200/60 bg-[#33251b]/95"}`}
+                  aria-pressed={selectedClue === name}
                 >
                   <p className="font-display text-lg text-amber-100">{name}</p>
                   <p className="mt-1 font-mono text-[10px] leading-relaxed text-amber-100/70">
                     {detail}
                   </p>
-                </div>
+                </button>
               ))}
             </div>
           </div>
           <div className="relative z-10 mt-6 flex items-center justify-center">
-            <div className="border-2 border-red-400 bg-[#3b1418] px-8 py-3 text-center shadow-[0_0_25px_rgba(180,35,45,0.35)]">
+            <div className="border-2 border-red-400 bg-[#3b1418] px-8 py-4 text-center shadow-[0_0_25px_rgba(180,35,45,0.35)]">
               <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-200/80">
-                Pergunta central
+                Mesa de Dexter Morgan
               </p>
               <p className="mt-1 font-display text-xl text-red-50">Quem matou Jonathan Monroe?</p>
+              <p className="mt-2 max-w-sm text-xs text-red-100/70">
+                O objetivo não é apenas apontar um nome. É reunir a prova necessária para colocar o
+                assassino na mesa.
+              </p>
             </div>
           </div>
         </div>
       </div>
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_auto]">
+        <div className="border border-border bg-card/40 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+              Fios montados: {connections.length}
+            </p>
+            {(selectedSuspect || selectedClue) && (
+              <p className="font-mono text-xs text-amber-200">
+                {selectedSuspect ? "Agora escolha uma pista" : "Agora escolha um suspeito"}
+              </p>
+            )}
+          </div>
+          {connections.length === 0 ? (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Nenhuma conexão montada. Comece por uma pessoa de interesse e cruze-a com um
+              documento.
+            </p>
+          ) : (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {connections.map((connection) => (
+                <button
+                  key={`${connection.suspect}-${connection.clue}`}
+                  type="button"
+                  onClick={() => removeConnection(connection.suspect, connection.clue)}
+                  className="border border-red-400/70 px-3 py-2 text-left text-xs text-red-100 hover:bg-red-950/60"
+                  title="Remover conexão"
+                >
+                  {connection.suspect} <span className="text-red-300">×</span> {connection.clue}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setConnections([]);
+            setSelectedSuspect(null);
+            setSelectedClue(null);
+          }}
+          disabled={connections.length === 0 && !selectedSuspect && !selectedClue}
+          className="min-h-11 self-start border border-border px-4 py-3 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Limpar quadro
+        </button>
+      </div>
       <p className="mt-3 text-xs text-muted-foreground">
         Consulte os documentos no dossiê e use o bloco de notas para separar fatos confirmados de
-        teorias.
+        teorias. O quadro organiza o raciocínio; o relatório final decide quem chega à mesa.
       </p>
     </div>
   );
