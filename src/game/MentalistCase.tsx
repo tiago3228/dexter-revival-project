@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
 import { finishCaseTimer } from "./caseTimer";
@@ -66,7 +66,15 @@ const SUSPECTS = [
   },
 ];
 
-export function MentalistCase({ onBack }: { onBack: () => void }) {
+export function MentalistCase({
+  onBack,
+  soundOn,
+  onToggleSound,
+}: {
+  onBack: () => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+}) {
   const [found, setFound] = useState<string[]>([]);
   const [selectedClues, setSelectedClues] = useState<string[]>([]);
   const [interviewed, setInterviewed] = useState<string[]>([]);
@@ -77,11 +85,103 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
   const [showJane, setShowJane] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [harryLine, setHarryLine] = useState<string | null>(null);
+  const [ambientOn, setAmbientOn] = useState(true);
+  const [ambientVolume, setAmbientVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.32;
+    const saved = window.localStorage.getItem("dexter-mentalist-ambient-volume");
+    if (saved === null) return 0.32;
+    const parsed = Number(saved);
+    return Number.isFinite(parsed) ? Math.min(1, Math.max(0, parsed)) : 0.32;
+  });
+  const ambientRef = useRef<{
+    context: AudioContext;
+    sources: AudioScheduledSourceNode[];
+    gains: GainNode[];
+  } | null>(null);
+
+  const stopAmbient = useCallback(() => {
+    const ambient = ambientRef.current;
+    if (!ambient) return;
+    ambient.sources.forEach((source) => source.stop());
+    ambientRef.current = null;
+    void ambient.context.close();
+  }, []);
+
+  const startAmbient = useCallback(
+    (force = false) => {
+      if ((!ambientOn && !force) || ambientRef.current || typeof window === "undefined") return;
+      const context = new AudioContext();
+      const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let index = 0; index < data.length; index += 1) {
+        data[index] = (Math.random() * 2 - 1) * 0.16;
+      }
+
+      const roomTone = context.createBufferSource();
+      roomTone.buffer = buffer;
+      roomTone.loop = true;
+      const filter = context.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 1150;
+      const roomGain = context.createGain();
+      roomGain.gain.value = 0.026 * ambientVolume;
+      roomTone.connect(filter).connect(roomGain).connect(context.destination);
+
+      const hum = context.createOscillator();
+      hum.type = "sine";
+      hum.frequency.value = 52;
+      const humGain = context.createGain();
+      humGain.gain.value = 0.008 * ambientVolume;
+      hum.connect(humGain).connect(context.destination);
+
+      roomTone.start();
+      hum.start();
+      ambientRef.current = { context, sources: [roomTone, hum], gains: [roomGain, humGain] };
+    },
+    [ambientOn, ambientVolume],
+  );
+
+  useEffect(() => () => stopAmbient(), [stopAmbient]);
+
+  useEffect(() => {
+    if (!ambientOn) stopAmbient();
+  }, [ambientOn, stopAmbient]);
+
+  useEffect(() => {
+    if (!ambientOn || ambientRef.current) return;
+    const activateAmbient = () => startAmbient();
+    window.addEventListener("pointerdown", activateAmbient, { once: true });
+    return () => window.removeEventListener("pointerdown", activateAmbient);
+  }, [ambientOn, startAmbient]);
+
+  useEffect(() => {
+    if (ambientRef.current) {
+      const [roomGain, humGain] = ambientRef.current.gains;
+      if (roomGain) roomGain.gain.value = 0.026 * ambientVolume;
+      if (humGain) humGain.gain.value = 0.008 * ambientVolume;
+    }
+  }, [ambientVolume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("dexter-mentalist-ambient-volume", String(ambientVolume));
+  }, [ambientVolume]);
+
+  const toggleAmbient = () => {
+    if (ambientOn) {
+      stopAmbient();
+      setAmbientOn(false);
+    } else {
+      setAmbientOn(true);
+      startAmbient(true);
+    }
+  };
+
   const allCoreClues = ["call", "ledger", "feather"].every((id) => found.includes(id));
   const connectionsSolved =
     selectedClues.includes("call+ledger") && selectedClues.includes("feather+ledger");
 
   const collect = (id: string) => {
+    startAmbient();
     if (!found.includes(id)) setFound((current) => [...current, id]);
     setHarryLine(
       "Um comportamento pode orientar a investigação; a prova material precisa sustentá-lo.",
@@ -90,6 +190,7 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
   };
 
   const connect = (pair: string) => {
+    startAmbient();
     if (selectedClues.includes(pair)) return;
     const valid = pair === "call+ledger" || pair === "feather+ledger";
     if (valid) {
@@ -112,6 +213,7 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
   };
 
   const interview = (id: string) => {
+    startAmbient();
     if (!interviewed.includes(id)) setInterviewed((current) => [...current, id]);
     const lines: Record<string, string> = {
       mcallister:
@@ -126,6 +228,7 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
   };
 
   const accuse = () => {
+    startAmbient();
     if (!allCoreClues || !connectionsSolved || interviewed.length < 2) {
       setHarryLine(
         "Uma acusação não substitui o trabalho que ainda falta. Complete as conexões e os depoimentos.",
@@ -190,6 +293,42 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
           </button>
         </header>
 
+        <div className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3">
+          <button
+            type="button"
+            onClick={onToggleSound}
+            aria-pressed={soundOn}
+            className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+          >
+            Trilha: {soundOn ? "ligada" : "desligada"}
+          </button>
+          <button
+            type="button"
+            onClick={toggleAmbient}
+            aria-pressed={ambientOn}
+            className="min-h-10 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+          >
+            Ambiente: {ambientOn ? "ligado" : "desligado"}
+          </button>
+          <label className="flex min-h-10 items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Volume ambiente
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={ambientVolume}
+              aria-label="Volume do som ambiente"
+              onChange={(event) => setAmbientVolume(Number(event.target.value))}
+              className="w-24 accent-primary"
+            />
+            <span>{Math.round(ambientVolume * 100)}%</span>
+          </label>
+          <p className="basis-full text-xs text-muted-foreground">
+            O som ambiente e a trilha podem tocar separadamente ou juntos.
+          </p>
+        </div>
+
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
         <section className="mt-6 border border-primary/40 bg-card/40 p-4 sm:p-6">
@@ -203,7 +342,10 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
             confirmada por evidências.
           </p>
           <button
-            onClick={() => setShowJane((current) => !current)}
+            onClick={() => {
+              startAmbient();
+              setShowJane((current) => !current);
+            }}
             className="mt-4 min-h-10 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
             {showJane ? "Ocultar análise de Jane" : "Ouvir a análise inicial de Patrick Jane"}

@@ -228,7 +228,9 @@ export function Game() {
       ? aberturaAudio.url
       : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
-        : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+        : !showMenu && caseMode === "mentalist"
+          ? "/audio/mentalist/red-john-theme.mp3"
+          : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const trackUrl = new URL(track, window.location.href).href;
     if (audio.src !== trackUrl) {
       audio.pause();
@@ -330,7 +332,13 @@ export function Game() {
   }
 
   if (caseMode === "mentalist") {
-    return <MentalistCase onBack={() => setShowMenu(true)} />;
+    return (
+      <MentalistCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+      />
+    );
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
