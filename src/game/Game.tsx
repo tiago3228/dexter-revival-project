@@ -128,6 +128,7 @@ export function Game() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const soundOnRef = useRef(soundOn);
   const musicVolumeRef = useRef(musicVolume);
+  const reflectionVideoPlayingRef = useRef(false);
   const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
@@ -191,10 +192,17 @@ export function Game() {
   const toggleSound = () => {
     setSoundOn((current) => {
       const next = !current;
-      if (next) void audioRef.current?.play().catch(() => undefined);
-      else audioRef.current?.pause();
+      if (next && !reflectionVideoPlayingRef.current) {
+        void audioRef.current?.play().catch(() => undefined);
+      } else audioRef.current?.pause();
       return next;
     });
+  };
+
+  const handleReflectionVideoPlaybackChange = (playing: boolean) => {
+    reflectionVideoPlayingRef.current = playing;
+    if (playing) audioRef.current?.pause();
+    else if (soundOnRef.current) void audioRef.current?.play().catch(() => undefined);
   };
 
   if (showIntro) {
@@ -218,6 +226,7 @@ export function Game() {
         onMusicVolumeChange={setMusicVolume}
         soundOn={soundOn}
         onToggleSound={toggleSound}
+        onReflectionVideoPlaybackChange={handleReflectionVideoPlaybackChange}
       />
     );
   }
@@ -1111,26 +1120,34 @@ function MainMenu({
   onMusicVolumeChange,
   soundOn,
   onToggleSound,
+  onReflectionVideoPlaybackChange,
 }: {
   onSelect: (nextCase: "ortega" | "monroe" | "painscreek") => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
   onToggleSound: () => void;
+  onReflectionVideoPlaybackChange: (playing: boolean) => void;
 }) {
   const [showReflections, setShowReflections] = useState(false);
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
 
-  const closeVideo = () => setActiveVideo(null);
+  const closeVideo = () => {
+    setActiveVideo(null);
+    onReflectionVideoPlaybackChange(false);
+  };
 
   useEffect(() => {
     if (activeVideo === null) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeVideo();
+      if (event.key === "Escape") {
+        setActiveVideo(null);
+        onReflectionVideoPlaybackChange(false);
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeVideo]);
+  }, [activeVideo, onReflectionVideoPlaybackChange]);
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
@@ -1164,6 +1181,9 @@ function MainMenu({
               autoPlay
               playsInline
               preload="metadata"
+              onPlay={() => onReflectionVideoPlaybackChange(true)}
+              onPause={() => onReflectionVideoPlaybackChange(false)}
+              onEnded={() => onReflectionVideoPlaybackChange(false)}
               src={
                 activeVideo === 1
                   ? "/videos/dexter-reflexoes/reflexao-dexter-01.mp4"
