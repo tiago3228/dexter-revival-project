@@ -800,7 +800,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
 
       {boardOpen && (
         <Overlay className="max-w-6xl" onClose={() => setBoardOpen(false)}>
-          <InvestigationBoard />
+          <InvestigationBoard onFeedback={(kind) => playSfx(kind)} />
         </Overlay>
       )}
       {briefingOpen && (
@@ -1011,7 +1011,7 @@ function ReportMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function InvestigationBoard() {
+function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "error") => void }) {
   const suspects = [
     ["Monica Monroe", "esposa · viagem de negócios"],
     ["Richard Stevens", "primo · sócio minoritário"],
@@ -1025,17 +1025,54 @@ function InvestigationBoard() {
     ["Diário de Emily", "motivo e acesso à casa"],
     ["Jornal da gala", "Amara em Nova York"],
   ];
+  const requiredConnections = [
+    ["Richard Stevens", "Jornal da gala"],
+    ["Richard Stevens", "SMS de Richard"],
+    ["Emily Parker", "Diário de Emily"],
+  ];
   const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
   const [selectedClue, setSelectedClue] = useState<string | null>(null);
   const [connections, setConnections] = useState<{ suspect: string; clue: string }[]>([]);
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState<{
+    kind: "correct" | "wrong" | "duplicate";
+    text: string;
+  } | null>(null);
+
+  const isRequiredConnection = (suspect: string, clue: string) =>
+    requiredConnections.some(
+      ([requiredSuspect, requiredClue]) => requiredSuspect === suspect && requiredClue === clue,
+    );
+
+  const correctConnections = connections.filter((connection) =>
+    isRequiredConnection(connection.suspect, connection.clue),
+  );
+  const allProofsReady = correctConnections.length === requiredConnections.length;
 
   const connect = (suspect: string | null, clue: string | null) => {
     if (!suspect || !clue) return;
-    setConnections((current) =>
-      current.some((connection) => connection.suspect === suspect && connection.clue === clue)
-        ? current
-        : [...current, { suspect, clue }],
+    const alreadyConnected = connections.some(
+      (connection) => connection.suspect === suspect && connection.clue === clue,
     );
+    if (alreadyConnected) {
+      setFeedback({ kind: "duplicate", text: "Esse fio já está preso ao quadro." });
+      return;
+    }
+    const correct = isRequiredConnection(suspect, clue);
+    setConnections((current) => [...current, { suspect, clue }]);
+    setScore((current) => Math.max(0, current + (correct ? 100 : -25)));
+    setFeedback(
+      correct
+        ? {
+            kind: "correct",
+            text: "Conexão confirmada. Essa evidência sustenta a cadeia do crime.",
+          }
+        : {
+            kind: "wrong",
+            text: "Conexão sem sustentação suficiente. Mantenha-a como hipótese e volte aos documentos.",
+          },
+    );
+    onFeedback?.(correct ? "success" : "error");
     setSelectedSuspect(null);
     setSelectedClue(null);
   };
@@ -1060,6 +1097,7 @@ function InvestigationBoard() {
     setConnections((current) =>
       current.filter((connection) => connection.suspect !== suspect || connection.clue !== clue),
     );
+    setFeedback({ kind: "duplicate", text: "Fio removido. A hipótese voltou a ficar em aberto." });
   };
 
   return (
@@ -1167,6 +1205,53 @@ function InvestigationBoard() {
           </div>
         </div>
       </div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-border bg-card/40 p-4">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+            Pontuação da dedução
+          </p>
+          <p className="mt-1 font-display text-2xl">{score} pontos</p>
+        </div>
+        <p className="font-mono text-xs text-muted-foreground">
+          Provas necessárias: {correctConnections.length}/{requiredConnections.length}
+        </p>
+      </div>
+      {feedback && (
+        <div
+          className={`mt-3 border p-4 text-sm ${feedback.kind === "correct" ? "border-primary bg-primary/10 text-primary" : feedback.kind === "wrong" ? "border-red-400/70 bg-red-950/30 text-red-100" : "border-border bg-card/40 text-muted-foreground"}`}
+          aria-live="polite"
+        >
+          <p className="font-mono text-xs uppercase tracking-[0.2em]">
+            {feedback.kind === "correct"
+              ? "Conexão correta · +100"
+              : feedback.kind === "wrong"
+                ? "Hipótese não confirmada · −25"
+                : "Quadro atualizado"}
+          </p>
+          <p className="mt-1">{feedback.text}</p>
+        </div>
+      )}
+      {allProofsReady && (
+        <div className="relative mt-4 overflow-hidden border-2 border-primary bg-[#3b1418] p-5 text-center shadow-[0_0_35px_rgba(180,35,45,0.55)] animate-pulse">
+          <div className="pointer-events-none absolute inset-0 border-4 border-primary/30 animate-ping" />
+          <p className="relative font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Todas as provas necessárias reunidas
+          </p>
+          <h3 className="relative mt-2 font-display text-3xl text-red-50">
+            A mesa de Dexter está pronta
+          </h3>
+          <p className="relative mx-auto mt-2 max-w-2xl text-sm text-red-100/80">
+            O fio entre Richard, a chantagem e o álibi quebrado está ligado ao motivo e ao acesso de
+            Emily. Você já tem a cadeia mínima para apontar o assassino — agora confirme tudo no
+            relatório final.
+          </p>
+          <div className="relative mt-4 flex items-center justify-center gap-2 font-mono text-xs text-primary">
+            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,80,80,0.9)]" />
+            CASO PRONTO PARA A CONCLUSÃO
+            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,80,80,0.9)]" />
+          </div>
+        </div>
+      )}
       <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_auto]">
         <div className="border border-border bg-card/40 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
