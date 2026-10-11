@@ -14,6 +14,7 @@ import {
 } from "./data";
 import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
+import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
 
 type PuzzleId =
   | "sangue"
@@ -129,7 +130,7 @@ export function Game() {
 
   useEffect(() => {
     const track = showIntro
-      ? "/audio/Abertura - Dexter - Marcos Ramos.mp3"
+      ? aberturaAudio.url
       : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
         : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
