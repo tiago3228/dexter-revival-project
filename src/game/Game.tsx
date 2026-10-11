@@ -110,6 +110,7 @@ export function Game() {
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
+  const [volume, setVolume] = useState(0.28);
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -137,6 +138,10 @@ export function Game() {
       sfxRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume]);
 
   if (showMenu) {
     return (
@@ -191,7 +196,10 @@ export function Game() {
       oscillator.type = kind === "error" ? "sawtooth" : "sine";
       oscillator.frequency.setValueAtTime(frequency, start);
       gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(0.07, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(
+        Math.max(0.0001, 0.07 * (volume / 0.28)),
+        start + 0.01,
+      );
       gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
       oscillator.connect(gain);
       gain.connect(context.destination);
@@ -643,6 +651,19 @@ export function Game() {
           >
             Som: {soundOn ? "ligado" : "desligado"}
           </button>
+          <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-xs text-muted-foreground">
+            Volume {Math.round(volume * 100)}%
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(event) => setVolume(Number(event.target.value))}
+              className="w-24 accent-primary"
+              aria-label="Volume do jogo"
+            />
+          </label>
           <button
             type="button"
             onClick={() => setShowMenu(true)}

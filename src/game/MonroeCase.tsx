@@ -214,18 +214,22 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [answer, setAnswer] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Objective[]>([]);
   const [soundOn, setSoundOn] = useState(true);
+  const [volume, setVolume] = useState(0.65);
   const [mistakes, setMistakes] = useState(0);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
   const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
   const [reportOpen, setReportOpen] = useState(false);
   const [briefingOpen, setBriefingOpen] = useState(true);
+  const [zoomedImage, setZoomedImage] = useState<{ src: string; title: string } | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [finalVerdict, setFinalVerdict] = useState<
     "emily-richard" | "jacob-daniel" | "monica-alone" | null
   >(null);
   const ambientRef = useRef<{
     context: AudioContext;
     sources: AudioScheduledSourceNode[];
+    gains: GainNode[];
   } | null>(null);
 
   useEffect(() => {
@@ -243,6 +247,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       ambientRef.current = null;
     }
   }, [soundOn]);
+  useEffect(() => {
+    if (ambientRef.current) {
+      ambientRef.current.gains[0].gain.value = 0.045 * volume;
+      ambientRef.current.gains[1].gain.value = 0.012 * volume;
+    }
+  }, [volume]);
 
   const startAmbient = (force = false) => {
     if ((!soundOn && !force) || ambientRef.current || typeof window === "undefined") return;
@@ -257,17 +267,17 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     rainFilter.type = "lowpass";
     rainFilter.frequency.value = 1800;
     const rainGain = context.createGain();
-    rainGain.gain.value = 0.045;
+    rainGain.gain.value = 0.045 * volume;
     rain.connect(rainFilter).connect(rainGain).connect(context.destination);
     const hum = context.createOscillator();
     hum.type = "sine";
     hum.frequency.value = 58;
     const humGain = context.createGain();
-    humGain.gain.value = 0.012;
+    humGain.gain.value = 0.012 * volume;
     hum.connect(humGain).connect(context.destination);
     rain.start();
     hum.start();
-    ambientRef.current = { context, sources: [rain, hum] };
+    ambientRef.current = { context, sources: [rain, hum], gains: [rainGain, humGain] };
   };
 
   const playSfx = (kind: "paper" | "play" | "success" | "error" | "warning") => {
@@ -288,7 +298,10 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       oscillator.type = kind === "error" ? "sawtooth" : "sine";
       oscillator.frequency.value = frequency;
       gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(kind === "paper" ? 0.04 : 0.07, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(
+        (kind === "paper" ? 0.04 : 0.07) * volume,
+        start + 0.01,
+      );
       gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.14);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(start);
@@ -422,6 +435,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     4: "Quem matou Jonathan e roubou o dinheiro?",
   };
 
+  const openZoom = (src: string, title: string) => {
+    playSfx("paper");
+    setZoomLevel(1);
+    setZoomedImage({ src, title });
+  };
+
   return (
     <main className="monroe-case min-h-screen bg-background px-3 py-4 text-foreground sm:px-10 sm:py-8">
       <header className="border-b border-border pb-5">
@@ -456,6 +475,19 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           >
             Ambiente: {soundOn ? "ligado" : "desligado"}
           </button>
+          <label className="flex min-h-11 items-center gap-2 border border-border px-3 py-2 font-mono text-xs text-muted-foreground">
+            Volume {Math.round(volume * 100)}%
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={(event) => setVolume(Number(event.target.value))}
+              className="w-24 accent-primary"
+              aria-label="Volume do Caso Monroe"
+            />
+          </label>
           <button
             disabled={completed.length < 4}
             onClick={() => setReportOpen(true)}
@@ -524,6 +556,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                     className="mt-3 w-full"
                     controls
                     autoPlay
+                    volume={volume}
                     onPlay={() => {
                       startAmbient();
                       playSfx("play");
@@ -716,7 +749,8 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             <img
               src="/images/monroe/page-4.jpg"
               alt="Página original do PDF com a apresentação do Caso Monroe"
-              className="max-h-[38rem] w-full object-contain object-top"
+              onClick={() => openZoom("/images/monroe/page-4.jpg", "Apresentação do Caso Monroe")}
+              className="max-h-[38rem] w-full cursor-zoom-in object-contain object-top"
             />
             <div className="text-sm leading-relaxed">
               <p>
@@ -762,11 +796,23 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         <Overlay onClose={() => setOpened(null)}>
           <h2 className="font-display text-2xl">{opened.title}</h2>
           {opened.image && (
-            <img
-              src={opened.image}
-              alt={`Página original do PDF: ${opened.title}`}
-              className="mt-4 max-h-[55vh] w-full object-contain"
-            />
+            <>
+              <button
+                type="button"
+                onClick={() => openZoom(opened.image!, opened.title)}
+                className="group mt-4 block w-full cursor-zoom-in text-left"
+                title="Clique para ampliar"
+              >
+                <img
+                  src={opened.image}
+                  alt={`Página original do PDF: ${opened.title}`}
+                  className="max-h-[55vh] w-full object-contain transition group-hover:opacity-80"
+                />
+                <span className="mt-2 block text-center font-mono text-[11px] text-primary">
+                  Clique na imagem para ampliar e ler os detalhes
+                </span>
+              </button>
+            </>
           )}
           <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">{opened.body}</p>
           {opened.audio && (
@@ -777,6 +823,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               <audio
                 controls
                 className="w-full"
+                volume={volume}
                 src={opened.audio}
                 onPlay={() => {
                   startAmbient();
@@ -861,6 +908,14 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           )}
         </Overlay>
       )}
+      {zoomedImage && (
+        <ImageZoom
+          image={zoomedImage}
+          zoomLevel={zoomLevel}
+          onZoomChange={setZoomLevel}
+          onClose={() => setZoomedImage(null)}
+        />
+      )}
     </main>
   );
 }
@@ -894,6 +949,102 @@ function ReportMetric({ label, value }: { label: string; value: string }) {
         {label}
       </p>
       <p className="mt-1 font-mono text-lg text-foreground">{value}</p>
+    </div>
+  );
+}
+
+function ImageZoom({
+  image,
+  zoomLevel,
+  onZoomChange,
+  onClose,
+}: {
+  image: { src: string; title: string };
+  zoomLevel: number;
+  onZoomChange: (value: number) => void;
+  onClose: () => void;
+}) {
+  const baseWidth = typeof window === "undefined" ? 1020 : Math.min(window.innerWidth * 0.92, 1020);
+
+  return (
+    <div
+      className="fixed inset-0 z-[70] flex flex-col bg-black/95 p-3 text-white sm:p-6"
+      onClick={onClose}
+      onWheel={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        onZoomChange(Math.min(8, Math.max(0.5, zoomLevel + (event.deltaY < 0 ? 0.25 : -0.25))));
+      }}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/20 pb-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/60">
+            Visualizador de evidência
+          </p>
+          <h2 className="mt-1 font-display text-xl">{image.title}</h2>
+        </div>
+        <div
+          className="flex flex-wrap items-center gap-2"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => onZoomChange(Math.max(0.5, zoomLevel - 0.25))}
+            className="min-h-10 min-w-10 border border-white/30 px-3 font-mono text-lg hover:border-primary hover:text-primary"
+            aria-label="Diminuir zoom"
+          >
+            −
+          </button>
+          <input
+            type="range"
+            min="0.5"
+            max="8"
+            step="0.25"
+            value={zoomLevel}
+            onChange={(event) => onZoomChange(Number(event.target.value))}
+            className="w-32 accent-primary sm:w-48"
+            aria-label="Nível de zoom"
+          />
+          <button
+            type="button"
+            onClick={() => onZoomChange(Math.min(8, zoomLevel + 0.25))}
+            className="min-h-10 min-w-10 border border-white/30 px-3 font-mono text-lg hover:border-primary hover:text-primary"
+            aria-label="Aumentar zoom"
+          >
+            +
+          </button>
+          <button
+            type="button"
+            onClick={() => onZoomChange(1)}
+            className="min-h-10 border border-white/30 px-3 font-mono text-xs hover:border-primary hover:text-primary"
+          >
+            {Math.round(zoomLevel * 100)}% · resetar
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="min-h-10 border border-primary px-3 font-mono text-xs text-primary hover:bg-primary/10"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+      <div className="mt-3 min-h-0 flex-1 overflow-auto rounded border border-white/10 bg-black/40 p-4">
+        <div style={{ width: baseWidth * zoomLevel }}>
+          <img
+            src={image.src}
+            alt={`Evidência ampliada: ${image.title}`}
+            className="max-w-none cursor-zoom-out select-none"
+            style={{ width: "100%" }}
+            onClick={(event) => event.stopPropagation()}
+            draggable={false}
+          />
+        </div>
+      </div>
+      <p className="pt-3 text-center font-mono text-[11px] text-white/60">
+        Use +, −, o controle deslizante ou a roda do mouse/trackpad. Arraste as barras de rolagem
+        para explorar a página.
+      </p>
     </div>
   );
 }
