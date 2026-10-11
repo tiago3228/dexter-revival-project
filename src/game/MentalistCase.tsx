@@ -38,7 +38,7 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
 
   const connect = (pair: string) => {
     if (selectedClues.includes(pair)) return;
-    const valid = pair === "call+ledger" || pair === "feather+ledger" || pair === "smile+photo";
+    const valid = pair === "call+ledger" || pair === "feather+ledger";
     if (valid) {
       setSelectedClues((current) => [...current, pair]);
       setFeedback(pair === "call+ledger"
@@ -125,7 +125,6 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
               <div className="mt-4 grid gap-2">
                 <button disabled={!found.includes("call") || !found.includes("ledger")} onClick={() => connect("call+ledger")} className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40">Registro telefônico + livro de acesso</button>
                 <button disabled={!found.includes("feather") || !found.includes("ledger")} onClick={() => connect("feather+ledger")} className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40">Fibra de uniforme + livro de acesso</button>
-                <button disabled={!found.includes("smile") || !found.includes("photo")} onClick={() => connect("smile+photo")} className="min-h-11 border border-border p-3 text-left text-sm hover:border-primary disabled:opacity-40">Sorriso vermelho + fotografia antiga</button>
               </div>
               <p className="mt-3 font-mono text-xs text-muted-foreground">Conexões confirmadas: {selectedClues.length}/2 necessárias</p>
             </section>
