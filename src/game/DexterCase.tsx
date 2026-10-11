@@ -277,7 +277,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   }, [difficulty]);
 
   const currentLocation =
-    LOCATIONS.find((location) => location.id === activeLocation) ?? LOCATIONS[0];
+    LOCATIONS.find((location) => location.id === activeLocation) ?? LOCATIONS[0]!;
   const locationEvidence = useMemo(
     () => EVIDENCE.filter((item) => currentLocation.evidence.includes(item.id)),
     [currentLocation],
