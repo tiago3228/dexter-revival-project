@@ -12,6 +12,7 @@ import {
   type DocId,
   type LocationId,
 } from "./data";
+import { MonroeCase } from "./MonroeCase";
 
 type PuzzleId =
   | "sangue"
@@ -109,6 +110,7 @@ export function Game() {
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
+  const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<AudioContext | null>(null);
 
@@ -134,6 +136,10 @@ export function Game() {
       sfxRef.current = null;
     };
   }, []);
+
+  if (caseMode === "monroe") {
+    return <MonroeCase onBack={() => setCaseMode("ortega")} />;
+  }
 
   const toggleSound = () => {
     setSoundOn((current) => {
@@ -624,6 +630,13 @@ export function Game() {
             aria-label={soundOn ? "Desligar música" : "Ligar música"}
           >
             Som: {soundOn ? "ligado" : "desligado"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setCaseMode("monroe")}
+            className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+          >
+            Caso Monroe
           </button>
           <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
         </div>
