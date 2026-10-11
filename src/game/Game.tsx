@@ -41,6 +41,25 @@ const initial = () => ({
   ] as string[],
 });
 
+const SCENE_IMAGES: Record<LocationId, { src: string; alt: string }> = {
+  lab: {
+    src: "/images/scene-lab.jpg",
+    alt: "Laboratório forense de Miami durante uma noite chuvosa",
+  },
+  corredor: {
+    src: "/images/scene-homicide-corridor.jpg",
+    alt: "Corredor noturno da divisão de Homicídios de Miami",
+  },
+  evidencias: {
+    src: "/images/scene-evidence-room.jpg",
+    alt: "Sala de evidências da polícia com armários e prateleiras",
+  },
+  apartamento: {
+    src: "/images/scene-dexter-apartment.jpg",
+    alt: "Apartamento de Dexter com vista noturna para Miami",
+  },
+};
+
 export function Game() {
   const [s, setS] = useState(initial);
   const [modal, setModal] = useState<Modal>(null);
@@ -404,25 +423,25 @@ export function Game() {
           </p>
           <h1 className="font-display text-3xl">Turno da Noite</h1>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
           <button
             type="button"
             onClick={() => setInfoModal("como-jogar")}
-            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
           >
             Como jogar
           </button>
           <button
             type="button"
             onClick={() => setInfoModal("dicas")}
-            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
           >
             Dicas
           </button>
           <button
             type="button"
             onClick={toggleSound}
-            className="border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
             aria-label={soundOn ? "Desligar música" : "Ligar música"}
           >
             Som: {soundOn ? "ligado" : "desligado"}
@@ -431,12 +450,12 @@ export function Game() {
         </div>
       </header>
 
-      <nav className="mt-4 flex flex-wrap gap-2 font-mono text-sm">
+      <nav className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs sm:flex sm:flex-wrap sm:text-sm">
         {(Object.keys(LOCATION_NAMES) as LocationId[]).map((l) => (
           <button
             key={l}
             onClick={() => go(l)}
-            className={`border px-3 py-1.5 ${s.loc === l ? "border-primary text-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
+            className={`min-h-11 border px-3 py-2 text-left ${s.loc === l ? "border-primary text-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
           >
             {LOCATION_NAMES[l]}
           </button>
@@ -448,21 +467,29 @@ export function Game() {
           <div className="mb-4 flex gap-4 font-mono text-sm">
             <button
               onClick={() => setTab("cena")}
-              className={tab === "cena" ? "text-primary" : "text-muted-foreground"}
+              className={`min-h-11 ${tab === "cena" ? "text-primary" : "text-muted-foreground"}`}
             >
               Cena
             </button>
             <button
               onClick={() => setTab("caderno")}
-              className={tab === "caderno" ? "text-primary" : "text-muted-foreground"}
+              className={`min-h-11 ${tab === "caderno" ? "text-primary" : "text-muted-foreground"}`}
             >
               Caderno ({s.docs.length})
             </button>
           </div>
           {tab === "cena" ? (
-            <div className="space-y-4 border border-border bg-card p-6 text-lg leading-relaxed">
-              <h2 className="font-display text-2xl">{LOCATION_NAMES[s.loc]}</h2>
-              {scenes[s.loc]}
+            <div className="relative min-h-[560px] overflow-hidden border border-border bg-black text-lg leading-relaxed sm:min-h-[620px]">
+              <img
+                src={SCENE_IMAGES[s.loc].src}
+                alt={SCENE_IMAGES[s.loc].alt}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/80" />
+              <div className="relative z-10 space-y-4 p-5 sm:p-8">
+                <h2 className="font-display text-2xl text-white">{LOCATION_NAMES[s.loc]}</h2>
+                <div className="max-w-3xl space-y-4 text-white/95">{scenes[s.loc]}</div>
+              </div>
             </div>
           ) : (
             <div className="grid gap-2 sm:grid-cols-2">
@@ -614,7 +641,7 @@ export function Game() {
 
 function Shell({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10">
+    <main className="min-h-screen bg-background px-3 py-4 text-foreground sm:px-10 sm:py-8">
       {children}
     </main>
   );
@@ -636,7 +663,7 @@ function Choice({
         <button
           key={o.value}
           onClick={() => onPick(o.value)}
-          className="border border-border px-4 py-2 text-left hover:border-primary"
+          className="min-h-11 touch-manipulation border border-border px-4 py-3 text-left hover:border-primary"
         >
           {o.label}
         </button>
