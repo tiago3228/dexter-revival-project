@@ -1031,53 +1031,36 @@ export function Game() {
 
 function IntroScreen({ onStart }: { onStart: () => void }) {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f3f0eb] px-4 py-8 text-[#171719] sm:px-8">
-      <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(255,255,255,0.95),rgba(235,232,226,0.72)_52%,rgba(210,205,199,0.5))]" />
-      <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[46%] bg-[#a71925] sm:w-[43%]" />
-      <div aria-hidden="true" className="absolute inset-y-0 right-[43%] w-[3%] bg-[#171719]" />
-      <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[43%] bg-[linear-gradient(145deg,rgba(170,22,34,0.18),rgba(35,9,13,0.58))]" />
-      <div aria-hidden="true" className="absolute inset-0 opacity-[0.14] [background-image:radial-gradient(#292323_0.7px,transparent_0.7px)] [background-size:5px_5px]" />
-      <section className="relative z-10 grid w-full max-w-6xl items-center gap-8 sm:min-h-[min(760px,88vh)] sm:grid-cols-[1.05fr_0.95fr] sm:gap-12">
-        <div className="order-2 flex flex-col items-start px-2 py-4 sm:order-1 sm:px-8 sm:py-12">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.32em] text-[#8f1d27] sm:text-xs">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2efea] px-4 py-6 text-[#171719] sm:px-8 sm:py-10">
+      <section className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+        <img
+          src="/images/tela-inicial.jpeg"
+          alt="Arte original da tela inicial de Dexter"
+          className="max-h-[54vh] w-full rounded-sm object-contain sm:max-h-[58vh]"
+        />
+        <div className="mt-5 flex w-full max-w-4xl flex-col items-center border-t-4 border-[#a71925] bg-[#171719] px-5 py-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.22)] sm:mt-7 sm:px-10 sm:py-8">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#e0d8d4] sm:text-xs sm:tracking-[0.32em]">
             Uma investigação nunca termina na cena do crime
           </p>
-          <div className="my-6 h-[3px] w-16 bg-[#b51f2b]" />
-          <h1 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-[-0.04em] text-[#171719] sm:text-7xl lg:text-8xl">
+          <h1 className="mt-4 font-display text-4xl font-black uppercase leading-none tracking-[0.04em] text-white sm:text-6xl">
             Dexter
           </h1>
-          <p className="mt-4 font-mono text-lg font-extrabold uppercase tracking-[0.13em] text-[#b21f2c] sm:text-2xl">
+          <p className="mt-2 font-mono text-lg font-extrabold uppercase tracking-[0.13em] text-[#d52c39] sm:text-2xl">
             Passageiro Sombrio
           </p>
-          <p className="mt-5 max-w-md text-sm leading-relaxed text-[#4d4948] sm:text-base">
+          <p className="mt-4 text-sm leading-relaxed text-[#d5d0cd] sm:text-base">
             Todo segredo deixa vestígios. Toda escolha tem um preço.
           </p>
           <button
             type="button"
             onClick={onStart}
-            className="mt-9 min-h-12 min-w-52 border-2 border-[#171719] bg-[#a71925] px-8 py-3.5 font-mono text-sm font-bold uppercase tracking-[0.28em] text-white shadow-[6px_6px_0_#171719] transition hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[4px_4px_0_#171719] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a71925]"
+            className="mt-6 min-h-12 min-w-52 border-2 border-[#f4ece8] bg-[#b21f2c] px-8 py-3.5 font-mono text-sm font-bold uppercase tracking-[0.28em] text-white shadow-[5px_5px_0_#6f111a] transition hover:bg-[#d12a37] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f4ece8]"
           >
             Iniciar
           </button>
-          <p className="mt-8 font-mono text-[9px] font-semibold uppercase tracking-[0.24em] text-[#6e6763] sm:text-[10px]">
-            Investigue <span className="px-1.5 text-[#b21f2c]">•</span> Descubra <span className="px-1.5 text-[#b21f2c]">•</span> Decida
+          <p className="mt-6 font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#bcb4b0] sm:text-[10px] sm:tracking-[0.24em]">
+            Investigue <span className="px-1.5 text-[#e13a45]">•</span> Descubra <span className="px-1.5 text-[#e13a45]">•</span> Decida
           </p>
-        </div>
-        <div className="relative order-1 mx-auto flex aspect-[4/3] w-full max-w-xl items-center justify-center overflow-hidden border-[5px] border-[#171719] bg-[#eeeae4] shadow-[12px_12px_0_rgba(23,23,25,0.18)] sm:order-2 sm:aspect-[3/4] sm:max-h-[620px]">
-          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.12))]" />
-          <div className="absolute inset-y-0 left-0 w-1/2 bg-[#f4f1ec]" />
-          <div className="absolute inset-y-0 right-0 w-1/2 bg-[#b21f2c]" />
-          <img
-            src="/images/scene-dexter-apartment.jpg"
-            alt="Ambiente noturno do universo de Dexter"
-            className="absolute inset-0 h-full w-full object-cover opacity-65 mix-blend-multiply grayscale"
-          />
-          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(244,241,236,0.45)_0%,rgba(244,241,236,0.08)_49%,rgba(178,31,44,0.2)_50%,rgba(95,8,17,0.52)_100%)]" />
-          <div className="absolute bottom-5 left-5 border-l-2 border-[#b21f2c] pl-3 text-left sm:bottom-7 sm:left-7">
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-white drop-shadow sm:text-[10px]">Arquivo confidencial</p>
-            <p className="mt-1 font-display text-xl font-black uppercase tracking-wider text-white drop-shadow sm:text-2xl">Miami · Flórida</p>
-          </div>
-          <span aria-hidden="true" className="absolute right-4 top-4 h-3 w-3 rounded-full bg-[#b21f2c] ring-4 ring-white/70" />
         </div>
       </section>
     </main>
