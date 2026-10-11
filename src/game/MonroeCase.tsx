@@ -237,6 +237,8 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [finalVerdict, setFinalVerdict] = useState<
     "emily-richard" | "jacob-daniel" | "monica-alone" | null
   >(null);
+  const [tableSceneOpen, setTableSceneOpen] = useState(false);
+  const [tableSceneStep, setTableSceneStep] = useState(0);
   const ambientRef = useRef<{
     context: AudioContext;
     sources: AudioScheduledSourceNode[];
@@ -933,11 +935,14 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         </Overlay>
       )}
       {reportOpen && (
-        <Overlay onClose={() => setReportOpen(false)}>
+        <Overlay
+          className={finalVerdict === "emily-richard" ? "max-w-4xl" : "max-w-xl"}
+          onClose={() => setReportOpen(false)}
+        >
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
-            Relatório final · Arquivo Greenfield
+            Dossiê de encerramento · Arquivo Greenfield
           </p>
-          <h2 className="mt-2 font-display text-3xl">O Caso Monroe</h2>
+          <h2 className="mt-2 font-display text-3xl">O Caso Monroe — reconstrução completa</h2>
           <div className="mt-5 border border-primary/60 bg-primary/5 p-5">
             <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
               Classificação do investigador
@@ -965,11 +970,197 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
               ))}
             </ol>
           </section>
+          {finalVerdict === "emily-richard" && (
+            <section className="mt-5 space-y-5 border-2 border-primary/70 bg-[#211313] p-5 shadow-[0_0_28px_rgba(180,35,45,0.25)] sm:p-7">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Dossiê completo · cadeia dos acontecimentos
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  A reconstrução abaixo separa o que foi observado nos arquivos da conclusão que
+                  Dexter pode sustentar. Nenhum suspeito chega à mesa apenas por intuição.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="border border-border/80 bg-background/30 p-4">
+                  <h4 className="font-mono text-xs uppercase tracking-wider text-primary">
+                    Linha do tempo
+                  </h4>
+                  <ol className="mt-3 space-y-3 text-sm leading-relaxed">
+                    <li>
+                      <strong>18/05:</strong> Emily é demitida por Jonathan e perde o acesso formal
+                      ao trabalho, mas conhece a casa e a rotina.
+                    </li>
+                    <li>
+                      <strong>20/05 · 19:30:</strong> a mensagem de Jacob cria uma pista paralela; o
+                      registro militar não o coloca na cena.
+                    </li>
+                    <li>
+                      <strong>20/05 · 20:00:</strong> Richard marca um encontro com Jonathan para
+                      tratar do dinheiro desaparecido.
+                    </li>
+                    <li>
+                      <strong>20/05 à noite:</strong> Emily usa o conhecimento do local; Richard
+                      participa da cadeia de chantagem e mente sobre o álibi.
+                    </li>
+                    <li>
+                      <strong>21/05:</strong> Monica retorna da viagem, encontra Jonathan e chama a
+                      polícia.
+                    </li>
+                  </ol>
+                </div>
+                <div className="border border-border/80 bg-background/30 p-4">
+                  <h4 className="font-mono text-xs uppercase tracking-wider text-primary">
+                    Pessoas e descarte de hipóteses
+                  </h4>
+                  <ul className="mt-3 space-y-3 text-sm leading-relaxed">
+                    <li>
+                      <strong>Emily Parker:</strong> motivo documentado, acesso à residência e ódio
+                      registrado no diário.
+                    </li>
+                    <li>
+                      <strong>Richard Stevens:</strong> chantagem de cinquenta mil dólares e álibi
+                      desmontado pelo jornal da gala.
+                    </li>
+                    <li>
+                      <strong>Monica Monroe:</strong> tinha conflito financeiro, mas a fatura do
+                      Luxe Hotel a coloca fora de Greenfield.
+                    </li>
+                    <li>
+                      <strong>Daniel Thompson:</strong> a fatura do Carvelle sustenta a viagem e não
+                      explica a chantagem.
+                    </li>
+                    <li>
+                      <strong>Jacob Kline:</strong> cliente secreto, mas sem prova de presença na
+                      noite do crime.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="border-l-2 border-primary pl-4 text-sm leading-relaxed">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-primary">
+                  Conclusão sustentada
+                </h4>
+                <p className="mt-2">
+                  Emily Parker matou Jonathan Monroe e Richard Stevens trabalhou com ela. Emily
+                  forneceu o acesso e o motivo; Richard forneceu a pressão financeira e uma mentira
+                  para esconder a cadeia. A dupla explica o corpo, o dinheiro, o encontro e os
+                  álibis quebrados sem deixar as provas principais sem resposta.
+                </p>
+              </div>
+              <div className="border border-primary bg-primary/10 p-4 text-center">
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Próxima etapa de Dexter Morgan
+                </p>
+                <p className="mt-2 font-display text-2xl">Levar o assassino à mesa</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  O dossiê está fechado. A investigação policial termina aqui; a justiça de Dexter
+                  começa em outro lugar.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSfx("table");
+                    setTableSceneStep(0);
+                    setReportOpen(false);
+                    setTableSceneOpen(true);
+                  }}
+                  className="mt-5 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary hover:bg-primary/20"
+                >
+                  Preparar a mesa de Dexter
+                </button>
+              </div>
+            </section>
+          )}
           <p className="mt-6 border-l-2 border-primary pl-3 text-xs leading-relaxed text-muted-foreground">
             Este relatório separa evidências observadas de conclusão investigativa. A classificação
             considera objetivos resolvidos, documentos consultados, depoimentos ouvidos, erros e
             dicas utilizadas.
           </p>
+        </Overlay>
+      )}
+      {tableSceneOpen && (
+        <Overlay className="max-w-3xl" onClose={() => setTableSceneOpen(false)}>
+          <div className="relative overflow-hidden border border-primary/70 bg-[#120b0b] p-5 shadow-[0_0_35px_rgba(180,35,45,0.35)] sm:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(180,35,45,0.18),transparent_65%)]" />
+            <div className="relative">
+              <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+                Miami · arquivo encerrado · mesa de Dexter Morgan
+              </p>
+              {tableSceneStep === 0 && (
+                <>
+                  <h2 className="mt-4 font-display text-4xl text-red-50">A cidade dorme.</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                    O dossiê está preso por um clipe vermelho. As provas estão em ordem. O alvo está
+                    sozinho, sem o álibi que o protegia.
+                  </p>
+                  <blockquote className="mt-6 border-l-2 border-primary pl-4 font-display text-xl italic text-red-100">
+                    “A polícia precisa de uma história que sobreviva ao tribunal. Eu preciso de
+                    certeza.”
+                  </blockquote>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSfx("connection");
+                      setTableSceneStep(1);
+                    }}
+                    className="mt-7 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary hover:bg-primary/20"
+                  >
+                    Continuar
+                  </button>
+                </>
+              )}
+              {tableSceneStep === 1 && (
+                <>
+                  <h2 className="mt-4 font-display text-4xl text-red-50">O ritual começa.</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                    Plástico, luz fria, ferramentas alinhadas. Dexter revisa cada prova uma última
+                    vez: motivo, acesso, chantagem e a mentira que fechou o círculo.
+                  </p>
+                  <div className="mt-6 grid grid-cols-3 gap-2 font-mono text-xs text-primary">
+                    <div className="border border-primary/50 p-3 text-center">MOTIVO</div>
+                    <div className="border border-primary/50 p-3 text-center">ACESSO</div>
+                    <div className="border border-primary/50 p-3 text-center">PROVA</div>
+                  </div>
+                  <blockquote className="mt-6 border-l-2 border-primary pl-4 font-display text-xl italic text-red-100">
+                    “Não é vingança. É o código. E o código pede um fim.”
+                  </blockquote>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSfx("table");
+                      setTableSceneStep(2);
+                    }}
+                    className="mt-7 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary hover:bg-primary/20"
+                  >
+                    Encerrar o ritual
+                  </button>
+                </>
+              )}
+              {tableSceneStep === 2 && (
+                <>
+                  <h2 className="mt-4 font-display text-4xl text-red-50">Corte para o silêncio.</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                    A tela não mostra o golpe. Mostra apenas o plástico vazio, o mar escuro além da
+                    janela e o dossiê sendo fechado. O assassino não voltará a ferir ninguém.
+                  </p>
+                  <p className="mt-6 border-l-2 border-primary pl-4 font-display text-xl italic text-red-100">
+                    “Uma ponta solta a menos em Miami.”
+                  </p>
+                  <p className="mt-6 font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                    Caso Monroe · encerrado
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setTableSceneOpen(false)}
+                    className="mt-7 min-h-11 border border-border px-5 py-3 font-mono text-sm hover:border-primary hover:text-primary"
+                  >
+                    Fechar arquivo
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
         </Overlay>
       )}
       {showHint && (
