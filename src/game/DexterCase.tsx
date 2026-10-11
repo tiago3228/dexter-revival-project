@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
+type EvidenceConnection = { id: string; evidence: [string, string]; title: string; insight: string };
 type SavedInvestigation = {
   version: 1;
   difficulty: Difficulty;
   visited: string[];
   found: string[];
+  confirmedConnections: string[];
   activeLocation: string;
   safeOpen: boolean;
   depotOpen: boolean;
@@ -60,6 +62,39 @@ const EVIDENCE: Evidence[] = [
     title: "Recibo do depósito",
     location: "Cais antigo",
     body: "A caixa 19 foi alugada por P. Renner. O recibo tem tinta azul fresca e uma marca de limpeza no canto, compatível com o resíduo encontrado sob as unhas de Eleanor.",
+  },
+];
+
+const EVIDENCE_CONNECTIONS: EvidenceConnection[] = [
+  {
+    id: "letter+tape",
+    evidence: ["letter", "tape"],
+    title: "A carta aponta para a gravação",
+    insight: "A anotação 04·27 coincide com a data citada na carta. A transcrição é a gravação que Eleanor queria que alguém encontrasse — mas isso ainda não identifica quem a ameaçou.",
+  },
+  {
+    id: "photo+receipt",
+    evidence: ["photo", "receipt"],
+    title: "A fotografia confirma o depósito",
+    insight: "A foto indica depósito 73, caixa 19. O recibo confirma que a caixa foi alugada por P. Renner, transformando uma referência anônima em uma ligação documental.",
+  },
+  {
+    id: "log+receipt",
+    evidence: ["log", "receipt"],
+    title: "O registro contradiz Renner",
+    insight: "Renner registrou a saída às 21h10, mas há uma assinatura de retorno às 22h06. O recibo da caixa 19 em seu nome liga sua movimentação ao depósito.",
+  },
+  {
+    id: "autopsy+receipt",
+    evidence: ["autopsy", "receipt"],
+    title: "O vestígio físico encontra o recibo",
+    insight: "A tinta azul sob as unhas de Eleanor combina com a tinta fresca no recibo, e a marca de limpeza reforça a hipótese de que alguém tentou remover vestígios.",
+  },
+  {
+    id: "log+tape",
+    evidence: ["log", "tape"],
+    title: "A gravação não confirma o cais",
+    insight: "A fita menciona o sino da capela, que estava quebrado. Isso enfraquece a leitura literal do local descrito e exige cruzar o áudio com o registro de horários.",
   },
 ];
 
@@ -170,6 +205,11 @@ function readSavedInvestigation(): SavedInvestigation | null {
       found: Array.isArray(saved.found)
         ? saved.found.filter((id): id is string => EVIDENCE.some((item) => item.id === id))
         : [],
+      confirmedConnections: Array.isArray(saved.confirmedConnections)
+        ? saved.confirmedConnections.filter((id): id is string =>
+            EVIDENCE_CONNECTIONS.some((connection) => connection.id === id),
+          )
+        : [],
       activeLocation: LOCATIONS.find((item) => item.id === saved.activeLocation)?.id ?? "house",
       safeOpen: saved.safeOpen === true,
       depotOpen: saved.depotOpen === true,
@@ -214,6 +254,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   });
   const [visited, setVisited] = useState<string[]>(() => initialSave?.visited ?? []);
   const [found, setFound] = useState<string[]>(() => initialSave?.found ?? []);
+  const [confirmedConnections, setConfirmedConnections] = useState<string[]>(
+    () => initialSave?.confirmedConnections ?? [],
+  );
+  const [selectedConnectionEvidence, setSelectedConnectionEvidence] = useState<string[]>([]);
+  const [connectionMessage, setConnectionMessage] = useState("");
   const [activeLocation, setActiveLocation] = useState(
     () => initialSave?.activeLocation ?? "house",
   );
@@ -248,6 +293,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       difficulty,
       visited,
       found,
+      confirmedConnections,
       activeLocation,
       safeOpen,
       depotOpen,
@@ -266,6 +312,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     difficulty,
     visited,
     found,
+    confirmedConnections,
     activeLocation,
     safeOpen,
     depotOpen,
@@ -316,6 +363,30 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   };
   const inspectEvidence = (id: string) =>
     setFound((current) => (current.includes(id) ? current : [...current, id]));
+  const toggleConnectionEvidence = (id: string) => {
+    setSelectedConnectionEvidence((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : current.length >= 2 ? [id] : [...current, id],
+    );
+    setConnectionMessage("");
+  };
+  const connectSelectedEvidence = () => {
+    if (selectedConnectionEvidence.length !== 2) return;
+    const connectionId = [...selectedConnectionEvidence].sort().join("+");
+    const connection = EVIDENCE_CONNECTIONS.find((item) => item.id === connectionId);
+    if (!connection) {
+      setMistakes((current) => current + 1);
+      setConnectionMessage("Essas duas pistas ainda não sustentam uma conexão verificável. Releia os documentos e tente outra combinação.");
+      setSelectedConnectionEvidence([]);
+      return;
+    }
+    if (confirmedConnections.includes(connection.id)) {
+      setConnectionMessage("Esta conexão já foi registrada no quadro de investigação.");
+    } else {
+      setConfirmedConnections((current) => [...current, connection.id]);
+      setConnectionMessage("Conexão confirmada: " + connection.title + ".");
+    }
+    setSelectedConnectionEvidence([]);
+  };
   const submitCode = (kind: "safe" | "depot") => {
     const expected = kind === "safe" ? "0427" : "7319";
     if (code.trim() === expected) {
@@ -341,6 +412,9 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     setDifficulty(nextDifficulty);
     setVisited([]);
     setFound([]);
+    setConfirmedConnections([]);
+    setSelectedConnectionEvidence([]);
+    setConnectionMessage("");
     setActiveLocation("house");
     setCode("");
     setCodeMessage("");
@@ -607,6 +681,94 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 <p className="mt-1 font-mono text-sm">{item.value}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mt-6 border border-border p-4 sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Análise cruzada
+              </p>
+              <h2 className="mt-2 font-display text-2xl">Conexões entre evidências</h2>
+            </div>
+            <p className="font-mono text-xs text-muted-foreground">
+              {confirmedConnections.length}/{EVIDENCE_CONNECTIONS.length} CONEXÕES REGISTRADAS
+            </p>
+          </div>
+          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+            Selecione duas evidências já examinadas e cruze as informações. Uma conexão só será
+            registrada quando houver apoio nos documentos; combinações sem sustentação contam como erro.
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {EVIDENCE.map((item) => {
+              const registered = found.includes(item.id);
+              const selected = selectedConnectionEvidence.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  disabled={!registered}
+                  onClick={() => toggleConnectionEvidence(item.id)}
+                  aria-pressed={selected}
+                  className={`border p-3 text-left transition disabled:cursor-not-allowed disabled:opacity-40 ${selected ? "border-primary bg-primary/10" : "border-border hover:border-primary/60"}`}
+                >
+                  <span className="block text-sm font-medium">{item.title}</span>
+                  <span className="mt-1 block font-mono text-[10px] text-muted-foreground">
+                    {registered ? (selected ? "SELECIONADA" : "EVIDÊNCIA DISPONÍVEL") : "EXAMINE PRIMEIRO"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <p className="text-sm text-muted-foreground">
+              {selectedConnectionEvidence.length}/2 pistas selecionadas
+            </p>
+            <button
+              type="button"
+              disabled={selectedConnectionEvidence.length !== 2}
+              onClick={connectSelectedEvidence}
+              className="border border-primary px-4 py-3 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              CRUZAR EVIDÊNCIAS
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedConnectionEvidence([]);
+                setConnectionMessage("");
+              }}
+              className="border border-border px-4 py-3 font-mono text-xs text-muted-foreground hover:border-primary"
+            >
+              LIMPAR SELEÇÃO
+            </button>
+          </div>
+          {connectionMessage && (
+            <p role="status" className="mt-3 border-l-2 border-primary pl-3 text-sm text-primary">
+              {connectionMessage}
+            </p>
+          )}
+          <div className="mt-5 space-y-3">
+            {confirmedConnections.length === 0 ? (
+              <p className="border border-dashed border-border p-4 text-sm text-muted-foreground">
+                Nenhuma conexão registrada. Examine as pistas nos locais para começar a cruzar informações.
+              </p>
+            ) : (
+              confirmedConnections.map((id) => {
+                const connection = EVIDENCE_CONNECTIONS.find((item) => item.id === id);
+                if (!connection) return null;
+                const titles = connection.evidence.map((evidenceId) => EVIDENCE.find((item) => item.id === evidenceId)?.title);
+                return (
+                  <article key={connection.id} className="border border-primary/40 bg-primary/5 p-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">CONEXÃO CONFIRMADA</p>
+                    <h3 className="mt-1 font-medium">{connection.title}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{titles.join(" + ")}</p>
+                    <p className="mt-3 text-sm leading-relaxed">{connection.insight}</p>
+                  </article>
+                );
+              })
+            )}
           </div>
         </section>
 
