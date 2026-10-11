@@ -39,7 +39,7 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
 
   const connect = (pair: string) => {
     if (selectedClues.includes(pair)) return;
-    const valid = pair === "call+ledger" || pair === "feather+ledger";
+    const valid = pair === "call+ledger" || pair === "feather+ledger" || pair === "smile+photo";
     if (valid) {
       setSelectedClues((current) => [...current, pair]);
       setFeedback(pair === "call+ledger"
@@ -68,17 +68,20 @@ export function MentalistCase({ onBack }: { onBack: () => void }) {
       return;
     }
     const correct = answer === "mcallister";
+    if (!correct) {
+      setMistakes((current) => current + 1);
+      setFeedback("A acusação não fecha com as provas reunidas. Patrick pede que você reavalie os depoimentos e escolha novamente; intuição não substitui evidência.");
+      return;
+    }
     setFinished(true);
     recordCaseCompletion({
       caseId: "mentalist",
-      score: correct ? Math.max(0, 100 - mistakes * 8 - (hint ? 12 : 0)) : Math.max(0, 35 - mistakes * 5),
+      score: Math.max(0, 100 - mistakes * 8 - (hint ? 12 : 0)),
       hints: hint ? 1 : 0,
-      mistakes: correct ? mistakes : mistakes + 1,
-      correctConclusion: correct,
+      mistakes,
+      correctConclusion: true,
     });
-    setFeedback(correct
-      ? "DEXTER: A autoridade que controlava a cena tentou controlar também a narrativa. JANE: Exatamente. Thomas McAllister é Red John."
-      : "A acusação não fecha com as provas reunidas. Patrick pede que você volte ao quadro e separe intuição de evidência.");
+    setFeedback("DEXTER: A autoridade que controlava a cena tentou controlar também a narrativa. JANE: Exatamente. Thomas McAllister é Red John.");
   };
 
   return (
