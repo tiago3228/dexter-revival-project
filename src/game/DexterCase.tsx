@@ -356,10 +356,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       <main className="min-h-screen bg-background px-4 py-10 text-foreground sm:px-10 sm:py-16">
         <div className="mx-auto max-w-4xl">
           <button
+            type="button"
             onClick={onBack}
-            className="mb-8 font-mono text-xs text-muted-foreground hover:text-primary"
+            className="mb-8 min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
-            ← VOLTAR AOS ARQUIVOS
+            ← VOLTAR AOS CASOS
           </button>
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
             Arquivo especial · Greybridge, Flórida
@@ -402,10 +403,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
           <div>
             <button
+              type="button"
               onClick={onBack}
-              className="mb-4 font-mono text-xs text-muted-foreground hover:text-primary"
+              className="mb-4 min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
             >
-              ← ARQUIVOS
+              ← VOLTAR AOS CASOS
             </button>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Caso 03 · Greybridge, Flórida · 1998

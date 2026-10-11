@@ -513,10 +513,11 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             </p>
           </div>
           <button
+            type="button"
             onClick={onBack}
-            className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
+            className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
-            Voltar ao Turno da Noite
+            ← Voltar aos casos
           </button>
           <button
             onClick={() => setBriefingOpen(true)}
@@ -1076,6 +1077,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             considera objetivos resolvidos, documentos consultados, depoimentos ouvidos, erros e
             dicas utilizadas.
           </p>
+          <button
+            type="button"
+            onClick={onBack}
+            className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+          >
+            ← Voltar aos casos
+          </button>
         </Overlay>
       )}
       {tableSceneOpen && (
@@ -1155,6 +1163,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                     className="mt-7 min-h-11 border border-border px-5 py-3 font-mono text-sm hover:border-primary hover:text-primary"
                   >
                     Fechar arquivo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onBack}
+                    className="ml-3 mt-7 min-h-11 border border-primary px-5 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                  >
+                    ← Voltar aos casos
                   </button>
                 </>
               )}

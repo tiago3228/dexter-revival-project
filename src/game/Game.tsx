@@ -688,6 +688,13 @@ export function Game() {
           >
             Recomeçar o turno
           </button>
+          <button
+            type="button"
+            onClick={() => setShowMenu(true)}
+            className="ml-3 mt-10 min-h-11 border border-primary px-6 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+          >
+            ← Voltar aos casos
+          </button>
         </div>
       </Shell>
     );
@@ -746,7 +753,7 @@ export function Game() {
             onClick={() => setShowMenu(true)}
             className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
-            Menu principal
+            ← Voltar aos casos
           </button>
           <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
         </div>
