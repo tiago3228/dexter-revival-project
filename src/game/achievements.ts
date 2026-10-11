@@ -1,4 +1,4 @@
-export const CASE_IDS = ["ortega", "monroe", "painscreek"] as const;
+export const CASE_IDS = ["ortega", "monroe", "painscreek", "mentalist"] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
 export const ACHIEVEMENTS = [
@@ -41,14 +41,14 @@ export const ACHIEVEMENTS = [
   {
     id: "all-cases",
     title: "Arquivo completo",
-    description: "Conclua os três capítulos disponíveis.",
+    description: "Conclua os quatro capítulos disponíveis.",
     tier: "Ouro",
   },
   {
     id: "blood-slide-box",
     title: "Caixa de lâminas de sangue",
     description:
-      "Conclua os três capítulos com 90 pontos ou mais em cada um e acerte os três interrogatórios do Caso Dexter sem erros.",
+      "Conclua os quatro capítulos com 90 pontos ou mais em cada um e acerte os três interrogatórios do Caso Dexter sem erros.",
     tier: "Lendário",
   },
 ] as const;
