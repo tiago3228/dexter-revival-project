@@ -115,67 +115,78 @@ const DIFFICULTIES: { id: Difficulty; title: string; subtitle: string; details: 
     subtitle: "Difícil",
     details: "Sem destaques automáticos. Você precisa conectar evidências por conta própria.",
   },
-];
+ ];
+
+function readSavedInvestigation(): SavedInvestigation | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as Partial<SavedInvestigation>;
+    if (saved.version !== 1 || !isDifficulty(saved.difficulty)) {
+      window.localStorage.removeItem(SAVE_KEY);
+      return null;
+    }
+    return {
+      version: 1,
+      difficulty: saved.difficulty,
+      visited: Array.isArray(saved.visited)
+        ? saved.visited.filter((id): id is string => LOCATIONS.some((item) => item.id === id))
+        : [],
+      found: Array.isArray(saved.found)
+        ? saved.found.filter((id): id is string => EVIDENCE.some((item) => item.id === id))
+        : [],
+      activeLocation: LOCATIONS.find((item) => item.id === saved.activeLocation)?.id ?? "house",
+      safeOpen: saved.safeOpen === true,
+      depotOpen: saved.depotOpen === true,
+      timelineAnswer: typeof saved.timelineAnswer === "string" ? saved.timelineAnswer : "",
+      timelineSolved: saved.timelineSolved === true,
+      forensicAnswer: typeof saved.forensicAnswer === "string" ? saved.forensicAnswer : "",
+      forensicSolved: saved.forensicSolved === true,
+      suspect: typeof saved.suspect === "string" ? saved.suspect : "",
+      ending: saved.ending === true,
+      accusationSubmitted: saved.accusationSubmitted === true,
+      hintsUsed: Array.isArray(saved.hintsUsed)
+        ? saved.hintsUsed.filter((id): id is string => ["safe", "depot", "timeline", "forensics"].includes(id))
+        : [],
+      mistakes:
+        typeof saved.mistakes === "number" && Number.isFinite(saved.mistakes)
+          ? Math.max(0, Math.floor(saved.mistakes))
+          : 0,
+    };
+  } catch {
+    window.localStorage.removeItem(SAVE_KEY);
+    return null;
+  }
+}
 
 export function DexterCase({ onBack }: { onBack: () => void }) {
+  const [initialSave] = useState<SavedInvestigation | null>(() => readSavedInvestigation());
   const [difficulty, setDifficulty] = useState<Difficulty | null>(() => {
+    if (initialSave) return initialSave.difficulty;
     if (typeof window === "undefined") return null;
     const saved = window.localStorage.getItem("dexter-painscreek-difficulty");
-    return saved === "investigador" || saved === "detetive" || saved === "dexter" ? saved : null;
+    return isDifficulty(saved) ? saved : null;
   });
-  const [visited, setVisited] = useState<string[]>([]);
-  const [found, setFound] = useState<string[]>([]);
-  const [activeLocation, setActiveLocation] = useState("house");
+  const [visited, setVisited] = useState<string[]>(() => initialSave?.visited ?? []);
+  const [found, setFound] = useState<string[]>(() => initialSave?.found ?? []);
+  const [activeLocation, setActiveLocation] = useState(() => initialSave?.activeLocation ?? "house");
   const [code, setCode] = useState("");
   const [codeMessage, setCodeMessage] = useState("");
-  const [safeOpen, setSafeOpen] = useState(false);
-  const [depotOpen, setDepotOpen] = useState(false);
-  const [timelineAnswer, setTimelineAnswer] = useState("");
-  const [timelineSolved, setTimelineSolved] = useState(false);
-  const [forensicAnswer, setForensicAnswer] = useState("");
-  const [forensicSolved, setForensicSolved] = useState(false);
-  const [suspect, setSuspect] = useState("");
-  const [ending, setEnding] = useState(false);
-  const [accusationSubmitted, setAccusationSubmitted] = useState(false);
+  const [safeOpen, setSafeOpen] = useState(() => initialSave?.safeOpen ?? false);
+  const [depotOpen, setDepotOpen] = useState(() => initialSave?.depotOpen ?? false);
+  const [timelineAnswer, setTimelineAnswer] = useState(() => initialSave?.timelineAnswer ?? "");
+  const [timelineSolved, setTimelineSolved] = useState(() => initialSave?.timelineSolved ?? false);
+  const [forensicAnswer, setForensicAnswer] = useState(() => initialSave?.forensicAnswer ?? "");
+  const [forensicSolved, setForensicSolved] = useState(() => initialSave?.forensicSolved ?? false);
+  const [suspect, setSuspect] = useState(() => initialSave?.suspect ?? "");
+  const [ending, setEnding] = useState(() => initialSave?.ending ?? false);
+  const [accusationSubmitted, setAccusationSubmitted] = useState(() => initialSave?.accusationSubmitted ?? false);
   const [hintDialog, setHintDialog] = useState<{ id: string; hint: string; revealed: boolean } | null>(null);
-  const [hintsUsed, setHintsUsed] = useState<string[]>([]);
-  const [mistakes, setMistakes] = useState(0);
-  const [saveReady, setSaveReady] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState<string[]>(() => initialSave?.hintsUsed ?? []);
+  const [mistakes, setMistakes] = useState(() => initialSave?.mistakes ?? 0);
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(SAVE_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw) as Partial<SavedInvestigation>;
-        if (saved.version === 1 && isDifficulty(saved.difficulty)) {
-          setDifficulty(saved.difficulty);
-          setVisited(Array.isArray(saved.visited) ? saved.visited.filter((id): id is string => LOCATIONS.some((item) => item.id === id)) : []);
-          setFound(Array.isArray(saved.found) ? saved.found.filter((id): id is string => EVIDENCE.some((item) => item.id === id)) : []);
-          setActiveLocation(LOCATIONS.some((item) => item.id === saved.activeLocation) ? (saved.activeLocation as string) : "house");
-          setSafeOpen(saved.safeOpen === true);
-          setDepotOpen(saved.depotOpen === true);
-          setTimelineAnswer(typeof saved.timelineAnswer === "string" ? saved.timelineAnswer : "");
-          setTimelineSolved(saved.timelineSolved === true);
-          setForensicAnswer(typeof saved.forensicAnswer === "string" ? saved.forensicAnswer : "");
-          setForensicSolved(saved.forensicSolved === true);
-          setSuspect(typeof saved.suspect === "string" ? saved.suspect : "");
-          setEnding(saved.ending === true);
-          setAccusationSubmitted(saved.accusationSubmitted === true);
-          setHintsUsed(Array.isArray(saved.hintsUsed) ? saved.hintsUsed.filter((id): id is string => ["safe", "depot", "timeline", "forensics"].includes(id)) : []);
-          setMistakes(typeof saved.mistakes === "number" && Number.isFinite(saved.mistakes) ? Math.max(0, Math.floor(saved.mistakes)) : 0);
-        } else {
-          window.localStorage.removeItem(SAVE_KEY);
-        }
-      }
-    } catch {
-      window.localStorage.removeItem(SAVE_KEY);
-    } finally {
-      setSaveReady(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!saveReady) return;
     if (!difficulty) {
       window.localStorage.removeItem(SAVE_KEY);
       return;
@@ -199,7 +210,23 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
       mistakes,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
-  }, [saveReady, difficulty, visited, found, activeLocation, safeOpen, depotOpen, timelineAnswer, timelineSolved, forensicAnswer, forensicSolved, suspect, ending, accusationSubmitted, hintsUsed, mistakes]);
+  }, [
+    difficulty,
+    visited,
+    found,
+    activeLocation,
+    safeOpen,
+    depotOpen,
+    timelineAnswer,
+    timelineSolved,
+    forensicAnswer,
+    forensicSolved,
+    suspect,
+    ending,
+    accusationSubmitted,
+    hintsUsed,
+    mistakes,
+  ]);
 
   useEffect(() => {
     if (difficulty) window.localStorage.setItem("dexter-painscreek-difficulty", difficulty);
@@ -213,17 +240,18 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   );
   const allFound = found.length === EVIDENCE.length;
   const score = Math.max(0, 100 - hintsUsed.length * 15 - mistakes * 5);
-  const finalRank = suspect !== "Paul Renner"
-    ? "Investigação inconclusiva"
-    : score === 100
-      ? "Dexter — Instinto impecável"
-      : score >= 85
-        ? "Investigador de elite"
-        : score >= 70
-          ? "Detetive experiente"
-          : score >= 55
-            ? "Investigador mediano"
-            : "Investigação comprometida";
+  const finalRank =
+    suspect !== "Paul Renner"
+      ? "Investigação inconclusiva"
+      : score === 100
+        ? "Dexter — Instinto impecável"
+        : score >= 85
+          ? "Investigador de elite"
+          : score >= 70
+            ? "Detetive experiente"
+            : score >= 55
+              ? "Investigador mediano"
+              : "Investigação comprometida";
   const canSolveTimeline = found.includes("log") && found.includes("tape");
   const canSolveForensics = found.includes("autopsy") && found.includes("receipt");
   const canAccuse =
@@ -360,7 +388,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               EVIDÊNCIAS: {found.length}/{EVIDENCE.length}
             </p>
             <p className="mt-2">PONTUAÇÃO: {score}/100</p>
-            <p className="mt-2 text-[10px] text-primary">{saveReady ? "SALVAMENTO AUTOMÁTICO ATIVO" : "CARREGANDO ARQUIVO..."}</p>
+            <p className="mt-2 text-[10px] text-primary">SALVAMENTO AUTOMÁTICO ATIVO</p>
             <button
               className="mt-3 underline hover:text-primary"
               onClick={() => resetCase()}
