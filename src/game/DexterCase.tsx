@@ -115,6 +115,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [forensicSolved, setForensicSolved] = useState(false);
   const [suspect, setSuspect] = useState("");
   const [ending, setEnding] = useState(false);
+  const [hintDialog, setHintDialog] = useState<{ hint: string; revealed: boolean } | null>(null);
 
   useEffect(() => {
     if (difficulty) window.localStorage.setItem("dexter-painscreek-difficulty", difficulty);
@@ -333,10 +334,14 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <div className="border border-border bg-card/40 p-4">
               <h3 className="font-medium">Cofre da casa Whitmore {safeOpen && "· ABERTO"}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                {difficulty === "investigador"
-                  ? "Dica: Eleanor escreveu a data-chave na carta que deixou."
-                  : "A carta de Eleanor menciona uma data-chave. Descubra o formato usado no teclado."}
+                Descubra o código usando as evidências reunidas durante a investigação.
               </p>
+              <button
+                onClick={() => setHintDialog({ hint: "Eleanor escreveu a data-chave na carta que deixou. Observe como a data pode ser convertida em quatro dígitos.", revealed: false })}
+                className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+              >
+                DICAS
+              </button>
               {!safeOpen && (
                 <div className="mt-3 flex gap-2">
                   <input
@@ -364,10 +369,14 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             <div className="border border-border bg-card/40 p-4">
               <h3 className="font-medium">Depósito do cais {depotOpen && "· ABERTO"}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                {difficulty === "investigador"
-                  ? "Dica: leia o verso da fotografia no arquivo do xerife."
-                  : "A fotografia contém duas referências que devem ser lidas como um único código."}
+                Procure as referências que conectam a fotografia ao depósito do cais.
               </p>
+              <button
+                onClick={() => setHintDialog({ hint: "Leia o verso da fotografia encontrada no arquivo do xerife. As duas referências ali devem ser combinadas em um único código.", revealed: false })}
+                className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+              >
+                DICAS
+              </button>
               {!depotOpen && (
                 <div className="mt-3 flex gap-2">
                   <input
@@ -410,6 +419,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               A versão oficial diz que Renner deixou o posto antes do crime e não retornou. O livro
               de entrada tem duas marcações; a fita coloca em dúvida o local do encontro.
             </p>
+            <button
+              onClick={() => setHintDialog({ hint: "Compare as duas marcações do livro de entrada com o detalhe do sino mencionado na fita. Uma dessas informações torna a versão oficial impossível.", revealed: false })}
+              className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+            >
+              DICAS
+            </button>
             {!timelineSolved ? (
               <>
                 <label className="mt-4 block text-sm" htmlFor="timeline">
@@ -463,6 +478,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               A ausência de sangue no corredor, o detergente nas mãos e a tinta azul sob as unhas
               sugerem que a vítima tocou em algo pouco antes de morrer.
             </p>
+            <button
+              onClick={() => setHintDialog({ hint: "Procure outro item do caso que tenha tinta azul. O vestígio sob as unhas de Eleanor pode conectar a vítima ao depósito.", revealed: false })}
+              className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
+            >
+              DICAS
+            </button>
             {!forensicSolved ? (
               <>
                 <label className="mt-4 block text-sm" htmlFor="forensics">
@@ -587,6 +608,42 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             </div>
           )}
         </section>
+        {hintDialog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" role="presentation">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="hint-dialog-title"
+              className="w-full max-w-md border border-primary/60 bg-background p-6 shadow-2xl"
+            >
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Caderno de investigação</p>
+              <h2 id="hint-dialog-title" className="mt-3 font-display text-2xl">
+                {hintDialog.revealed ? "Dica desbloqueada" : "Antes de pedir uma dica"}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                {hintDialog.revealed
+                  ? hintDialog.hint
+                  : "Só utilize dicas se realmente não conseguir resolver sozinho."}
+              </p>
+              <div className="mt-6 flex flex-wrap justify-end gap-3">
+                <button
+                  onClick={() => setHintDialog(null)}
+                  className="border border-border px-4 py-3 font-mono text-xs transition hover:border-primary"
+                >
+                  {hintDialog.revealed ? "FECHAR" : "VOLTAR"}
+                </button>
+                {!hintDialog.revealed && (
+                  <button
+                    onClick={() => setHintDialog((current) => current ? { ...current, revealed: true } : null)}
+                    className="border border-primary bg-primary/10 px-4 py-3 font-mono text-xs text-primary transition hover:bg-primary/20"
+                  >
+                    ABRIR DICA
+                  </button>
+                )}
+              </div>
+            </section>
+          </div>
+        )}
         <footer className="mt-8 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-[10px] text-muted-foreground">
           <span>DEXTER MORGAN · CADERNO DE INVESTIGAÇÃO</span>
           <button
