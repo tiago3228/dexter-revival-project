@@ -128,7 +128,7 @@ export function Game() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const soundOnRef = useRef(soundOn);
   const musicVolumeRef = useRef(musicVolume);
-  const reflectionVideoPlayingRef = useRef(false);
+  const reflectionModalOpenRef = useRef(false);
   const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
@@ -140,29 +140,9 @@ export function Game() {
   }, [musicVolume]);
 
   useEffect(() => {
-    const track = showIntro
-      ? aberturaAudio.url
-      : !showMenu && caseMode === "painscreek"
-        ? "/audio/painscreek/painscreek-case-theme.mp3"
-        : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
-    const audio = new Audio(track);
+    const audio = new Audio();
     audio.loop = true;
-    audio.volume = musicVolumeRef.current;
-    if (showIntro) {
-      audio.onerror = () => {
-        // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
-        audio.onerror = null;
-        audio.src = "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
-        audio.load();
-        if (soundOnRef.current) void audio.play().catch(() => undefined);
-      };
-    }
     audioRef.current = audio;
-
-    if (soundOnRef.current) {
-      // Tenta o autoplay; navegadores que o bloquearem aguardam a primeira interação.
-      void audio.play().catch(() => undefined);
-    }
 
     const startMusic = () => {
       if (!soundOnRef.current) return;
@@ -175,8 +155,47 @@ export function Game() {
     return () => {
       window.removeEventListener("pointerdown", startMusic);
       audio.pause();
+      audio.onerror = null;
       audio.src = "";
       audioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const track = showIntro
+      ? aberturaAudio.url
+      : !showMenu && caseMode === "painscreek"
+        ? "/audio/painscreek/painscreek-case-theme.mp3"
+        : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+    const trackUrl = new URL(track, window.location.href).href;
+    if (audio.src !== trackUrl) {
+      audio.pause();
+      audio.src = track;
+      audio.load();
+    }
+    audio.volume = musicVolumeRef.current;
+    if (showIntro) {
+      audio.onerror = () => {
+        // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
+        audio.onerror = null;
+        audio.src = "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+        audio.load();
+        if (soundOnRef.current) void audio.play().catch(() => undefined);
+      };
+    } else {
+      audio.onerror = null;
+    }
+
+    if (soundOnRef.current) {
+      // Tenta o autoplay; navegadores que o bloquearem aguardam a primeira interação.
+      void audio.play().catch(() => undefined);
+    }
+
+    return () => {
+      audio.onerror = null;
       void sfxRef.current?.close();
       sfxRef.current = null;
     };
@@ -197,16 +216,16 @@ export function Game() {
   const toggleSound = () => {
     setSoundOn((current) => {
       const next = !current;
-      if (next && !reflectionVideoPlayingRef.current) {
+      if (next && !reflectionModalOpenRef.current) {
         void audioRef.current?.play().catch(() => undefined);
       } else audioRef.current?.pause();
       return next;
     });
   };
 
-  const handleReflectionVideoPlaybackChange = (playing: boolean) => {
-    reflectionVideoPlayingRef.current = playing;
-    if (playing) audioRef.current?.pause();
+  const handleReflectionModalOpenChange = (open: boolean) => {
+    reflectionModalOpenRef.current = open;
+    if (open) audioRef.current?.pause();
     else if (soundOnRef.current) void audioRef.current?.play().catch(() => undefined);
   };
 
@@ -231,7 +250,7 @@ export function Game() {
         onMusicVolumeChange={setMusicVolume}
         soundOn={soundOn}
         onToggleSound={toggleSound}
-        onReflectionVideoPlaybackChange={handleReflectionVideoPlaybackChange}
+        onReflectionModalOpenChange={handleReflectionModalOpenChange}
       />
     );
   }
@@ -1132,21 +1151,25 @@ function MainMenu({
   onMusicVolumeChange,
   soundOn,
   onToggleSound,
-  onReflectionVideoPlaybackChange,
+  onReflectionModalOpenChange,
 }: {
   onSelect: (nextCase: "ortega" | "monroe" | "painscreek") => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
   onToggleSound: () => void;
-  onReflectionVideoPlaybackChange: (playing: boolean) => void;
+  onReflectionModalOpenChange: (open: boolean) => void;
 }) {
   const [showReflections, setShowReflections] = useState(false);
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
 
   const closeVideo = () => {
     setActiveVideo(null);
-    onReflectionVideoPlaybackChange(false);
+    onReflectionModalOpenChange(false);
+  };
+  const openVideo = (video: 1 | 2) => {
+    onReflectionModalOpenChange(true);
+    setActiveVideo(video);
   };
 
   useEffect(() => {
@@ -1154,12 +1177,12 @@ function MainMenu({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveVideo(null);
-        onReflectionVideoPlaybackChange(false);
+        onReflectionModalOpenChange(false);
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeVideo, onReflectionVideoPlaybackChange]);
+  }, [activeVideo, onReflectionModalOpenChange]);
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
@@ -1193,9 +1216,6 @@ function MainMenu({
               autoPlay
               playsInline
               preload="metadata"
-              onPlay={() => onReflectionVideoPlaybackChange(true)}
-              onPause={() => onReflectionVideoPlaybackChange(false)}
-              onEnded={() => onReflectionVideoPlaybackChange(false)}
               src={
                 activeVideo === 1
                   ? "/videos/dexter-reflexoes/reflexao-dexter-01.mp4"
@@ -1239,7 +1259,7 @@ function MainMenu({
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
-                onClick={() => setActiveVideo(1)}
+                onClick={() => openVideo(1)}
                 className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
               >
                 <span className="block font-mono text-xs uppercase tracking-widest text-primary">
@@ -1249,7 +1269,7 @@ function MainMenu({
               </button>
               <button
                 type="button"
-                onClick={() => setActiveVideo(2)}
+                onClick={() => openVideo(2)}
                 className="min-h-14 border border-border bg-background px-5 py-4 text-left transition hover:border-primary hover:bg-primary/5"
               >
                 <span className="block font-mono text-xs uppercase tracking-widest text-primary">
