@@ -341,7 +341,7 @@ export function MentalistCase({
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
         <section className="mt-6 overflow-hidden border border-primary/40 bg-card/40">
-          <img src="/images/red-john-investigation.webp" alt="Dexter Morgan e Patrick Jane analisam juntos o sorriso vermelho de Red John numa parede coberta de pistas" className="block max-h-[560px] w-full object-cover object-center" />
+          <img src="/images/red-john-investigation.webp" alt="Dexter Morgan e Patrick Jane analisam juntos o sorriso vermelho de Red John numa parede coberta de pistas" onError={(event) => { event.currentTarget.style.display = "none"; }} className="block max-h-[560px] w-full object-cover object-center" />
           <div className="p-4 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
             Briefing · Dexter + Patrick Jane
