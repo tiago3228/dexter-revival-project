@@ -145,7 +145,7 @@ export function Game() {
     audioRef.current = audio;
 
     const startMusic = () => {
-      if (!soundOnRef.current) return;
+      if (!soundOnRef.current || reflectionModalOpenRef.current) return;
       void audio.play().catch(() => {
         // O navegador pode bloquear o áudio até uma interação explícita.
       });
@@ -189,7 +189,7 @@ export function Game() {
       audio.onerror = null;
     }
 
-    if (soundOnRef.current) {
+    if (soundOnRef.current && !reflectionModalOpenRef.current) {
       // Tenta o autoplay; navegadores que o bloquearem aguardam a primeira interação.
       void audio.play().catch(() => undefined);
     }
