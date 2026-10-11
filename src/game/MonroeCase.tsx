@@ -222,6 +222,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [mistakes, setMistakes] = useState(0);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [documentsOpened, setDocumentsOpened] = useState<string[]>([]);
+  const [testimoniesRead, setTestimoniesRead] = useState<string[]>([]);
   const [testimoniesHeard, setTestimoniesHeard] = useState<string[]>([]);
   const [reportOpen, setReportOpen] = useState(false);
   const [briefingOpen, setBriefingOpen] = useState(true);
@@ -418,7 +419,39 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     setReportOpen(true);
   };
 
+  const conclusionRequirements: Record<Objective, { documents: string[]; testimonies: string[] }> =
+    {
+      1: {
+        documents: ["email-client", "diary-early"],
+        testimonies: ["jacob"],
+      },
+      2: {
+        documents: ["hotel-carvelle", "hotel-luxe", "receipt", "newspaper"],
+        testimonies: ["monica", "daniel", "richard"],
+      },
+      3: {
+        documents: ["sms-richard", "draft", "diary-final"],
+        testimonies: ["richard", "emily"],
+      },
+      4: {
+        documents: ["jacob-sms", "military", "diary-final", "sms-richard", "receipt"],
+        testimonies: ["emily", "richard", "jacob"],
+      },
+    };
+
   const checkChoice = (value: string) => {
+    const requirement = conclusionRequirements[objective];
+    const reviewedEverything =
+      requirement.documents.every((id) => documentsOpened.includes(id)) &&
+      requirement.testimonies.every((id) => testimoniesRead.includes(id));
+    if (!reviewedEverything) {
+      playSfx("warning");
+      setMistakes((current) => current + 1);
+      setAnswer(
+        "Conclusão prematura. Um investigador não fecha o caso sem cruzar os documentos e depoimentos relevantes deste objetivo.",
+      );
+      return;
+    }
     if (objective === 1 && value === "jacob")
       return complete(2, "Objetivo 1 resolvido: o cliente secreto era Jacob Kline.");
     if (objective === 2 && value === "richard")
@@ -562,6 +595,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
                     onClick={() => {
                       startAmbient();
                       playSfx("paper");
+                      setTestimoniesRead((prev) =>
+                        prev.includes(testimony.id) ? prev : [...prev, testimony.id],
+                      );
                       setOpened(testimony);
                     }}
                     className="min-h-10 border border-border px-3 py-2 font-mono text-xs hover:border-primary"
