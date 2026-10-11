@@ -123,12 +123,14 @@ export function Game() {
   });
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek">("ortega");
   const [showMenu, setShowMenu] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
-    const track =
-      !showMenu && caseMode === "painscreek"
+    const track = showIntro
+      ? "/audio/Abertura - Dexter - Marcos Ramos.mp3"
+      : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
         : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const audio = new Audio(track);
@@ -173,6 +175,10 @@ export function Game() {
       return next;
     });
   };
+
+  if (showIntro) {
+    return <IntroScreen onStart={() => setShowIntro(false)} />;
+  }
 
   if (showMenu) {
     return (
@@ -1011,6 +1017,44 @@ export function Game() {
         </div>
       )}
     </Shell>
+  );
+}
+
+function IntroScreen({ onStart }: { onStart: () => void }) {
+  return (
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f0efeb] px-5 py-10 text-[#f8f5f0]">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(150,15,24,0.22)_0%,rgba(17,17,18,0.94)_48%,#080809_100%)]"
+      />
+      <div aria-hidden="true" className="absolute inset-0 opacity-25 [background-image:radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:5px_5px]" />
+      <div aria-hidden="true" className="absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-[#a51e28]/20 blur-3xl" />
+      <section className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
+        <p className="font-mono text-xs uppercase tracking-[0.5em] text-[#c6c0bc] sm:text-sm">
+          Um jogo de investigação
+        </p>
+        <div className="my-8 h-px w-24 bg-[#b21f2d]" />
+        <h1 className="font-display text-5xl font-black uppercase leading-none tracking-[0.12em] text-[#f4f0ec] drop-shadow-[0_5px_24px_rgba(180,20,30,0.35)] sm:text-8xl">
+          Dexter
+        </h1>
+        <p className="mt-5 font-mono text-xl font-bold uppercase tracking-[0.22em] text-[#c52a36] sm:text-3xl">
+          Passageiro Sombrio
+        </p>
+        <p className="mt-7 max-w-xl text-sm leading-relaxed text-[#d1cdca] sm:text-base">
+          Todo segredo deixa vestígios. Toda escolha tem um preço.
+        </p>
+        <button
+          type="button"
+          onClick={onStart}
+          className="mt-12 min-h-14 min-w-56 border border-[#c52a36] bg-[#a91f2a] px-10 py-4 font-mono text-sm font-bold uppercase tracking-[0.28em] text-white shadow-[0_0_35px_rgba(169,31,42,0.22)] transition hover:bg-[#c52a36] hover:shadow-[0_0_45px_rgba(169,31,42,0.4)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e65b64]"
+        >
+          Iniciar
+        </button>
+        <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.3em] text-[#77716f]">
+          Investigue · Descubra · Decida
+        </p>
+      </section>
+    </main>
   );
 }
 
