@@ -60,6 +60,29 @@ describe("game achievements", () => {
     expect(progress.unlockedIds).toContain("all-cases");
   });
 
+  it("reserves the legendary blood-slide box for elite scores in every chapter and perfect interviews", () => {
+    let progress = emptyAchievementProgress();
+    progress = applyCasePerformance(progress, { ...performance, score: 95 });
+    progress = applyCasePerformance(progress, { ...performance, caseId: "monroe", score: 92 });
+    progress = applyCasePerformance(progress, {
+      ...performance,
+      caseId: "painscreek",
+      score: 91,
+      correctInterrogations: 3,
+      interrogationMistakes: 0,
+    });
+
+    expect(progress.unlockedIds).toContain("blood-slide-box");
+
+    const incomplete = applyCasePerformance(emptyAchievementProgress(), {
+      ...performance,
+      caseId: "painscreek",
+      correctInterrogations: 3,
+      interrogationMistakes: 0,
+    });
+    expect(incomplete.unlockedIds).not.toContain("blood-slide-box");
+  });
+
   it("never lowers a chapter's stored best score", () => {
     const firstRun = applyCasePerformance(emptyAchievementProgress(), performance);
     const lowerRun = applyCasePerformance(firstRun, {

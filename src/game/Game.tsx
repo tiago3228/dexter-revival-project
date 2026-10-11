@@ -45,7 +45,14 @@ type Modal =
   | { kind: "acusar" }
   | null;
 type InfoModal = "como-jogar" | "dicas" | null;
-type Ending = { title: string; text: string; good: boolean } | null;
+type Ending = {
+  title: string;
+  text: string;
+  good: boolean;
+  speaker?: string;
+  speechText?: string;
+  speechSrc?: string;
+} | null;
 
 const initial = () => ({
   loc: "lab" as LocationId,
@@ -701,6 +708,42 @@ export function Game() {
             {ending.title}
           </h1>
           <p className="mt-6 text-lg leading-relaxed">{ending.text}</p>
+          {ending.speaker && ending.speechText && ending.speechSrc && (
+            <section className="mt-7 border border-primary/50 bg-card/60 p-4 text-left sm:p-5">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+                Depoimento final · {ending.speaker}
+              </p>
+              <blockquote className="mt-3 border-l-2 border-primary pl-4 text-sm leading-relaxed text-muted-foreground">
+                “{ending.speechText}”
+              </blockquote>
+              <audio
+                className="mt-4 w-full"
+                controls
+                preload="none"
+                src={ending.speechSrc}
+                muted={!soundOn}
+                volume={ambientVolume}
+                aria-label={`Ouvir o depoimento final de ${ending.speaker}`}
+                onPlay={() => {
+                  audioRef.current?.pause();
+                  playSfx("click");
+                }}
+                onPause={() => {
+                  if (soundOnRef.current && !reflectionModalOpenRef.current) {
+                    void audioRef.current?.play().catch(() => undefined);
+                  }
+                }}
+                onEnded={() => {
+                  if (soundOnRef.current && !reflectionModalOpenRef.current) {
+                    void audioRef.current?.play().catch(() => undefined);
+                  }
+                }}
+              />
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                A trilha de fundo pausa durante o depoimento e retorna ao final.
+              </p>
+            </section>
+          )}
           <section className="score-card mt-10 border border-border bg-card/80 p-5 text-left sm:p-6">
             <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
               <div>
@@ -989,29 +1032,47 @@ export function Game() {
               <Accuse
                 onPick={(who) => {
                   const all = s.solved.length === 13;
+                  const correctWithProof = who === "ruiz" && all;
+                  playSfx(correctWithProof ? "success" : "error");
                   if (who === "ruiz" && all)
                     setEnding({
                       good: true,
                       title: "O Código foi respeitado",
                       text: "Ruiz mentiu sobre a noite, lavou o sangue antes de chegar ao bar e plantou a luva para incriminar Tellez. No armazém nove das docas, você encontra o resto. Esta noite, o Passageiro Sombrio come. E ninguém inocente paga por isso.",
+                      speaker: "Ruiz",
+                      speechText:
+                        "Eu precisava que todos suspeitassem de Tellez. A luva plantada desviaria os olhos da polícia do armazém nove. Você juntou as peças.",
+                      speechSrc: "/audio/dexter/ortega/ruiz-confession.mp3",
                     });
                   else if (who === "ruiz")
                     setEnding({
                       good: false,
                       title: "Ponta solta",
                       text: "Você tinha razão sobre Ruiz, mas não tinha certeza. Harry estaria decepcionado. Faltaram provas, e Ruiz percebe que está sendo seguido. Ele some de Miami antes do amanhecer.",
+                      speaker: "Ruiz",
+                      speechText:
+                        "Você sabe que estou mentindo, mas não consegue provar. Quando perceber o que ficou faltando, eu já estarei longe de Miami.",
+                      speechSrc: "/audio/dexter/ortega/ruiz-escape.mp3",
                     });
                   else if (who === "tellez")
                     setEnding({
                       good: false,
                       title: "Um inocente na mesa",
                       text: "Tellez estava no porto a noite toda; o ponto e a câmera provavam isso. A luva foi plantada. Você quebrou a primeira regra do Código, e o verdadeiro assassino agradece.",
+                      speaker: "Tellez",
+                      speechText:
+                        "Eu estava no porto aquela noite. O ponto e as câmeras confirmam. Aquela luva não é minha.",
+                      speechSrc: "/audio/dexter/ortega/tellez-defensive.mp3",
                     });
                   else
                     setEnding({
                       good: false,
                       title: "A testemunha errada",
                       text: "Teresa só contou o que viu. Acusá-la não faz sentido nenhum, e o caso se fecha sem culpado.",
+                      speaker: "Teresa",
+                      speechText:
+                        "Eu só contei o que vi. Não sei quem matou Ortega, e não posso inventar uma resposta para você.",
+                      speechSrc: "/audio/dexter/ortega/teresa-witness.mp3",
                     });
                 }}
               />
@@ -1189,11 +1250,44 @@ function MainMenu({
   const [showReflections, setShowReflections] = useState(false);
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
   const [showTrophies, setShowTrophies] = useState(false);
+  const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
+  const bloodSlideTrophy = ACHIEVEMENTS.find(
+    (achievement) => achievement.id === "blood-slide-box",
+  )!;
+  const bloodSlideUnlocked = achievementProgress.unlockedIds.includes("blood-slide-box");
+  const chapterTransitionCopy: Record<CaseId, { index: string; title: string; detail: string }> = {
+    ortega: {
+      index: "CAPÍTULO 01 · MIAMI",
+      title: "Turno da Noite",
+      detail: "Carregando o arquivo Ortega e os registros de Homicídios.",
+    },
+    monroe: {
+      index: "CAPÍTULO 02 · GREENFIELD",
+      title: "O Caso Monroe",
+      detail: "Reunindo depoimentos, documentos e evidências do dossiê.",
+    },
+    painscreek: {
+      index: "CAPÍTULO 03 · GREYBRIDGE",
+      title: "The Painscreek Case",
+      detail: "Abrindo os arquivos forenses de Greybridge.",
+    },
+  };
 
   const chapterStatus = (caseId: CaseId) => {
     if (!achievementProgress.completedCases.includes(caseId)) return "ARQUIVO DISPONÍVEL";
     return `CONCLUÍDO · MELHOR ${achievementProgress.bestScores[caseId] ?? 0}/100`;
+  };
+
+  const selectChapter = (caseId: CaseId) => {
+    if (transitionChapter !== null) return;
+    setTransitionChapter(caseId);
+    if (soundOn) {
+      const transitionSound = new Audio("/audio/dexter/sfx/chapter-transition.mp3");
+      transitionSound.volume = 0.42;
+      void transitionSound.play().catch(() => undefined);
+    }
+    window.setTimeout(() => onSelect(caseId), 1150);
   };
 
   const closeVideo = () => {
@@ -1219,6 +1313,36 @@ function MainMenu({
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
+      {transitionChapter !== null && (
+        <div
+          className="chapter-transition-overlay fixed inset-0 z-[80] flex items-center justify-center p-5"
+          role="dialog"
+          aria-modal="true"
+          aria-live="polite"
+          aria-label={`Abrindo ${chapterTransitionCopy[transitionChapter].title}`}
+        >
+          <section className="chapter-transition-card relative w-full max-w-xl border border-primary/70 bg-[#100d0d] p-6 shadow-[0_0_55px_rgba(180,35,45,0.2)] sm:p-10">
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+              {chapterTransitionCopy[transitionChapter].index}
+            </p>
+            <h2 className="chapter-transition-title mt-5 font-display text-4xl sm:text-5xl">
+              {chapterTransitionCopy[transitionChapter].title}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              {chapterTransitionCopy[transitionChapter].detail}
+            </p>
+            <div className="chapter-transition-stamp mt-7 inline-flex border border-primary/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+              Acesso autorizado
+            </div>
+            <div className="chapter-transition-track mt-8 h-1 overflow-hidden bg-white/10">
+              <div className="chapter-transition-progress h-full bg-primary" />
+            </div>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Abrindo dossiê confidencial...
+            </p>
+          </section>
+        </div>
+      )}
       {activeVideo !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-3 sm:p-8"
@@ -1382,30 +1506,56 @@ function MainMenu({
                 {achievementProgress.unlockedIds.length}/{ACHIEVEMENTS.length} conquistados
               </p>
             </div>
+            <section
+              className={`mt-5 flex flex-col items-center gap-4 border p-5 text-center sm:flex-row sm:text-left ${bloodSlideUnlocked ? "border-primary bg-primary/10" : "border-primary/40 bg-background/40"}`}
+              aria-label="Troféu máximo: caixa de lâminas de sangue"
+            >
+              <BloodSlideBoxIcon locked={!bloodSlideUnlocked} />
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+                  Troféu máximo · {bloodSlideTrophy.tier}
+                </p>
+                <h3 className="mt-2 font-display text-2xl">{bloodSlideTrophy.title}</h3>
+                <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+                  {bloodSlideTrophy.description}
+                </p>
+                <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
+                  {bloodSlideUnlocked
+                    ? "Conquistado"
+                    : "Bloqueado · requer excelência nos três capítulos"}
+                </p>
+              </div>
+            </section>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {ACHIEVEMENTS.map((achievement) => {
-                const unlocked = achievementProgress.unlockedIds.includes(achievement.id);
-                return (
-                  <article
-                    key={achievement.id}
-                    className={`border p-4 ${unlocked ? "border-primary bg-primary/5" : "border-border bg-background/40 opacity-70"}`}
-                  >
-                    <p
-                      className={`font-mono text-[10px] uppercase tracking-wider ${unlocked ? "text-primary" : "text-muted-foreground"}`}
+              {ACHIEVEMENTS.filter((achievement) => achievement.id !== "blood-slide-box").map(
+                (achievement) => {
+                  const unlocked = achievementProgress.unlockedIds.includes(achievement.id);
+                  return (
+                    <article
+                      key={achievement.id}
+                      className={`border p-4 ${unlocked ? "border-primary bg-primary/5" : "border-border bg-background/40 opacity-70"}`}
                     >
-                      {unlocked ? "Troféu conquistado" : "Troféu bloqueado"}
-                    </p>
-                    <h3 className="mt-2 font-display text-xl">{achievement.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{achievement.description}</p>
-                  </article>
-                );
-              })}
+                      <p
+                        className={`font-mono text-[10px] uppercase tracking-wider ${unlocked ? "text-primary" : "text-muted-foreground"}`}
+                      >
+                        {achievement.tier} · {unlocked ? "Conquistado" : "Bloqueado"}
+                      </p>
+                      <h3 className="mt-2 font-display text-xl">{achievement.title}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {achievement.description}
+                      </p>
+                    </article>
+                  );
+                },
+              )}
             </div>
           </section>
         )}
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           <button
-            onClick={() => onSelect("ortega")}
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("ortega")}
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
@@ -1424,7 +1574,9 @@ function MainMenu({
             </span>
           </button>
           <button
-            onClick={() => onSelect("monroe")}
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("monroe")}
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
@@ -1443,7 +1595,9 @@ function MainMenu({
             </span>
           </button>
           <button
-            onClick={() => onSelect("painscreek")}
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("painscreek")}
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
@@ -1473,6 +1627,45 @@ function MainMenu({
         </div>
       </div>
     </main>
+  );
+}
+
+function BloodSlideBoxIcon({ locked }: { locked: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 160 112"
+      role="img"
+      aria-label={locked ? "Caixa de lâminas ainda bloqueada" : "Caixa de lâminas conquistada"}
+      className={`h-24 w-32 shrink-0 ${locked ? "opacity-40 grayscale" : ""}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M25 44V20c0-4 3-7 7-7h96c4 0 7 3 7 7v24L80 61 25 44Z"
+        fill="#181515"
+        stroke="#a63a3e"
+        strokeWidth="2"
+      />
+      <path
+        d="m25 44 55 17 55-17v49c0 5-4 9-9 9H34c-5 0-9-4-9-9V44Z"
+        fill="#241b1b"
+        stroke="#d0a7a3"
+        strokeWidth="2"
+      />
+      <path d="m25 44 55 17 55-17" fill="none" stroke="#d0a7a3" strokeWidth="2" />
+      <rect x="34" y="66" width="92" height="24" rx="3" fill="#100d0d" stroke="#6e292d" />
+      <rect x="40" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
+      <rect x="56" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
+      <rect x="72" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
+      <rect x="88" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
+      <rect x="104" y="70" width="11" height="16" rx="2" fill="#d8e4e3" stroke="#f4f1eb" />
+      <circle cx="45.5" cy="77" r="3" fill="#a91e27" />
+      <circle cx="61.5" cy="77" r="3" fill="#a91e27" />
+      <circle cx="77.5" cy="77" r="3" fill="#a91e27" />
+      <circle cx="93.5" cy="77" r="3" fill="#a91e27" />
+      <circle cx="109.5" cy="77" r="3" fill="#a91e27" />
+      <path d="M68 100h24" stroke="#d0a7a3" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="80" cy="51" r="3" fill="#bc3539" />
+    </svg>
   );
 }
 

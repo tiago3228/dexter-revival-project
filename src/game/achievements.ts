@@ -6,36 +6,50 @@ export const ACHIEVEMENTS = [
     id: "first-case",
     title: "Primeiro arquivo",
     description: "Conclua seu primeiro caso de investigação.",
+    tier: "Bronze",
   },
   {
     id: "sharp-eye",
     title: "Olho clínico",
     description: "Finalize um caso com 90 pontos ou mais.",
+    tier: "Prata",
   },
   {
     id: "no-hints",
     title: "Sem atalhos",
     description: "Conclua um caso sem solicitar dicas.",
+    tier: "Prata",
   },
   {
     id: "clean-run",
     title: "Disciplina de laboratório",
     description: "Conclua um caso sem cometer erros.",
+    tier: "Prata",
   },
   {
     id: "correct-verdict",
     title: "Conclusão sustentada",
     description: "Chegue ao veredicto correto em um caso.",
+    tier: "Ouro",
   },
   {
     id: "master-interrogator",
     title: "Mestre dos depoimentos",
     description: "Acerte os três interrogatórios do Caso Dexter sem errar.",
+    tier: "Ouro",
   },
   {
     id: "all-cases",
     title: "Arquivo completo",
     description: "Conclua os três capítulos disponíveis.",
+    tier: "Ouro",
+  },
+  {
+    id: "blood-slide-box",
+    title: "Caixa de lâminas de sangue",
+    description:
+      "Conclua os três capítulos com 90 pontos ou mais em cada um e acerte os três interrogatórios do Caso Dexter sem erros.",
+    tier: "Lendário",
   },
 ] as const;
 
@@ -126,7 +140,12 @@ export function applyCasePerformance(
   ) {
     unlocked.add("master-interrogator");
   }
-  if (CASE_IDS.every((caseId) => completedCases.includes(caseId))) unlocked.add("all-cases");
+  const allCasesCompleted = CASE_IDS.every((caseId) => completedCases.includes(caseId));
+  if (allCasesCompleted) unlocked.add("all-cases");
+  const allEliteScores = CASE_IDS.every((caseId) => (bestScores[caseId] ?? 0) >= 90);
+  if (allCasesCompleted && allEliteScores && unlocked.has("master-interrogator")) {
+    unlocked.add("blood-slide-box");
+  }
 
   return { unlockedIds: [...unlocked], completedCases, bestScores };
 }
