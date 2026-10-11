@@ -110,7 +110,8 @@ export function Game() {
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
-  const [volume, setVolume] = useState(0.28);
+  const [musicVolume, setMusicVolume] = useState(0.28);
+  const [ambientVolume, setAmbientVolume] = useState(0.28);
   const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -140,23 +141,8 @@ export function Game() {
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
-  }, [volume]);
-
-  if (showMenu) {
-    return (
-      <MainMenu
-        onSelect={(nextCase) => {
-          setCaseMode(nextCase);
-          setShowMenu(false);
-        }}
-      />
-    );
-  }
-
-  if (caseMode === "monroe") {
-    return <MonroeCase onBack={() => setShowMenu(true)} />;
-  }
+    if (audioRef.current) audioRef.current.volume = musicVolume;
+  }, [musicVolume]);
 
   const toggleSound = () => {
     setSoundOn((current) => {
@@ -166,6 +152,25 @@ export function Game() {
       return next;
     });
   };
+
+  if (showMenu) {
+    return (
+      <MainMenu
+        onSelect={(nextCase) => {
+          setCaseMode(nextCase);
+          setShowMenu(false);
+        }}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+      />
+    );
+  }
+
+  if (caseMode === "monroe") {
+    return <MonroeCase onBack={() => setShowMenu(true)} />;
+  }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
     if (!soundOn || typeof window === "undefined") return;
@@ -197,7 +202,7 @@ export function Game() {
       oscillator.frequency.setValueAtTime(frequency, start);
       gain.gain.setValueAtTime(0.0001, start);
       gain.gain.exponentialRampToValueAtTime(
-        Math.max(0.0001, 0.07 * (volume / 0.28)),
+        Math.max(0.0001, 0.07 * (ambientVolume / 0.28)),
         start + 0.01,
       );
       gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
@@ -652,16 +657,16 @@ export function Game() {
             Som: {soundOn ? "ligado" : "desligado"}
           </button>
           <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-xs text-muted-foreground">
-            Volume {Math.round(volume * 100)}%
+            Ambientação {Math.round(ambientVolume * 100)}%
             <input
               type="range"
               min="0"
               max="1"
               step="0.01"
-              value={volume}
-              onChange={(event) => setVolume(Number(event.target.value))}
+              value={ambientVolume}
+              onChange={(event) => setAmbientVolume(Number(event.target.value))}
               className="w-24 accent-primary"
-              aria-label="Volume do jogo"
+              aria-label="Volume da ambientação"
             />
           </label>
           <button
@@ -984,7 +989,19 @@ export function Game() {
   );
 }
 
-function MainMenu({ onSelect }: { onSelect: (nextCase: "ortega" | "monroe") => void }) {
+function MainMenu({
+  onSelect,
+  musicVolume,
+  onMusicVolumeChange,
+  soundOn,
+  onToggleSound,
+}: {
+  onSelect: (nextCase: "ortega" | "monroe") => void;
+  musicVolume: number;
+  onMusicVolumeChange: (value: number) => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+}) {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
       <div className="mx-auto max-w-5xl">
@@ -998,6 +1015,40 @@ function MainMenu({ onSelect }: { onSelect: (nextCase: "ortega" | "monroe") => v
           Entre em um arquivo, examine documentos, ouça depoimentos e construa uma conclusão que
           sobreviva às provas.
         </p>
+        <section
+          className="mt-8 max-w-xl border border-border bg-card/40 p-4 sm:p-5"
+          aria-label="Controles de áudio"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                Trilha sonora
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">Música do Dexter</p>
+            </div>
+            <button
+              type="button"
+              onClick={onToggleSound}
+              className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+              aria-label={soundOn ? "Desligar música do Dexter" : "Ligar música do Dexter"}
+            >
+              Música: {soundOn ? "ligada" : "desligada"}
+            </button>
+          </div>
+          <label className="mt-4 flex min-h-10 flex-wrap items-center gap-3 font-mono text-xs text-muted-foreground">
+            Volume da música {Math.round(musicVolume * 100)}%
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={musicVolume}
+              onChange={(event) => onMusicVolumeChange(Number(event.target.value))}
+              className="min-w-40 flex-1 accent-primary"
+              aria-label="Volume da música do Dexter"
+            />
+          </label>
+        </section>
         <div className="mt-12 grid gap-5 lg:grid-cols-2">
           <button
             onClick={() => onSelect("ortega")}
