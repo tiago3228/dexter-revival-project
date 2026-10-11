@@ -13,6 +13,7 @@ import {
   type LocationId,
 } from "./data";
 import { MonroeCase } from "./MonroeCase";
+import { DexterCase } from "./DexterCase";
 
 type PuzzleId =
   | "sangue"
@@ -120,7 +121,7 @@ export function Game() {
     const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<"ortega" | "monroe">("ortega");
+  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek">("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sfxRef = useRef<AudioContext | null>(null);
@@ -186,6 +187,10 @@ export function Game() {
 
   if (caseMode === "monroe") {
     return <MonroeCase onBack={() => setShowMenu(true)} />;
+  }
+
+  if (caseMode === "painscreek") {
+    return <DexterCase onBack={() => setShowMenu(true)} />;
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
@@ -1012,7 +1017,7 @@ function MainMenu({
   soundOn,
   onToggleSound,
 }: {
-  onSelect: (nextCase: "ortega" | "monroe") => void;
+  onSelect: (nextCase: "ortega" | "monroe" | "painscreek") => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
@@ -1098,23 +1103,26 @@ function MainMenu({
               Abrir dossiê →
             </span>
           </button>
-          <article className="border border-border/70 bg-card/30 p-6 text-left opacity-85 sm:p-8">
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Próximo arquivo · Painscreek
+          <button
+            onClick={() => onSelect("painscreek")}
+            className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+              Arquivo especial · Greybridge
             </p>
             <h2 className="mt-3 font-display text-3xl">Dexter: The Painscreek Case</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Uma investigação de exploração, documentos ocultos e dedução em uma cidade que guarda
-              seus próprios segredos. A base do caso ainda está sendo preparada.
+              Explore locais, examine documentos, destranque mecanismos e conecte evidências
+              forenses para reconstruir um caso arquivado.
             </p>
-            <span className="mt-8 block font-mono text-xs text-muted-foreground">
-              Arquivo em preparação · aguarde a liberação
+            <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
+              Escolher dificuldade e iniciar →
             </span>
-          </article>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 02</p>
-          <p className="mt-2">PRÓXIMO CASO: Dexter: The Painscreek Case · em preparação</p>
+          <p>ARQUIVOS DISPONÍVEIS: 03</p>
+          <p className="mt-2">NOVO ARQUIVO: Dexter: The Painscreek Case · disponível</p>
         </div>
       </div>
     </main>
