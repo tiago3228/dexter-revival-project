@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { caesar } from "./data";
 import { recordCaseCompletion } from "./achievements";
+import { HarryCodePanel } from "./HarryCodePanel";
+import { finishCaseTimer } from "./caseTimer";
 
 type Objective = 1 | 2 | 3 | 4;
 type Evidence = {
@@ -240,6 +242,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   >(null);
   const [tableSceneOpen, setTableSceneOpen] = useState(false);
   const [tableSceneStep, setTableSceneStep] = useState(0);
+  const [harryLine, setHarryLine] = useState<string | null>(null);
   const ambientRef = useRef<{
     context: AudioContext;
     sources: AudioScheduledSourceNode[];
@@ -400,6 +403,16 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
 
   const complete = (next: number, message: string) => {
     playSfx("success");
+    setHarryLine(
+      (
+        {
+          1: "Não confie numa visita clandestina até confirmar quem esteve na casa.",
+          2: "Álibis são histórias. Registros independentes são o que as desmonta.",
+          3: "O motivo importa quando se conecta a uma oportunidade real.",
+          4: "Cada detalhe precisa caber na mesma sequência; nada pode ficar solto.",
+        } as Partial<Record<Objective, string>>
+      )[objective] ?? "Uma conclusão sólida sobrevive ao próximo documento.",
+    );
     setCompleted((prev) => (prev.includes(objective) ? prev : [...prev, objective]));
     setAnswer(message);
     setOpened(null);
@@ -417,12 +430,21 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     message: string,
   ) => {
     playSfx(verdict === "emily-richard" ? "success" : "error");
+    setHarryLine(
+      verdict === "emily-richard"
+        ? "Você cruzou motivo, oportunidade e prova. É assim que se fecha um círculo."
+        : "Uma hipótese errada não vira verdade por ser conveniente. Volte aos fatos que ela não explica.",
+    );
+    const correctActions = Math.min(3, completed.length) + (verdict === "emily-richard" ? 1 : 0);
     recordCaseCompletion({
       caseId: "monroe",
       score: reportPoints,
       hints: hintsUsed,
       mistakes,
       correctConclusion: verdict === "emily-richard",
+      elapsedSeconds: finishCaseTimer("monroe"),
+      correctActions,
+      totalActions: Math.min(3, completed.length) + 1 + mistakes,
     });
     setFinalVerdict(verdict);
     setCompleted((prev) => (prev.includes(4) ? prev : [...prev, 4]));
@@ -457,6 +479,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       requirement.testimonies.every((id) => testimoniesRead.includes(id));
     if (!reviewedEverything) {
       playSfx("warning");
+      setHarryLine("Não acuse antes de cruzar as fontes. A pressa costuma proteger quem mente.");
       setMistakes((current) => current + 1);
       setAnswer(
         "Conclusão prematura. Um investigador não fecha o caso sem cruzar os documentos e depoimentos relevantes deste objetivo.",
@@ -488,6 +511,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         "Hipótese registrada: você apontou Monica sozinha, mas o relatório mostrará quais provas ficaram sem explicação.",
       );
     playSfx("error");
+    setHarryLine(
+      "Quando uma hipótese não explica as provas, descarte-a. Não as force a caber nela.",
+    );
     setMistakes((value) => value + 1);
     setAnswer(
       "Essa hipótese ainda não fecha todas as pistas. Volte aos documentos e compare fatos independentes.",
@@ -582,6 +608,8 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           ))}
         </div>
       </header>
+
+      <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <section>

@@ -17,7 +17,9 @@ export type DocId =
   | "codigo"
   | "rede"
   | "compartimento"
-  | "reacao";
+  | "reacao"
+  | "amostraLuva"
+  | "estojoFacas";
 
 export const DOCS: Record<DocId, { title: string; body: string }> = {
   legista: {
@@ -100,6 +102,14 @@ export const DOCS: Record<DocId, { title: string; body: string }> = {
   reacao: {
     title: "O caso mudou de lugar",
     body: "Quando você volta ao laboratório, a cópia da foto não está mais na bancada. No lugar, alguém deixou uma anotação: 'Você está olhando para o homem errado.' A tinta ainda está fresca. O culpado sabe que alguém está reconstruindo a noite.",
+  },
+  amostraLuva: {
+    title: "Microamostra — punho interno da luva",
+    body: "Lâmina nº 18, preparada a partir do punho interno da luva sem etiqueta do armário 17. A análise registra sangue O−, compatível com Lucía Ortega, e um segundo microtraço O+, compatível com Carlos Ruiz. A distribuição na costura sugere transferência por contato, não respingo de impacto. A amostra não determina quando ocorreu o contato nem prova quem atacou; cruze-a com a linha do tempo e com provas independentes.",
+  },
+  estojoFacas: {
+    title: "Estojo de ferramentas de Dexter",
+    body: "O estojo está organizado com precisão quase ritual. Não há vestígio que o ligue ao caso Ortega. Harry ensinou a separar método de prova: uma ferramenta pode revelar quem você é, mas nunca deve substituir uma evidência verificável.",
   },
 };
 

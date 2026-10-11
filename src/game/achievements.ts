@@ -59,6 +59,15 @@ export type AchievementProgress = {
   unlockedIds: AchievementId[];
   completedCases: CaseId[];
   bestScores: Partial<Record<CaseId, number>>;
+  caseStats: Partial<Record<CaseId, CaseStatistics>>;
+};
+
+export type CaseStatistics = {
+  attempts: number;
+  lastElapsedSeconds: number;
+  bestElapsedSeconds: number;
+  lastCorrectActions: number;
+  lastTotalActions: number;
 };
 
 export type CasePerformance = {
@@ -67,6 +76,9 @@ export type CasePerformance = {
   hints: number;
   mistakes: number;
   correctConclusion: boolean;
+  elapsedSeconds: number;
+  correctActions: number;
+  totalActions: number;
   correctInterrogations?: number;
   interrogationMistakes?: number;
 };
@@ -74,7 +86,7 @@ export type CasePerformance = {
 const STORAGE_KEY = "dexter-investigator-achievements-v1";
 
 export function emptyAchievementProgress(): AchievementProgress {
-  return { unlockedIds: [], completedCases: [], bestScores: {} };
+  return { unlockedIds: [], completedCases: [], bestScores: {}, caseStats: {} };
 }
 
 const isCaseId = (value: unknown): value is CaseId =>
@@ -90,10 +102,38 @@ export function loadAchievementProgress(): AchievementProgress {
     if (!raw) return emptyAchievementProgress();
     const saved = JSON.parse(raw) as Partial<AchievementProgress>;
     const bestScores: Partial<Record<CaseId, number>> = {};
+    const caseStats: Partial<Record<CaseId, CaseStatistics>> = {};
     for (const caseId of CASE_IDS) {
       const score = saved.bestScores?.[caseId];
       if (typeof score === "number" && Number.isFinite(score)) {
         bestScores[caseId] = Math.min(100, Math.max(0, Math.floor(score)));
+      }
+      const stats = saved.caseStats?.[caseId];
+      if (!stats || typeof stats !== "object") continue;
+      const value = stats as Partial<CaseStatistics>;
+      if (
+        typeof value.attempts === "number" &&
+        Number.isFinite(value.attempts) &&
+        typeof value.lastElapsedSeconds === "number" &&
+        Number.isFinite(value.lastElapsedSeconds) &&
+        typeof value.bestElapsedSeconds === "number" &&
+        Number.isFinite(value.bestElapsedSeconds) &&
+        typeof value.lastCorrectActions === "number" &&
+        Number.isFinite(value.lastCorrectActions) &&
+        typeof value.lastTotalActions === "number" &&
+        Number.isFinite(value.lastTotalActions)
+      ) {
+        const lastTotalActions = Math.max(0, Math.floor(value.lastTotalActions));
+        caseStats[caseId] = {
+          attempts: Math.max(0, Math.floor(value.attempts)),
+          lastElapsedSeconds: Math.max(0, Math.floor(value.lastElapsedSeconds)),
+          bestElapsedSeconds: Math.max(0, Math.floor(value.bestElapsedSeconds)),
+          lastCorrectActions: Math.min(
+            lastTotalActions,
+            Math.max(0, Math.floor(value.lastCorrectActions)),
+          ),
+          lastTotalActions,
+        };
       }
     }
     return {
@@ -104,6 +144,7 @@ export function loadAchievementProgress(): AchievementProgress {
         ? [...new Set(saved.completedCases.filter(isCaseId))]
         : [],
       bestScores,
+      caseStats,
     };
   } catch {
     return emptyAchievementProgress();
@@ -121,12 +162,34 @@ export function applyCasePerformance(
   const mistakes = Number.isFinite(performance.mistakes)
     ? Math.max(0, Math.floor(performance.mistakes))
     : 0;
+  const elapsedSeconds = Number.isFinite(performance.elapsedSeconds)
+    ? Math.max(1, Math.floor(performance.elapsedSeconds))
+    : 1;
+  const correctActions = Number.isFinite(performance.correctActions)
+    ? Math.max(0, Math.floor(performance.correctActions))
+    : 0;
+  const totalActions = Number.isFinite(performance.totalActions)
+    ? Math.max(correctActions, Math.floor(performance.totalActions))
+    : correctActions;
   const completedCases = [...new Set([...progress.completedCases, performance.caseId])];
   const bestScores = {
     ...progress.bestScores,
     [performance.caseId]: Math.max(progress.bestScores[performance.caseId] ?? -1, score),
   };
   const unlocked = new Set(progress.unlockedIds);
+  const previousStats = progress.caseStats[performance.caseId];
+  const caseStats = {
+    ...progress.caseStats,
+    [performance.caseId]: {
+      attempts: (previousStats?.attempts ?? 0) + 1,
+      lastElapsedSeconds: elapsedSeconds,
+      bestElapsedSeconds: previousStats
+        ? Math.min(previousStats.bestElapsedSeconds, elapsedSeconds)
+        : elapsedSeconds,
+      lastCorrectActions: correctActions,
+      lastTotalActions: totalActions,
+    },
+  };
 
   unlocked.add("first-case");
   if (score >= 90) unlocked.add("sharp-eye");
@@ -147,7 +210,7 @@ export function applyCasePerformance(
     unlocked.add("blood-slide-box");
   }
 
-  return { unlockedIds: [...unlocked], completedCases, bestScores };
+  return { unlockedIds: [...unlocked], completedCases, bestScores, caseStats };
 }
 
 export function recordCaseCompletion(performance: CasePerformance): AchievementProgress {

@@ -12,6 +12,9 @@ const performance = {
   hints: 0,
   mistakes: 0,
   correctConclusion: true,
+  elapsedSeconds: 245,
+  correctActions: 10,
+  totalActions: 12,
 };
 
 describe("game achievements", () => {
@@ -20,6 +23,13 @@ describe("game achievements", () => {
 
     expect(progress.completedCases).toEqual(["ortega"]);
     expect(progress.bestScores.ortega).toBe(94);
+    expect(progress.caseStats.ortega).toEqual({
+      attempts: 1,
+      lastElapsedSeconds: 245,
+      bestElapsedSeconds: 245,
+      lastCorrectActions: 10,
+      lastTotalActions: 12,
+    });
     expect(progress.unlockedIds).toEqual(
       expect.arrayContaining([
         "first-case",
@@ -49,14 +59,16 @@ describe("game achievements", () => {
     expect(imperfect.unlockedIds).not.toContain("master-interrogator");
   });
 
-  it("unlocks the collection trophy only after all three chapters are completed", () => {
+  it("unlocks the collection trophy only after all four chapters are completed", () => {
     let progress = emptyAchievementProgress();
     progress = applyCasePerformance(progress, performance);
     progress = applyCasePerformance(progress, { ...performance, caseId: "monroe" });
     expect(progress.unlockedIds).not.toContain("all-cases");
     progress = applyCasePerformance(progress, { ...performance, caseId: "painscreek" });
+    expect(progress.unlockedIds).not.toContain("all-cases");
+    progress = applyCasePerformance(progress, { ...performance, caseId: "mentalist" });
 
-    expect(progress.completedCases).toHaveLength(3);
+    expect(progress.completedCases).toHaveLength(4);
     expect(progress.unlockedIds).toContain("all-cases");
   });
 
@@ -70,6 +82,11 @@ describe("game achievements", () => {
       score: 91,
       correctInterrogations: 3,
       interrogationMistakes: 0,
+    });
+    progress = applyCasePerformance(progress, {
+      ...performance,
+      caseId: "mentalist",
+      score: 90,
     });
 
     expect(progress.unlockedIds).toContain("blood-slide-box");
@@ -90,11 +107,15 @@ describe("game achievements", () => {
       score: 70,
       hints: 2,
       mistakes: 3,
+      elapsedSeconds: 900,
       correctConclusion: false,
     });
     const stored = lowerRun as AchievementProgress;
 
     expect(stored.bestScores.ortega).toBe(94);
     expect(stored.completedCases).toEqual(["ortega"]);
+    expect(stored.caseStats.ortega?.attempts).toBe(2);
+    expect(stored.caseStats.ortega?.bestElapsedSeconds).toBe(245);
+    expect(stored.caseStats.ortega?.lastElapsedSeconds).toBe(900);
   });
 });

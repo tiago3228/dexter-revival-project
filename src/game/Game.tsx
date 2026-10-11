@@ -22,6 +22,8 @@ import {
   recordCaseCompletion,
   type CaseId,
 } from "./achievements";
+import { HarryCodePanel } from "./HarryCodePanel";
+import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
 
 type PuzzleId =
@@ -37,7 +39,8 @@ type PuzzleId =
   | "rede"
   | "caderno"
   | "segredo"
-  | "reacao";
+  | "reacao"
+  | "lamina";
 type ImageId = "blood-trail" | "autopsy-report" | "glove-bag" | "harry-notebook";
 type Modal =
   | { kind: "doc"; id: DocId }
@@ -97,7 +100,7 @@ type InvestigatorScore = {
 };
 
 function getInvestigatorScore(state: ReturnType<typeof initial>): InvestigatorScore {
-  const solvedPoints = Math.round((state.solved.length / 13) * 60);
+  const solvedPoints = Math.round((state.solved.length / 14) * 60);
   const timePoints = Math.round(
     Math.max(0, Math.min(1, (END_MIN - state.clock) / (END_MIN - START_MIN))) * 20,
   );
@@ -126,6 +129,7 @@ export function Game() {
   const [tab, setTab] = useState<"cena" | "caderno">("cena");
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [hintConfirmed, setHintConfirmed] = useState(false);
+  const [harryLine, setHarryLine] = useState<string | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   const [musicVolume, setMusicVolume] = useState(() => {
     if (typeof window === "undefined") return 0.28;
@@ -137,10 +141,13 @@ export function Game() {
     const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek" | "mentalist">("ortega");
+  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek" | "mentalist">(
+    "ortega",
+  );
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recordedEndingRef = useRef(false);
   const soundOnRef = useRef(soundOn);
   const musicVolumeRef = useRef(musicVolume);
   const reflectionModalOpenRef = useRef(false);
@@ -155,7 +162,12 @@ export function Game() {
   }, [musicVolume]);
 
   useEffect(() => {
-    if (!ending) return;
+    if (!ending) {
+      recordedEndingRef.current = false;
+      return;
+    }
+    if (recordedEndingRef.current) return;
+    recordedEndingRef.current = true;
     const score = getInvestigatorScore(s);
     recordCaseCompletion({
       caseId: "ortega",
@@ -163,8 +175,28 @@ export function Game() {
       hints: s.hintsUsed,
       mistakes: s.mistakes,
       correctConclusion: ending.good,
+      elapsedSeconds: finishCaseTimer("ortega"),
+      correctActions: s.solved.length,
+      totalActions: s.solved.length + s.mistakes,
     });
   }, [ending, s]);
+
+  useEffect(() => {
+    if (showIntro || showMenu) return;
+    beginCaseTimer(caseMode, caseMode === "monroe");
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") pauseCaseTimer(caseMode);
+      else beginCaseTimer(caseMode);
+    };
+    const pause = () => pauseCaseTimer(caseMode);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", pause);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", pause);
+      pauseCaseTimer(caseMode);
+    };
+  }, [caseMode, showIntro, showMenu]);
 
   useEffect(() => {
     const audio = new Audio();
@@ -408,17 +440,31 @@ export function Game() {
     playSfx("evidence");
     if (has(d)) return setModal({ kind: "doc", id: d });
     narrate(text, { docs: [...s.docs, d] });
+    setHarryLine("Observe o que a evidência confirma — e também o que ela ainda não pode provar.");
     setModal({ kind: "doc", id: d });
   };
 
   const solve = (p: PuzzleId, text: string, extra: Partial<ReturnType<typeof initial>> = {}) => {
     playSfx("success");
     narrate(text, { solved: [...s.solved, p], ...extra });
+    const reactions: Partial<Record<PuzzleId, string>> = {
+      sangue: "A cena conta uma história. Não confunda a primeira marca com a sequência inteira.",
+      contradicao: "Uma mentira só importa quando outra prova a torna impossível.",
+      lamina:
+        "Uma prova pode apontar para alguém. Ela ainda precisa resistir a cada explicação alternativa.",
+      reacao: "Quando alguém mexe no tabuleiro, significa que você chegou perto demais.",
+    };
+    setHarryLine(
+      reactions[p] ?? "Certeza não é instinto. É a soma de detalhes que ninguém conseguiu apagar.",
+    );
     setModal(null);
   };
 
   const fail = (text: string, minutes = 30, susp = 0) => {
     playSfx("error");
+    setHarryLine(
+      "Não force uma conclusão, Dexter. Volte às provas antes que a pressa deixe um rastro.",
+    );
     narrate(text, { mistakes: s.mistakes + 1 }, minutes, susp);
   };
 
@@ -542,6 +588,54 @@ export function Game() {
             </Hot>{" "}
             pode revelar qual pista era perigosa.
           </p>
+        )}
+        {has("fichas") && (
+          <section className="mt-5 max-w-xl border border-primary/50 bg-black/45 p-3 sm:p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+              Análise complementar · armário 17
+            </p>
+            <div className="mt-3 grid grid-cols-[96px_1fr] items-center gap-3 sm:grid-cols-[132px_1fr]">
+              <img
+                src="/images/dexter-items/blood-slides-box-closed.webp"
+                alt="Caixa fechada de lâminas de vidro de Dexter"
+                className="h-24 w-full border border-white/15 object-cover sm:h-28"
+              />
+              <p className="text-sm leading-relaxed text-white/85">
+                Uma caixa de lâminas foi guardada junto à luva sem etiqueta. A ficha sanguínea dos
+                envolvidos permite conferir um microtraço no punho interno.
+              </p>
+            </div>
+            {done("lamina") ? (
+              <button
+                type="button"
+                onClick={() =>
+                  addDoc("amostraLuva", "Você revisa o laudo da microamostra da luva.")
+                }
+                className="mt-3 min-h-10 border border-border px-3 py-2 font-mono text-xs text-primary hover:border-primary"
+              >
+                Rever laudo da microamostra
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  if (!has("amostraLuva")) {
+                    playSfx("evidence");
+                    narrate(
+                      "A caixa guarda uma lâmina preparada do punho interno da luva do armário 17.",
+                      {
+                        docs: [...s.docs, "amostraLuva"],
+                      },
+                    );
+                  }
+                  setModal({ kind: "puzzle", id: "lamina" });
+                }}
+                className="mt-3 min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+              >
+                Comparar a amostra com as fichas →
+              </button>
+            )}
+          </section>
         )}
       </>
     ),
@@ -674,6 +768,25 @@ export function Game() {
             Ver caderno de Harry e descrição
           </span>
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            addDoc("estojoFacas", "Você examina o estojo pessoal de ferramentas.");
+            setHarryLine(
+              "Uma ferramenta não é uma prova. O que importa é o vestígio que ela deixa.",
+            );
+          }}
+          className="evidence-card group mt-2 block w-full max-w-xl touch-manipulation border border-border bg-black/20 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/dexter-items/knife-kit.webp"
+            alt="Estojo aberto com facas e ferramentas organizadas"
+            className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Examinar o estojo de ferramentas
+          </span>
+        </button>
         {has("codigo") && !done("segredo") && (
           <p>
             O filtro do ar-condicionado parece ter sido recolocado às pressas. Atrás dele há um{" "}
@@ -760,7 +873,7 @@ export function Game() {
               <p className="font-mono text-4xl text-primary">{score.points}/100</p>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-              <ScoreMetric label="Puzzles" value={`${s.solved.length}/13`} />
+              <ScoreMetric label="Puzzles" value={`${s.solved.length}/14`} />
               <ScoreMetric label="Erros" value={String(s.mistakes)} />
               <ScoreMetric label="Dicas" value={String(s.hintsUsed)} />
               <ScoreMetric label="Suspeita" value={`${s.suspicion}/3`} />
@@ -774,9 +887,11 @@ export function Game() {
           <button
             className="mt-10 min-h-11 border border-border px-6 py-3 font-mono text-sm hover:bg-accent"
             onClick={() => {
+              beginCaseTimer("ortega", true);
               setS(initial());
               setEnding(null);
               setModal(null);
+              setHarryLine(null);
             }}
           >
             Recomeçar o turno
@@ -851,6 +966,8 @@ export function Game() {
           <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
         </div>
       </header>
+
+      <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
       <nav className="mt-4 grid grid-cols-2 gap-2 font-mono text-xs sm:flex sm:flex-wrap sm:text-sm">
         {(Object.keys(LOCATION_NAMES) as LocationId[]).map((l) => (
@@ -1036,7 +1153,7 @@ export function Game() {
             {modal.kind === "acusar" && (
               <Accuse
                 onPick={(who) => {
-                  const all = s.solved.length === 13;
+                  const all = s.solved.length === 14;
                   const correctWithProof = who === "ruiz" && all;
                   playSfx(correctWithProof ? "success" : "error");
                   if (who === "ruiz" && all)
@@ -1255,6 +1372,7 @@ function MainMenu({
   const [showReflections, setShowReflections] = useState(false);
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
   const [showTrophies, setShowTrophies] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
   const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
   const bloodSlideTrophy = ACHIEVEMENTS.find(
@@ -1287,6 +1405,22 @@ function MainMenu({
   const chapterStatus = (caseId: CaseId) => {
     if (!achievementProgress.completedCases.includes(caseId)) return "ARQUIVO DISPONÍVEL";
     return `CONCLUÍDO · MELHOR ${achievementProgress.bestScores[caseId] ?? 0}/100`;
+  };
+
+  const chapterTitles: Record<CaseId, string> = {
+    ortega: "Turno da Noite · Caso Ortega",
+    monroe: "O Caso Monroe",
+    painscreek: "The Last Confession",
+    mentalist: "Red John: O Sorriso Escarlate",
+  };
+  const formatDuration = (seconds: number) => {
+    const total = Math.max(0, Math.floor(seconds));
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const remainder = total % 60;
+    return hours > 0
+      ? `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`
+      : `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
   };
 
   const selectChapter = (caseId: CaseId) => {
@@ -1493,6 +1627,90 @@ function MainMenu({
         </section>
         <button
           type="button"
+          onClick={() => setShowStatistics((visible) => !visible)}
+          aria-expanded={showStatistics}
+          className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
+        >
+          {showStatistics ? "Fechar estatísticas" : "Estatísticas detalhadas"}
+        </button>
+        {showStatistics && (
+          <section
+            className="mt-5 border border-primary/50 bg-card/40 p-4 sm:p-6"
+            aria-label="Estatísticas detalhadas dos casos"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Registro de desempenho
+                </p>
+                <h2 className="mt-2 font-display text-2xl">Estatísticas dos capítulos</h2>
+              </div>
+              <p className="font-mono text-[10px] text-muted-foreground">
+                Salvas somente neste navegador
+              </p>
+            </div>
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              {CASE_IDS.map((caseId) => {
+                const stats = achievementProgress.caseStats[caseId];
+                const accuracy =
+                  stats && stats.lastTotalActions > 0
+                    ? Math.round((stats.lastCorrectActions / stats.lastTotalActions) * 100)
+                    : null;
+                return (
+                  <article key={caseId} className="border border-border bg-background/50 p-4">
+                    <h3 className="font-display text-xl">{chapterTitles[caseId]}</h3>
+                    {stats ? (
+                      <div className="mt-3 space-y-2 font-mono text-xs leading-relaxed">
+                        <p>
+                          Tentativas concluídas:{" "}
+                          <span className="text-primary">{stats.attempts}</span>
+                        </p>
+                        <p>
+                          Último tempo:{" "}
+                          <span className="text-primary">
+                            {formatDuration(stats.lastElapsedSeconds)}
+                          </span>
+                        </p>
+                        <p>
+                          Melhor tempo:{" "}
+                          <span className="text-primary">
+                            {formatDuration(stats.bestElapsedSeconds)}
+                          </span>
+                        </p>
+                        <p>
+                          Precisão recente:{" "}
+                          <span className="text-primary">
+                            {accuracy === null
+                              ? "N/D"
+                              : `${accuracy}% (${stats.lastCorrectActions}/${stats.lastTotalActions})`}
+                          </span>
+                        </p>
+                        <p>
+                          Melhor pontuação:{" "}
+                          <span className="text-primary">
+                            {achievementProgress.bestScores[caseId] ?? 0}/100
+                          </span>
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                        Conclua este capítulo para registrar tempo, precisão e pontuação.
+                      </p>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              A precisão compara ações corretas com decisões registradas: puzzles no Caso Ortega,
+              objetivos no Caso Monroe e evidências, mecanismos e interrogatórios em The Last
+              Confession, além de evidências, conexões e entrevistas em Red John: O Sorriso
+              Escarlate.
+            </p>
+          </section>
+        )}
+        <button
+          type="button"
           onClick={() => setShowTrophies((visible) => !visible)}
           aria-expanded={showTrophies}
           className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
@@ -1636,7 +1854,8 @@ function MainMenu({
             </p>
             <h2 className="mt-3 font-display text-3xl">Red John: O Sorriso Escarlate</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Dexter precisa da mente de Patrick Jane para seguir a assinatura de Red John, cruzar registros policiais e identificar quem manipula a investigação por dentro.
+              Dexter precisa da mente de Patrick Jane para seguir a assinatura de Red John, cruzar
+              registros policiais e identificar quem manipula a investigação por dentro.
             </p>
             <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
               Abrir capítulo →
@@ -1760,6 +1979,69 @@ function Puzzle({
   const [key, setKey] = useState("");
   const [decoded, setDecoded] = useState<string | null>(null);
   const [liar, setLiar] = useState<string | null>(null);
+
+  if (id === "lamina") {
+    return (
+      <>
+        <h2 className="font-display text-2xl">Microtraços na luva</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A lâmina foi preparada do punho interno da luva encontrada no armário 17. Compare o laudo
+          com as fichas sanguíneas e com o padrão de transferência descrito.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <figure className="border border-border bg-background/50 p-2">
+            <img
+              src="/images/dexter-items/blood-slides-box-open.webp"
+              alt="Caixa aberta contendo lâminas de sangue arquivadas"
+              className="h-40 w-full object-cover"
+            />
+            <figcaption className="mt-2 font-mono text-[10px] text-muted-foreground">
+              Caixa de lâminas · arquivo pessoal
+            </figcaption>
+          </figure>
+          <figure className="border border-border bg-background/50 p-2">
+            <img
+              src="/images/dexter-items/blood-slide-sample.webp"
+              alt="Lâmina de vidro com uma amostra de sangue preservada"
+              className="h-40 w-full object-cover"
+            />
+            <figcaption className="mt-2 font-mono text-[10px] text-muted-foreground">
+              Lâmina nº 18 · microamostra do punho
+            </figcaption>
+          </figure>
+        </div>
+        <Choice
+          options={[
+            {
+              label:
+                "O− e O+: a mistura liga a luva a Lucía e Ruiz, mas outras provas são necessárias.",
+              value: "ruiz",
+            },
+            {
+              label: "Apenas O−: a luva esteve com a vítima e exclui os suspeitos.",
+              value: "victim",
+            },
+            { label: "O sangue prova sozinho que Teresa plantou a luva.", value: "teresa" },
+          ]}
+          onPick={(value) => {
+            if (value === "ruiz") {
+              const docs = s.docs.includes("amostraLuva") ? s.docs : [...s.docs, "amostraLuva"];
+              solve(
+                "lamina",
+                "A amostra contém sangue O− de Lucía e um microtraço O+ compatível com Ruiz. A transferência na costura reforça a ligação dele com a luva, mas não determina quando ocorreu o contato nem prova autoria. Cruze essa pista com o álibi e com as demais provas.",
+                { docs },
+              );
+            } else {
+              fail(
+                "O laudo não exclui todos os suspeitos nem identifica sozinho quem plantou a luva. Compare o tipo O+ com as fichas e respeite os limites da amostra.",
+                10,
+              );
+            }
+          }}
+        />
+      </>
+    );
+  }
 
   if (id === "sangue") {
     const stains = [

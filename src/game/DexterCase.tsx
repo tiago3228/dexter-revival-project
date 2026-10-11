@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { recordCaseCompletion } from "./achievements";
+import { HarryCodePanel } from "./HarryCodePanel";
+import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { getInterrogationRanking } from "./interrogationRanking";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
@@ -349,6 +351,7 @@ export function DexterCase({
   } | null>(null);
   const [hintsUsed, setHintsUsed] = useState<string[]>(() => initialSave?.hintsUsed ?? []);
   const [mistakes, setMistakes] = useState(() => initialSave?.mistakes ?? 0);
+  const [harryLine, setHarryLine] = useState<string | null>(null);
 
   useEffect(
     () => () => {
@@ -490,6 +493,9 @@ export function DexterCase({
     const connectionId = [...selectedConnectionEvidence].sort().join("+");
     const connection = EVIDENCE_CONNECTIONS.find((item) => item.id === connectionId);
     if (!connection) {
+      setHarryLine(
+        "Duas pistas lado a lado não formam uma conexão se não houver uma razão verificável.",
+      );
       setMistakes((current) => current + 1);
       setConnectionMessage(
         "Essas duas pistas ainda não sustentam uma conexão verificável. Releia os documentos e tente outra combinação.",
@@ -501,6 +507,7 @@ export function DexterCase({
       setConnectionMessage("Esta conexão já foi registrada no quadro de investigação.");
     } else {
       setConfirmedConnections((current) => [...current, connection.id]);
+      setHarryLine("Boa. Uma conexão só vale quando ambas as pontas são sustentadas por fatos.");
       setConnectionMessage("Conexão confirmada: " + connection.title + ".");
     }
     setSelectedConnectionEvidence([]);
@@ -516,6 +523,9 @@ export function DexterCase({
       );
       setLastInterrogatedSuspect(person.name);
       playInterrogationSfx("success");
+      setHarryLine(
+        "Não procure uma confissão. Faça a evidência tornar impossível continuar mentindo.",
+      );
       setInterrogationFeedback((current) => {
         const next = { ...current };
         delete next[person.name];
@@ -525,6 +535,9 @@ export function DexterCase({
     }
 
     stopInterrogationVoices();
+    setHarryLine(
+      "Uma evidência fora de contexto não derruba um álibi. Escolha a que contradiz o depoimento.",
+    );
     setMistakes((current) => current + 1);
     setInterrogationMistakes((current) => current + 1);
     playInterrogationSfx("error");
@@ -537,6 +550,9 @@ export function DexterCase({
   const submitCode = (kind: "safe" | "depot") => {
     const expected = kind === "safe" ? "0427" : "7319";
     if (code.trim() === expected) {
+      setHarryLine(
+        "Um mecanismo aberto é só o começo. Leia o que foi escondido antes de tirar conclusões.",
+      );
       if (kind === "safe") setSafeOpen(true);
       else setDepotOpen(true);
       setCodeMessage(
@@ -546,6 +562,7 @@ export function DexterCase({
       );
       setCode("");
     } else {
+      setHarryLine("Não tente combinações ao acaso. Procure a pista que explica o mecanismo.");
       setMistakes((current) => current + 1);
       setCodeMessage(
         difficulty === "investigador"
@@ -556,6 +573,8 @@ export function DexterCase({
   };
 
   const resetCase = (nextDifficulty: Difficulty | null = null) => {
+    if (nextDifficulty) beginCaseTimer("painscreek", true);
+    else pauseCaseTimer("painscreek");
     setDifficulty(nextDifficulty);
     setVisited([]);
     setFound([]);
@@ -695,6 +714,8 @@ export function DexterCase({
             </button>
           </div>
         </div>
+
+        <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
         <section className="mt-6 border border-border bg-card/30 p-5 sm:p-6">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
@@ -1405,12 +1426,28 @@ export function DexterCase({
             onClick={() => {
               setAccusationSubmitted(true);
               setEnding(true);
+              setHarryLine(
+                suspect === "Paul Renner"
+                  ? "O instinto abriu a porta. Foram as provas que fecharam o caso."
+                  : "A primeira regra do Código é ter certeza. Revise quem as provas realmente apontam.",
+              );
+              const correctActions =
+                found.length +
+                confirmedConnections.length +
+                Number(safeOpen) +
+                Number(depotOpen) +
+                Number(timelineSolved) +
+                Number(forensicSolved) +
+                interviewedSuspects.length;
               recordCaseCompletion({
                 caseId: "painscreek",
                 score,
                 hints: hintsUsed.length,
                 mistakes,
                 correctConclusion: suspect === "Paul Renner",
+                elapsedSeconds: finishCaseTimer("painscreek"),
+                correctActions,
+                totalActions: correctActions + mistakes,
                 correctInterrogations: interviewedSuspects.length,
                 interrogationMistakes,
               });
