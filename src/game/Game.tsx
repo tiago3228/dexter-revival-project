@@ -126,7 +126,17 @@ export function Game() {
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const soundOnRef = useRef(soundOn);
+  const musicVolumeRef = useRef(musicVolume);
   const sfxRef = useRef<AudioContext | null>(null);
+
+  useEffect(() => {
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
+
+  useEffect(() => {
+    musicVolumeRef.current = musicVolume;
+  }, [musicVolume]);
 
   useEffect(() => {
     const track = showIntro
@@ -136,19 +146,20 @@ export function Game() {
         : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const audio = new Audio(track);
     audio.loop = true;
-    audio.volume = musicVolume;
+    audio.volume = musicVolumeRef.current;
     if (showIntro) {
       audio.onerror = () => {
         // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
         audio.onerror = null;
         audio.src = "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
         audio.load();
-        if (soundOn) void audio.play().catch(() => undefined);
+        if (soundOnRef.current) void audio.play().catch(() => undefined);
       };
     }
     audioRef.current = audio;
 
     const startMusic = () => {
+      if (!soundOnRef.current) return;
       void audio.play().catch(() => {
         // O navegador pode bloquear o áudio até uma interação explícita.
       });
@@ -187,7 +198,13 @@ export function Game() {
   };
 
   if (showIntro) {
-    return <IntroScreen onStart={() => setShowIntro(false)} />;
+    return (
+      <IntroScreen
+        onStart={() => setShowIntro(false)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+      />
+    );
   }
 
   if (showMenu) {
@@ -1030,16 +1047,35 @@ export function Game() {
   );
 }
 
-function IntroScreen({ onStart }: { onStart: () => void }) {
+function IntroScreen({
+  onStart,
+  soundOn,
+  onToggleSound,
+}: {
+  onStart: () => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+}) {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f2efea] px-4 py-6 text-[#171719] sm:px-8 sm:py-10">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0d0d0f] px-4 py-5 text-white sm:px-8 sm:py-8">
       <section className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+        <div className="mb-3 flex w-full justify-end">
+          <button
+            type="button"
+            onClick={onToggleSound}
+            aria-pressed={soundOn}
+            aria-label={soundOn ? "Desligar música" : "Ligar música"}
+            className="border border-white/25 bg-black/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/80 transition hover:border-[#d52c39] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d52c39] sm:text-xs"
+          >
+            Som: {soundOn ? "ligado" : "desligado"}
+          </button>
+        </div>
         <img
-          src="/images/tela-inicial.jpeg"
+          src="/images/tela-inicial.webp"
           alt="Arte original da tela inicial de Dexter"
-          className="max-h-[54vh] w-full rounded-sm object-contain sm:max-h-[58vh]"
+          className="max-h-[54vh] w-full object-contain sm:max-h-[58vh]"
         />
-        <div className="mt-5 flex w-full max-w-4xl flex-col items-center border-t-4 border-[#a71925] bg-[#171719] px-5 py-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.22)] sm:mt-7 sm:px-10 sm:py-8">
+        <div className="mt-4 flex w-full flex-col items-center border-t-4 border-[#a71925] bg-[#171719] px-5 py-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.35)] sm:mt-5 sm:px-10 sm:py-8">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#e0d8d4] sm:text-xs sm:tracking-[0.32em]">
             Uma investigação nunca termina na cena do crime
           </p>
