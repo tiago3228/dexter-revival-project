@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
-type EvidenceConnection = { id: string; evidence: [string, string]; title: string; insight: string };
+type EvidenceConnection = {
+  id: string;
+  evidence: [string, string];
+  title: string;
+  insight: string;
+};
 type SavedInvestigation = {
   version: 1;
   difficulty: Difficulty;
@@ -70,31 +75,36 @@ const EVIDENCE_CONNECTIONS: EvidenceConnection[] = [
     id: "letter+tape",
     evidence: ["letter", "tape"],
     title: "A carta aponta para a gravação",
-    insight: "A anotação 04·27 coincide com a data citada na carta. A transcrição é a gravação que Eleanor queria que alguém encontrasse — mas isso ainda não identifica quem a ameaçou.",
+    insight:
+      "A anotação 04·27 coincide com a data citada na carta. A transcrição é a gravação que Eleanor queria que alguém encontrasse — mas isso ainda não identifica quem a ameaçou.",
   },
   {
     id: "photo+receipt",
     evidence: ["photo", "receipt"],
     title: "A fotografia confirma o depósito",
-    insight: "A foto indica depósito 73, caixa 19. O recibo confirma que a caixa foi alugada por P. Renner, transformando uma referência anônima em uma ligação documental.",
+    insight:
+      "A foto indica depósito 73, caixa 19. O recibo confirma que a caixa foi alugada por P. Renner, transformando uma referência anônima em uma ligação documental.",
   },
   {
     id: "log+receipt",
     evidence: ["log", "receipt"],
     title: "O registro contradiz Renner",
-    insight: "Renner registrou a saída às 21h10, mas há uma assinatura de retorno às 22h06. O recibo da caixa 19 em seu nome liga sua movimentação ao depósito.",
+    insight:
+      "Renner registrou a saída às 21h10, mas há uma assinatura de retorno às 22h06. O recibo da caixa 19 em seu nome liga sua movimentação ao depósito.",
   },
   {
     id: "autopsy+receipt",
     evidence: ["autopsy", "receipt"],
     title: "O vestígio físico encontra o recibo",
-    insight: "A tinta azul sob as unhas de Eleanor combina com a tinta fresca no recibo, e a marca de limpeza reforça a hipótese de que alguém tentou remover vestígios.",
+    insight:
+      "A tinta azul sob as unhas de Eleanor combina com a tinta fresca no recibo, e a marca de limpeza reforça a hipótese de que alguém tentou remover vestígios.",
   },
   {
     id: "log+tape",
     evidence: ["log", "tape"],
     title: "A gravação não confirma o cais",
-    insight: "A fita menciona o sino da capela, que estava quebrado. Isso enfraquece a leitura literal do local descrito e exige cruzar o áudio com o registro de horários.",
+    insight:
+      "A fita menciona o sino da capela, que estava quebrado. Isso enfraquece a leitura literal do local descrito e exige cruzar o áudio com o registro de horários.",
   },
 ];
 
@@ -237,7 +247,9 @@ function readSavedInvestigation(): SavedInvestigation | null {
 }
 
 export function DexterCase({ onBack }: { onBack: () => void }) {
-  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 1024);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 1024,
+  );
   const [mobileSceneOpen, setMobileSceneOpen] = useState(false);
 
   useEffect(() => {
@@ -365,7 +377,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     setFound((current) => (current.includes(id) ? current : [...current, id]));
   const toggleConnectionEvidence = (id: string) => {
     setSelectedConnectionEvidence((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : current.length >= 2 ? [id] : [...current, id],
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : current.length >= 2
+          ? [id]
+          : [...current, id],
     );
     setConnectionMessage("");
   };
@@ -375,7 +391,9 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     const connection = EVIDENCE_CONNECTIONS.find((item) => item.id === connectionId);
     if (!connection) {
       setMistakes((current) => current + 1);
-      setConnectionMessage("Essas duas pistas ainda não sustentam uma conexão verificável. Releia os documentos e tente outra combinação.");
+      setConnectionMessage(
+        "Essas duas pistas ainda não sustentam uma conexão verificável. Releia os documentos e tente outra combinação.",
+      );
       setSelectedConnectionEvidence([]);
       return;
     }
@@ -571,7 +589,9 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
             className={`border border-border bg-background p-4 sm:p-5 ${isMobile ? (mobileSceneOpen ? "fixed inset-3 z-50 overflow-y-auto shadow-2xl" : "hidden") : "block"} lg:static lg:z-auto lg:block lg:overflow-visible lg:bg-transparent lg:shadow-none`}
           >
             <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Cena da investigação</p>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+                Cena da investigação
+              </p>
               <button
                 type="button"
                 onClick={() => setMobileSceneOpen(false)}
@@ -698,7 +718,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
           </div>
           <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
             Selecione duas evidências já examinadas e cruze as informações. Uma conexão só será
-            registrada quando houver apoio nos documentos; combinações sem sustentação contam como erro.
+            registrada quando houver apoio nos documentos; combinações sem sustentação contam como
+            erro.
           </p>
           <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {EVIDENCE.map((item) => {
@@ -715,7 +736,11 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 >
                   <span className="block text-sm font-medium">{item.title}</span>
                   <span className="mt-1 block font-mono text-[10px] text-muted-foreground">
-                    {registered ? (selected ? "SELECIONADA" : "EVIDÊNCIA DISPONÍVEL") : "EXAMINE PRIMEIRO"}
+                    {registered
+                      ? selected
+                        ? "SELECIONADA"
+                        : "EVIDÊNCIA DISPONÍVEL"
+                      : "EXAMINE PRIMEIRO"}
                   </span>
                 </button>
               );
@@ -752,16 +777,24 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
           <div className="mt-5 space-y-3">
             {confirmedConnections.length === 0 ? (
               <p className="border border-dashed border-border p-4 text-sm text-muted-foreground">
-                Nenhuma conexão registrada. Examine as pistas nos locais para começar a cruzar informações.
+                Nenhuma conexão registrada. Examine as pistas nos locais para começar a cruzar
+                informações.
               </p>
             ) : (
               confirmedConnections.map((id) => {
                 const connection = EVIDENCE_CONNECTIONS.find((item) => item.id === id);
                 if (!connection) return null;
-                const titles = connection.evidence.map((evidenceId) => EVIDENCE.find((item) => item.id === evidenceId)?.title);
+                const titles = connection.evidence.map(
+                  (evidenceId) => EVIDENCE.find((item) => item.id === evidenceId)?.title,
+                );
                 return (
-                  <article key={connection.id} className="border border-primary/40 bg-primary/5 p-4">
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">CONEXÃO CONFIRMADA</p>
+                  <article
+                    key={connection.id}
+                    className="border border-primary/40 bg-primary/5 p-4"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                      CONEXÃO CONFIRMADA
+                    </p>
                     <h3 className="mt-1 font-medium">{connection.title}</h3>
                     <p className="mt-1 text-xs text-muted-foreground">{titles.join(" + ")}</p>
                     <p className="mt-3 text-sm leading-relaxed">{connection.insight}</p>
