@@ -41,6 +41,8 @@ const initial = () => ({
   loc: "lab" as LocationId,
   clock: START_MIN,
   suspicion: 0,
+  mistakes: 0,
+  hintsUsed: 0,
   docs: [] as DocId[],
   solved: [] as PuzzleId[],
   flags: { tellezIncriminado: false, horaFalsa: false },
@@ -67,6 +69,37 @@ const SCENE_IMAGES: Record<LocationId, { src: string; alt: string }> = {
     alt: "Apartamento de Dexter com vista noturna para Miami",
   },
 };
+
+type InvestigatorScore = {
+  points: number;
+  rank: string;
+  solvedPoints: number;
+  timePoints: number;
+  disciplinePoints: number;
+};
+
+function getInvestigatorScore(state: ReturnType<typeof initial>): InvestigatorScore {
+  const solvedPoints = Math.round((state.solved.length / 13) * 60);
+  const timePoints = Math.round(
+    Math.max(0, Math.min(1, (END_MIN - state.clock) / (END_MIN - START_MIN))) * 20,
+  );
+  const disciplinePoints = Math.max(
+    0,
+    20 - state.mistakes * 3 - state.hintsUsed * 4 - state.suspicion * 4,
+  );
+  const points = Math.max(0, Math.min(100, solvedPoints + timePoints + disciplinePoints));
+  const rank =
+    points >= 90
+      ? "Analista Fantasma"
+      : points >= 75
+        ? "Detetive de Homicídios"
+        : points >= 55
+          ? "Investigador de Campo"
+          : points >= 35
+            ? "Sob Vigilância"
+            : "Ponta Solta";
+  return { points, rank, solvedPoints, timePoints, disciplinePoints };
+}
 
 export function Game() {
   const [s, setS] = useState(initial);
@@ -226,7 +259,7 @@ export function Game() {
 
   const fail = (text: string, minutes = 30, susp = 0) => {
     playSfx("error");
-    narrate(text, {}, minutes, susp);
+    narrate(text, { mistakes: s.mistakes + 1 }, minutes, susp);
   };
 
   const go = (loc: LocationId) => {
@@ -268,6 +301,34 @@ export function Game() {
           </Hot>
           .
         </p>
+        <button
+          type="button"
+          onClick={() => openImage("blood-trail")}
+          className="evidence-card group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/evidence-blood-trail.jpg"
+            alt="Fotografia forense com uma trilha de gotas de sangue pelo apartamento"
+            className="h-44 w-full object-cover transition group-hover:opacity-90 sm:h-60"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Ver fotografia da cena e descrição
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => openImage("autopsy-report")}
+          className="evidence-card group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/evidence-autopsy-report.jpg"
+            alt="Relatório do legista sobre a bancada do laboratório"
+            className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Ver relatório do legista e descrição
+          </span>
+        </button>
         <p>
           Na parede, a velha{" "}
           <Hot
@@ -360,34 +421,6 @@ export function Game() {
           </Hot>
           .
         </p>
-        <button
-          type="button"
-          onClick={() => openImage("blood-trail")}
-          className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
-        >
-          <img
-            src="/images/evidence-blood-trail.jpg"
-            alt="Fotografia forense com uma trilha de gotas de sangue pelo apartamento"
-            className="h-44 w-full object-cover transition group-hover:opacity-90 sm:h-60"
-          />
-          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Ver fotografia da cena e descrição
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => openImage("autopsy-report")}
-          className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
-        >
-          <img
-            src="/images/evidence-autopsy-report.jpg"
-            alt="Relatório do legista sobre a bancada do laboratório"
-            className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
-          />
-          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Ver relatório do legista e descrição
-          </span>
-        </button>
         <p>
           No quadro branco, Debra escreveu com força:{" "}
           <Hot onClick={() => setModal({ kind: "puzzle", id: "contradicao" })}>
@@ -443,7 +476,7 @@ export function Game() {
           <button
             type="button"
             onClick={() => openImage("glove-bag")}
-            className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+            className="evidence-card group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
           >
             <img
               src="/images/evidence-glove-bag.jpg"
@@ -470,7 +503,7 @@ export function Game() {
         <button
           type="button"
           onClick={() => openImage("harry-notebook")}
-          className="group mt-2 block w-full max-w-xl touch-manipulation border border-border bg-black/20 p-2 text-left hover:border-primary"
+          className="evidence-card group mt-2 block w-full max-w-xl touch-manipulation border border-border bg-black/20 p-2 text-left hover:border-primary"
         >
           <img
             src="/images/evidence-harry-notebook.jpg"
@@ -509,18 +542,41 @@ export function Game() {
   };
 
   if (ending) {
+    const score = getInvestigatorScore(s);
     return (
       <Shell>
-        <div className="mx-auto max-w-2xl py-24 text-center">
+        <div className="ending-screen mx-auto max-w-2xl py-16 text-center sm:py-24">
           <p className="font-mono text-sm text-muted-foreground">{fmtClock(s.clock)}</p>
           <h1
-            className={`mt-4 font-display text-5xl ${ending.good ? "text-primary" : "text-destructive"}`}
+            className={`ending-title mt-4 font-display text-5xl ${ending.good ? "text-primary" : "text-destructive"}`}
           >
             {ending.title}
           </h1>
           <p className="mt-6 text-lg leading-relaxed">{ending.text}</p>
+          <section className="score-card mt-10 border border-border bg-card/80 p-5 text-left sm:p-6">
+            <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                  Avaliação da investigação
+                </p>
+                <h2 className="mt-2 font-display text-3xl text-primary">{score.rank}</h2>
+              </div>
+              <p className="font-mono text-4xl text-primary">{score.points}/100</p>
+            </div>
+            <div className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+              <ScoreMetric label="Puzzles" value={`${s.solved.length}/13`} />
+              <ScoreMetric label="Erros" value={String(s.mistakes)} />
+              <ScoreMetric label="Dicas" value={String(s.hintsUsed)} />
+              <ScoreMetric label="Suspeita" value={`${s.suspicion}/3`} />
+            </div>
+            <div className="mt-5 space-y-2 font-mono text-xs text-muted-foreground">
+              <p>Provas resolvidas: +{score.solvedPoints}</p>
+              <p>Tempo preservado: +{score.timePoints}</p>
+              <p>Disciplina investigativa: +{score.disciplinePoints}</p>
+            </div>
+          </section>
           <button
-            className="mt-10 border border-border px-6 py-3 font-mono text-sm hover:bg-accent"
+            className="mt-10 min-h-11 border border-border px-6 py-3 font-mono text-sm hover:bg-accent"
             onClick={() => {
               setS(initial());
               setEnding(null);
@@ -536,7 +592,7 @@ export function Game() {
 
   return (
     <Shell>
-      <header className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-4">
+      <header className="game-header flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             Dexter — Episódio 1
@@ -569,7 +625,7 @@ export function Game() {
           >
             Som: {soundOn ? "ligado" : "desligado"}
           </button>
-          <p className="font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
+          <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
         </div>
       </header>
 
@@ -602,13 +658,17 @@ export function Game() {
             </button>
           </div>
           {tab === "cena" ? (
-            <div className="relative min-h-[560px] overflow-hidden border border-border bg-black text-lg leading-relaxed sm:min-h-[620px]">
+            <div
+              key={s.loc}
+              className="scene-shell relative min-h-[560px] overflow-hidden border border-border bg-black text-lg leading-relaxed sm:min-h-[620px]"
+            >
               <img
                 src={SCENE_IMAGES[s.loc].src}
                 alt={SCENE_IMAGES[s.loc].alt}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="scene-image absolute inset-0 h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/80" />
+              <div className="scene-vignette absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/80" />
+              <div className="scene-rain pointer-events-none absolute inset-0" aria-hidden="true" />
               <div className="relative z-10 space-y-4 p-5 sm:p-8">
                 <h2 className="font-display text-2xl text-white">{LOCATION_NAMES[s.loc]}</h2>
                 <div className="max-w-3xl space-y-4 text-white/95">{scenes[s.loc]}</div>
@@ -635,7 +695,7 @@ export function Game() {
           <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             Pensamentos
           </h3>
-          <ul className="mt-3 max-h-[60vh] space-y-3 overflow-auto text-sm leading-relaxed">
+          <ul className="thoughts-panel mt-3 max-h-[60vh] space-y-3 overflow-auto text-sm leading-relaxed">
             {s.log.map((l, i) => (
               <li key={i} className={i === 0 ? "text-foreground" : "text-muted-foreground"}>
                 {l}
@@ -835,7 +895,13 @@ export function Game() {
                       <button
                         type="button"
                         className="min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
-                        onClick={() => setHintConfirmed(true)}
+                        onClick={() => {
+                          setHintConfirmed(true);
+                          setS((prev) => ({
+                            ...prev,
+                            hintsUsed: prev.hintsUsed + 1,
+                          }));
+                        }}
                       >
                         Continuar e ver dica
                       </button>
@@ -877,6 +943,17 @@ function Shell({ children }: { children: ReactNode }) {
     <main className="min-h-screen bg-background px-3 py-4 text-foreground sm:px-10 sm:py-8">
       {children}
     </main>
+  );
+}
+
+function ScoreMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border border-border/70 bg-background/50 p-3">
+      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1 font-mono text-lg text-foreground">{value}</p>
+    </div>
   );
 }
 

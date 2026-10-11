@@ -145,3 +145,135 @@
     color: var(--color-foreground);
   }
 }
+
+@keyframes dexter-scene-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.015) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dexter-rain {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 32px 160px;
+  }
+}
+
+@keyframes dexter-flicker {
+  0%,
+  100% {
+    opacity: 0.36;
+  }
+  48% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 0.44;
+  }
+  52% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes dexter-evidence-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dexter-title-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    text-shadow: 0 0 24px color-mix(in oklch, var(--color-primary) 35%, transparent);
+  }
+}
+
+.scene-shell {
+  animation: dexter-scene-reveal 700ms ease-out both;
+}
+
+.scene-image {
+  filter: saturate(0.82) contrast(1.08);
+  transition:
+    transform 1.2s ease,
+    filter 700ms ease;
+}
+
+.scene-shell:hover .scene-image {
+  filter: saturate(0.96) contrast(1.12);
+  transform: scale(1.025);
+}
+
+.scene-vignette {
+  animation: dexter-flicker 8s ease-in-out infinite;
+}
+
+.scene-rain {
+  background-image: linear-gradient(
+    112deg,
+    transparent 0 46%,
+    rgb(190 225 235 / 0.12) 47%,
+    transparent 48% 100%
+  );
+  background-size: 42px 180px;
+  mix-blend-mode: screen;
+  opacity: 0.2;
+  animation: dexter-rain 4s linear infinite;
+}
+
+.evidence-card {
+  animation: dexter-evidence-rise 500ms ease-out both;
+  transition:
+    transform 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.evidence-card:hover {
+  box-shadow: 0 0 28px rgb(190 50 30 / 0.16);
+  transform: translateY(-3px);
+}
+
+.clock-glow {
+  animation: dexter-title-pulse 4s ease-in-out infinite;
+}
+
+.ending-screen {
+  animation: dexter-scene-reveal 800ms ease-out both;
+}
+
+.ending-title {
+  animation: dexter-title-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-shell,
+  .scene-vignette,
+  .scene-rain,
+  .evidence-card,
+  .clock-glow,
+  .ending-screen,
+  .ending-title {
+    animation: none;
+  }
+
+  .scene-shell:hover .scene-image,
+  .evidence-card:hover {
+    transform: none;
+  }
+}
