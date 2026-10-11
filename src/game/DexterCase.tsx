@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
@@ -198,8 +197,14 @@ function readSavedInvestigation(): SavedInvestigation | null {
 }
 
 export function DexterCase({ onBack }: { onBack: () => void }) {
-  const isMobile = useIsMobile();
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 1024);
   const [mobileSceneOpen, setMobileSceneOpen] = useState(false);
+
+  useEffect(() => {
+    const updateScreenSize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
   const [initialSave] = useState<SavedInvestigation | null>(() => readSavedInvestigation());
   const [difficulty, setDifficulty] = useState<Difficulty | null>(() => {
     if (initialSave) return initialSave.difficulty;
@@ -484,12 +489,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               type="button"
               aria-label="Fechar cena"
               onClick={() => setMobileSceneOpen(false)}
-              className="fixed inset-0 z-40 bg-black/75 md:hidden"
+              className="fixed inset-0 z-40 bg-black/75 lg:hidden"
             />
           )}
           <section
             aria-label={`Cena ativa: ${currentLocation.name}`}
-            className={`border border-border bg-background p-4 sm:p-5 ${isMobile ? (mobileSceneOpen ? "fixed inset-3 z-50 overflow-y-auto shadow-2xl" : "hidden") : "block"} md:static md:z-auto md:block md:overflow-visible md:bg-transparent md:shadow-none`}
+            className={`border border-border bg-background p-4 sm:p-5 ${isMobile ? (mobileSceneOpen ? "fixed inset-3 z-50 overflow-y-auto shadow-2xl" : "hidden") : "block"} lg:static lg:z-auto lg:block lg:overflow-visible lg:bg-transparent lg:shadow-none`}
           >
             <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Cena da investigação</p>
