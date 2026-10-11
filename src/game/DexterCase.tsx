@@ -116,7 +116,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
   const [suspect, setSuspect] = useState("");
   const [ending, setEnding] = useState(false);
   const [accusationSubmitted, setAccusationSubmitted] = useState(false);
-  const [hintDialog, setHintDialog] = useState<{ hint: string; revealed: boolean } | null>(null);
+  const [hintDialog, setHintDialog] = useState<{ id: string; hint: string; revealed: boolean } | null>(null);
+  const [hintsUsed, setHintsUsed] = useState<string[]>([]);
 
   useEffect(() => {
     if (difficulty) window.localStorage.setItem("dexter-painscreek-difficulty", difficulty);
@@ -129,6 +130,18 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
     [currentLocation],
   );
   const allFound = found.length === EVIDENCE.length;
+  const score = Math.max(0, 100 - hintsUsed.length * 15);
+  const finalRank = suspect !== "Paul Renner"
+    ? "Investigação inconclusiva"
+    : score === 100
+      ? "Dexter — Instinto impecável"
+      : score >= 85
+        ? "Investigador de elite"
+        : score >= 70
+          ? "Detetive experiente"
+          : score >= 55
+            ? "Investigador mediano"
+            : "Investigação comprometida";
   const canSolveTimeline = found.includes("log") && found.includes("tape");
   const canSolveForensics = found.includes("autopsy") && found.includes("receipt");
   const canAccuse =
@@ -340,7 +353,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 Descubra o código usando as evidências reunidas durante a investigação.
               </p>
               <button
-                onClick={() => setHintDialog({ hint: "Eleanor escreveu a data-chave na carta que deixou. Observe como a data pode ser convertida em quatro dígitos.", revealed: false })}
+                onClick={() => setHintDialog({ id: "safe", hint: "Eleanor escreveu a data-chave na carta que deixou. Observe como a data pode ser convertida em quatro dígitos.", revealed: false })}
                 className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
               >
                 DICAS
@@ -375,7 +388,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 Procure as referências que conectam a fotografia ao depósito do cais.
               </p>
               <button
-                onClick={() => setHintDialog({ hint: "Leia o verso da fotografia encontrada no arquivo do xerife. As duas referências ali devem ser combinadas em um único código.", revealed: false })}
+                onClick={() => setHintDialog({ id: "depot", hint: "Leia o verso da fotografia encontrada no arquivo do xerife. As duas referências ali devem ser combinadas em um único código.", revealed: false })}
                 className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
               >
                 DICAS
@@ -423,7 +436,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               de entrada tem duas marcações; a fita coloca em dúvida o local do encontro.
             </p>
             <button
-              onClick={() => setHintDialog({ hint: "Compare as duas marcações do livro de entrada com o detalhe do sino mencionado na fita. Uma dessas informações torna a versão oficial impossível.", revealed: false })}
+              onClick={() => setHintDialog({ id: "timeline", hint: "Compare as duas marcações do livro de entrada com o detalhe do sino mencionado na fita. Uma dessas informações torna a versão oficial impossível.", revealed: false })}
               className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
             >
               DICAS
@@ -489,7 +502,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               sugerem que a vítima tocou em algo pouco antes de morrer.
             </p>
             <button
-              onClick={() => setHintDialog({ hint: "Procure outro item do caso que tenha tinta azul. O vestígio sob as unhas de Eleanor pode conectar a vítima ao depósito.", revealed: false })}
+              onClick={() => setHintDialog({ id: "forensics", hint: "Procure outro item do caso que tenha tinta azul. O vestígio sob as unhas de Eleanor pode conectar a vítima ao depósito.", revealed: false })}
               className="mt-3 border border-border px-3 py-2 font-mono text-xs text-primary transition hover:border-primary"
             >
               DICAS
@@ -615,6 +628,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                   </p>
                 </>
               )}
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="font-mono text-xs uppercase tracking-widest text-primary">Classificação final</p>
+                <p className="mt-2 font-display text-2xl">{finalRank}</p>
+                <p className="mt-2 text-sm">Pontuação: <strong>{score}/100</strong></p>
+                <p className="mt-1 text-xs text-muted-foreground">Dicas utilizadas: {hintsUsed.length} · penalidade: {hintsUsed.length * 15} pontos</p>
+              </div>
             </div>
           )}
         </section>
@@ -633,7 +652,7 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {hintDialog.revealed
                   ? hintDialog.hint
-                  : "Só utilize dicas se realmente não conseguir resolver sozinho."}
+                  : "Só utilize dicas se realmente não conseguir resolver sozinho. Cada dica aberta reduz 15 pontos da sua classificação final."}
               </p>
               <div className="mt-6 flex flex-wrap justify-end gap-3">
                 <button
@@ -644,7 +663,12 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
                 </button>
                 {!hintDialog.revealed && (
                   <button
-                    onClick={() => setHintDialog((current) => current ? { ...current, revealed: true } : null)}
+                    onClick={() => {
+                      if (hintDialog && !hintsUsed.includes(hintDialog.id)) {
+                        setHintsUsed((current) => current.includes(hintDialog.id) ? current : [...current, hintDialog.id]);
+                      }
+                      setHintDialog((current) => current ? { ...current, revealed: true } : null);
+                    }}
                     className="border border-primary bg-primary/10 px-4 py-3 font-mono text-xs text-primary transition hover:bg-primary/20"
                   >
                     ABRIR DICA
@@ -668,6 +692,8 @@ export function DexterCase({ onBack }: { onBack: () => void }) {
               setEnding(false);
               setAccusationSubmitted(false);
               setSuspect("");
+              setHintsUsed([]);
+              setHintDialog(null);
             }}
             className="underline hover:text-primary"
           >
