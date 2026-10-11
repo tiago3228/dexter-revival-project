@@ -1027,6 +1027,8 @@ function MainMenu({
   soundOn: boolean;
   onToggleSound: () => void;
 }) {
+  const [reflectionsOpen, setReflectionsOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
       <div className="mx-auto max-w-5xl">
@@ -1124,6 +1126,59 @@ function MainMenu({
             </span>
           </button>
         </div>
+        <section className="mt-8 border border-border bg-card/30 p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+                Conteúdo extra
+              </p>
+              <h2 className="mt-2 font-display text-2xl">Reflexões do Dexter</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Vídeos extras para assistir entre uma investigação e outra.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setReflectionsOpen((open) => !open)}
+              className="min-h-11 border border-primary px-4 py-3 font-mono text-xs text-primary hover:bg-primary/10"
+              aria-expanded={reflectionsOpen}
+            >
+              {reflectionsOpen ? "Fechar reflexões" : "Abrir reflexões"}
+            </button>
+          </div>
+          {reflectionsOpen && (
+            <div className="mt-6 grid gap-5 lg:grid-cols-2">
+              <article className="border border-border bg-background/40 p-3 sm:p-4">
+                <h3 className="font-display text-xl">Reflexão #1</h3>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Seriado Dexter · dublado
+                </p>
+                <video
+                  className="mt-4 aspect-video w-full bg-black"
+                  controls
+                  preload="metadata"
+                  playsInline
+                  src="/videos/dexter-reflexoes/reflexao-dexter-01.mp4"
+                  aria-label="Reflexão do seriado Dexter, vídeo 1"
+                />
+              </article>
+              <article className="border border-border bg-background/40 p-3 sm:p-4">
+                <h3 className="font-display text-xl">Reflexão #2</h3>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Seriado Dexter · dublado
+                </p>
+                <video
+                  className="mt-4 aspect-video w-full bg-black"
+                  controls
+                  preload="metadata"
+                  playsInline
+                  src="/videos/dexter-reflexoes/reflexao-dexter-02.mp4"
+                  aria-label="Reflexão do seriado Dexter, vídeo 2"
+                />
+              </article>
+            </div>
+          )}
+        </section>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
           <p>ARQUIVOS DISPONÍVEIS: 03</p>
           <p className="mt-2">NOVO ARQUIVO: Dexter: The Painscreek Case · disponível</p>
