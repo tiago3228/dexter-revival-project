@@ -24,8 +24,13 @@ type PuzzleId =
   | "rede"
   | "segredo"
   | "reacao";
+type ImageId = "blood-trail";
 type Modal =
-  { kind: "doc"; id: DocId } | { kind: "puzzle"; id: PuzzleId } | { kind: "acusar" } | null;
+  | { kind: "doc"; id: DocId }
+  | { kind: "puzzle"; id: PuzzleId }
+  | { kind: "image"; id: ImageId }
+  | { kind: "acusar" }
+  | null;
 type InfoModal = "como-jogar" | "dicas" | null;
 type Ending = { title: string; text: string; good: boolean } | null;
 
@@ -66,6 +71,7 @@ export function Game() {
   const [ending, setEnding] = useState<Ending>(null);
   const [tab, setTab] = useState<"cena" | "caderno">("cena");
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
+  const [hintConfirmed, setHintConfirmed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -103,7 +109,7 @@ export function Game() {
   const done = (p: PuzzleId) => s.solved.includes(p);
 
   const hint = !done("sangue")
-    ? "Observe as características das gotas nas fotos. A forma delas indica o ritmo do movimento."
+    ? "No laboratório, clique na miniatura 'Ver fotografia da cena e descrição'. Observe as características das gotas: a forma delas indica o ritmo do movimento."
     : !done("hora")
       ? "Compare a temperatura registrada com a temperatura normal e a tabela encontrada no laboratório."
       : !done("contradicao")
@@ -191,7 +197,7 @@ export function Game() {
             onClick={() =>
               done("sangue")
                 ? addDoc("versoFoto", "Você vira a foto do banheiro. Há algo escrito no verso.")
-                : setModal({ kind: "puzzle", id: "sangue" })
+                : setModal({ kind: "image", id: "blood-trail" })
             }
           >
             fotos da cena
@@ -294,10 +300,24 @@ export function Game() {
           </Hot>
           . O fax ainda cospe uma{" "}
           <Hot onClick={() => addDoc("ponto", "Um fax do Porto de Miami chegou para Debra.")}>
-            folha do porto
+            relatório
           </Hot>
           .
         </p>
+        <button
+          type="button"
+          onClick={() => setModal({ kind: "image", id: "blood-trail" })}
+          className="group mt-2 block w-full max-w-xl touch-manipulation border border-white/20 bg-black/30 p-2 text-left hover:border-primary"
+        >
+          <img
+            src="/images/evidence-blood-trail.jpg"
+            alt="Fotografia forense com uma trilha de gotas de sangue pelo apartamento"
+            className="h-44 w-full object-cover transition group-hover:opacity-90 sm:h-60"
+          />
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
+            Ver fotografia da cena e descrição
+          </span>
+        </button>
         <p>
           No quadro branco, Debra escreveu com força:{" "}
           <Hot onClick={() => setModal({ kind: "puzzle", id: "contradicao" })}>
@@ -433,7 +453,10 @@ export function Game() {
           </button>
           <button
             type="button"
-            onClick={() => setInfoModal("dicas")}
+            onClick={() => {
+              setHintConfirmed(false);
+              setInfoModal("dicas");
+            }}
             className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
           >
             Dicas
@@ -539,6 +562,28 @@ export function Game() {
                 </p>
               </>
             )}
+            {modal.kind === "image" && modal.id === "blood-trail" && (
+              <>
+                <h2 className="font-display text-2xl">Fotografia da cena — trilha de sangue</h2>
+                <img
+                  src="/images/evidence-blood-trail.jpg"
+                  alt="Fotografia forense ampliada com uma trilha de gotas de sangue"
+                  className="mt-4 max-h-[55vh] w-full object-contain"
+                />
+                <p className="mt-4 text-sm leading-relaxed">
+                  A foto mostra uma porta à esquerda, a cozinha ao centro e um corredor que termina
+                  no banheiro. Observe como as gotas mudam de formato ao longo do caminho: algumas
+                  são alongadas, outras mais redondas, e há uma poça no ponto final.
+                </p>
+                <button
+                  type="button"
+                  className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                  onClick={() => setModal({ kind: "puzzle", id: "sangue" })}
+                >
+                  Examinar as manchas
+                </button>
+              </>
+            )}
             {modal.kind === "puzzle" && <Puzzle id={modal.id} s={s} solve={solve} fail={fail} />}
             {modal.kind === "acusar" && (
               <Accuse
@@ -615,19 +660,42 @@ export function Game() {
             ) : (
               <>
                 <h2 className="font-display text-2xl">Dicas sem spoiler</h2>
-                <p className="mt-3 border-l-2 border-primary pl-3 text-sm leading-relaxed text-primary">
-                  Só pegue dicas em último caso, quando você realmente não estiver conseguindo
-                  resolver. Tente observar e cruzar as pistas antes de abrir esta janela.
-                </p>
-                <p className="mt-5 text-sm leading-relaxed">Dica atual: {hint}</p>
-                <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                  A dica acompanha seu progresso e nunca mostra diretamente a resposta, a combinação
-                  ou o culpado.
-                </p>
+                {!hintConfirmed ? (
+                  <>
+                    <p className="mt-3 border-l-2 border-primary pl-3 text-sm leading-relaxed text-primary">
+                      Só pegue dicas em último caso, quando você realmente não estiver conseguindo
+                      resolver. Tente observar e cruzar as pistas antes de abrir esta janela.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        className="min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
+                        onClick={() => setHintConfirmed(true)}
+                      >
+                        Continuar e ver dica
+                      </button>
+                      <button
+                        type="button"
+                        className="min-h-11 border border-border px-4 py-3 font-mono text-sm text-muted-foreground hover:text-foreground"
+                        onClick={() => setInfoModal(null)}
+                      >
+                        Voltar
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-5 text-sm leading-relaxed">Dica atual: {hint}</p>
+                    <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+                      A dica acompanha seu progresso e nunca mostra diretamente a resposta, a
+                      combinação ou o culpado.
+                    </p>
+                  </>
+                )}
               </>
             )}
             <button
-              className="mt-6 font-mono text-xs text-muted-foreground hover:text-foreground"
+              className="mt-6 min-h-10 font-mono text-xs text-muted-foreground hover:text-foreground"
               onClick={() => setInfoModal(null)}
             >
               fechar
