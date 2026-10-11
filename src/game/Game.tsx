@@ -1167,11 +1167,23 @@ export function Game() {
                 setModal({ kind: "acusar" });
                 return;
               }
-              if (s.loc !== nextObjective.location) go(nextObjective.location);
-              else if (nextObjective.location === "lab" && !done("sangue")) openImage("blood-trail");
-              else if (nextObjective.location === "lab" && !done("relatorio")) openImage("autopsy-report");
-              else if (nextObjective.location === "corredor") setModal({ kind: "puzzle", id: "contradicao" });
-              else if (nextObjective.location === "evidencias") setModal({ kind: "puzzle", id: done("janela") ? "fechadura" : "janela" });
+              if (s.loc !== nextObjective.location) {
+                go(nextObjective.location);
+                return;
+              }
+              if (nextObjective.title === "Examinar a cena do crime") openImage("blood-trail");
+              else if (nextObjective.title === "Conferir o relatório do legista") openImage("autopsy-report");
+              else if (nextObjective.title === "Reconstruir a hora da morte") setModal({ kind: "puzzle", id: "hora" });
+              else if (nextObjective.title === "Conferir os depoimentos") setModal({ kind: "puzzle", id: "contradicao" });
+              else if (nextObjective.title === "Examinar a sala de evidências")
+                setModal({ kind: "puzzle", id: !done("janela") ? "janela" : !done("fechadura") ? "fechadura" : "luva" });
+              else if (nextObjective.title === "Decifrar o bilhete") setModal({ kind: "puzzle", id: "cifra" });
+              else if (nextObjective.title === "Cruzar nomes e endereços")
+                setModal({ kind: "puzzle", id: !done("rede") ? "rede" : "reacao" });
+              else if (nextObjective.title === "Confirmar os vestígios físicos")
+                setModal({ kind: "puzzle", id: !done("vestigio") ? "vestigio" : "lamina" });
+              else if (nextObjective.title === "Revisar o Código de Harry")
+                setModal({ kind: "puzzle", id: !done("caderno") ? "caderno" : "segredo" });
               else setTab("caderno");
             }}
             className="min-h-11 border border-primary bg-primary/10 px-4 py-2 font-mono text-xs text-primary hover:bg-primary/20"
