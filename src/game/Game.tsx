@@ -127,7 +127,11 @@ export function Game() {
   const sfxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
-    const audio = new Audio("/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3");
+    const track =
+      !showMenu && caseMode === "painscreek"
+        ? "/audio/painscreek/painscreek-case-theme.mp3"
+        : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+    const audio = new Audio(track);
     audio.loop = true;
     audio.volume = 0.28;
     audioRef.current = audio;
@@ -147,7 +151,7 @@ export function Game() {
       void sfxRef.current?.close();
       sfxRef.current = null;
     };
-  }, []);
+  }, [caseMode, showMenu]);
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = musicVolume;
