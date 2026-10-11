@@ -298,7 +298,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     ambientRef.current = { context, sources: [rain, hum], gains: [rainGain, humGain] };
   };
 
-  const playSfx = (kind: "paper" | "play" | "success" | "error" | "warning") => {
+  const playSfx = (
+    kind: "paper" | "play" | "success" | "error" | "warning" | "connection" | "table",
+  ) => {
     if (!soundOn || typeof window === "undefined") return;
     startAmbient();
     const context = ambientRef.current?.context ?? new AudioContext();
@@ -308,16 +310,18 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
       success: [392, 523, 659],
       error: [220, 165],
       warning: [180, 220],
+      connection: [240, 520, 740],
+      table: [196, 294, 392, 587, 784],
     }[kind];
     tones.forEach((frequency, index) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const start = context.currentTime + index * 0.08;
-      oscillator.type = kind === "error" ? "sawtooth" : "sine";
+      oscillator.type = kind === "error" ? "sawtooth" : kind === "table" ? "triangle" : "sine";
       oscillator.frequency.value = frequency;
       gain.gain.setValueAtTime(0.0001, start);
       gain.gain.exponentialRampToValueAtTime(
-        (kind === "paper" ? 0.04 : 0.07) * volume,
+        (kind === "paper" ? 0.04 : kind === "table" ? 0.1 : 0.07) * volume,
         start + 0.01,
       );
       gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.14);
@@ -1011,7 +1015,11 @@ function ReportMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "error") => void }) {
+function InvestigationBoard({
+  onFeedback,
+}: {
+  onFeedback?: (kind: "success" | "error" | "connection" | "table") => void;
+}) {
   const suspects = [
     ["Monica Monroe", "esposa · viagem de negócios"],
     ["Richard Stevens", "primo · sócio minoritário"],
@@ -1030,6 +1038,14 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
     ["Richard Stevens", "SMS de Richard"],
     ["Emily Parker", "Diário de Emily"],
   ];
+  const dexterNarrations: Record<string, string> = {
+    "Richard Stevens|Jornal da gala":
+      "O álibi de Richard sangra no papel. Amara estava em Nova York. Ele estava sozinho quando disse o contrário.",
+    "Richard Stevens|SMS de Richard":
+      "Cinquenta mil dólares não são um pedido. São uma coleira. Richard tinha um motivo para silenciar Jonathan.",
+    "Emily Parker|Diário de Emily":
+      "Emily conhecia a casa, conhecia a rotina e carregava o ódio como uma lâmina escondida. Motivo e acesso: uma combinação perigosa.",
+  };
   const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
   const [selectedClue, setSelectedClue] = useState<string | null>(null);
   const [connections, setConnections] = useState<{ suspect: string; clue: string }[]>([]);
@@ -1037,6 +1053,7 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
   const [feedback, setFeedback] = useState<{
     kind: "correct" | "wrong" | "duplicate";
     text: string;
+    narration?: string;
   } | null>(null);
 
   const isRequiredConnection = (suspect: string, clue: string) =>
@@ -1059,6 +1076,7 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
       return;
     }
     const correct = isRequiredConnection(suspect, clue);
+    const nextCorrectCount = correctConnections.length + (correct ? 1 : 0);
     setConnections((current) => [...current, { suspect, clue }]);
     setScore((current) => Math.max(0, current + (correct ? 100 : -25)));
     setFeedback(
@@ -1066,13 +1084,20 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
         ? {
             kind: "correct",
             text: "Conexão confirmada. Essa evidência sustenta a cadeia do crime.",
+            narration: dexterNarrations[`${suspect}|${clue}`],
           }
         : {
             kind: "wrong",
             text: "Conexão sem sustentação suficiente. Mantenha-a como hipótese e volte aos documentos.",
           },
     );
-    onFeedback?.(correct ? "success" : "error");
+    onFeedback?.(
+      correct
+        ? nextCorrectCount === requiredConnections.length
+          ? "table"
+          : "connection"
+        : "error",
+    );
     setSelectedSuspect(null);
     setSelectedClue(null);
   };
@@ -1229,6 +1254,14 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
                 : "Quadro atualizado"}
           </p>
           <p className="mt-1">{feedback.text}</p>
+          {feedback.narration && (
+            <blockquote className="mt-3 border-l-2 border-primary/70 pl-3 font-display text-lg italic text-foreground">
+              <span className="mr-2 font-mono text-[10px] not-italic uppercase tracking-[0.2em] text-primary">
+                Dexter Morgan
+              </span>
+              “{feedback.narration}”
+            </blockquote>
+          )}
         </div>
       )}
       {allProofsReady && (
@@ -1245,6 +1278,13 @@ function InvestigationBoard({ onFeedback }: { onFeedback?: (kind: "success" | "e
             Emily. Você já tem a cadeia mínima para apontar o assassino — agora confirme tudo no
             relatório final.
           </p>
+          <blockquote className="relative mx-auto mt-4 max-w-2xl border-l-2 border-primary/70 pl-3 text-left font-display text-lg italic text-red-50">
+            <span className="mr-2 font-mono text-[10px] not-italic uppercase tracking-[0.2em] text-primary">
+              Dexter Morgan
+            </span>
+            “Três fios. Um motivo. Uma oportunidade. Agora só falta levar o assassino até a minha
+            mesa.”
+          </blockquote>
           <div className="relative mt-4 flex items-center justify-center gap-2 font-mono text-xs text-primary">
             <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,80,80,0.9)]" />
             CASO PRONTO PARA A CONCLUSÃO
