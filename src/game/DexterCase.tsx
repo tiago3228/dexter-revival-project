@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { recordCaseCompletion } from "./achievements";
 import { getInterrogationRanking } from "./interrogationRanking";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
@@ -1404,6 +1405,15 @@ export function DexterCase({
             onClick={() => {
               setAccusationSubmitted(true);
               setEnding(true);
+              recordCaseCompletion({
+                caseId: "painscreek",
+                score,
+                hints: hintsUsed.length,
+                mistakes,
+                correctConclusion: suspect === "Paul Renner",
+                correctInterrogations: interviewedSuspects.length,
+                interrogationMistakes,
+              });
             }}
             className="mt-5 border border-primary px-5 py-3 font-mono text-xs text-primary disabled:cursor-not-allowed disabled:opacity-40"
           >

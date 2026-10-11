@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { caesar } from "./data";
+import { recordCaseCompletion } from "./achievements";
 
 type Objective = 1 | 2 | 3 | 4;
 type Evidence = {
@@ -416,6 +417,13 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
     message: string,
   ) => {
     playSfx(verdict === "emily-richard" ? "success" : "error");
+    recordCaseCompletion({
+      caseId: "monroe",
+      score: reportPoints,
+      hints: hintsUsed,
+      mistakes,
+      correctConclusion: verdict === "emily-richard",
+    });
     setFinalVerdict(verdict);
     setCompleted((prev) => (prev.includes(4) ? prev : [...prev, 4]));
     setAnswer(message);

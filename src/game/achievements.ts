@@ -1,0 +1,144 @@
+export const CASE_IDS = ["ortega", "monroe", "painscreek"] as const;
+export type CaseId = (typeof CASE_IDS)[number];
+
+export const ACHIEVEMENTS = [
+  {
+    id: "first-case",
+    title: "Primeiro arquivo",
+    description: "Conclua seu primeiro caso de investigação.",
+  },
+  {
+    id: "sharp-eye",
+    title: "Olho clínico",
+    description: "Finalize um caso com 90 pontos ou mais.",
+  },
+  {
+    id: "no-hints",
+    title: "Sem atalhos",
+    description: "Conclua um caso sem solicitar dicas.",
+  },
+  {
+    id: "clean-run",
+    title: "Disciplina de laboratório",
+    description: "Conclua um caso sem cometer erros.",
+  },
+  {
+    id: "correct-verdict",
+    title: "Conclusão sustentada",
+    description: "Chegue ao veredicto correto em um caso.",
+  },
+  {
+    id: "master-interrogator",
+    title: "Mestre dos depoimentos",
+    description: "Acerte os três interrogatórios do Caso Dexter sem errar.",
+  },
+  {
+    id: "all-cases",
+    title: "Arquivo completo",
+    description: "Conclua os três capítulos disponíveis.",
+  },
+] as const;
+
+export type AchievementId = (typeof ACHIEVEMENTS)[number]["id"];
+
+export type AchievementProgress = {
+  unlockedIds: AchievementId[];
+  completedCases: CaseId[];
+  bestScores: Partial<Record<CaseId, number>>;
+};
+
+export type CasePerformance = {
+  caseId: CaseId;
+  score: number;
+  hints: number;
+  mistakes: number;
+  correctConclusion: boolean;
+  correctInterrogations?: number;
+  interrogationMistakes?: number;
+};
+
+const STORAGE_KEY = "dexter-investigator-achievements-v1";
+
+export function emptyAchievementProgress(): AchievementProgress {
+  return { unlockedIds: [], completedCases: [], bestScores: {} };
+}
+
+const isCaseId = (value: unknown): value is CaseId =>
+  typeof value === "string" && CASE_IDS.includes(value as CaseId);
+
+const isAchievementId = (value: unknown): value is AchievementId =>
+  typeof value === "string" && ACHIEVEMENTS.some((achievement) => achievement.id === value);
+
+export function loadAchievementProgress(): AchievementProgress {
+  if (typeof window === "undefined") return emptyAchievementProgress();
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return emptyAchievementProgress();
+    const saved = JSON.parse(raw) as Partial<AchievementProgress>;
+    const bestScores: Partial<Record<CaseId, number>> = {};
+    for (const caseId of CASE_IDS) {
+      const score = saved.bestScores?.[caseId];
+      if (typeof score === "number" && Number.isFinite(score)) {
+        bestScores[caseId] = Math.min(100, Math.max(0, Math.floor(score)));
+      }
+    }
+    return {
+      unlockedIds: Array.isArray(saved.unlockedIds)
+        ? [...new Set(saved.unlockedIds.filter(isAchievementId))]
+        : [],
+      completedCases: Array.isArray(saved.completedCases)
+        ? [...new Set(saved.completedCases.filter(isCaseId))]
+        : [],
+      bestScores,
+    };
+  } catch {
+    return emptyAchievementProgress();
+  }
+}
+
+export function applyCasePerformance(
+  progress: AchievementProgress,
+  performance: CasePerformance,
+): AchievementProgress {
+  const score = Number.isFinite(performance.score)
+    ? Math.min(100, Math.max(0, Math.floor(performance.score)))
+    : 0;
+  const hints = Number.isFinite(performance.hints) ? Math.max(0, Math.floor(performance.hints)) : 0;
+  const mistakes = Number.isFinite(performance.mistakes)
+    ? Math.max(0, Math.floor(performance.mistakes))
+    : 0;
+  const completedCases = [...new Set([...progress.completedCases, performance.caseId])];
+  const bestScores = {
+    ...progress.bestScores,
+    [performance.caseId]: Math.max(progress.bestScores[performance.caseId] ?? -1, score),
+  };
+  const unlocked = new Set(progress.unlockedIds);
+
+  unlocked.add("first-case");
+  if (score >= 90) unlocked.add("sharp-eye");
+  if (hints === 0) unlocked.add("no-hints");
+  if (mistakes === 0) unlocked.add("clean-run");
+  if (performance.correctConclusion) unlocked.add("correct-verdict");
+  if (
+    performance.caseId === "painscreek" &&
+    performance.correctInterrogations === 3 &&
+    performance.interrogationMistakes === 0
+  ) {
+    unlocked.add("master-interrogator");
+  }
+  if (CASE_IDS.every((caseId) => completedCases.includes(caseId))) unlocked.add("all-cases");
+
+  return { unlockedIds: [...unlocked], completedCases, bestScores };
+}
+
+export function recordCaseCompletion(performance: CasePerformance): AchievementProgress {
+  const progress = applyCasePerformance(loadAchievementProgress(), performance);
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    } catch {
+      // Keep the current session functional when browser storage is unavailable.
+    }
+  }
+  return progress;
+}

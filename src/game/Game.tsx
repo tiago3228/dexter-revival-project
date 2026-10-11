@@ -14,6 +14,13 @@ import {
 } from "./data";
 import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
+import {
+  ACHIEVEMENTS,
+  CASE_IDS,
+  loadAchievementProgress,
+  recordCaseCompletion,
+  type CaseId,
+} from "./achievements";
 import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
 
 type PuzzleId =
@@ -140,6 +147,18 @@ export function Game() {
   }, [musicVolume]);
 
   useEffect(() => {
+    if (!ending) return;
+    const score = getInvestigatorScore(s);
+    recordCaseCompletion({
+      caseId: "ortega",
+      score: score.points,
+      hints: s.hintsUsed,
+      mistakes: s.mistakes,
+      correctConclusion: ending.good,
+    });
+  }, [ending, s]);
+
+  useEffect(() => {
     const audio = new Audio();
     audio.loop = true;
     audioRef.current = audio;
@@ -243,6 +262,11 @@ export function Game() {
     return (
       <MainMenu
         onSelect={(nextCase) => {
+          if (nextCase === "ortega" && ending) {
+            setS(initial());
+            setEnding(null);
+            setModal(null);
+          }
           setCaseMode(nextCase);
           setShowMenu(false);
         }}
@@ -1164,6 +1188,13 @@ function MainMenu({
 }) {
   const [showReflections, setShowReflections] = useState(false);
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
+  const [showTrophies, setShowTrophies] = useState(false);
+  const [achievementProgress] = useState(() => loadAchievementProgress());
+
+  const chapterStatus = (caseId: CaseId) => {
+    if (!achievementProgress.completedCases.includes(caseId)) return "ARQUIVO DISPONÍVEL";
+    return `CONCLUÍDO · MELHOR ${achievementProgress.bestScores[caseId] ?? 0}/100`;
+  };
 
   const closeVideo = () => {
     setActiveVideo(null);
@@ -1283,14 +1314,14 @@ function MainMenu({
           </section>
         )}
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-          Dexter · Arquivos de investigação
+          Dexter · capítulos de investigação
         </p>
         <h1 className="mt-3 max-w-3xl font-display text-5xl leading-tight sm:text-7xl">
-          Escolha seu caso
+          Seleção de capítulos
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Entre em um arquivo, examine documentos, ouça depoimentos e construa uma conclusão que
-          sobreviva às provas.
+          Escolha um capítulo para investigar. Você pode voltar a este menu e alternar entre os três
+          casos sempre que quiser.
         </p>
         <section
           className="mt-8 max-w-xl border border-border bg-card/40 p-4 sm:p-5"
@@ -1326,13 +1357,59 @@ function MainMenu({
             />
           </label>
         </section>
+        <button
+          type="button"
+          onClick={() => setShowTrophies((visible) => !visible)}
+          aria-expanded={showTrophies}
+          className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
+        >
+          {showTrophies ? "Fechar mural" : "Mural de troféus"} ·{" "}
+          {achievementProgress.unlockedIds.length}/{ACHIEVEMENTS.length}
+        </button>
+        {showTrophies && (
+          <section
+            className="mt-5 border border-primary/50 bg-card/40 p-4 sm:p-6"
+            aria-label="Mural de troféus"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Desempenho do investigador
+                </p>
+                <h2 className="mt-2 font-display text-2xl">Mural de troféus</h2>
+              </div>
+              <p className="font-mono text-xs text-muted-foreground">
+                {achievementProgress.unlockedIds.length}/{ACHIEVEMENTS.length} conquistados
+              </p>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {ACHIEVEMENTS.map((achievement) => {
+                const unlocked = achievementProgress.unlockedIds.includes(achievement.id);
+                return (
+                  <article
+                    key={achievement.id}
+                    className={`border p-4 ${unlocked ? "border-primary bg-primary/5" : "border-border bg-background/40 opacity-70"}`}
+                  >
+                    <p
+                      className={`font-mono text-[10px] uppercase tracking-wider ${unlocked ? "text-primary" : "text-muted-foreground"}`}
+                    >
+                      {unlocked ? "Troféu conquistado" : "Troféu bloqueado"}
+                    </p>
+                    <h3 className="mt-2 font-display text-xl">{achievement.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{achievement.description}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           <button
             onClick={() => onSelect("ortega")}
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-              Episódio 1 · Miami
+              Capítulo 01 · Miami
             </p>
             <h2 className="mt-3 font-display text-3xl">Turno da Noite</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -1340,7 +1417,10 @@ function MainMenu({
               de Harry esperam por você.
             </p>
             <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
-              Abrir arquivo →
+              Abrir capítulo →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("ortega")}
             </span>
           </button>
           <button
@@ -1348,7 +1428,7 @@ function MainMenu({
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-              Arquivo Greenfield · 20/05/2023
+              Capítulo 02 · Greenfield · 20/05/2023
             </p>
             <h2 className="mt-3 font-display text-3xl">O Caso Monroe</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -1356,7 +1436,10 @@ function MainMenu({
               e relatório final alternativo.
             </p>
             <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
-              Abrir dossiê →
+              Abrir capítulo →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("monroe")}
             </span>
           </button>
           <button
@@ -1364,7 +1447,7 @@ function MainMenu({
             className="group border border-primary/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-primary hover:bg-card sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-              Arquivo especial · Greybridge
+              Capítulo 03 · Greybridge
             </p>
             <h2 className="mt-3 font-display text-3xl">Dexter: The Painscreek Case</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -1374,11 +1457,19 @@ function MainMenu({
             <span className="mt-8 block font-mono text-xs text-primary group-hover:underline">
               Escolher dificuldade e iniciar →
             </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("painscreek")}
+            </span>
           </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
           <p>ARQUIVOS DISPONÍVEIS: 03</p>
-          <p className="mt-2">NOVO ARQUIVO: Dexter: The Painscreek Case · disponível</p>
+          <p className="mt-2">
+            CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
+          </p>
+          <p className="mt-2">
+            TROFÉUS CONQUISTADOS: {achievementProgress.unlockedIds.length}/{ACHIEVEMENTS.length}
+          </p>
         </div>
       </div>
     </main>
