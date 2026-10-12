@@ -91,8 +91,19 @@ Não fechar uma rota investigativa nem criar puzzle obrigatório antes que os do
 
 ## Prioridades acrescentadas — OCR das páginas 31–69
 - [ ] Conferir páginas 31–42, especialmente colunas e datas.
-- [ ] Inspecionar páginas 43 e 55, sem texto reconhecido pelo OCR.
+- [x] Inspecionar páginas 43 e 55: ambas têm texto legível nas imagens, apesar da falha de OCR; atualizar inventário e organização.
 - [ ] Comparar páginas 46–48 com 49–51 para confirmar duplicatas.
 - [ ] Conferir a narrativa atribuída a Andrew na p. 54 e a ordem de entradas na p. 56.
-- [ ] Conferir nomes e campos fragmentários das páginas 58–62.
+- [x] Registrar na p. 60 a anotação visual “Sala de segurança: 005241 (Mansão?)”.
+- [ ] Conferir com ampliação adicional os nomes e campos fragmentários das páginas 58–62, especialmente p. 61–62.
 - [ ] Confirmar o código 44871 na p. 64 e a frase truncada na p. 69.
+
+
+## Resultado da primeira inspeção visual — páginas 31–69 (12/10/2026)
+
+- [x] O PDF original foi aberto a partir de `IMAGENS DE PAINSCREEK.zip`; foram inspecionadas as imagens das páginas 31–69.
+- [x] Corrigida a falsa marcação de “sem texto OCR” para as páginas 43 e 55: ambas exibem texto legível que o OCR omitiu.
+- [x] Recuperada a anotação da página 60: “Sala de segurança: 005241 (Mansão?)”.
+- [x] Confirmado visualmente que as páginas 49–51 repetem o conteúdo das páginas 46–48, respectivamente, no material mostrado.
+- [x] Confirmado visualmente o código **44871** na página 64.
+- [ ] A transcrição literal de cada página ainda requer revisão ampliada de caracteres pequenos e manuscritos; esta inspeção corrige omissões evidentes, mas não declara cada palavra de todas as páginas validada.
