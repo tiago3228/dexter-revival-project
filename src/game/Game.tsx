@@ -175,9 +175,9 @@ export function Game() {
   const [harryLine, setHarryLine] = useState<string | null>(null);
   const [soundOn, setSoundOn] = useState(true);
   const [musicVolume, setMusicVolume] = useState(() => {
-    if (typeof window === "undefined") return 0.28;
+    if (typeof window === "undefined") return 0.3;
     const saved = Number(window.localStorage.getItem("dexter-music-volume"));
-    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.3;
   });
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.28;
@@ -282,7 +282,9 @@ export function Game() {
         ? "/audio/painscreek/painscreek-case-theme.mp3"
         : !showMenu && caseMode === "mentalist"
           ? "/audio/mentalist/red-john-theme.mp3"
-          : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+          : !showMenu && caseMode === "winchester"
+            ? "/audio/winchester/o-sangue-dos-condenados.mp3"
+            : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const trackUrl = new URL(track, window.location.href).href;
     if (audio.src !== trackUrl) {
       audio.pause();
@@ -369,13 +371,7 @@ export function Game() {
   };
 
   if (showIntro) {
-    return (
-      <IntroScreen
-        onStart={startGameFadeOut}
-        soundOn={soundOn}
-        onToggleSound={toggleSound}
-      />
-    );
+    return <IntroScreen onStart={startGameFadeOut} soundOn={soundOn} onToggleSound={toggleSound} />;
   }
 
   if (showMenu) {
@@ -410,7 +406,15 @@ export function Game() {
   }
 
   if (caseMode === "winchester") {
-    return <WinchesterCase onBack={() => setShowMenu(true)} />;
+    return (
+      <WinchesterCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+      />
+    );
   }
 
   if (caseMode === "mentalist") {
@@ -2370,9 +2374,8 @@ function MainMenu({
             </p>
             <h2 className="mt-3 font-display text-3xl">O Sangue dos Condenados</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Um caso maior em seis atos: perícia contraditória, arquivos apagados,
-              interrogatórios, conexões ocultas e uma hipótese sobrenatural que só se confirma
-              perto do fim.
+              Um caso maior em seis atos: perícia contraditória, arquivos apagados, interrogatórios,
+              conexões ocultas e uma hipótese sobrenatural que só se confirma perto do fim.
             </p>
             <span className="mt-8 block font-mono text-xs text-red-300 group-hover:underline">
               Abrir dossiê →
