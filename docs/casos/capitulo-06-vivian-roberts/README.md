@@ -1,11 +1,12 @@
 # Capítulo 6 — O Caso Vivian Roberts
 
-**Status:** estrutura documental em preparação; transcrições OCR pendentes de conferência visual.
+**Status:** estrutura documental em preparação; transcrição organizada das páginas 1–20 recebida, aguardando conferência visual independente palavra por palavra; lotes posteriores seguem com estados de revisão próprios.
 
 ## Objetivo
 Preparar um caso investigativo independente para Dexter Revival Project, inspirado na estrutura de exploração e descoberta de documentos de The Painscreek Killings. O capítulo existente chamado Painscreek permanece separado e não deve ser sobrescrito, renomeado ou reutilizado como se fosse este caso.
 
 ## Documentos de trabalho
+- [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md) — transcrição e notas investigativas recebidas; conferir contra as imagens antes de usar como texto final no jogo.
 - [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — síntese por página do lote 1–69, atualizada com o OCR recebido até a página 69.
 - [Inventário OCR — páginas 31–69](./inventario-ocr-paginas-031-069.md) — inventário do OCR enviado, com alertas de coluna, duplicatas, páginas sem texto reconhecido e afirmações que continuam sendo relatos.
 - [Inventário OCR — páginas 70–116](./recebido-ia-paginas-070-116.md) — inventário por página do texto enviado, com tipo de documento, conteúdo principal e alertas de OCR/consistência. Não substitui a transcrição literal.
