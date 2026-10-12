@@ -182,12 +182,22 @@ export function Game() {
   const [soundOn, setSoundOn] = useState(true);
   const [musicVolume, setMusicVolume] = useState(() => {
     if (typeof window === "undefined") return 0.3;
-    const saved = Number(window.localStorage.getItem("dexter-music-volume"));
+    const stored = window.localStorage.getItem("dexter-music-volume");
+    if (stored === null) return 0.3;
+    const saved = Number(stored);
+    if (stored === "0" && window.localStorage.getItem("dexter-audio-defaults-v1") !== "true") {
+      return 0.3;
+    }
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.3;
   });
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.28;
-    const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
+    const stored = window.localStorage.getItem("dexter-ortega-ambient-volume");
+    if (stored === null) return 0.28;
+    const saved = Number(stored);
+    if (stored === "0" && window.localStorage.getItem("dexter-audio-defaults-v1") !== "true") {
+      return 0.28;
+    }
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
   const [caseMode, setCaseMode] = useState<
@@ -332,6 +342,10 @@ export function Game() {
   }, [musicVolume]);
 
   useEffect(() => {
+    window.localStorage.setItem("dexter-audio-defaults-v1", "true");
+  }, []);
+
+  useEffect(() => {
     window.localStorage.setItem("dexter-music-volume", String(musicVolume));
   }, [musicVolume]);
 
@@ -445,7 +459,13 @@ export function Game() {
 
   if (caseMode === "winchester") {
     return (
-      <WinchesterCase onBack={() => setShowMenu(true)} />
+      <WinchesterCase
+        onBack={() => setShowMenu(true)}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+      />
     );
   }
 

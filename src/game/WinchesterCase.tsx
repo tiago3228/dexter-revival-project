@@ -38,7 +38,21 @@ const SUSPECTS = [
   { id: "archivist", name: "Dr. Peter Hales", role: "Arquivista municipal", clue: "A assinatura dele aparece em transferências de registros.", question: "Por que os registros desapareceram?", answer: "Recebi ordens com carimbo oficial. Quando tentei contestar, meu próprio arquivo pessoal foi esvaziado." },
 ] as const;
 
-export function WinchesterCase({ onBack }: { onBack: () => void }) {
+type InterviewDetails = { id: string; name: string; role: string; question: string; answer: string };
+
+export function WinchesterCase({
+  onBack,
+  musicVolume,
+  onMusicVolumeChange,
+  soundOn,
+  onToggleSound,
+}: {
+  onBack: () => void;
+  musicVolume: number;
+  onMusicVolumeChange: (value: number) => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+}) {
   const [act, setAct] = useState<Act>(0);
   const [found, setFound] = useState<string[]>([]);
   const [interrogated, setInterrogated] = useState<string[]>([]);
@@ -51,7 +65,67 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
   const [mistakes, setMistakes] = useState(0);
   const [feedback, setFeedback] = useState("A primeira cena parece simples demais. Comece examinando os vestígios do canal.");
   const [activeEvidence, setActiveEvidence] = useState<string | null>(null);
+  const [activeInterview, setActiveInterview] = useState<InterviewDetails | null>(null);
+  const [ambientOn, setAmbientOn] = useState(true);
+  const [ambientVolume, setAmbientVolume] = useState(() => {
+    const stored = typeof window === "undefined" ? null : window.localStorage.getItem("dexter-winchester-ambient-volume");
+    if (stored === null) return 0.3;
+    const saved = Number(stored);
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.3;
+  });
+  const ambientRef = useRef<{ context: AudioContext; sources: AudioScheduledSourceNode[]; gains: GainNode[] } | null>(null);
   const recorded = useRef(false);
+
+  const stopAmbient = useCallback(() => {
+    const ambient = ambientRef.current;
+    if (!ambient) return;
+    ambient.sources.forEach((source) => source.stop());
+    ambientRef.current = null;
+    void ambient.context.close();
+  }, []);
+
+  const startAmbient = useCallback(() => {
+    if (!ambientOn || ambientRef.current || typeof window === "undefined") return;
+    const context = new AudioContext();
+    const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let index = 0; index < data.length; index += 1) data[index] = (Math.random() * 2 - 1) * 0.12;
+    const roomTone = context.createBufferSource();
+    roomTone.buffer = buffer;
+    roomTone.loop = true;
+    const filter = context.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 900;
+    const roomGain = context.createGain();
+    roomGain.gain.value = 0.025 * ambientVolume;
+    roomTone.connect(filter).connect(roomGain).connect(context.destination);
+    const hum = context.createOscillator();
+    hum.type = "sine";
+    hum.frequency.value = 48;
+    const humGain = context.createGain();
+    humGain.gain.value = 0.008 * ambientVolume;
+    hum.connect(humGain).connect(context.destination);
+    roomTone.start();
+    hum.start();
+    ambientRef.current = { context, sources: [roomTone, hum], gains: [roomGain, humGain] };
+  }, [ambientOn, ambientVolume]);
+
+  useEffect(() => () => stopAmbient(), [stopAmbient]);
+  useEffect(() => {
+    if (!ambientOn) stopAmbient();
+  }, [ambientOn, stopAmbient]);
+  useEffect(() => {
+    if (!ambientOn || ambientRef.current) return;
+    window.addEventListener("pointerdown", startAmbient, { once: true });
+    return () => window.removeEventListener("pointerdown", startAmbient);
+  }, [ambientOn, startAmbient]);
+  useEffect(() => {
+    if (ambientRef.current) {
+      ambientRef.current.gains[0].gain.value = 0.025 * ambientVolume;
+      ambientRef.current.gains[1].gain.value = 0.008 * ambientVolume;
+    }
+    window.localStorage.setItem("dexter-winchester-ambient-volume", String(ambientVolume));
+  }, [ambientVolume]);
 
   useEffect(() => {
     beginCaseTimer("winchester");
@@ -118,13 +192,18 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
 
   const interview = (id: string) => {
     if (interrogated.includes(id)) return;
-    setInterrogated((current) => [...current, id]);
     const person = SUSPECTS.find((p) => p.id === id);
-    const specialAnswers: Record<string, string> = {
-      sam: "Os desaparecimentos seguem um padrão entre cidades. Não é prova de um demônio — ainda não. Mas as datas coincidem com uma tragédia da minha família.",
-      dean: "Eu estava nas docas procurando alguém que desapareceu. Não vim prender um assassino comum. E não vou contar tudo até saber o que você encontrou.",
+    const winchesterInterviews: Record<string, InterviewDetails> = {
+      sam: { id: "sam", name: "Sam Winchester", role: "Pesquisador · registros históricos", question: "Pergunte sobre desaparecimentos semelhantes.", answer: "Os desaparecimentos seguem um padrão entre cidades. Não é prova de um demônio — ainda não. Mas as datas coincidem com uma tragédia da minha família." },
+      dean: { id: "dean", name: "Dean Winchester", role: "Agente federal · campo", question: "Pergunte sobre a presença nas docas.", answer: "Eu estava nas docas procurando alguém que desapareceu. Não vim prender um assassino comum. E não vou contar tudo até saber o que você encontrou." },
     };
-    setFeedback(person ? `${person.name}: “${person.answer}”` : `${id === "sam" ? "Sam Winchester" : "Dean Winchester"}: “${specialAnswers[id] ?? "Não tenho mais nada a acrescentar."}”`);
+    const interviewDetails: InterviewDetails | undefined = person
+      ? { id, name: person.name, role: person.role, question: person.question, answer: person.answer }
+      : winchesterInterviews[id];
+    if (!interviewDetails) return;
+    setInterrogated((current) => [...current, id]);
+    setActiveInterview(interviewDetails);
+    setFeedback(`${interviewDetails.name}: “${interviewDetails.answer}”`);
   };
 
   const advance = () => {
@@ -177,6 +256,22 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
           <button onClick={onBack} className="min-h-10 border border-white/20 px-3 py-2 font-mono text-xs text-zinc-300 hover:border-red-500"><ArrowLeft className="mr-2 inline h-4 w-4" /> Menu de casos</button>
         </div>
       </header>
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 pt-4 sm:px-8" aria-label="Controles de áudio">
+        <button type="button" onClick={onToggleSound} aria-pressed={soundOn} className="min-h-10 border border-red-900/70 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-red-500">
+          Trilha: {soundOn ? "ligada" : "desligada"}
+        </button>
+        <label className="flex min-h-10 items-center gap-2 border border-white/10 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-zinc-300">
+          Música {Math.round(musicVolume * 100)}%
+          <input type="range" min="0" max="1" step="0.01" value={musicVolume} onChange={(event) => onMusicVolumeChange(Number(event.target.value))} aria-label="Volume da música tema" className="w-24 accent-red-500" />
+        </label>
+        <button type="button" onClick={() => { if (ambientOn) { stopAmbient(); setAmbientOn(false); } else { setAmbientOn(true); startAmbient(); } }} aria-pressed={ambientOn} className="min-h-10 border border-white/10 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-red-500">
+          Ambiente: {ambientOn ? "ligado" : "desligado"}
+        </button>
+        <label className="flex min-h-10 items-center gap-2 border border-white/10 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-zinc-300">
+          Ambiente {Math.round(ambientVolume * 100)}%
+          <input type="range" min="0" max="1" step="0.01" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} aria-label="Volume do som ambiente" className="w-24 accent-red-500" />
+        </label>
+      </div>
       <CaseHeroImage
         src={oTrioAsset.url}
         alt="Dexter Morgan com Sam e Dean Winchester em frente ao Impala"
@@ -216,6 +311,28 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
           <section className="border border-white/10 bg-[#131419] p-4"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-red-400" /><h2 className="font-display text-xl">Arquivo secreto</h2></div><p className="mt-2 text-sm text-zinc-400">{secretReady?"Condições reunidas. A quarta testemunha está disponível no relatório final.":"Requer 14 evidências, os 6 depoimentos, conexões familiares e financeiras, confiança nos Winchester e zero erros."}</p></section>
         </aside>
       </div>
+      {activeInterview && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="interview-title">
+          <button type="button" aria-label="Fechar depoimento" className="absolute inset-0 cursor-default" onClick={() => setActiveInterview(null)} />
+          <article className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto border border-red-900/70 bg-[#101115] shadow-2xl shadow-black/60">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5 sm:p-7">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-300">Depoimento · entrevista registrada</p>
+                <h2 id="interview-title" className="mt-2 font-display text-3xl sm:text-4xl">{activeInterview.name}</h2>
+                <p className="mt-2 text-sm text-zinc-400">{activeInterview.role}</p>
+              </div>
+              <button type="button" onClick={() => setActiveInterview(null)} className="shrink-0 border border-white/15 px-3 py-2 font-mono text-xs text-zinc-300 hover:border-red-500">Fechar ✕</button>
+            </div>
+            <div className="space-y-5 p-5 sm:p-7">
+              <div><p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Pergunta</p><p className="mt-2 text-base leading-7 text-zinc-200">{activeInterview.question}</p></div>
+              <blockquote className="border-l-2 border-red-700 bg-white/[0.03] p-5 text-base leading-8 text-zinc-200">“{activeInterview.answer}”</blockquote>
+              <div className="flex justify-end border-t border-white/10 pt-5">
+                <button type="button" onClick={() => setActiveInterview(null)} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">Fechar depoimento</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      )}
       {openedEvidence && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="evidence-detail-title">
           <button type="button" aria-label="Fechar detalhes da evidência" className="absolute inset-0 cursor-default" onClick={() => setActiveEvidence(null)} />
