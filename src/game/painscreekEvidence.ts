@@ -156,9 +156,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [82, 83, 90, 104],
     sourceType: "Notícia, relatório policial e carta pessoal",
     documented:
-      "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que ele tenha matado Vivian.",
+      "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que tenha matado Vivian. Na carta a Trisha (p. 104), Scott também afirma que não matou Vivian e associa sua descoberta sobre os pais biológicos à oposição do padre Matthew ao relacionamento entre eles.",
     pendingVerification:
-      "Separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico.",
+      "As páginas 104 foi cotejada visualmente; separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico, e não tratar a negação de Scott como prova independente.",
     confidence: "high",
     status: "unverified",
     playerInference:
@@ -172,7 +172,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Registros atribuem a Scott ajuda a Andrew durante uma crise em 1994; em fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy.",
     pendingVerification:
-      "Confirmar a sequência dos eventos e se há alguma relação documentada entre eles.",
+      "As páginas 104–105 foram consultadas; a carta de Scott (p. 104) foi cotejada visualmente. Confirmar a sequência dos eventos e se há alguma relação documentada entre eles; o registro de enfermagem da p. 105 precisa de transcrição mais cuidadosa.",
     confidence: "high",
     status: "unverified",
     playerInference:
@@ -391,6 +391,36 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     status: "visually-checked",
     playerInference:
       "A carta confirma a contratação de representação jurídica conforme o remetente, mas não estabelece o resultado do recurso nem a culpa ou inocência de Scott.",
+  },
+
+
+  {
+    id: "P-027",
+    title: "Carta de Scott para Trisha",
+    pages: [104],
+    sourceType: "Carta pessoal",
+    documented:
+      "Scott escreve a Trisha que saber sobre seus pais biológicos mudou sua compreensão da oposição do padre Matthew ao relacionamento deles. Ele nega ter matado Vivian, diz não saber quem a matou e pede perdão pela dor que causou.",
+    pendingVerification:
+      "A página 104 foi cotejada visualmente. Comparar a carta com os documentos sobre a origem de Scott e a relação com Trisha; a negação é uma declaração do próprio Scott, não confirmação independente.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta revela o que Scott diz compreender sobre o parentesco e o relacionamento, mas não identifica seus pais biológicos nem resolve a morte de Vivian.",
+  },
+  {
+    id: "P-028",
+    title: "Registro de enfermagem com ocorrências de 1993–1994",
+    pages: [105],
+    sourceType: "Registro interno de enfermagem",
+    documented:
+      "O registro reúne anotações datadas de 19 de maio de 1993, 4 e 20 de junho de 1993 e 26 de junho de 1994. Inclui uma tentativa frustrada de contatar o Dr. Johnson após Nora Jefferson ser levada ao hospital, uma ausência por doença e falta de pessoal, a morte por afogamento de Timothy Scott, de seis anos, e a observação de uma jovem perto do consultório do Dr. Johnson após o horário de visitas.",
+    pendingVerification:
+      "A página 105 foi lida com apoio de OCR, mas a transcrição integral e alguns detalhes precisam de conferência visual cuidadosa. Não presumir que os eventos estejam relacionados entre si.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "As notas registram incidentes distintos em datas diferentes; a proximidade na mesma página não prova conexão causal ou participação de qualquer personagem.",
   },
 
 ];
