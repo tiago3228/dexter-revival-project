@@ -70,7 +70,7 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
   const progress = Math.round((found.length / EVIDENCE.length) * 100);
   const allHumanThreads = ["blood", "autopsy", "camera", "archive", "ledger"].every((id) => found.includes(id));
   const fullTimeline = ["clock", "salt", "sam", "family", "symbol"].every((id) => found.includes(id));
-  const hasWitness = found.includes("yellow") && found.includes("symbol");
+  const hasWitness = found.includes("yellow") && found.includes("trap");
   const allInterviews = interrogated.length >= 4;
   const secretReady = EVIDENCE.every((item) => found.includes(item.id)) && allInterviews && connections.includes("family-sam") && connections.includes("ledger-vale") && trustWinchesters === true && mistakes === 0;
 
