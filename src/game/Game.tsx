@@ -17,6 +17,8 @@ import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
 import { MentalistCase } from "./MentalistCase";
 import { WinchesterCase } from "./WinchesterCase";
+import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
+import { ORTEGA_DIALOGUE } from "./ortegaDialogues";
 import {
   ACHIEVEMENTS,
   CASE_IDS,
@@ -174,6 +176,7 @@ function getInvestigatorScore(state: ReturnType<typeof initial>): InvestigatorSc
 export function Game() {
   const [s, setS] = useState(initial);
   const [modal, setModal] = useState<Modal>(null);
+  const [activeStoryDialogue, setActiveStoryDialogue] = useState<StoryDialogueScene | null>(null);
   const [ending, setEnding] = useState<Ending>(null);
   const [tab, setTab] = useState<"cena" | "caderno">("cena");
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
@@ -1465,6 +1468,24 @@ export function Game() {
 
       <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
+      {s.docs.length >= 3 && !ending && (
+        <section className="mt-5 border border-primary/50 bg-primary/5 p-4 sm:p-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+            Testemunhos cruzados · Porto de Miami
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Compare a lembrança de Teresa com o ponto de Tellez, a câmera e a luva encontrada na cena.
+          </p>
+          <button
+            type="button"
+            onClick={() => setActiveStoryDialogue(ORTEGA_DIALOGUE)}
+            className="mt-3 min-h-10 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+          >
+            Reconstituir os depoimentos
+          </button>
+        </section>
+      )}
+
       <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
         Locais da investigação · selecione para explorar
       </p>
@@ -1824,6 +1845,12 @@ export function Game() {
             </button>
           </div>
         </div>
+      )}
+      {activeStoryDialogue && (
+        <StoryDialogue
+          scene={activeStoryDialogue}
+          onClose={() => setActiveStoryDialogue(null)}
+        />
       )}
     </Shell>
   );

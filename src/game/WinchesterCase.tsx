@@ -91,6 +91,28 @@ const WINCHESTER_DIALOGUES: Record<string, InterviewDetails> = {
           { speaker: "Dexter", text: "Uma parceria construída na desconfiança. Curiosamente, entendo o apelo." },
         ],
       },
+      {
+        id: "sam-hunting",
+        label: "Perguntar como Sam transforma o passado em pistas verificáveis",
+        lines: [
+          { speaker: "Dexter", text: "Você liga desaparecimentos a histórias antigas. Como evita enxergar um padrão onde só há coincidência?" },
+          { speaker: "Sam", text: "Procuro o que pode ser conferido: datas, rotas, objetos que aparecem em mais de uma cena. A lenda só me diz onde começar." },
+          { speaker: "Dean", text: "E eu vou ao lugar. Um arquivo pode mentir; uma porta arrombada não costuma escrever relatório." },
+          { speaker: "Sam", text: "Desta vez, o livro-caixa e a marca no concreto são o elo. Se não coincidirem, abandonamos a teoria." },
+          { speaker: "Dexter", text: "Bom. Uma hipótese que aceita ser testada é mais útil que uma certeza que não aceita perguntas." },
+        ],
+      },
+      {
+        id: "sam-dexter-code",
+        label: "Perguntar o que Sam percebeu no método de Dexter",
+        lines: [
+          { speaker: "Sam", text: "Você olha para uma cena como se estivesse ouvindo alguém contar uma história. O que procura primeiro?" },
+          { speaker: "Dexter", text: "O que não pertence. Sangue sem ferida. Uma pausa que não combina com a gravação. Um detalhe colocado para ser notado." },
+          { speaker: "Dean", text: "Então o autor da cena queria que você encontrasse o sangue." },
+          { speaker: "Dexter", text: "Ou queria que eu parasse de procurar depois dele. Não pretendo facilitar." },
+          { speaker: "Sam", text: "É exatamente por isso que achei que você poderia nos ajudar." },
+        ],
+      },
     ],
   },
   dean: {
@@ -138,6 +160,28 @@ const WINCHESTER_DIALOGUES: Record<string, InterviewDetails> = {
           { speaker: "Sam", text: "E porque você não escreveu 'fuga voluntária' só para fechar o caso antes do fim do turno." },
           { speaker: "Dexter", text: "Não confunda persistência com confiança. Eu ainda vou verificar tudo o que disserem." },
           { speaker: "Dean", text: "Ótimo. A gente também." },
+        ],
+      },
+      {
+        id: "dean-brothers",
+        label: "Perguntar por que Dean sempre protege Sam",
+        lines: [
+          { speaker: "Dexter", text: "Você responde por Sam antes que ele termine. É hábito de campo ou medo de perdê-lo?" },
+          { speaker: "Dean", text: "Eu sou o irmão mais velho. Se alguém precisa entrar primeiro numa sala perigosa, sou eu." },
+          { speaker: "Sam", text: "Ele diz isso como se eu ainda fosse criança. Mas eu também voltaria por ele, sem pensar." },
+          { speaker: "Dean", text: "Eu sei. É justamente o que me preocupa." },
+          { speaker: "Dexter", text: "Família é uma excelente razão para tomar decisões ruins com convicção." },
+        ],
+      },
+      {
+        id: "dean-impala",
+        label: "Perguntar o que Dean encontrou nas docas",
+        lines: [
+          { speaker: "Dexter", text: "Você passou pelas docas antes de qualquer equipe oficial. O que viu que não está no meu laudo?" },
+          { speaker: "Dean", text: "Pneus pesados sobre a poeira, uma marca de arrasto que termina na rampa e um cadeado trocado recentemente." },
+          { speaker: "Sam", text: "A câmera foi desligada por dentro. O horário bate com o intervalo apagado do registro." },
+          { speaker: "Dexter", text: "Isso transforma uma suspeita em uma sequência. Vou comparar com o padrão do sangue." },
+          { speaker: "Dean", text: "Faça isso. Se a sequência não fechar, não temos nada." },
         ],
       },
     ],

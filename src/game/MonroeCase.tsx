@@ -4,6 +4,8 @@ import { recordCaseCompletion } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { finishCaseTimer } from "./caseTimer";
+import { StoryDialogue } from "./StoryDialogue";
+import { MONROE_DIALOGUES } from "./monroeDialogues";
 
 type Objective = 1 | 2 | 3 | 4;
 type Evidence = {
@@ -210,6 +212,7 @@ function speak(text: string) {
 export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [objective, setObjective] = useState<Objective>(1);
   const [opened, setOpened] = useState<Evidence | null>(null);
+  const [activeDialogue, setActiveDialogue] = useState<import("./StoryDialogue").StoryDialogueScene | null>(null);
   const [audio, setAudio] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [hintConfirmed, setHintConfirmed] = useState(false);
@@ -959,6 +962,15 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             </>
           )}
           <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">{opened.body}</p>
+          {MONROE_DIALOGUES[opened.id] && (
+            <button
+              type="button"
+              onClick={() => setActiveDialogue(MONROE_DIALOGUES[opened.id])}
+              className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-xs text-primary hover:bg-primary/10"
+            >
+              Fazer perguntas de seguimento
+            </button>
+          )}
           {opened.audio && (
             <div className="mt-5">
               <p className="mb-2 font-mono text-xs text-muted-foreground">
@@ -976,6 +988,9 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             </div>
           )}
         </Overlay>
+      )}
+      {activeDialogue && (
+        <StoryDialogue scene={activeDialogue} onClose={() => setActiveDialogue(null)} />
       )}
       {reportOpen && (
         <Overlay

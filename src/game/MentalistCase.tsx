@@ -4,6 +4,8 @@ import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { finishCaseTimer } from "./caseTimer";
 import { getInterrogationRanking } from "./interrogationRanking";
+import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
+import { DEXTER_JANE_DIALOGUE, RED_JOHN_SUSPECT_DIALOGUES } from "./redJohnDialogues";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type SuspectId = "mcallister" | "bertram" | "stiles";
@@ -139,6 +141,7 @@ export function MentalistCase({
   const [mistakes, setMistakes] = useState(0);
   const [finished, setFinished] = useState(false);
   const [showJane, setShowJane] = useState(false);
+  const [activeDialogue, setActiveDialogue] = useState<StoryDialogueScene | null>(null);
   const [feedback, setFeedback] = useState("");
   const [harryLine, setHarryLine] = useState<string | null>(null);
   const [ambientOn, setAmbientOn] = useState(true);
@@ -525,6 +528,17 @@ export function MentalistCase({
                 antes de a polícia decidir fazê-lo. E depois prove.” — Patrick Jane
               </blockquote>
             )}
+            <button
+              type="button"
+              disabled={found.length === 0}
+              onClick={() => setActiveDialogue(DEXTER_JANE_DIALOGUE)}
+              className="mt-4 min-h-11 border border-primary px-4 py-3 font-mono text-xs text-primary transition hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Conversa reservada: Dexter e Patrick Jane
+            </button>
+            {found.length === 0 && (
+              <p className="mt-2 text-xs text-muted-foreground">Colete uma evidência para abrir a conversa.</p>
+            )}
           </div>
         </section>
 
@@ -675,8 +689,17 @@ export function MentalistCase({
                             ? "Rever depoimento correto"
                             : interviewed.includes(suspect.id)
                               ? "Tentar novo confronto"
-                              : "Interrogar"}
+                            : "Interrogar"}
                         </button>
+                        {interviewed.includes(suspect.id) && (
+                          <button
+                            type="button"
+                            onClick={() => setActiveDialogue(RED_JOHN_SUSPECT_DIALOGUES[suspect.id])}
+                            className="mt-3 min-h-9 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary hover:bg-primary/5"
+                          >
+                            Fazer perguntas de seguimento
+                          </button>
+                        )}
                       </article>
                     ))}
                   </div>
@@ -751,6 +774,9 @@ export function MentalistCase({
           >
             {feedback}
           </p>
+        )}
+        {activeDialogue && (
+          <StoryDialogue scene={activeDialogue} onClose={() => setActiveDialogue(null)} />
         )}
         <footer className="mt-8 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-xs text-muted-foreground">
           <span>

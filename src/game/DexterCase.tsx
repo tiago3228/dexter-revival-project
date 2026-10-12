@@ -4,6 +4,8 @@ import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { getInterrogationRanking } from "./interrogationRanking";
+import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
+import { PAINSCREEK_DIALOGUES } from "./painscreekDialogues";
 
 type Difficulty = "investigador" | "detetive" | "dexter";
 type Evidence = { id: string; title: string; location: string; body: string };
@@ -314,6 +316,7 @@ export function DexterCase({
   const [interviewedSuspects, setInterviewedSuspects] = useState<string[]>(
     () => initialSave?.interviewedSuspects ?? [],
   );
+  const [activeDialogue, setActiveDialogue] = useState<StoryDialogueScene | null>(null);
   const [interrogationMistakes, setInterrogationMistakes] = useState(
     () => initialSave?.interrogationMistakes ?? 0,
   );
@@ -1105,6 +1108,13 @@ export function DexterCase({
                               Ative o som para ouvir a dublagem e os efeitos.
                             </p>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveDialogue(PAINSCREEK_DIALOGUES[person.name])}
+                            className="mt-3 min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase text-primary hover:bg-primary/5"
+                          >
+                            Fazer perguntas de seguimento
+                          </button>
                         </div>
                       ) : (
                         <>
@@ -1645,6 +1655,9 @@ export function DexterCase({
               </div>
             </section>
           </div>
+        )}
+        {activeDialogue && (
+          <StoryDialogue scene={activeDialogue} onClose={() => setActiveDialogue(null)} />
         )}
         <footer className="mt-8 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-[10px] text-muted-foreground">
           <span>DEXTER MORGAN · CADERNO DE INVESTIGAÇÃO</span>
