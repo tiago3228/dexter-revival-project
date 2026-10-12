@@ -11,6 +11,11 @@
 - [Revisão visual das páginas 100–107 e 111–116](./revisao-visual-paginas-100-107-111-116.md) — conferência das evidências prioritárias, limites de interpretação e pendências restantes (inclui adendo sobre 108–110).
 - [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.
 
+## Interface interativa
+- [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo usa os registros P-001–P-012 existentes e não altera o caso Painscreek já presente na tela principal.
+
+**Limite atual:** a interface apresenta o catálogo documental das páginas 80–116; a deduplicação integral contra as páginas 1–79 continua pendente. O PDF original está dentro de `IMAGENS DE PAINSCREEK.zip` e tem 116 páginas digitalizadas como imagem, exigindo OCR/conferência visual para comparação confiável.
+
 ## Critérios de documentação
 1. Manter a paginação conforme o PDF de origem.
 2. Separar manchetes e alegações jornalísticas dos fatos documentais confirmados.
