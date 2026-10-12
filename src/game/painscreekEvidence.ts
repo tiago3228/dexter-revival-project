@@ -422,7 +422,6 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     playerInference:
       "As notas registram incidentes distintos em datas diferentes; a proximidade na mesma página não prova conexão causal ou participação de qualquer personagem.",
   },
-,
 
   {
     id: "P-029",
