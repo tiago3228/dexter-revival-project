@@ -2,6 +2,7 @@
 
 ## Transcrições
 - [Páginas 80–89](./transcricao-paginas-080-089.md) — transcrição com observações de legibilidade e trechos incompletos assinalados.\n- [Análise das páginas 90–99](./analise-paginas-090-099.md) — resumo documental, pistas a cruzar e pendências de legibilidade.
+- [Análise das páginas 100–109](./analise-paginas-100-109.md) — resumo documental, notas de segurança e novas linhas de investigação.
 
 ## Critérios de documentação
 1. Manter a paginação conforme o PDF de origem.
