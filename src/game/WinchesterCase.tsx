@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, Search, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
 import { recordCaseCompletion } from "./achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 
@@ -39,7 +39,6 @@ const SUSPECTS = [
 export function WinchesterCase({ onBack }: { onBack: () => void }) {
   const [act, setAct] = useState<Act>(0);
   const [found, setFound] = useState<string[]>([]);
-  const [read, setRead] = useState<string[]>([]);
   const [interrogated, setInterrogated] = useState<string[]>([]);
   const [connections, setConnections] = useState<string[]>([]);
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
@@ -90,7 +89,6 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
     const item = EVIDENCE.find((e) => e.id === id);
     if (!item) return;
     setFound((current) => [...current, id]);
-    setRead((current) => [...current, id]);
     setActiveEvidence(id);
     setFeedback(`Nova evidência catalogada: ${item.title}. Compare com outros registros antes de concluir.`);
   };
