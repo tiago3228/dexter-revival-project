@@ -86,14 +86,15 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
   }, [ending, found.length, allInterviews, interrogated.length, connections.length, hints, mistakes]);
 
   const examine = (id: string) => {
-    if (found.includes(id)) {
-      setActiveEvidence(id);
-      return;
-    }
+    if (!EVIDENCE.some((item) => item.id === id)) return;
+    setActiveEvidence(id);
+  };
+
+  const catalogEvidence = (id: string) => {
+    if (found.includes(id)) return;
     const item = EVIDENCE.find((e) => e.id === id);
     if (!item) return;
     setFound((current) => [...current, id]);
-    setActiveEvidence(id);
     setFeedback(`Nova evidência catalogada: ${item.title}. Compare com outros registros antes de concluir.`);
   };
 
@@ -239,7 +240,7 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
               <p className="text-sm leading-6 text-zinc-400">Leia o conteúdo com atenção e compare com os outros documentos antes de tirar uma conclusão.</p>
               <div className="flex flex-wrap justify-end gap-3 border-t border-white/10 pt-5">
                 <button type="button" onClick={() => setActiveEvidence(null)} className="min-h-11 border border-white/15 px-5 py-3 font-mono text-xs uppercase tracking-wider text-zinc-300 hover:border-white/40">Voltar aos locais</button>
-                <button type="button" onClick={() => { if (!found.includes(openedEvidence.id)) examine(openedEvidence.id); setActiveEvidence(null); }} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">{found.includes(openedEvidence.id) ? "Concluir leitura" : "Catalogar evidência"}</button>
+                <button type="button" onClick={() => { catalogEvidence(openedEvidence.id); setActiveEvidence(null); }} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">{found.includes(openedEvidence.id) ? "Concluir leitura" : "Catalogar evidência"}</button>
               </div>
             </div>
           </article>
