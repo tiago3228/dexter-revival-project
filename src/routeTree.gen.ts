@@ -48,12 +48,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/painscreek-evidence': typeof PainscreekEvidenceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/painscreek-evidence': typeof PainscreekEvidenceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
