@@ -3,6 +3,10 @@
 
 **Escopo deste arquivo:** organizar o material que foi revisado até a página 69. A partir da página 70, a organização fica fora deste lote, conforme combinado. Este documento é um catálogo de trabalho e não substitui a transcrição literal conferida nas imagens.
 
+## Transcrição detalhada recebida — páginas 1–20
+
+A transcrição por entrada, com os textos narrativos e notas de incerteza, está em [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md). Ela foi organizada a partir do texto fornecido pelo usuário e ainda precisa de conferência visual independente, palavra por palavra. As notas não transformam relatos de personagens, acusações de terceiros ou interpretações em fatos comprovados.
+
 ## Regras de proveniência
 
 - **RESUMO DE TRABALHO:** síntese de conteúdo identificado durante a leitura; não é transcrição literal.
