@@ -87,3 +87,12 @@ Atualizar, nesta ordem:
 5. grafo de dependências e progressão de jogo.
 
 Não fechar uma rota investigativa nem criar puzzle obrigatório antes que os documentos que a sustentam estejam conferidos.
+
+
+## Prioridades acrescentadas — OCR das páginas 31–69
+- [ ] Conferir páginas 31–42, especialmente colunas e datas.
+- [ ] Inspecionar páginas 43 e 55, sem texto reconhecido pelo OCR.
+- [ ] Comparar páginas 46–48 com 49–51 para confirmar duplicatas.
+- [ ] Conferir a narrativa atribuída a Andrew na p. 54 e a ordem de entradas na p. 56.
+- [ ] Conferir nomes e campos fragmentários das páginas 58–62.
+- [ ] Confirmar o código 44871 na p. 64 e a frase truncada na p. 69.
