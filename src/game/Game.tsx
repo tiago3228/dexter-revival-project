@@ -314,7 +314,9 @@ export function Game() {
     };
   }, [caseMode, showIntro, showMenu]);
 
+  const fadingRef = useRef(false);
   useEffect(() => {
+    if (fadingRef.current) return;
     if (audioRef.current) audioRef.current.volume = musicVolume;
   }, [musicVolume]);
 
@@ -342,10 +344,34 @@ export function Game() {
     else if (soundOnRef.current) void audioRef.current?.play().catch(() => undefined);
   };
 
+  const startGameFadeOut = () => {
+    const audio = audioRef.current;
+    if (!audio || !soundOnRef.current) {
+      setShowIntro(false);
+      return;
+    }
+    if (fadingRef.current) return;
+    fadingRef.current = true;
+    const startVolume = audio.volume;
+    const steps = 60;
+    let step = 0;
+    const interval = window.setInterval(() => {
+      step += 1;
+      const ratio = Math.max(0, 1 - step / steps);
+      if (audioRef.current === audio) audio.volume = startVolume * ratio;
+      if (step >= steps) {
+        window.clearInterval(interval);
+        fadingRef.current = false;
+        audio.pause();
+        setShowIntro(false);
+      }
+    }, 50);
+  };
+
   if (showIntro) {
     return (
       <IntroScreen
-        onStart={() => setShowIntro(false)}
+        onStart={startGameFadeOut}
         soundOn={soundOn}
         onToggleSound={toggleSound}
       />
