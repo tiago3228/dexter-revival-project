@@ -72,7 +72,8 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
   const fullTimeline = ["clock", "salt", "sam", "family", "symbol"].every((id) => found.includes(id));
   const hasWitness = found.includes("yellow") && found.includes("trap");
   const allInterviews = interrogated.length >= 6;
-  const secretReady = EVIDENCE.every((item) => found.includes(item.id)) && allInterviews && connections.includes("family-sam") && connections.includes("ledger-vale") && trustWinchesters === true && mistakes === 0;
+  const correctConnections = ["family-sam", "ledger-vale", "yellow-witness", "symbol-dean"];
+  const secretReady = EVIDENCE.every((item) => found.includes(item.id)) && allInterviews && connections.includes("family-sam") && connections.includes("ledger-vale") && correctConnections.filter((key) => connections.includes(key)).length >= 3 && trustWinchesters === true && mistakes === 0;
 
   useEffect(() => {
     if (!ending || recorded.current) return;
