@@ -694,7 +694,10 @@ export function MentalistCase({
                         {interviewed.includes(suspect.id) && (
                           <button
                             type="button"
-                            onClick={() => setActiveDialogue(RED_JOHN_SUSPECT_DIALOGUES[suspect.id])}
+                            onClick={() => {
+                              const dialogue = RED_JOHN_SUSPECT_DIALOGUES[suspect.id];
+                              if (dialogue) setActiveDialogue(dialogue);
+                            }}
                             className="mt-3 min-h-9 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary hover:bg-primary/5"
                           >
                             Fazer perguntas de seguimento

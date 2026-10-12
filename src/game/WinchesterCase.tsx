@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, Search, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { recordCaseCompletion } from "./achievements";
@@ -321,8 +321,9 @@ export function WinchesterCase({
   }, [ambientOn, startAmbient]);
   useEffect(() => {
     if (ambientRef.current) {
-      ambientRef.current.gains[0].gain.value = 0.025 * ambientVolume;
-      ambientRef.current.gains[1].gain.value = 0.008 * ambientVolume;
+      const [roomGain, humGain] = ambientRef.current.gains;
+      if (roomGain) roomGain.gain.value = 0.025 * ambientVolume;
+      if (humGain) humGain.gain.value = 0.008 * ambientVolume;
     }
     window.localStorage.setItem("dexter-winchester-ambient-volume", String(ambientVolume));
   }, [ambientVolume]);

@@ -965,7 +965,10 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           {MONROE_DIALOGUES[opened.id] && (
             <button
               type="button"
-              onClick={() => setActiveDialogue(MONROE_DIALOGUES[opened.id])}
+              onClick={() => {
+                const dialogue = MONROE_DIALOGUES[opened.id];
+                if (dialogue) setActiveDialogue(dialogue);
+              }}
               className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-xs text-primary hover:bg-primary/10"
             >
               Fazer perguntas de seguimento

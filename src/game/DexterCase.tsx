@@ -1110,7 +1110,10 @@ export function DexterCase({
                           )}
                           <button
                             type="button"
-                            onClick={() => setActiveDialogue(PAINSCREEK_DIALOGUES[person.name])}
+                            onClick={() => {
+                              const dialogue = PAINSCREEK_DIALOGUES[person.name];
+                              if (dialogue) setActiveDialogue(dialogue);
+                            }}
                             className="mt-3 min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase text-primary hover:bg-primary/5"
                           >
                             Fazer perguntas de seguimento
