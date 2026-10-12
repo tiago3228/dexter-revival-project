@@ -122,7 +122,17 @@ export function PainscreekEvidenceExplorer() {
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <header className="border-b border-border pb-6">
-          <a href="/" className="text-sm text-muted-foreground hover:text-foreground">
+          <a
+            href="/"
+            onClick={() => {
+              try {
+                window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
+              } catch {
+                // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
+              }
+            }}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             ← Voltar ao jogo
           </a>
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.25em] text-primary">

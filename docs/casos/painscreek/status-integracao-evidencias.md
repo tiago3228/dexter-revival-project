@@ -21,6 +21,7 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. Ele contém 
 ## Cobertura automatizada adicionada
 
 - Teste de roteamento para `/painscreek-evidence`.
+- Teste de navegação que verifica a gravação do marcador de retomada do Caso Vivian ao clicar em “Voltar ao jogo” no catálogo.
 - Testes estruturais do catálogo para IDs `P-001`–`P-034`, unicidade, páginas e campos obrigatórios, além da contagem exibida na introdução.
 - Testes das regras do Caso Vivian para custos graduais, deduplicação de dicas em saves, limite mínimo zero, chaves malformadas e deduplicação de IDs restaurados.
 
@@ -30,8 +31,8 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 
 - O workflow está em `.github/workflows/ci.yml`. A execução [38315052983](https://github.com/tiago3228/dexter-revival-project/actions/runs/38315052983) terminou com sucesso no commit `194b65e6c449cae625950ad929a5d21cf2a3ba7a`, dentro do PR #10. A execução anterior [38314003065](https://github.com/tiago3228/dexter-revival-project/actions/runs/38314003065) também passou no commit `27d434f5440632d1cd7fc6a46e25393c02b08309`.
 - Este registro documental foi atualizado depois do commit validado `194b65e`; o commit que registrar esta própria atualização ainda precisa passar pelo CI antes de qualquer merge.
-- Na validação local final desta etapa: `bun run lint` terminou com 0 erros e 7 avisos; `bun run test` passou em 7 arquivos e 25 testes; `bunx tsc --noEmit`, `bun run build` e `git diff --check` passaram.
-- A correspondência estrutural da rota foi testada; ainda falta conferir a rota e o ciclo de investigação no navegador.
+- Na validação local desta correção: `pnpm test` passou em 8 arquivos e 26 testes; `pnpm exec tsc --noEmit` e `pnpm run build` passaram; `pnpm run lint` terminou com 0 erros e 7 avisos preexistentes; `git diff --check` passou.
+- O teste automatizado cobre o marcador de retorno do catálogo; ainda falta conferir a rota e o ciclo de investigação completo no navegador.
 
 ## Pendências documentais e de integração
 
