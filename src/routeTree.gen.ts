@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MapasRouteImport } from './routes/mapas'
 import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
+import { Route as PainscreekEvidenceRouteImport } from './routes/painscreek-evidence'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,10 +32,17 @@ const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 
+const PainscreekEvidenceRoute = PainscreekEvidenceRouteImport.update({
+  id: '/painscreek-evidence',
+  path: '/painscreek-evidence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
+  '/painscreek-evidence': typeof PainscreekEvidenceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -49,16 +57,17 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mapas' | '/linha-do-tempo'
+  fullPaths: '/' | '/mapas' | '/linha-do-tempo' | '/painscreek-evidence'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mapas' | '/linha-do-tempo'
-  id: '__root__' | '/' | '/mapas' | '/linha-do-tempo'
+  to: '/' | '/mapas' | '/linha-do-tempo' | '/painscreek-evidence'
+  id: '__root__' | '/' | '/mapas' | '/linha-do-tempo' | '/painscreek-evidence'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MapasRoute: typeof MapasRoute
   LinhaDoTempoRoute: typeof LinhaDoTempoRoute
+  PainscreekEvidenceRoute: typeof PainscreekEvidenceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -84,6 +93,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LinhaDoTempoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painscreek-evidence': {
+      id: '/painscreek-evidence'
+      path: '/painscreek-evidence'
+      fullPath: '/painscreek-evidence'
+      preLoaderRoute: typeof PainscreekEvidenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -91,6 +107,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MapasRoute: MapasRoute,
   LinhaDoTempoRoute: LinhaDoTempoRoute,
+  PainscreekEvidenceRoute: PainscreekEvidenceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
