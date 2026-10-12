@@ -20,6 +20,15 @@ function MapasPage() {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [ambientOn, setAmbientOn] = useState(true);
+  const [musicOn, setMusicOn] = useState(true);
+  const [musicVolume, setMusicVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.3;
+    const saved = window.localStorage.getItem("dexter-music-volume");
+    if (saved === null) return 0.3;
+    const parsed = Number(saved);
+    return Number.isFinite(parsed) ? Math.min(1, Math.max(0, parsed)) : 0.3;
+  });
+  const musicRef = useRef<HTMLAudioElement | null>(null);
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.22;
     const saved = window.localStorage.getItem("vivian-ambient-volume");
@@ -35,6 +44,34 @@ function MapasPage() {
   useEffect(() => {
     try { window.localStorage.setItem("vivian-ambient-volume", String(ambientVolume)); } catch {}
   }, [ambientVolume]);
+
+  useEffect(() => {
+    try { window.localStorage.setItem("dexter-music-volume", String(musicVolume)); } catch {}
+    if (musicRef.current) musicRef.current.volume = musicVolume;
+  }, [musicVolume]);
+
+  useEffect(() => {
+    const audio = new Audio("/audio/painscreek/painscreek-case-theme.mp3");
+    audio.loop = true;
+    audio.volume = musicVolume;
+    musicRef.current = audio;
+    const startMusic = () => {
+      if (!musicOn || !musicRef.current) return;
+      void musicRef.current.play().catch(() => undefined);
+    };
+    if (musicOn) {
+      window.addEventListener("pointerdown", startMusic, { once: true });
+      void audio.play().catch(() => undefined);
+    }
+    return () => {
+      window.removeEventListener("pointerdown", startMusic);
+      audio.pause();
+      audio.src = "";
+      musicRef.current = null;
+    };
+  }, [musicOn]);
+
+
 
   useEffect(() => {
     if (!ambientOn || typeof window === "undefined") return;
@@ -122,12 +159,19 @@ function MapasPage() {
             <h1 className="mt-1 text-2xl font-semibold sm:text-3xl">Atlas de investigação</h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 border border-[#56594c] bg-[#111310] px-3 py-2">
-              <button type="button" aria-label={ambientOn ? "Desligar ambientação" : "Ligar ambientação"} onClick={() => setAmbientOn((value) => !value)} className="inline-flex items-center gap-2 text-sm hover:text-[#c4b27a]">
-                {ambientOn ? <Volume2 size={17}/> : <VolumeX size={17}/>} <span className="hidden sm:inline">{ambientOn ? "Ambiência ligada" : "Ambiência desligada"}</span>
-              </button>
-              <input aria-label="Volume da ambientação" type="range" min="0" max="1" step="0.05" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} className="w-20 accent-[#a5a78d] sm:w-24"/>
-              <Music2 size={15} className="text-[#a5a78d]"/>
+            <div className="flex flex-wrap items-center gap-3 border border-[#56594c] bg-[#111310] px-3 py-2">
+              <div className="flex items-center gap-2">
+                <button type="button" aria-label={musicOn ? "Desligar trilha sonora" : "Ligar trilha sonora"} onClick={() => setMusicOn((value) => !value)} className="inline-flex items-center gap-1 text-sm hover:text-[#c4b27a]">
+                  <Music2 size={17}/> <span className="hidden sm:inline">Trilha</span>
+                </button>
+                <input aria-label="Volume da trilha sonora" type="range" min="0" max="1" step="0.05" value={musicVolume} onChange={(event) => setMusicVolume(Number(event.target.value))} className="w-16 accent-[#a5a78d] sm:w-20"/>
+              </div>
+              <div className="flex items-center gap-2 border-l border-[#45483d] pl-3">
+                <button type="button" aria-label={ambientOn ? "Desligar ambientação" : "Ligar ambientação"} onClick={() => setAmbientOn((value) => !value)} className="inline-flex items-center gap-1 text-sm hover:text-[#c4b27a]">
+                  {ambientOn ? <Volume2 size={17}/> : <VolumeX size={17}/>} <span className="hidden sm:inline">Ambiente</span>
+                </button>
+                <input aria-label="Volume da ambientação" type="range" min="0" max="1" step="0.05" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} className="w-16 accent-[#a5a78d] sm:w-20"/>
+              </div>
             </div>
             <Link to="/" className="inline-flex items-center gap-2 border border-[#56594c] px-3 py-2 text-sm hover:bg-[#292c24]"><ArrowLeft size={16} /> Voltar ao jogo</Link>
           </div>
