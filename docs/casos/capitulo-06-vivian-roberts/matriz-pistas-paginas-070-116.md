@@ -43,7 +43,7 @@
 | EV-083-01 | p. 83, notícia | Testemunha anônima diz ter visto Scott afastando-se da mansão por volta de 23h50; Scott confirma ter encontrado Vivian, mas nega envolvimento. | Testemunha anônima e observação à distância; não prova que Scott a matou. | EV-082-01, EV-088-01, EV-090-01 |
 | EV-090-01 | p. 90, relatório do xerife | O relatório diz que dois caçadores ouviram gritos e viram Scott e Vivian discutindo na floresta, mas estavam longe demais para ouvir a conversa. | Relato oficial com testemunhas não identificadas; data e detalhes devem ser confrontados com a notícia e os documentos originais. | EV-082-01, EV-083-01, EV-088-01 |
 | EV-100-01 | p. 100, carta anônima | Uma pessoa que afirma ter estado em Painscreek contrata Steven Moss e diz incluir cópia de uma carta de ameaça recebida por Vivian no dia da morte. | A carta de ameaça mencionada não está transcrita neste lote; não inventar seu conteúdo nem a identidade do remetente anônimo. | EV-082-01, EV-083-01, EV-090-01 |
-| EV-104-01 | p. 104, carta de Scott | Scott nega ter matado Vivian. | Negação do suspeito, não álibi independente. | EV-082-01, EV-083-01, EV-088-01 |
+**Referência cruzada — EV-104-01:** a carta de Scott para Trisha, registrada na seção A, também contém a negativa sobre a morte de Vivian. Esta linha foi consolidada para evitar cadastrar o mesmo documento duas vezes. A referência cruzada não constitui uma segunda evidência independente.
 | EV-110-01 | p. 110, registro da pousada | Um registro menciona Steven Moss investigando o assassinato depois que a polícia encerrou as buscas. | Confirmar a data e a autoria do livro de registro. | EV-100-01, EV-111-01 |
 
 ## D. Henry Johnson e fundos do hospital
