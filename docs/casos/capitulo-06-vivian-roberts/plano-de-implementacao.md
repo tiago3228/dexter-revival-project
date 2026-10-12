@@ -4,17 +4,20 @@
 - [x] Criar área documental separada para o capítulo.
 - [x] Definir regras de proveniência e estado de revisão.
 - [x] Criar catálogo inicial de personagens, locais e tipos de evidência.
-- [ ] Receber as transcrições do PDF em lotes.
-- [ ] Conferir nomes, datas, documentos e paginação contra a fonte.
-- [ ] Fechar o inventário e registrar lacunas/contradições.
+- [x] Receber os lotes de trabalho do PDF: organização das páginas 1–69 e OCR das páginas 70–116.
+- [x] Criar inventário OCR e matriz preliminar de pistas para as páginas 70–116.
+- [ ] Conferir nomes, datas, documentos e paginação dos dois lotes contra as imagens originais.
+- [ ] Completar as transcrições literais, preservando trechos ilegíveis sem reconstrução inventada.
+- [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
 ## Fase 2 — Design investigativo
-- [ ] Modelar grafo de dependências por pista.
+- [ ] Modelar grafo de dependências por pista, com referência às fontes.
 - [ ] Definir progressão de exploração sem bloqueios impossíveis.
 - [ ] Definir a rota original com base apenas em evidências confirmadas.
 - [ ] Projetar a rota alternativa em documento separado e marcá-la como design novo.
 - [ ] Conferir que as duas rotas têm evidências suficientes para concluir autor, motivação e arma/meio.
-- [ ] Fazer revisão de continuidade, horários, distâncias, acesso e alibis.
+- [ ] Fazer revisão de continuidade, horários, distâncias, acesso e álibis.
+- [ ] Separar contradições da fonte de eventuais inconsistências introduzidas pelo design.
 
 ## Fase 3 — Implementação
 - [ ] Criar componente de caso isolado, sem reaproveitar o estado interno do caso Painscreek existente.
@@ -39,4 +42,4 @@
 - [ ] Fazer revisão editorial e de consistência antes de publicar.
 
 ## Escopo desta preparação
-Esta fase cria documentação e estrutura isoladas. A integração ao menu e a publicação do caso jogável ficam pendentes até que o modelo do jogo e as transcrições sejam conferidos; não marcar o capítulo como concluído antes desses passos.
+Esta fase cria documentação e estrutura isoladas. A integração ao menu e a publicação do caso jogável ficam pendentes até que as transcrições sejam conferidas e o modelo investigativo seja validado. Não marcar o capítulo como concluído antes desses passos.
