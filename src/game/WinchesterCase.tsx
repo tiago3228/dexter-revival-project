@@ -116,8 +116,12 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
   const interview = (id: string) => {
     if (interrogated.includes(id)) return;
     setInterrogated((current) => [...current, id]);
-    const person = SUSPECTS.find((p) => p.id === id)!;
-    setFeedback(`${person.name}: “${person.answer}”`);
+    const person = SUSPECTS.find((p) => p.id === id);
+    const specialAnswers: Record<string, string> = {
+      sam: "Os desaparecimentos seguem um padrão entre cidades. Não é prova de um demônio — ainda não. Mas as datas coincidem com uma tragédia da minha família.",
+      dean: "Eu estava nas docas procurando alguém que desapareceu. Não vim prender um assassino comum. E não vou contar tudo até saber o que você encontrou.",
+    };
+    setFeedback(person ? `${person.name}: “${person.answer}”` : `${id === "sam" ? "Sam Winchester" : "Dean Winchester"}: “${specialAnswers[id] ?? "Não tenho mais nada a acrescentar."}”`);
   };
 
   const advance = () => {
