@@ -81,7 +81,7 @@ export function PainscreekEvidenceExplorer() {
           <a href="/" className="text-sm text-muted-foreground hover:text-foreground">← Voltar ao jogo</a>
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.25em] text-primary">Arquivo investigativo · Painscreek</p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Catálogo de evidências</h1>
-          <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">Consulte as 22 referências catalogadas a partir das páginas 80–116 do PDF. Busque por título, página ou conteúdo e abra cada registro para ver suas ressalvas.</p>
+          <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">Consulte as 26 referências catalogadas a partir das páginas 80–116 do PDF. Busque por título, página ou conteúdo e abra cada registro para ver suas ressalvas.</p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card p-3"><p className="text-xs text-muted-foreground">Registros no catálogo</p><p className="mt-1 text-2xl font-semibold">{counts.all}</p></div>
             <div className="rounded-xl border border-border bg-card p-3"><p className="text-xs text-muted-foreground">Conferidos visualmente</p><p className="mt-1 flex items-center gap-2 text-2xl font-semibold"><CheckCircle2 size={20} className="text-emerald-400" />{counts.checked}</p></div>
