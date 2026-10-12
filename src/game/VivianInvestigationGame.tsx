@@ -6,6 +6,7 @@ type ClueId =
   | "police-report"
   | "scott-denial"
   | "hospital-closure"
+  | "hospital-contract"
   | "henry-death"
   | "funds-investigation"
   | "vivian-medical"
@@ -54,6 +55,7 @@ const CLUES: Clue[] = [
   { id: "police-report", title: "Relatório policial sobre Vivian", source: "Arquivo do xerife · PDF p. 90", summary: "O relatório registra Scott Brooks como principal suspeito e menciona testemunhas que ouviram uma discussão, sem conseguir identificar as palavras ditas.", caution: "Ser suspeito e ter sido visto em uma discussão não prova autoria do homicídio.", place: "archive" },
   { id: "scott-denial", title: "Scott nega ter matado Vivian", source: "Recorte de jornal · PDF p. 88", summary: "Scott afirma que encontrou Vivian na floresta e foi embora. A declaração é a versão dele, não uma confirmação independente.", caution: "Compare a declaração com o relatório policial e procure corroboração independente.", place: "archive" },
   { id: "hospital-closure", title: "Fechamento do Hospital Comunitário", source: "Notícia de jornal · PDF p. 84", summary: "Uma notícia relata o fechamento do hospital em 1956, após décadas de funcionamento, e cita dificuldades financeiras e suspeitas sobre fundos.", caution: "A OCR precisa de conferência visual; a notícia não prova que as suspeitas eram verdadeiras.", place: "archive" },
+  { id: "hospital-contract", title: "Carta sobre fornecimento ao hospital", source: "Correspondência · PDF p. 92", summary: "Uma carta datada de 16 de outubro de 1973 agradece a Vivian por escolher a empresa como fornecedora do Hospital Comunitário e menciona a candidatura de Charles a prefeito e o uso de fundos para pesquisa e atendimento a idosos.", caution: "A carta demonstra uma relação comercial e filantrópica descrita pelo remetente; não prova desvio de fundos nem relação com a morte de Vivian.", place: "hospital" },
   { id: "henry-death", title: "Morte do Dr. Henry Johnson", source: "Notícia de jornal · PDF p. 85", summary: "A notícia relata que Henry Johnson foi encontrado morto em um veículo submerso no Lago Cherry Creek em 1995.", caution: "A notícia registra a descoberta do corpo; causa, circunstâncias e conexões ainda precisam ser confirmadas.", place: "lake" },
   { id: "funds-investigation", title: "Investigação sobre fundos da Roberts Relief", source: "Carta de investigadores privados · PDF p. 97", summary: "Um relatório acusa Henry Johnson de transferir dinheiro para uma conta offshore e estima o total em aproximadamente US$ 160 mil.", caution: "É uma acusação de investigadores privados, não uma conclusão judicial nem prova de motivo para outro crime.", place: "hospital" },
   { id: "vivian-medical", title: "Relatório médico de Vivian", source: "Registro médico · PDF p. 94", summary: "O documento atribuído ao Dr. Henry Johnson descreve o estado clínico de Vivian, a necessidade de reabilitação e o efeito estressante da presença de Charles.", caution: "O contexto médico não estabelece, por si só, culpa ou motivo criminal.", place: "hospital" },
@@ -250,7 +252,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
         </section>
 
         <nav className="mt-5 flex flex-wrap gap-2" aria-label="Fases da investigação">
-          {([{ id: "explore", label: "Explorar", icon: MapPin }, { id: "board", label: "Quadro de evidências", icon: Network }, { id: "timeline", label: "Cronologia", icon: ClipboardList }, { id: "report", label: "Relatório", icon: BookOpen }] as const).map((item) => { const Icon = item.icon; return <button key={item.id} type="button" onClick={() => setPhase(item.id)} className={`inline-flex min-h-11 items-center gap-2 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider ${phase === item.id ? "border-[#c4a779] bg-[#c4a779]/10 text-[#ead8b8]" : "border-[#4b4439] text-[#bdb5a8]"}`}><Icon size={15}/>{item.label}</button>; })}
+          {([{ id: "explore", label: "Explorar", icon: MapPin }, { id: "board", label: "Quadro de evidências", icon: Network }, { id: "timeline", label: "Cronologia", icon: ClipboardList }, { id: "report", label: "Relatório", icon: BookOpen }] as const).map((item) => { const Icon = item.icon; return <button key={item.id} type="button" onClick={() => item.id === "report" ? submitReport() : setPhase(item.id)} className={`inline-flex min-h-11 items-center gap-2 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider ${phase === item.id ? "border-[#c4a779] bg-[#c4a779]/10 text-[#ead8b8]" : "border-[#4b4439] text-[#bdb5a8]"}`}><Icon size={15}/>{item.label}</button>; })}
         </nav>
 
         <div className="mt-4 border border-[#5c5143] bg-[#1b1a17] p-3 text-sm leading-relaxed text-[#d5c9b5]" role="status" aria-live="polite">{notice}</div>
