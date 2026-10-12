@@ -91,6 +91,7 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
   });
   const [selectedPersonId, setSelectedPersonId] = useState<string | null>(null);
   const [step, setStep] = useState<"people" | "places">("people");
+  const [confirmAnotherPlace, setConfirmAnotherPlace] = useState(false);
   const [placeQuery, setPlaceQuery] = useState("");
   const [notice, setNotice] = useState("Escolha uma pessoa e depois selecione um ou mais locais para relacioná-la.");
   useEffect(() => { window.localStorage.setItem("vivian-investigation-board-v1", JSON.stringify(connections)); }, [connections]);
@@ -120,7 +121,8 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
     }
     setConnections((current) => [...current, { personId, placeId }]);
     setPlaceQuery("");
-    setNotice(`Local adicionado: ${person.name} ↔ ${place.name}. Você pode adicionar outros locais ou voltar à lista de pessoas.`);
+    setNotice(`Local adicionado: ${person.name} ↔ ${place.name}.`);
+    setConfirmAnotherPlace(true);
   };
   const removeConnection = (personId: string, placeId: string) => {
     const person = PEOPLE.find((item) => item.id === personId);
@@ -238,6 +240,19 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
             </div>
           ) : <p className="mt-3 border border-dashed border-[#5c5143] p-5 text-sm text-[#a9a092]">As ligações que você criar aparecerão aqui para revisão.</p>}
         </section>
+        {confirmAnotherPlace && selectedPerson && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" role="presentation">
+            <section role="dialog" aria-modal="true" aria-labelledby="confirm-another-place-title" className="w-full max-w-md border border-[#c4a779] bg-[#1b1a17] p-5 shadow-2xl sm:p-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">Ligação registrada</p>
+              <h2 id="confirm-another-place-title" className="mt-2 font-display text-2xl">Deseja adicionar esse personagem a outro local?</h2>
+              <p className="mt-3 text-sm leading-relaxed text-[#bdb5a8]"><strong className="text-[#ead8b8]">{selectedPerson.name}</strong> já foi relacionado ao local escolhido. Você pode continuar adicionando outros locais ou voltar à lista de personagens.</p>
+              <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button type="button" onClick={() => { setConfirmAnotherPlace(false); setSelectedPersonId(null); setStep("people"); setPlaceQuery(""); setNotice(`${selectedPerson.name} foi registrado(a). Escolha outro personagem para continuar.`); }} className="min-h-11 border border-[#79664c] px-5 py-2 font-mono text-xs uppercase tracking-wider text-[#d4cabc] hover:bg-white/5">Não</button>
+                <button type="button" onClick={() => { setConfirmAnotherPlace(false); setStep("places"); setPlaceQuery(""); setNotice(`Escolha outro local para ${selectedPerson.name}. As ligações existentes serão mantidas.`); }} className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/20">Sim, adicionar outro local</button>
+              </div>
+            </section>
+          </div>
+        )}
         <p className="mt-4 text-xs leading-relaxed text-[#81796d]">Importante: uma ligação entre pessoa e local é uma anotação de investigação; sozinha, não confirma presença na noite do crime nem culpa.</p>
       </div>
     </main>
