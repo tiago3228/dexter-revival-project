@@ -108,6 +108,7 @@ function TimelinePage() {
             <h1 className="mt-2 font-display text-3xl sm:text-5xl">Linha do tempo</h1>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Os acontecimentos só aparecem depois que o diário de origem é encontrado e registrado como coletado.</p>
           </div>
+          <Link to="/painscreek-evidence" className="inline-flex min-h-10 items-center gap-2 border border-[#5c5143] px-3 py-2 text-xs uppercase tracking-wider hover:bg-[#302a22]">Catálogo de evidências</Link>
           <Link to="/" onClick={() => { try { window.sessionStorage.setItem("dexter-return-to-vivian-case", "true"); } catch {} }} className="inline-flex min-h-10 items-center gap-2 border border-[#5c5143] px-3 py-2 text-xs uppercase tracking-wider hover:border-[#c4a779]"><ArrowLeft size={15}/> Voltar ao caso</Link>
         </header>
 
