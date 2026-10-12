@@ -3,7 +3,7 @@
 
 **Escopo exclusivo:** páginas 31–69 do PDF. Não inclui páginas 1–30 nem 70–116.
 **Método informado:** OCR das imagens fornecido na conversa. Não houve conferência visual independente do PDF original.
-**Estado global:** TRANSCRIÇÃO PENDENTE. Os resumos abaixo organizam o OCR; não substituem a transcrição literal. Em páginas de duas colunas, a ordem de leitura pode estar misturada. Erros de OCR não foram completados por suposição.
+**Estado global:** OCR comparado visualmente com as imagens do PDF para as páginas 31–69. As páginas foram inspecionadas em conjunto e as páginas com divergências relevantes foram ampliadas. Isso não equivale a uma transcrição diplomática linha a linha de todos os caracteres; pontos ainda duvidosos permanecem sinalizados. Em páginas de duas colunas, a ordem de leitura deve seguir a disposição visual.
 
 ## Páginas 31–34 — Matthew Brooks e Sofia; anotações de 1995
 
@@ -51,7 +51,7 @@
 |---|---|---|---|
 | 53 | 19/04/1994; 23/09/1994 | Scott nota que Andrew parou de aparecer para cuidar do jardim. Em setembro, encontra Andrew inconsciente, com um frasco vazio de comprimidos para dormir; uma enfermeira diz que seria a terceira tentativa de suicídio. | A informação sobre tentativas anteriores é atribuída à enfermeira. Preservar linguagem sensível sem transformar o relato em diagnóstico independente. |
 | 54 | 28/09/1994 | Scott visita Andrew no hospital. Andrew conta uma versão segundo a qual Sofia teve um caso com Charles e um filho; em 26/06/1975, às 23h, Vivian, Dr. Johnson e Andrew confrontaram Sofia. Na versão contada, Sofia caiu em um poço, morreu e Vivian pediu a Andrew que cuidasse do corpo e do bebê. Andrew diz que o bebê se chamava Vincent. | **Relato indireto de Andrew registrado por Scott**, não confirmação independente. A narrativa sobre morte e corpo precisa ser corroborada por outras fontes. O OCR mistura colunas e corta o fim da primeira parte. |
-| 55 | Sem texto OCR legível suficiente | Nenhum texto reconhecido pelo OCR nesta página. | **Não importar a antiga descrição resumida como se fosse proveniente do OCR desta página.** Conferir imagem original. |
+| 55 | **Conferido na imagem:** entrada de 13/02/1995: Scott diz que percebeu quem é ao ver uma foto, observa que tem o mesmo cobertor, conclui que sabe quem é seu pai e que tudo faz sentido. Entrada de 07/03/1995: Scott visita Andrew para saber onde esconderam o corpo de sua mãe; Andrew chora e implora para que Scott não diga mais nada. Scott diz que é o menino que Andrew entregou ao padre Calvin para que fosse salvo. Andrew fica chocado; Scott vai embora e diz que não suportaria olhar para ele por mais um segundo. | O OCR falhou por completo nesta página, mas a imagem contém texto legível. A conclusão de Scott sobre sua identidade e a declaração que faz a Andrew devem ser mantidas como fala/ponto de vista do personagem, ainda que tenham grande valor investigativo. | **Não importar a antiga descrição resumida como se fosse proveniente do OCR desta página.** Conferir imagem original. |
 | 56 | 04/04/1995; 13/04/1995 | Scott escreve que o poço secou e estava coberto de lodo; encontrou um corpo que acredita ser o de sua mãe e o enterrou no cemitério ao lado de Father Calvin, sob uma cruz de madeira. Em outra entrada, Andrew vai à cabana e diz onde o corpo estava escondido, depois vai embora; Scott fica tomado de raiva e chora. | **A ordem no OCR é 13/04 antes de 04/04**, embora a data anterior seja cronologicamente mais cedo. Preservar a ordem visual até conferência. Scott acredita que o corpo é da mãe; a identificação não está confirmada por exame independente. |
 | 57 | 03 e 13/05/1995 | Scott se isola e evita Trisha, que bate à porta e chora. Matthew visita Scott; Scott chora e diz saber que Charles é seu pai e que Trisha é sua meia-irmã. | São conclusões/confissões de Scott. As fontes que sustentariam paternidade e parentesco devem ser localizadas e verificadas separadamente. |
 
@@ -61,7 +61,7 @@
 |---|---|---|---|
 | 58 | 26/03/1997; Steven Moss | Moss registra que a investigação avança lentamente, moradores foram embora e a imprensa pode ter errado. Planeja visitar o Orfanato São Patrício e entrevistar antigos funcionários da mansão; acredita que Scott sabe algo, mas ainda não pretende falar com Matthew. | Trechos sobre distância/viagem e palavras no meio da página estão corrompidos. “Matthew parece ser responsável legal por Scott” é anotação investigativa, não confirmação jurídica. |
 | 59 | 30/03/1997; Steven Moss | Fragmentos citam a recuperação de Vivian após cirurgia de emergência em 1974, Trisha, a vice-presidência da Companhia de Mineração Roberts, a crise após acidente na mina em 1973 e apoio ao hospital comunitário. | OCR está severamente misturado e incompleto; não reconstruir a sequência nem a relação causal além do texto reconhecível. |
-| 60 | Fragmento “(Mansão?)” | Apenas um fragmento curto foi reconhecido. | Fonte e contexto não identificados; ilegível/incompleto. Não criar evidência a partir de uma palavra isolada. |
+| 60 | **Conferido na imagem:** anotação “Sala de segurança: 005241 (Mansão?)”. | O texto aparece isolado no canto inferior direito da página. “Mansão?” permanece com interrogação na fonte; o código legível é **005241**. Não confundir com o código da sala de estudo da p. 64 (**44871**). |
 | 61 | Bernard Hopkins; “1997-2” | Ficha com endereço “Av. Silverlake, n.º 31”, Painscreek, NL 28115. Nota diz que o pai morreu em acidente na mina e que Bernard estava em casa no dia em que Vivian foi morta, acrescentando “Sem álibi”. | Confirmar grafia/endereço e significado do campo “1997-2”. Ausência de álibi anotado não é prova de culpa. |
 | 62 | “Entrevista com Dorothy”; anotação de encontro | Aparecem nome(s) parcialmente reconhecíveis, incluindo texto OCR semelhante a “Catererta Moon”, e nota de encontro com o xerife no posto às 10h em 11/05; ele queria mostrar documentos. | Nome e ano não confirmados. Não normalizar o nome fragmentário nem presumir o conteúdo dos documentos. |
 
@@ -83,7 +83,7 @@
 2. **Identidade de Vincent/Scott:** Andrew, segundo Scott, diz que o bebê se chamava Vincent; Scott mais tarde conclui que Charles é seu pai e Trisha sua meia-irmã. Não assumir que Vincent e Scott são a mesma pessoa sem a cadeia documental.
 3. **Poço e corpo:** o relato de Andrew e a interpretação de Scott precisam de corroboração; o corpo encontrado é descrito por Scott como o de sua mãe, sem confirmação independente no OCR.
 4. **Matthew e Calvin:** preservar como pessoas distintas até que a fonte estabeleça o contrário.
-5. **Página 43 e página 55:** sem texto reconhecido pelo OCR; revisar a imagem original antes de reutilizar resumos antigos.
+5. **Páginas 43 e 55:** o OCR não reconheceu texto, mas a inspeção visual confirmou entradas legíveis. A p. 43 registra a autorização para Scott ficar na cabana sob condição de trabalhar no jardim e a referência a Magdalene. A p. 55 registra a foto, o cobertor, a conversa com Andrew e a declaração de Scott sobre ter sido entregue a Father Calvin.
 6. **Páginas 49–51:** duplicam, respectivamente, conteúdo das páginas 46–48 no OCR fornecido. Não contam como testemunhos independentes.
 7. **Código da sala de estudo:** p. 64 indica 44871; a anotação anterior “71” estava incompleta e deve ser corrigida.
 8. **Página 54:** 26/06/1975 às 23h é parte do relato atribuído a Andrew; não tratar como cronologia comprovada.
@@ -99,7 +99,8 @@
 - [ ] Comparar as páginas 46–48 com 49–51 para confirmar duplicatas visuais, não apenas repetição do OCR.
 - [ ] Conferir p. 54, especialmente a cronologia, os nomes e o final da narrativa.
 - [ ] Conferir ordem das entradas e descrição do corpo na p. 56.
-- [ ] Ler visualmente os documentos fragmentários das páginas 58–62.
+- [x] Conferir visualmente p. 60: anotação “Sala de segurança: 005241 (Mansão?)”.
+- [ ] Ler com ampliação adicional os documentos fragmentários das páginas 58–62 e confirmar todos os campos de p. 61–62.
 - [ ] Confirmar o código 44871 na p. 64.
 - [ ] Conferir a frase truncada na p. 69.
 - [ ] Só depois promover qualquer dado para **CONFIRMADO NA FONTE** ou conteúdo jogável.
