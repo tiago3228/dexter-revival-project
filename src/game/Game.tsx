@@ -208,19 +208,28 @@ export function Game() {
     "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
   >(() => {
     try {
-      return window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true" ? "vivian" : "ortega";
-    } catch { return "ortega"; }
+      return window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true"
+        ? "vivian"
+        : "ortega";
+    } catch {
+      return "ortega";
+    }
   });
   const [showMenu, setShowMenu] = useState(() => {
-    try { return window.sessionStorage.getItem("dexter-return-to-vivian-case") !== "true"; }
-    catch { return true; }
+    try {
+      return window.sessionStorage.getItem("dexter-return-to-vivian-case") !== "true";
+    } catch {
+      return true;
+    }
   });
   const [showIntro, setShowIntro] = useState(() => {
     try {
       const shouldResume = window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true";
       if (shouldResume) window.sessionStorage.removeItem("dexter-return-to-vivian-case");
       return !shouldResume;
-    } catch { return true; }
+    } catch {
+      return true;
+    }
   });
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
   const [introMusicActive, setIntroMusicActive] = useState(true);
@@ -314,15 +323,16 @@ export function Game() {
 
     // A trilha específica do caso deve ter prioridade sobre a música da abertura.
     // Assim, Vivian Roberts usa a mesma faixa da página de mapas.
-    const track = !showMenu && (caseMode === "painscreek" || caseMode === "vivian")
-      ? "/audio/painscreek/painscreek-case-theme.mp3"
-      : !showMenu && caseMode === "mentalist"
-        ? "/audio/mentalist/red-john-theme.mp3"
-        : !showMenu && caseMode === "winchester"
-          ? "/audio/winchester/o-sangue-dos-condenados.mp3"
-          : introMusicActive
-            ? aberturaAudio.url
-            : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+    const track =
+      !showMenu && (caseMode === "painscreek" || caseMode === "vivian")
+        ? "/audio/painscreek/painscreek-case-theme.mp3"
+        : !showMenu && caseMode === "mentalist"
+          ? "/audio/mentalist/red-john-theme.mp3"
+          : !showMenu && caseMode === "winchester"
+            ? "/audio/winchester/o-sangue-dos-condenados.mp3"
+            : introMusicActive
+              ? aberturaAudio.url
+              : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const trackUrl = new URL(track, window.location.href).href;
     if (audio.src !== trackUrl) {
       audio.pause();
@@ -1502,7 +1512,8 @@ export function Game() {
             Testemunhos cruzados · Porto de Miami
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Compare a lembrança de Teresa com o ponto de Tellez, a câmera e a luva encontrada na cena.
+            Compare a lembrança de Teresa com o ponto de Tellez, a câmera e a luva encontrada na
+            cena.
           </p>
           <button
             type="button"
@@ -1875,10 +1886,7 @@ export function Game() {
         </div>
       )}
       {activeStoryDialogue && (
-        <StoryDialogue
-          scene={activeStoryDialogue}
-          onClose={() => setActiveStoryDialogue(null)}
-        />
+        <StoryDialogue scene={activeStoryDialogue} onClose={() => setActiveStoryDialogue(null)} />
       )}
     </Shell>
   );
@@ -2014,7 +2022,9 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian") => void;
+  onSelect: (
+    nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian",
+  ) => void;
   playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
@@ -2646,7 +2656,8 @@ function MainMenu({
             </p>
             <h2 className="mt-3 font-display text-3xl">O Caso Vivian Roberts</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Investigue personagens, locais e documentos de um caso em preparação. Esta versão-base ainda não contém a solução nem as rotas investigativas completas.
+              Investigue personagens, locais e documentos de um caso em preparação. Esta versão-base
+              ainda não contém a solução nem as rotas investigativas completas.
             </p>
             <span className="mt-8 block font-mono text-xs text-amber-300 group-hover:underline">
               Abrir arquivo-base →

@@ -212,7 +212,9 @@ function speak(text: string) {
 export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [objective, setObjective] = useState<Objective>(1);
   const [opened, setOpened] = useState<Evidence | null>(null);
-  const [activeDialogue, setActiveDialogue] = useState<import("./StoryDialogue").StoryDialogueScene | null>(null);
+  const [activeDialogue, setActiveDialogue] = useState<
+    import("./StoryDialogue").StoryDialogueScene | null
+  >(null);
   const [audio, setAudio] = useState<string | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [hintConfirmed, setHintConfirmed] = useState(false);
