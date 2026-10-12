@@ -2199,7 +2199,7 @@ function MainMenu({
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
                   {bloodSlideUnlocked
                     ? "Conquistado"
-                    : "Bloqueado · requer excelência nos quatro capítulos e interrogatórios perfeitos"}
+                    : "Bloqueado · requer excelência nos cinco capítulos e interrogatórios perfeitos"}
                 </p>
               </div>
             </section>
