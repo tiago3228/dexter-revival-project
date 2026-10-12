@@ -422,5 +422,90 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     playerInference:
       "As notas registram incidentes distintos em datas diferentes; a proximidade na mesma página não prova conexão causal ou participação de qualquer personagem.",
   },
+,
 
+  {
+    id: "P-029",
+    title: "Registro de segurança: intruso no jardim",
+    pages: [106],
+    sourceType: "Livro de segurança da mansão",
+    documented:
+      "Uma anotação datada de 18 de março de 1994 relata que um homem de cerca de 1,70 m, usando moletom com capuz, escalou a cerca, atravessou o jardim e pulou o muro. A câmera não registrou seu rosto; o Sr. Roberts pediu a instalação de mais câmeras.",
+    pendingVerification:
+      "O conteúdo visível da página 106 foi conferido com a digitalização. A identidade do intruso e a relação do episódio com outros eventos não estão estabelecidas.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "O registro documenta uma invasão e uma limitação da vigilância; não identifica o intruso nem demonstra ligação com a morte de Vivian.",
+  },
+  {
+    id: "P-030",
+    title: "Mudanças na equipe e ocorrência com Andrew",
+    pages: [107, 108],
+    sourceType: "Livro de segurança da mansão",
+    documented:
+      "O registro informa a chegada de novas fitas VHS em 25 de março de 1994 e a contratação de Samuel Green como novo segurança em 28 de maio. Em 4 de julho, Andrew teria chegado muito embriagado à mansão por volta das 23h, e Scott foi chamado para levá-lo para casa. Uma anotação de 12 de agosto registra vinte anos de serviço de Tom Parker e sua saída prevista para cuidar da esposa doente.",
+    pendingVerification:
+      "As páginas 107–108 foram conferidas visualmente. Confirmar grafias e cruzar os horários com outros registros, sem presumir que os episódios estejam relacionados.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "Os registros fornecem contexto sobre segurança e rotina da mansão; não provam que Andrew ou Scott estivessem envolvidos em um crime.",
+  },
+  {
+    id: "P-031",
+    title: "Desaparecimento temporário de Stephanie",
+    pages: [109],
+    sourceType: "Livro de segurança da mansão",
+    documented:
+      "Uma anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween após seguir vaga-lumes. Uma busca não a encontrou, mas ela voltou para casa duas horas depois e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. As empregadas afirmaram que estavam trabalhando naquela noite.",
+    pendingVerification:
+      "A página 109 foi conferida visualmente. O relato não identifica a mulher; a semelhança do vestido é uma descrição atribuída à criança, não uma identificação confirmada.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "O episódio deixa uma discrepância entre o relato de Stephanie e as declarações das empregadas; não prova a existência de uma pessoa específica nem um evento sobrenatural.",
+  },
+  {
+    id: "P-032",
+    title: "Livro da pousada: Steven Moss e o caso Vivian",
+    pages: [110, 111],
+    sourceType: "Livro de registro da pousada",
+    documented:
+      "Em 20 de março de 1997, o autor do registro anota rumores de que Steven Moss foi contratado para investigar a morte de Vivian depois que a polícia encerrou as buscas. Em 9 de abril, Matthew diz que pretende deixar Painscreek e que os serviços dele não serão mais necessários; o autor questiona se Scott matou Vivian ou foi acusado injustamente. Em 14 de abril, Moss pergunta ao autor sobre o que sabe e menciona um incidente de 1975 como possível avanço; o autor pergunta se isso tem relação com a empregada que deixou a cidade.",
+    pendingVerification:
+      "As páginas 110–111 foram conferidas visualmente. A referência ao incidente de 1975 também aparece em P-002; manter as entradas cruzadas sem contar o mesmo relato como confirmação independente.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "O registro documenta rumores e conversas sobre a investigação; a pista de 1975 é uma hipótese de Moss e não identifica, por si só, a empregada ou o responsável pela morte.",
+  },
+  {
+    id: "P-033",
+    title: "Anotações de Dorothy sobre Sofia e a gravidez",
+    pages: [112, 113, 114],
+    sourceType: "Diário ou anotações pessoais de Dorothy Patterson",
+    documented:
+      "As anotações datadas de 20 de junho e 24 de setembro de 1973 descrevem visitas de Matthew a Sofia e uma conversa em que Sofia diz não saber como é ser amada por pais. Em 2 e 6 de fevereiro de 1975, Dorothy registra que Charles pediu que cuidasse de Sofia em uma casa afastada da mansão e que os dois combinaram manter a gravidez em segredo. Em 6 de abril de 1975, Dorothy escreve que Sofia estava no oitavo mês, esperançosa com o futuro e pensando que seria melhor se o bebê fosse menino.",
+    pendingVerification:
+      "As páginas 112–114 foram conferidas visualmente. Os registros são a versão escrita por Dorothy; cruzar com cartas de Henry, Rachel e outros documentos antes de fixar todos os detalhes da cronologia.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "As anotações sustentam que a gravidez de Sofia foi ocultada e que Charles participou dos preparativos descritos por Dorothy; não provam que todos os planos tenham sido executados como previsto.",
+  },
+  {
+    id: "P-034",
+    title: "Anotações sobre Andrew, Scott e a fotografia emprestada",
+    pages: [115, 116],
+    sourceType: "Diário ou livro de memórias",
+    documented:
+      "Uma anotação de 23 de setembro de 1994 relata outra tentativa de suicídio de Andrew e atribui a Scott o ato de salvá-lo; a de 10 de outubro descreve melhora de Andrew e visitas frequentes de Scott. Em 13 de fevereiro de 1995, Scott visita o autor para consertar uma pia, conversa sobre Charles e Vivian e pede emprestada uma fotografia de um álbum. Em 19 de junho de 1995, o autor registra a morte de Andrew e o reencontro de Laura e Daniel no funeral, lamentando não ter ligado para Laura antes.",
+    pendingVerification:
+      "As páginas 115–116 foram conferidas visualmente. A identificação exata do autor dessas anotações e a fotografia emprestada ainda precisam ser confirmadas com outras páginas; não presumir que a fotografia seja uma prova específica.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "As anotações estabelecem uma sequência relatada sobre Andrew e o empréstimo de uma foto; a identidade da foto e sua relevância para a investigação permanecem em aberto.",
+  },
 ];
