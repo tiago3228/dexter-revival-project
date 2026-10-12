@@ -6,8 +6,8 @@ const maps = [
   { title: "Mapa da cidade", file: "mapa de paisncreek cidade.png", note: "Referência geral para localizar edifícios, ruas e pontos de interesse." },
   { title: "Rede de esgotos", file: "mapa de paisncreek esgoto.png", note: "Rotas subterrâneas e ligações entre áreas da cidade." },
   { title: "Hospital comunitário", file: "mapa de paisncreek hospital.png", note: "Plantas e setores do hospital." },
-  { title: "Mansão — 1º andar", file: "mapa de paisncreek mansão 1º andar.png", note: "Cômodos e circulação do primeiro piso." },
-  { title: "Mansão — 2º andar", file: "mapa de paisncreek mansão 2º andar.png", note: "Quartos e áreas do segundo piso." },
+  { title: "Mansão — 1º andar", file: "mapa de paisncreek mansão 1° andar.png", note: "Cômodos e circulação do primeiro piso." },
+  { title: "Mansão — 2º andar", file: "mapa de paisncreek mansão 2° andar.png", note: "Quartos e áreas do segundo piso." },
 ];
 
 export const Route = createFileRoute("/mapas")({
@@ -18,7 +18,7 @@ function MapasPage() {
   const [active, setActive] = useState(0);
   const [zoom, setZoom] = useState(1);
   const selected = maps[active]!;
-  const src = "/images/" + encodeURIComponent(selected.file).replace(/%20/g, "%20");
+  const src = "/maps/" + encodeURIComponent(selected.file);
 
   return (
     <main className="min-h-screen bg-[#111310] text-[#e8e4d9]">
