@@ -9,11 +9,11 @@
 - [Registro de pistas 80–116](./registro-de-pistas-080-116.md) — catálogo de evidências, fontes, incertezas e cruzamentos pendentes.
 - [Plano de integração investigativa](./plano-integracao-investigativa.md) — matriz inicial das pistas, regras de validação e sequência segura para implementação.
 - [Revisão visual das páginas 100–107 e 111–116](./revisao-visual-paginas-100-107-111-116.md) — conferência das evidências prioritárias, limites de interpretação e pendências restantes (inclui adendo sobre 108–110).
-- [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.
+- [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.\n- [Auditoria de cruzamento das páginas 100–116](./auditoria-cruzamento-paginas-100-116.md) — cruzamento dos registros P-001–P-034, com atenção às possíveis duplicatas e às alegações que não podem ser tratadas como fatos confirmados.
 - [Auditoria preliminar das páginas 1–79](./auditoria-cruzamento-paginas-001-079.md) — OCR preliminar; duplicatas de conteúdo nas páginas 49–51 comparadas visualmente com as páginas 46–48 e confirmadas; auditoria integral ainda pendente.
 
 ## Interface interativa
-- [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo usa os registros P-001–P-012 existentes e não altera o caso Painscreek já presente na tela principal.
+- [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo documental tem 34 registros (P-001–P-034) em `src/game/painscreekEvidence.ts`; esse arquivo de dados continua separado da mecânica de solução do caso e não altera o caso Painscreek já presente na tela principal.
 
 **Limite atual:** a interface apresenta o catálogo documental das páginas 80–116; a deduplicação integral contra as páginas 1–79 continua pendente. O PDF original está dentro de `IMAGENS DE PAINSCREEK.zip` e tem 116 páginas digitalizadas como imagem, exigindo OCR/conferência visual para comparação confiável.
 
