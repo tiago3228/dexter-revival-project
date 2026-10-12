@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X, Volume2, VolumeX, ClipboardList, Network } from "lucide-react";
+import { CaseHeroImage } from "./CaseHeroImage";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -127,7 +128,7 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
                   const linked = connections.filter((item) => item.placeId === place.id);
                   return <div key={place.id} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }} onDrop={(event) => { event.preventDefault(); const personId = event.dataTransfer.getData("application/vivian-person"); if (personId) addConnection(personId, place.id); }} onClick={() => { if (selectedPersonId) addConnection(selectedPersonId, place.id); }} className={`min-h-32 cursor-pointer border p-3 transition ${selectedPersonId ? "border-dashed border-[#c4a779] hover:bg-[#c4a779]/10" : "border-[#6a5942] bg-[#171512]/90 hover:border-[#c4a779]"}`}>
                     <div className="flex items-start gap-2"><MapPin size={16} className="mt-0.5 shrink-0 text-[#c4a779]"/><div><h3 className="font-medium">{place.name}</h3><p className="mt-1 text-[10px] uppercase tracking-wider text-[#a9a092]">{place.group}</p></div></div>
-                    {linked.length > 0 ? <div className="mt-3 space-y-2">{linked.map((link) => { const person = PEOPLE.find((item) => item.id === link.personId); return <div key={link.personId} className="flex items-center justify-between gap-2 border border-[#79664c]/70 bg-[#3a2e20]/80 px-2 py-2 text-xs"><span className="text-[#ead8b8]">● {person?.name}</span><button type="button" aria-label={`Remover ligação de ${person?.name} com ${place.name}`} onClick={(event) => { event.stopPropagation(); setConnections((current) => current.filter((item) => !(item.personId === link.personId && item.placeId === place.id)); setNotice("Ligação removida do quadro."); }} className="text-[#bdb5a8] hover:text-red-200">×</button></div>; })}</div> : <p className="mt-4 border border-dashed border-[#5c5143] px-2 py-3 text-center text-[10px] uppercase tracking-wider text-[#81796d]">Solte aqui um personagem</p>}
+                    {linked.length > 0 ? <div className="mt-3 space-y-2">{linked.map((link) => { const person = PEOPLE.find((item) => item.id === link.personId); return <div key={link.personId} className="flex items-center justify-between gap-2 border border-[#79664c]/70 bg-[#3a2e20]/80 px-2 py-2 text-xs"><span className="text-[#ead8b8]">● {person?.name}</span><button type="button" aria-label={`Remover ligação de ${person?.name} com ${place.name}`} onClick={(event) => { event.stopPropagation(); setConnections((current) => current.filter((item) => !(item.personId === link.personId && item.placeId === place.id))); setNotice("Ligação removida do quadro."); }} className="text-[#bdb5a8] hover:text-red-200">×</button></div>; })}</div> : <p className="mt-4 border border-dashed border-[#5c5143] px-2 py-3 text-center text-[10px] uppercase tracking-wider text-[#81796d]">Solte aqui um personagem</p>}
                   </div>;
                 })}
               </div>
@@ -208,12 +209,13 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { o
       ambientRef.current = null;
     }
   }, []);
-  if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
   const filteredPeople = useMemo(() => PEOPLE.filter((p) => `${p.name} ${p.role} ${p.note}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const filteredPlaces = useMemo(() => PLACES.filter((p) => `${p.name} ${p.group} ${p.description}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const filteredDocuments = useMemo(() => DOCUMENTS.filter((d) => `${d.title} ${d.type} ${d.location}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const closeDetail = () => { setSelectedPerson(null); setSelectedPlace(null); setSelectedDocument(null); };
+
+  if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
   return (
     <main className="min-h-screen bg-[#11110f] px-4 py-6 text-[#eee9df] sm:px-8">
