@@ -131,8 +131,9 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
     if (act === 3 && !["archive", "family"].every((id) => found.includes(id))) return setFeedback("O arquivo está incompleto. Encontre a ficha retirada e a fotografia.");
     if (act === 4 && !["ledger", "symbol"].every((id) => found.includes(id))) return setFeedback("O armazém ainda não foi documentado. Não avance sem registrar o livro-caixa e a marca.");
     if (act < 5) setAct((current) => (current + 1) as Act);
+    const nextAct = ACTS[Math.min(5, act + 1)];
     setActiveEvidence(null);
-    setFeedback(ACTS[Math.min(5, act + 1)].desc);
+    setFeedback(nextAct?.desc ?? "");
   };
 
   const conclude = (choice: "false" | "partial" | "true" | "secret") => {
