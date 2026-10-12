@@ -125,3 +125,24 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 - [ ] Conferir visualmente as imagens originais.
 - [ ] Produzir transcrição literal final apenas depois da conferência.
 - [ ] Não editar páginas 70–116 neste lote.
+
+
+### Páginas 51–69 — duplicatas, Steven Moss e Trisha Roberts
+
+| Página | Registro organizado | Estado / cuidado |
+|---|---|---|
+| 51 | Repete a entrada de Scott/Dorothy sobre Sofia da p. 48. | Duplicata visual; não contar como nova entrada nem confirmação independente. |
+| 52–53 | Scott registra a caixa de música para Trisha, o afastamento do padre Matthew e encontra Andrew inconsciente; a informação sobre tentativas anteriores vem de uma enfermeira. | Entrada nova no lote; distinguir observação, fala atribuída e interpretação de Scott. |
+| 54 | Scott reproduz o relato de Andrew sobre o confronto com Sofia em 1975 e o bebê Vincent. | Testemunho atribuído a Andrew, sem confirmação independente. |
+| 55–57 | Scott investiga sua origem, recebe informação sobre o poço, relata o sepultamento e conta suas conclusões a Matthew. | Preservar a ordem visual e a discrepância entre as datas de 13/04 e 04/04/1995. |
+| 58–59 | Steven Moss registra passos de investigação, possível visita ao Orfanato São Patrício e notas biográficas sobre Vivian. | Pistas e hipóteses de Steven; confirmar detalhes e datas no original. |
+| 60 | Código manuscrito possivelmente `025241`, associado de modo incerto à sala de segurança. | Leitura/localização pendentes de ampliação e teste no jogo. |
+| 61 | Ficha de Bernard Hopkins, endereço e nota sobre o pai morto em acidente na mina e ausência de álibi. | Nota investigativa; texto manuscrito deve ser ampliado e “sem álibi” não é prova. |
+| 62 | Nota aparentemente sobre entrevista com Dorothy, Cafeteria Moon e encontro com o xerife em 11/05. | Ano e parte do cabeçalho incertos; não completar por inferência. |
+| 63–69 | Entradas do diário de Trisha entre 1988 e 1994: infância, relação com os pais, aproximação com Scott, esconderijo, trabalho de Scott e proibição de encontros. | Novas entradas no material consultado; opiniões de Trisha não são confirmação independente. Código `44871` na p. 64 associado à sala de estudo, ainda sem validação funcional. |
+
+Transcrição de trabalho das páginas 51–60: [arquivo de transcrição](../painscreek/transcricao-paginas-051-060.md).  
+Transcrição de trabalho das páginas 61–69: [arquivo de transcrição](../painscreek/transcricao-paginas-061-069.md).  
+Notas investigativas das páginas 51–60: [arquivo de notas](../painscreek/paginas-51-60-notas-investigativas.md).
+
+**Limite:** páginas 61–69 foram registradas a partir de leitura visual com OCR auxiliar. A comparação com páginas 1–60 é parcial, pois nem todos os lotes 1–50 estão disponíveis como transcrição integral independente. Nenhum desses registros foi integrado à interface jogável ou publicado como nova versão.
