@@ -440,7 +440,13 @@ export function Game() {
 
   const openZoom = (title: string, src: string, alt: string, description?: string) => {
     playSfx("evidence");
-    setModal({ kind: "zoom", title, src, alt, description });
+    setModal({
+      kind: "zoom",
+      title,
+      src,
+      alt,
+      ...(description !== undefined ? { description } : {}),
+    });
   };
 
   const has = (d: DocId) => s.docs.includes(d);
@@ -1094,7 +1100,9 @@ export function Game() {
                 preload="none"
                 src={ending.speechSrc}
                 muted={!soundOn}
-                volume={ambientVolume}
+                ref={(el) => {
+                  if (el) el.volume = Math.min(1, Math.max(0, ambientVolume));
+                }}
                 aria-label={`Ouvir o depoimento final de ${ending.speaker}`}
                 onPlay={() => {
                   audioRef.current?.pause();
