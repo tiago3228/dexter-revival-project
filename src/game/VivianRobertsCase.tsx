@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X, Volume2, VolumeX, ClipboardList, Network } from "lucide-react";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -80,16 +80,135 @@ function StatusPill({ status }: { status: ReviewStatus }) {
   return <span className="inline-flex border border-amber-500/40 bg-amber-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-amber-200">{statusLabel[status]}</span>;
 }
 
+type BoardConnection = { personId: string; placeId: string };
+function InvestigationBoard({ onClose }: { onClose: () => void }) {
+  const [connections, setConnections] = useState<BoardConnection[]>(() => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(window.localStorage.getItem("vivian-investigation-board-v1") || "[]") as BoardConnection[]; }
+    catch { return []; }
+  });
+  const [selectedPersonId, setSelectedPersonId] = useState<string | null>(null);
+  const [notice, setNotice] = useState("Arraste um personagem até um local para criar uma ligação. No celular, toque primeiro no personagem e depois no local.");
+  useEffect(() => { window.localStorage.setItem("vivian-investigation-board-v1", JSON.stringify(connections)); }, [connections]);
+  const addConnection = (personId: string, placeId: string) => {
+    const person = PEOPLE.find((item) => item.id === personId);
+    const place = PLACES.find((item) => item.id === placeId);
+    if (!person || !place) return;
+    setConnections((current) => current.some((item) => item.personId === personId && item.placeId === placeId) ? current : [...current, { personId, placeId }]);
+    setSelectedPersonId(null);
+    setNotice(`Ligação registrada: ${person.name} ↔ ${place.name}. Isso é uma anotação de investigação, não uma conclusão de culpa.`);
+  };
+  return (
+    <main className="min-h-screen bg-[#11100e] px-3 py-5 text-[#eee9df] sm:px-7 sm:py-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#5c5143] pb-5">
+          <div><p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">Dexter Revival Project · Evidências conectadas</p><h1 className="mt-2 font-display text-3xl sm:text-5xl">Quadro investigativo</h1><p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Organize pessoas e locais como num quadro de investigação. As ligações ficam salvas neste navegador e podem ser removidas a qualquer momento.</p></div>
+          <button type="button" onClick={onClose} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={16}/> Voltar ao caso</button>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4">
+          <p className="text-sm text-[#c9c1b5]">{notice}</p>
+          <div className="flex gap-2"><span className="border border-[#79664c] px-3 py-2 font-mono text-xs">{connections.length} ligações</span><button type="button" onClick={() => { setConnections([]); setNotice("Quadro limpo. Nenhuma ligação foi mantida."); }} className="border border-red-900/70 px-3 py-2 font-mono text-xs text-red-200 hover:bg-red-950/40">Limpar quadro</button></div>
+        </div>
+        <div className="mt-5 grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+          <section className="border border-[#4b4439] bg-[#191714] p-4 sm:p-5">
+            <h2 className="flex items-center gap-2 font-display text-2xl"><Users size={20} className="text-[#c4a779]"/> Personagens</h2>
+            <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">Todos os personagens já cadastrados. Arraste um cartão ou selecione-o para usar o modo de toque.</p>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+              {PEOPLE.map((person) => <button key={person.id} type="button" draggable onDragStart={(event) => { event.dataTransfer.setData("application/vivian-person", person.id); event.dataTransfer.effectAllowed = "copy"; setSelectedPersonId(person.id); }} onClick={() => { setSelectedPersonId(person.id); setNotice(`Personagem selecionado: ${person.name}. Agora toque em um local no quadro para registrar a ligação.`); }} className={`min-h-14 border p-3 text-left transition ${selectedPersonId === person.id ? "border-[#d8b77e] bg-[#c4a779]/15" : "border-[#4b4439] bg-[#211f1b] hover:border-[#79664c]"}`}><span className="flex items-center justify-between gap-2 font-medium"><span>{person.name}</span><span className="text-[#c4a779]">⠿</span></span><span className="mt-1 block text-[10px] uppercase tracking-wider text-[#a9a092]">{person.role}</span></button>)}
+            </div>
+          </section>
+          <section className="relative overflow-hidden border border-[#4b4439] bg-[#242019] p-4 sm:p-5">
+            <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(#c4a779 0.7px, transparent 0.7px)", backgroundSize: "18px 18px" }} />
+            <div className="relative">
+              <h2 className="flex items-center gap-2 font-display text-2xl"><Network size={20} className="text-[#c4a779]"/> Locais e conexões</h2>
+              <p className="mt-2 text-xs leading-relaxed text-[#bdb5a8]">Solte personagens sobre um local. Cada ligação fica visível abaixo dele.</p>
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {PLACES.map((place) => {
+                  const linked = connections.filter((item) => item.placeId === place.id);
+                  return <div key={place.id} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }} onDrop={(event) => { event.preventDefault(); const personId = event.dataTransfer.getData("application/vivian-person"); if (personId) addConnection(personId, place.id); }} onClick={() => { if (selectedPersonId) addConnection(selectedPersonId, place.id); }} className={`min-h-32 cursor-pointer border p-3 transition ${selectedPersonId ? "border-dashed border-[#c4a779] hover:bg-[#c4a779]/10" : "border-[#6a5942] bg-[#171512]/90 hover:border-[#c4a779]"}`}>
+                    <div className="flex items-start gap-2"><MapPin size={16} className="mt-0.5 shrink-0 text-[#c4a779]"/><div><h3 className="font-medium">{place.name}</h3><p className="mt-1 text-[10px] uppercase tracking-wider text-[#a9a092]">{place.group}</p></div></div>
+                    {linked.length > 0 ? <div className="mt-3 space-y-2">{linked.map((link) => { const person = PEOPLE.find((item) => item.id === link.personId); return <div key={link.personId} className="flex items-center justify-between gap-2 border border-[#79664c]/70 bg-[#3a2e20]/80 px-2 py-2 text-xs"><span className="text-[#ead8b8]">● {person?.name}</span><button type="button" aria-label={`Remover ligação de ${person?.name} com ${place.name}`} onClick={(event) => { event.stopPropagation(); setConnections((current) => current.filter((item) => !(item.personId === link.personId && item.placeId === place.id)); setNotice("Ligação removida do quadro."); }} className="text-[#bdb5a8] hover:text-red-200">×</button></div>; })}</div> : <p className="mt-4 border border-dashed border-[#5c5143] px-2 py-3 text-center text-[10px] uppercase tracking-wider text-[#81796d]">Solte aqui um personagem</p>}
+                  </div>;
+                })}
+              </div>
+            </div>
+          </section>
+        </div>
+        <p className="mt-4 text-xs leading-relaxed text-[#81796d]">Importante: o quadro é uma ferramenta de organização. Uma ligação entre pessoa e local, sozinha, não confirma presença na noite do crime nem culpa.</p>
+      </div>
+    </main>
+  );
+}
+
 /**
  * Base isolada do Capítulo 6. Ainda não está ligada ao menu principal:
  * integrar somente após revisar as transcrições e as dependências do caso.
  */
-export function VivianRobertsCase({ onBack }: { onBack?: () => void }) {
+export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { onBack?: () => void; soundOn?: boolean; onToggleSound?: () => void }) {
+  const [showBoard, setShowBoard] = useState(false);
+  const [ambientOn, setAmbientOn] = useState(true);
+  const [ambientVolume, setAmbientVolume] = useState(0.22);
+  const ambientRef = useRef<{ context: AudioContext; nodes: AudioScheduledSourceNode[]; gains: GainNode[] } | null>(null);
   const [section, setSection] = useState<"pessoas" | "locais" | "documentos">("pessoas");
   const [query, setQuery] = useState("");
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
+
+  useEffect(() => {
+    if (!ambientOn || typeof window === "undefined") return;
+    const startAmbient = () => {
+      if (!ambientOn || ambientRef.current) return;
+      const context = new AudioContext();
+      const buffer = context.createBuffer(1, context.sampleRate * 3, context.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) data[i] = (Math.random() * 2 - 1) * 0.32;
+      const noise = context.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+      const filter = context.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 360;
+      const windGain = context.createGain();
+      windGain.gain.value = 0.055 * ambientVolume;
+      noise.connect(filter).connect(windGain).connect(context.destination);
+      const hum = context.createOscillator();
+      hum.type = "sine";
+      hum.frequency.value = 54;
+      const humGain = context.createGain();
+      humGain.gain.value = 0.018 * ambientVolume;
+      hum.connect(humGain).connect(context.destination);
+      noise.start();
+      hum.start();
+      ambientRef.current = { context, nodes: [noise, hum], gains: [windGain, humGain] };
+    };
+    window.addEventListener("pointerdown", startAmbient, { once: true });
+    return () => window.removeEventListener("pointerdown", startAmbient);
+  }, [ambientOn, ambientVolume]);
+  useEffect(() => {
+    if (ambientRef.current) {
+      ambientRef.current.gains[0].gain.value = 0.055 * ambientVolume;
+      ambientRef.current.gains[1].gain.value = 0.018 * ambientVolume;
+    }
+  }, [ambientVolume]);
+  useEffect(() => {
+    if (ambientOn) return;
+    const current = ambientRef.current;
+    ambientRef.current = null;
+    if (current) {
+      current.nodes.forEach((node) => { try { node.stop(); } catch {} });
+      void current.context.close();
+    }
+  }, [ambientOn]);
+  useEffect(() => () => {
+    const current = ambientRef.current;
+    if (current) {
+      current.nodes.forEach((node) => { try { node.stop(); } catch {} });
+      void current.context.close();
+      ambientRef.current = null;
+    }
+  }, []);
+  if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
   const filteredPeople = useMemo(() => PEOPLE.filter((p) => `${p.name} ${p.role} ${p.note}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const filteredPlaces = useMemo(() => PLACES.filter((p) => `${p.name} ${p.group} ${p.description}`.toLowerCase().includes(query.toLowerCase())), [query]);
@@ -101,13 +220,21 @@ export function VivianRobertsCase({ onBack }: { onBack?: () => void }) {
       <div className="mx-auto max-w-7xl">
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[#5c5143] pb-5">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.28em] text-[#c4a779]">Dexter Revival Project · Capítulo 06</p>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">Arquivo confidencial · Capítulo 06</p>
             <h1 className="mt-2 font-display text-3xl sm:text-5xl">O Caso Vivian Roberts</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Arquivo investigativo em preparação. Os registros marcados como pendentes ainda não foram conferidos integralmente contra o material-fonte.</p>
+            <p className="mt-2 max-w-3xl text-xs uppercase tracking-[0.2em] text-[#bdb5a8]">Painscreek, 1995 · O caso que a cidade tentou esquecer</p>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Reconstrua as relações, compare os registros e descubra quais conexões resistem às evidências. Não confunda suspeita com prova.</p>
           </div>
-          {onBack && <button type="button" onClick={onBack} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={16} /> Voltar aos capítulos</button>}
+          <div className="flex flex-wrap gap-2">
+            {onBack && <button type="button" onClick={onBack} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={16} /> Voltar aos capítulos</button>}
+            {onToggleSound && <button type="button" onClick={onToggleSound} aria-pressed={soundOn} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5">{soundOn ? <Volume2 size={16}/> : <VolumeX size={16}/>} Música: {soundOn ? "ligada" : "desligada"}</button>}
+            <button type="button" onClick={() => setAmbientOn((value) => !value)} aria-pressed={ambientOn} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5">{ambientOn ? <Volume2 size={16}/> : <VolumeX size={16}/>} Ambiente: {ambientOn ? "ligado" : "desligado"}</button>
+          </div>
         </header>
+        <CaseHeroImage src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/624270/header.jpg" alt="Arte oficial de The Painscreek Killings, jogo que inspira o caso Vivian Roberts" caption="Arquivo visual · The Painscreek Killings · EQ Studios" />
 
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramenta de dedução</p><p className="mt-1 text-sm text-[#bdb5a8]">Arraste personagens para locais e registre conexões que deseja investigar.</p></div><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button></div>
+        <div className="mt-3 flex flex-wrap items-center gap-3 border border-[#4b4439] bg-[#1b1a17] p-3"><label className="flex min-w-56 flex-1 items-center gap-3 text-xs text-[#bdb5a8]">Volume do som ambiente <input aria-label="Volume do som ambiente" type="range" min="0" max="0.5" step="0.01" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} className="w-40 accent-[#c4a779]"/><span className="font-mono">{Math.round(ambientVolume * 200)}%</span></label><span className="text-[10px] uppercase tracking-wider text-[#81796d]">Trilha: tema de Painscreek</span></div>
         <section className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><Users className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Personagens catalogados</p><p className="mt-1 text-3xl">{PEOPLE.length}</p></div>
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><MapPin className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Locais para revisar</p><p className="mt-1 text-3xl">{PLACES.length}</p></div>
