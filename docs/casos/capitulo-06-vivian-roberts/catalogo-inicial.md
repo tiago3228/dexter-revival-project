@@ -130,3 +130,22 @@ Antes da implementação final, conferir se o dossiê cobre:
 - [ ] A cronologia com fontes e contradições.
 - [ ] Cada inferência ligada às evidências que a sustentam.
 - [ ] A distinção entre material original e conteúdo exclusivo da rota alternativa.
+
+
+## 6. Estado de proveniência e cobertura — atualização
+
+O catálogo deve ser lido junto com os seguintes documentos de controle:
+
+- [Matriz preliminar de pistas — páginas 70–116](./matriz-pistas-paginas-070-116.md): IDs de trabalho e limites de cada afirmação.
+- [Grafo provisório de dependências](./grafo-dependencias-provisorio.md): caminhos de investigação candidatos, ainda não liberados para implementação.
+- [Contradições e lacunas](./contradicoes-e-lacunas.md): divergências, autoria incerta, conteúdo ausente e verificações pendentes.
+
+**Estado geral atual:** TRANSCRIÇÃO PENDENTE. A organização das páginas 1–69 contém resumos de trabalho e notas de continuidade; o lote 70–116 está baseado no OCR recebido. Nenhuma data, autoria, localização de item, relação entre personagens ou hipótese de mecanismo deve ser promovida a fato definitivo sem conferência visual.
+
+### Regras adicionais de catalogação
+
+1. Não usar o mesmo ID para dois documentos diferentes. A matriz atual reutiliza `EV-104-01` para a carta de Scott e para a referência à negativa dele sobre a morte de Vivian; corrigir a numeração após conferir se são o mesmo documento ou ocorrências distintas.
+2. Separar sempre: documento físico, conteúdo escrito, relato citado dentro dele e inferência do investigador.
+3. A presença de um personagem num local não comprova culpa nem define o que ele fez.
+4. Itens citados mas não incluídos no OCR — como a carta de ameaça mencionada na p. 100 — devem aparecer como **fonte citada, conteúdo não disponível**, não como documento transcrito.
+5. Locais e mecanismos listados na seção 2 são candidatos de catálogo; confirmar a existência e a forma de acesso na fonte antes de criar salas ou puzzles.
