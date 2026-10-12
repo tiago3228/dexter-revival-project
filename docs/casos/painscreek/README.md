@@ -9,7 +9,7 @@
 - [Registro de pistas 80–116](./registro-de-pistas-080-116.md) — catálogo de evidências, fontes, incertezas e cruzamentos pendentes.
 - [Plano de integração investigativa](./plano-integracao-investigativa.md) — matriz inicial das pistas, regras de validação e sequência segura para implementação.
 - [Revisão visual das páginas 100–107 e 111–116](./revisao-visual-paginas-100-107-111-116.md) — conferência das evidências prioritárias, limites de interpretação e pendências restantes (inclui adendo sobre 108–110).
-- [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.
+- [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.\n- [Auditoria preliminar das páginas 1–79](./auditoria-cruzamento-paginas-001-079.md) — primeira passagem por OCR, com três prováveis repetições nas páginas 49–51 e linhas documentais para cruzar com o catálogo 80–116; pendente de conferência visual final.
 
 ## Interface interativa
 - [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo usa os registros P-001–P-012 existentes e não altera o caso Painscreek já presente na tela principal.
