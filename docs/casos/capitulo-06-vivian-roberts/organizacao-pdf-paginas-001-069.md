@@ -1,7 +1,7 @@
-# Organização da extração do PDF — páginas 1–69
+# Organização da extração do PDF — páginas 1–79
 ## Capítulo de referência: The Painscreek Killing / material-base de O Caso Vivian Roberts
 
-**Escopo deste arquivo:** organizar o material que foi revisado até a página 69. A partir da página 70, a organização fica fora deste lote, conforme combinado. Este documento é um catálogo de trabalho e não substitui a transcrição literal conferida nas imagens.
+**Escopo deste arquivo:** organizar o material que foi revisado até a página 69. As páginas 70–79 foram organizadas em arquivo separado; as páginas 80–116 permanecem fora deste lote. Este documento é um catálogo de trabalho e não substitui a transcrição literal conferida nas imagens.
 
 ## Transcrições detalhadas/de trabalho — páginas 1–40
 
@@ -100,7 +100,21 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 | 68 | Scott termina de levar os pertences para a cabana; Trisha se preocupa com o frio e pensa em tricotar um cachecol. | Não presumir que a cabana seja o esconderijo da p. 65. |
 | 69 | Trisha questiona a oposição da mãe ao relacionamento com Scott e se Matthew também proibiu os encontros. | Frase final incompleta no OCR. |
 
-## Contradições e cuidados prioritários até a página 69
+### Páginas 70–79 — Trisha Roberts, Vivian Roberts e Wanda Tyler
+
+| Página | Registro organizado | Estado / cuidado |
+|---|---|---|
+| 70 | Trisha relata discussão entre Scott e Matthew e a pergunta sobre Vincent. | O rumor não confirma identidade ou destino. |
+| 71 | Trisha pergunta à mãe sobre Vincent e registra a demissão de Scott. | Perspectiva de Trisha; motivo da demissão não confirmado. |
+| 72 | Trisha procura Scott na cabana e questiona se há uma sala secreta. | Hipótese, não confirmação. |
+| 73–74 | Vivian registra a campanha de Charles, a relação do casal, um aborto espontâneo e pressão comercial de Edwards. | Entradas de 1972; manter separadas da cronologia de 1994. |
+| 75 | Vivian registra críticas de Andrew a Scott e suspeita que Andrew tenha contado algo sobre Sofia. | Suspeita de Vivian, não confirmação independente. |
+| 76–77 | Vivian registra evento de arrecadação, acordo com Howard Medical e conflito com Trisha sobre Scott. | Ponto de vista de Vivian. |
+| 78–79 | Wanda relata fatos familiares e expressa hostilidade contra Sofia. | Opiniões de Wanda não provam má conduta. |
+
+Transcrição de trabalho das páginas 70–79: [arquivo de transcrição](../painscreek/transcricao-paginas-070-079.md).
+
+## Contradições e cuidados prioritários até a página 79
 
 1. **Destino de Sofia:** Matthew é informado por Father Calvin de que ela partiu; Dorothy também diz que ela foi embora; Andrew, em relato registrado por Scott, diz que ela morreu num poço. Manter as fontes separadas.
 2. **Vincent/Scott:** o nome Vincent aparece na versão de Andrew; Scott depois conclui que Charles é seu pai e Trisha sua meia-irmã. Não fundir identidades sem documentação.
@@ -113,7 +127,10 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 9. **Página 61:** “Sem álibi” é anotação, não prova de culpa.
 10. **Páginas 58–62:** campos e nomes fragmentários precisam de inspeção visual.
 11. **Página 69:** não completar a frase truncada.
-12. **Escopo:** a organização detalhada deste arquivo abrange 1–69. Páginas 70–116 permanecem fora do lote de revisão atual, conforme o escopo combinado.
+12. **Vincent (páginas 70–71):** a pergunta sobre um irmão mais novo é rumor e não confirma identidade ou destino.
+13. **Cabana (página 72):** a sala secreta é hipótese de Trisha, ainda não confirmada.
+14. **Sofia (páginas 75 e 79):** as opiniões de Vivian e Wanda são fontes atribuídas, não prova independente.
+15. **Escopo:** organização atualizada até a página 79; páginas 80–116 permanecem fora deste lote.
 
 ## Checklist deste lote
 
@@ -124,7 +141,9 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 - [x] Marcar as repetições das páginas 49–51.
 - [ ] Conferir visualmente as imagens originais.
 - [ ] Produzir transcrição literal final apenas depois da conferência.
-- [ ] Não editar páginas 70–116 neste lote.
+- [x] Organizar páginas 70–79 em arquivo separado, mantendo opiniões e suspeitas atribuídas.
+- [ ] Conferir visualmente e comparar todos os lotes 1–50; cobertura anterior ainda parcial.
+- [ ] Não editar páginas 80–116 neste lote.
 
 
 ### Páginas 51–69 — duplicatas, Steven Moss e Trisha Roberts
@@ -145,4 +164,4 @@ Transcrição de trabalho das páginas 51–60: [arquivo de transcrição](../pa
 Transcrição de trabalho das páginas 61–69: [arquivo de transcrição](../painscreek/transcricao-paginas-061-069.md).  
 Notas investigativas das páginas 51–60: [arquivo de notas](../painscreek/paginas-51-60-notas-investigativas.md).
 
-**Limite:** páginas 61–69 foram registradas a partir de leitura visual com OCR auxiliar. A comparação com páginas 1–60 é parcial, pois nem todos os lotes 1–50 estão disponíveis como transcrição integral independente. Nenhum desses registros foi integrado à interface jogável ou publicado como nova versão.
+**Limite:** páginas 61–62 foram revisadas em ampliação e páginas 70–79 foram organizadas em arquivo separado. A comparação com páginas 1–60 é parcial, pois nem todos os lotes 1–50 estão disponíveis como transcrição integral independente. Nenhum desses registros foi integrado à interface jogável ou publicado como nova versão.
