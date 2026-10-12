@@ -1,5 +1,5 @@
 /**
- * Catálogo documental preliminar de Painscreek (PDF, páginas 80–116).
+ * Catálogo documental de Painscreek (PDF, páginas 80–116); o status indica revisão da fonte, não confirmação de todas as alegações.
  *
  * Este arquivo normaliza referências para implementação futura; não está conectado
  * à interface do jogo. "documented" descreve o que a fonte relata, não prova
@@ -100,9 +100,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [93, 98, 102, 103, 112, 113, 114],
     sourceType: "Diário e cartas",
     documented:
-      "O diário de Dorothy relata que Charles pediu que ela cuidasse de Sofia durante a gravidez e mantivesse o assunto em segredo; outras cartas tratam da situação de Sofia e do bebê.",
+      "A carta de Sylvia ao padre Calvin (página 93) relata que, ao chegar a Painscreek em 4 de julho de 1975, soube do colapso de Vivian após o parto de Trisha e da relação de Charles com a criada Sofia, que teve um menino. Sylvia diz que Sofia e o filho haviam desaparecido e que Magdalene organizou uma busca com ela e Patrick; a carta também menciona a morte de Magdalene após menos de dois meses de busca. Outras páginas registram o segredo e a gravidez.",
     pendingVerification:
-      "Conferir cartas parcialmente encobertas e estabelecer a cronologia completa da saída de Sofia e da criança.",
+      "A página 93 foi cotejada visualmente; as demais referências agrupadas (98, 102, 103, 112–114) ainda precisam de conferência individual para consolidar a cronologia sem duplicar fatos.",
     confidence: "high",
     status: "incomplete",
     playerInference:
@@ -114,11 +114,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [84, 92, 97],
     sourceType: "Relatório de investigação privada",
     documented:
-      "Um relatório acusa Henry Johnson de transferir fundos para uma conta offshore e estima o total em aproximadamente US$ 160.000.",
+      "A carta de Nelson & Brown, datada de 17 de fevereiro de 1993, acusa Henry Johnson de enviar transferências mensais de US$ 9.990 para uma conta offshore em nome de Jefferson Investments, Ltd. O remetente estima o total em cerca de US$ 160.000 ao longo de dezesseis meses.",
     pendingVerification:
-      "Procurar comprovantes ou fontes independentes que corroborem a acusação.",
+      "A carta foi cotejada com a página 97; localizar comprovantes ou fontes independentes que corroborem a acusação financeira.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "O relatório registra uma acusação; ela não equivale, por si só, a prova judicial ou motivo confirmado.",
   },
@@ -128,11 +128,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [85],
     sourceType: "Notícia de jornal",
     documented:
-      "A notícia relata que Henry Johnson foi encontrado morto em um veículo submerso no Lago Cherry Creek em julho de 1995.",
+      "A notícia de 13 de julho de 1995 relata que Henry Johnson foi encontrado no carro submerso no Lago Cherry Creek; o texto diz que o corpo permaneceu na água entre dez e quinze dias e que o hospital o viu pela última vez em 28 de junho.",
     pendingVerification:
-      "Cruzar a notícia com registros oficiais e outras fontes, sem presumir conexão com a alegação financeira.",
+      "A notícia foi cotejada com a página 85; buscar registros oficiais sobre causa e circunstâncias da morte, sem presumir conexão com a alegação financeira.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A notícia documenta a descoberta do corpo; causa, circunstâncias e conexões não estão confirmadas neste catálogo.",
   },
@@ -199,11 +199,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [84],
     sourceType: "Notícia de jornal",
     documented:
-      "Uma notícia datada de 21 de fevereiro de 1956 relata o fechamento do Hospital Comunitário de Painscreek após cerca de 60 anos de serviço. A matéria aponta suspeitas de desvio de fundos como possível fator, mas também descreve declínio populacional e dificuldades de atendimento.",
+      "Uma notícia de 21 de fevereiro de 1996 relata que o Hospital Comunitário de Painscreek fechou após cerca de 60 anos. O hospital teria sido inaugurado em 1936; a matéria também descreve a iniciativa de Vivian Roberts de apoiar sua renovação no início dos anos 1970 e o declínio populacional posterior.",
     pendingVerification:
-      "Conferir visualmente a data e os trechos sobre o fechamento; cruzar as alegações financeiras com os documentos de 1993 sem presumir que se trata do mesmo episódio.",
+      "A página 84 foi cotejada visualmente. Investigar a alegação financeira com fontes independentes e não presumir que ela corresponda ao relatório de 1993.",
     confidence: "medium",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A notícia oferece contexto histórico do hospital, mas não comprova por si só desvio de fundos nem ligação direta com os eventos posteriores.",
   },
@@ -213,11 +213,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [86],
     sourceType: "Notícia comemorativa",
     documented:
-      "Uma matéria datada de maio de 1993 relembra a morte de trabalhadores em um acidente na mina de carvão vinte anos antes e menciona uma ação beneficente associada à família Roberts.",
+      "Uma matéria de 3 de março de 1993 relembra um acidente de demolição na mina de carvão ocorrido vinte anos antes: seis moradores de Painscreek e outros treze de Hillsdale e Old Creek morreram. A Companhia de Mineração Roberts era dona da mina; Vivian organizou uma ação que arrecadou US$ 96.000 e, com US$ 24.000 da própria empresa, resultou em US$ 120.000 de compensação às seis famílias.",
     pendingVerification:
-      "Conferir a data exata, o número de vítimas e os valores arrecadados na imagem original; verificar se outras fontes documentam o acidente.",
-    confidence: "low",
-    status: "unverified",
+      "A página 86 foi cotejada visualmente. Os números e a data foram conferidos na imagem; buscar fontes independentes se o jogo precisar tratar o evento como fato histórico corroborado.",
+    confidence: "high",
+    status: "visually-checked",
     playerInference:
       "O texto registra memória pública e contexto comunitário; a OCR não é suficiente para fixar todos os números ou inferir relação com o caso principal.",
   },
@@ -227,11 +227,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [87],
     sourceType: "Notícia de jornal e relato de investigação",
     documented:
-      "A notícia relata que Andrew Reed foi encontrado morto após um incêndio em sua casa. O texto menciona queimaduras graves, uma possível origem do fogo relacionada a álcool derramado e relatos de que Reed havia bebido naquela noite.",
+      "Uma notícia de 7 de junho de 1995 relata que Andrew Reed, funcionário da mansão, foi encontrado morto após um incêndio em sua casa na rua Blackpine, nº 7. A causa não havia sido determinada; garrafas de bebida no local sugeriam uma hipótese acidental, e a matéria afirma que assassinato não havia sido identificado até então.",
     pendingVerification:
-      "Conferir visualmente o endereço, a data e a formulação sobre a causa do incêndio; procurar o restante da matéria e eventuais registros policiais.",
+      "A página 87 foi cotejada visualmente. Procurar registros posteriores do incêndio; não transformar a hipótese inicial em causa confirmada.",
     confidence: "medium",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A matéria contém hipóteses e relatos atribuídos a terceiros; não estabelece definitivamente a causa do incêndio nem se houve crime.",
   },
@@ -241,11 +241,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [88],
     sourceType: "Notícia de jornal sobre declaração em tribunal",
     documented:
-      "Uma notícia relata que Scott Brooks se declarou inocente da morte de Vivian Roberts e afirmou que a encontrou na floresta, mas foi embora antes do assassinato.",
+      "A notícia relata que Scott Brooks se declarou inocente no tribunal. Ele afirmou que encontrou Vivian na floresta, deixou-a viva e voltou para sua cabana, onde diz ter permanecido por dias sem saber do assassinato; estava detido e ainda não tinha fiança definida.",
     pendingVerification:
-      "Cruzar a declaração com o relatório policial da página 90 e distinguir a versão de Scott das conclusões da investigação.",
+      "A página 88 foi cotejada com o OCR; comparar a versão atribuída a Scott com o relatório policial da página 90 e distinguir alegação de conclusão judicial.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A declaração é a versão atribuída a Scott, não uma confirmação independente de seu relato nem uma conclusão sobre culpa.",
   },
@@ -255,11 +255,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [89],
     sourceType: "Carta administrativa",
     documented:
-      "Uma carta do Departamento do Xerife informa James Howard de sua transferência para Grand County, com data prevista de início em maio de 1998.",
+      "Uma carta administrativa do Departamento do Xerife do distrito de NL informa James Howard de que foi realocado para Grand County a partir de 14 de maio de 1998 e pede que se apresente ao escritório antes de 12 de maio.",
     pendingVerification:
-      "Conferir o texto integral, o nome do distrito e as datas na imagem original; procurar referências posteriores à transferência.",
+      "A página 89 foi cotejada visualmente. Procurar referências posteriores à transferência apenas se sua relevância investigativa for estabelecida.",
     confidence: "medium",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A carta registra uma mudança de lotação. Sem outras fontes, não se deve inferir que ela tenha relação com a investigação de Vivian.",
   },
@@ -269,9 +269,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [91],
     sourceType: "Carta pessoal",
     documented:
-      "Uma carta dirigida a Daniel relata melhora durante a recuperação, acompanhamento do Dr. Johnson e trabalho em tempo integral na mansão. O trecho visível menciona alucinações que teriam passado.",
+      "A carta manuscrita começa com “Querido Daniel” e relata melhora durante a recuperação, acompanhamento do Dr. Johnson, trabalho em tempo integral na mansão e o fim das alucinações. O texto termina incompleto no trecho visível da página.",
     pendingVerification:
-      "Identificar o remetente pela página completa e conferir o restante da carta; não inferir diagnóstico nem identidade apenas pelo trecho OCR.",
+      "A página 91 foi cotejada visualmente, mas não mostra assinatura nem a conclusão da carta. Identificar o remetente apenas se outra fonte o confirmar; não inferir diagnóstico ou identidade pelo conteúdo clínico.",
     confidence: "low",
     status: "incomplete",
     playerInference:
@@ -283,13 +283,56 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [92],
     sourceType: "Carta comercial",
     documented:
-      "Uma carta datada de 16 de outubro de 1973 agradece à Sra. Roberts por designar Jackson & Lewis como fornecedora do Hospital Comunitário e menciona os benefícios comerciais do contrato.",
+      "Uma carta de 16 de outubro de 1973, assinada por Eric W. Campbell em nome de Jackson & Lewis, agradece à Sra. Roberts por designar a empresa como fornecedora do Hospital Comunitário. Menciona a candidatura de Charles a prefeito, benefícios para a empresa e fundos de apoio usados em pesquisa e assistência a pacientes idosos; informa que os documentos contratuais seriam enviados em seguida.",
     pendingVerification:
-      "Confirmar visualmente a identidade completa da destinatária, os termos do contrato e se os documentos contratuais citados aparecem em outras páginas.",
-    confidence: "medium",
-    status: "unverified",
+      "A página 92 foi cotejada visualmente; a carta anuncia documentos contratuais futuros, mas esses anexos não estão presentes nesta página.",
+    confidence: "high",
+    status: "visually-checked",
     playerInference:
       "A carta documenta uma relação comercial e uma percepção sobre seus benefícios; não comprova irregularidade por si só.",
   },
 
+
+  {
+    id: "P-020",
+    title: "Laudo médico de Vivian Roberts",
+    pages: [94],
+    sourceType: "Relatório médico do Hospital Comunitário",
+    documented:
+      "O relatório assinado pelo Dr. Henry Johnson informa Charles Roberts de que Vivian estava estabilizando, não poderia mais dar à luz e precisava de seis meses de reabilitação. O médico observa que a presença de Charles a estressava e que a expectativa da mãe dele por um herdeiro homem aumentava a tensão.",
+    pendingVerification:
+      "A página 94 foi cotejada visualmente. Confirmar se outros documentos clínicos contextualizam o relatório; seu conteúdo não estabelece, por si só, causa criminal.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "O laudo documenta a avaliação escrita de Johnson e a tensão familiar descrita por ele; não permite diagnosticar retrospectivamente nem provar motivação para um crime.",
+  },
+  {
+    id: "P-021",
+    title: "Ficha de funcionário de Bernard Hopkins",
+    pages: [95],
+    sourceType: "Ficha de funcionário da mansão",
+    documented:
+      "A ficha identifica Bernard Hopkins como funcionário regular, mordomo responsável pelo gerenciamento dos funcionários e da casa. Registra nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973 e jornada de oito horas por dia, cinco dias por semana.",
+    pendingVerification:
+      "A página 95 foi cotejada visualmente. Cruzar cargo e datas com outros registros da mansão antes de atribuir relevância ao caso.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A ficha confirma a função e os dados administrativos registrados; não indica, por si só, envolvimento em eventos investigados.",
+  },
+  {
+    id: "P-022",
+    title: "Carta de despedida de Dorothy",
+    pages: [96],
+    sourceType: "Carta pessoal",
+    documented:
+      "Em carta datada de 31 de janeiro de 1996 e dirigida a Charles, Dorothy diz ter trabalhado na casa por mais de vinte anos, recorda com afeto Trisha e lamenta deixar o serviço após os acontecimentos em Painscreek, sem detalhá-los.",
+    pendingVerification:
+      "A página 96 foi cotejada visualmente. Buscar a carta completa ou outras fontes para identificar a que acontecimentos Dorothy se refere, sem preencher a lacuna por inferência.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta registra a despedida e o vínculo afetivo de Dorothy com Trisha; a referência a acontecimentos em Painscreek não explica quais foram nem demonstra culpa de alguém.",
+  },
 ];
