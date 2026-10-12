@@ -84,57 +84,129 @@ type BoardConnection = { personId: string; placeId: string };
 function InvestigationBoard({ onClose }: { onClose: () => void }) {
   const [connections, setConnections] = useState<BoardConnection[]>(() => {
     if (typeof window === "undefined") return [];
-    try { return JSON.parse(window.localStorage.getItem("vivian-investigation-board-v1") || "[]") as BoardConnection[]; }
-    catch { return []; }
+    try {
+      const saved = JSON.parse(window.localStorage.getItem("vivian-investigation-board-v1") || "[]");
+      return Array.isArray(saved) ? saved.filter((item) => item && typeof item.personId === "string" && typeof item.placeId === "string") : [];
+    } catch { return []; }
   });
   const [selectedPersonId, setSelectedPersonId] = useState<string | null>(null);
-  const [notice, setNotice] = useState("Arraste um personagem até um local para criar uma ligação. No celular, toque primeiro no personagem e depois no local.");
+  const [step, setStep] = useState<"people" | "places">("people");
+  const [placeQuery, setPlaceQuery] = useState("");
+  const [notice, setNotice] = useState("Escolha uma pessoa. Em seguida, selecione o local relacionado a ela.");
   useEffect(() => { window.localStorage.setItem("vivian-investigation-board-v1", JSON.stringify(connections)); }, [connections]);
+
+  const linkedPersonIds = new Set(connections.map((item) => item.personId));
+  const availablePeople = PEOPLE.filter((person) => !linkedPersonIds.has(person.id));
+  const selectedPerson = PEOPLE.find((person) => person.id === selectedPersonId) ?? null;
+  const filteredPlaces = PLACES.filter((place) => {
+    const search = placeQuery.trim().toLocaleLowerCase("pt-BR");
+    return !search || `${place.name} ${place.group} ${place.description}`.toLocaleLowerCase("pt-BR").includes(search);
+  });
   const addConnection = (personId: string, placeId: string) => {
     const person = PEOPLE.find((item) => item.id === personId);
     const place = PLACES.find((item) => item.id === placeId);
-    if (!person || !place) return;
-    setConnections((current) => current.some((item) => item.personId === personId && item.placeId === placeId) ? current : [...current, { personId, placeId }]);
+    if (!person || !place || connections.some((item) => item.personId === personId)) return;
+    setConnections((current) => [...current, { personId, placeId }]);
     setSelectedPersonId(null);
-    setNotice(`Ligação registrada: ${person.name} ↔ ${place.name}. Isso é uma anotação de investigação, não uma conclusão de culpa.`);
+    setPlaceQuery("");
+    setStep("people");
+    setNotice(`Ligação registrada: ${person.name} ↔ ${place.name}. A pessoa saiu da lista para você continuar com a próxima.`);
   };
+
   return (
     <main className="min-h-screen bg-[#11100e] px-3 py-5 text-[#eee9df] sm:px-7 sm:py-8">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#5c5143] pb-5">
-          <div><p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">Dexter Revival Project · Evidências conectadas</p><h1 className="mt-2 font-display text-3xl sm:text-5xl">Quadro investigativo</h1><p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Organize pessoas e locais como num quadro de investigação. As ligações ficam salvas neste navegador e podem ser removidas a qualquer momento.</p></div>
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">Dexter Revival Project · Evidências conectadas</p>
+            <h1 className="mt-2 font-display text-3xl sm:text-5xl">Quadro investigativo</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">Um passo de cada vez: escolha uma pessoa, escolha um local e continue a investigação. Suas ligações ficam salvas neste navegador.</p>
+          </div>
           <button type="button" onClick={onClose} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={16}/> Voltar ao caso</button>
         </div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4">
-          <p className="text-sm text-[#c9c1b5]">{notice}</p>
-          <div className="flex gap-2"><span className="border border-[#79664c] px-3 py-2 font-mono text-xs">{connections.length} ligações</span><button type="button" onClick={() => { setConnections([]); setNotice("Quadro limpo. Nenhuma ligação foi mantida."); }} className="border border-red-900/70 px-3 py-2 font-mono text-xs text-red-200 hover:bg-red-950/40">Limpar quadro</button></div>
+
+        <div className="mt-4 flex flex-col gap-3 border border-[#4b4439] bg-[#1b1a17] p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm leading-relaxed text-[#c9c1b5]" aria-live="polite">{notice}</p>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <span className="border border-[#79664c] px-3 py-2 font-mono text-xs">{connections.length} ligações</span>
+            <span className="border border-[#79664c] px-3 py-2 font-mono text-xs">{availablePeople.length} pessoas restantes</span>
+            <button type="button" onClick={() => { setConnections([]); setSelectedPersonId(null); setStep("people"); setNotice("Quadro limpo. Todas as pessoas voltaram para a lista."); }} className="min-h-10 border border-red-900/70 px-3 py-2 font-mono text-xs text-red-200 hover:bg-red-950/40">Limpar quadro</button>
+          </div>
         </div>
-        <div className="mt-5 grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
-          <section className="border border-[#4b4439] bg-[#191714] p-4 sm:p-5">
-            <h2 className="flex items-center gap-2 font-display text-2xl"><Users size={20} className="text-[#c4a779]"/> Personagens</h2>
-            <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">Todos os personagens já cadastrados. Arraste um cartão ou selecione-o para usar o modo de toque.</p>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
-              {PEOPLE.map((person) => <button key={person.id} type="button" draggable onDragStart={(event) => { event.dataTransfer.setData("application/vivian-person", person.id); event.dataTransfer.effectAllowed = "copy"; setSelectedPersonId(person.id); }} onClick={() => { setSelectedPersonId(person.id); setNotice(`Personagem selecionado: ${person.name}. Agora toque em um local no quadro para registrar a ligação.`); }} className={`min-h-14 border p-3 text-left transition ${selectedPersonId === person.id ? "border-[#d8b77e] bg-[#c4a779]/15" : "border-[#4b4439] bg-[#211f1b] hover:border-[#79664c]"}`}><span className="flex items-center justify-between gap-2 font-medium"><span>{person.name}</span><span className="text-[#c4a779]">⠿</span></span><span className="mt-1 block text-[10px] uppercase tracking-wider text-[#a9a092]">{person.role}</span></button>)}
-            </div>
-          </section>
-          <section className="relative overflow-hidden border border-[#4b4439] bg-[#242019] p-4 sm:p-5">
-            <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(#c4a779 0.7px, transparent 0.7px)", backgroundSize: "18px 18px" }} />
-            <div className="relative">
-              <h2 className="flex items-center gap-2 font-display text-2xl"><Network size={20} className="text-[#c4a779]"/> Locais e conexões</h2>
-              <p className="mt-2 text-xs leading-relaxed text-[#bdb5a8]">Solte personagens sobre um local. Cada ligação fica visível abaixo dele.</p>
-              <div className="mt-4 grid gap-3 md:grid-cols-2">
-                {PLACES.map((place) => {
-                  const linked = connections.filter((item) => item.placeId === place.id);
-                  return <div key={place.id} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }} onDrop={(event) => { event.preventDefault(); const personId = event.dataTransfer.getData("application/vivian-person"); if (personId) addConnection(personId, place.id); }} onClick={() => { if (selectedPersonId) addConnection(selectedPersonId, place.id); }} className={`min-h-32 cursor-pointer border p-3 transition ${selectedPersonId ? "border-dashed border-[#c4a779] hover:bg-[#c4a779]/10" : "border-[#6a5942] bg-[#171512]/90 hover:border-[#c4a779]"}`}>
-                    <div className="flex items-start gap-2"><MapPin size={16} className="mt-0.5 shrink-0 text-[#c4a779]"/><div><h3 className="font-medium">{place.name}</h3><p className="mt-1 text-[10px] uppercase tracking-wider text-[#a9a092]">{place.group}</p></div></div>
-                    {linked.length > 0 ? <div className="mt-3 space-y-2">{linked.map((link) => { const person = PEOPLE.find((item) => item.id === link.personId); return <div key={link.personId} className="flex items-center justify-between gap-2 border border-[#79664c]/70 bg-[#3a2e20]/80 px-2 py-2 text-xs"><span className="text-[#ead8b8]">● {person?.name}</span><button type="button" aria-label={`Remover ligação de ${person?.name} com ${place.name}`} onClick={(event) => { event.stopPropagation(); setConnections((current) => current.filter((item) => !(item.personId === link.personId && item.placeId === place.id))); setNotice("Ligação removida do quadro."); }} className="text-[#bdb5a8] hover:text-red-200">×</button></div>; })}</div> : <p className="mt-4 border border-dashed border-[#5c5143] px-2 py-3 text-center text-[10px] uppercase tracking-wider text-[#81796d]">Solte aqui um personagem</p>}
-                  </div>;
-                })}
+
+        {step === "people" ? (
+          <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="flex items-center gap-2 font-display text-2xl sm:text-3xl"><Users size={21} className="text-[#c4a779}"/> Escolha uma pessoa</h2>
+                <p className="mt-2 text-sm leading-relaxed text-[#a9a092]">Toque ou clique em um cartão para abrir a lista de locais. Não precisa arrastar nem procurar outra seção da página.</p>
               </div>
+              <span className="font-mono text-xs uppercase tracking-wider text-[#c4a779]">{availablePeople.length} disponíveis</span>
+            </div>
+
+            {availablePeople.length > 0 ? (
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {availablePeople.map((person) => (
+                  <button key={person.id} type="button" onClick={() => { setSelectedPersonId(person.id); setPlaceQuery(""); setStep("places"); setNotice(`Agora escolha o local relacionado a ${person.name}.`); }} className="flex min-h-[92px] items-center justify-between gap-3 border border-[#4b4439] bg-[#211f1b] p-4 text-left transition hover:border-[#c4a779] hover:bg-[#c4a779]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]">
+                    <span><span className="block font-medium leading-snug">{person.name}</span><span className="mt-2 block text-[10px] uppercase tracking-wider text-[#a9a092]">{person.role}</span></span>
+                    <span className="shrink-0 text-[#c4a779]" aria-hidden="true">→</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-5 border border-[#79664c] bg-[#211f1b] p-6 text-center">
+                <p className="font-display text-2xl">Todas as pessoas foram relacionadas</p>
+                <p className="mt-2 text-sm text-[#bdb5a8]">Você pode revisar as ligações registradas abaixo ou remover uma delas para devolver a pessoa à lista.</p>
+              </div>
+            )}
+          </section>
+        ) : (
+          <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6" aria-labelledby="place-picker-title">
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#4b4439] pb-5">
+              <div className="min-w-0">
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">Etapa 2 de 2 · Escolher local</p>
+                <h2 id="place-picker-title" className="mt-2 font-display text-2xl sm:text-3xl">Onde essa pessoa se conecta?</h2>
+                {selectedPerson && <p className="mt-2 text-sm text-[#bdb5a8]">Pessoa selecionada: <strong className="text-[#ead8b8]">{selectedPerson.name}</strong></p>}
+              </div>
+              <button type="button" onClick={() => { setSelectedPersonId(null); setStep("people"); setPlaceQuery(""); setNotice("Escolha uma pessoa para continuar."); }} className="inline-flex min-h-11 shrink-0 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={15}/> Trocar pessoa</button>
+            </div>
+            <label className="mt-5 block">
+              <span className="mb-2 block text-xs uppercase tracking-wider text-[#bdb5a8]">Buscar local</span>
+              <span className="flex items-center gap-2 border border-[#5c5143] bg-[#11100e] px-3"><FileSearch size={17} className="shrink-0 text-[#c4a779]"/><input value={placeQuery} onChange={(event) => setPlaceQuery(event.target.value)} placeholder="Digite o nome de um local..." className="min-h-12 w-full bg-transparent text-base text-[#eee9df] outline-none placeholder:text-[#81796d]" /></span>
+            </label>
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredPlaces.map((place) => (
+                <button key={place.id} type="button" onClick={() => selectedPersonId && addConnection(selectedPersonId, place.id)} className="min-h-[112px] border border-[#6a5942] bg-[#211f1b] p-4 text-left transition hover:border-[#c4a779] hover:bg-[#c4a779]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]">
+                  <span className="flex items-start gap-3"><MapPin size={18} className="mt-0.5 shrink-0 text-[#c4a779]"/><span><span className="block font-medium leading-snug">{place.name}</span><span className="mt-1 block text-[10px] uppercase tracking-wider text-[#c4a779]">{place.group}</span></span></span>
+                  <span className="mt-3 block text-xs leading-relaxed text-[#a9a092]">{place.description}</span>
+                  <span className="mt-4 flex items-center justify-end gap-2 border-t border-[#4b4439] pt-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8]">Selecionar este local <span aria-hidden="true">→</span></span>
+                </button>
+              ))}
+              {filteredPlaces.length === 0 && <p className="border border-dashed border-[#5c5143] p-5 text-sm text-[#bdb5a8] sm:col-span-2 lg:col-span-3">Nenhum local encontrado. Tente outro termo.</p>}
             </div>
           </section>
-        </div>
-        <p className="mt-4 text-xs leading-relaxed text-[#81796d]">Importante: o quadro é uma ferramenta de organização. Uma ligação entre pessoa e local, sozinha, não confirma presença na noite do crime nem culpa.</p>
+        )}
+
+        <section className="mt-5 border border-[#4b4439] bg-[#242019] p-4 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 font-display text-2xl"><Network size={20} className="text-[#c4a779}"/> Ligações registradas</h2>
+            <span className="font-mono text-xs text-[#c4a779]">{connections.length} no quadro</span>
+          </div>
+          {connections.length > 0 ? (
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {connections.map((link) => {
+                const person = PEOPLE.find((item) => item.id === link.personId);
+                const place = PLACES.find((item) => item.id === link.placeId);
+                if (!person || !place) return null;
+                return <article key={link.personId} className="border border-[#6a5942] bg-[#171512]/90 p-4">
+                  <div className="flex items-start gap-3"><Users size={17} className="mt-0.5 shrink-0 text-[#c4a779]"/><div className="min-w-0"><p className="font-medium">{person.name}</p><p className="mt-1 flex items-center gap-2 text-sm text-[#c4a779]"><MapPin size={14}/>{place.name}</p></div></div>
+                  <button type="button" onClick={() => { setConnections((current) => current.filter((item) => item.personId !== link.personId)); setNotice(`${person.name} voltou para a lista de pessoas disponíveis.`); }} className="mt-4 min-h-10 w-full border border-[#79664c] px-3 py-2 text-xs text-[#bdb5a8] hover:border-red-800 hover:text-red-200">Remover ligação e devolver pessoa à lista</button>
+                </article>;
+              })}
+            </div>
+          ) : <p className="mt-3 border border-dashed border-[#5c5143] p-5 text-sm text-[#a9a092]">As ligações que você criar aparecerão aqui para revisão.</p>}
+        </section>
+        <p className="mt-4 text-xs leading-relaxed text-[#81796d]">Importante: uma ligação entre pessoa e local é uma anotação de investigação; sozinha, não confirma presença na noite do crime nem culpa.</p>
       </div>
     </main>
   );
