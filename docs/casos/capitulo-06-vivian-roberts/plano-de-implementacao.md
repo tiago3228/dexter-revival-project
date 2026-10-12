@@ -11,7 +11,8 @@
 - [ ] Continuar a conferência ampliada, palavra por palavra, dos lotes 1–69 e 70–116; a inspeção inicial não equivale a transcrição diplomática integral.
 - [x] Organizar a transcrição recebida das páginas 1–20 com IDs de diário/entrada e notas de incerteza; ver [transcrição dos lotes 01–02](./transcricao-lotes-01-02-paginas-001-020.md).
 - [x] Organizar a transcrição recebida das páginas 21–30 com IDs de diário/entrada e notas de incerteza; ver [transcrição das páginas 21–30](./transcricao-paginas-021-030.md).
-- [ ] Conferir as transcrições das páginas 1–30 palavra por palavra contra as imagens originais; o texto recebido ainda não foi validado de forma independente.
+- [x] Preparar transcrição de trabalho das páginas 31–40 a partir das imagens, com OCR auxiliar e trechos incertos marcados; ver [transcrição das páginas 31–40](./transcricao-paginas-031-040.md).
+- [ ] Conferir as transcrições das páginas 1–40 palavra por palavra contra as imagens originais; as páginas 31–40 têm leitura visual inicial, mas alguns trechos seguem incertos.
 - [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
