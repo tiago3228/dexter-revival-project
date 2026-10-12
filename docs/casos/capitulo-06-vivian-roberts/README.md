@@ -1,12 +1,12 @@
 # Capítulo 6 — O Caso Vivian Roberts
 
-**Status:** estrutura documental em preparação; transcrição organizada das páginas 1–20 recebida, aguardando conferência visual independente palavra por palavra; lotes posteriores seguem com estados de revisão próprios.
+**Status:** estrutura documental em preparação; transcrições recebidas e organizadas para as páginas 1–30, ainda aguardando conferência visual independente palavra por palavra; lotes posteriores seguem com estados de revisão próprios.
 
 ## Objetivo
 Preparar um caso investigativo independente para Dexter Revival Project, inspirado na estrutura de exploração e descoberta de documentos de The Painscreek Killings. O capítulo existente chamado Painscreek permanece separado e não deve ser sobrescrito, renomeado ou reutilizado como se fosse este caso.
 
 ## Documentos de trabalho
-- [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md) — transcrição e notas investigativas recebidas; conferir contra as imagens antes de usar como texto final no jogo.
+- [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md) — transcrição e notas investigativas recebidas; conferir contra as imagens antes de usar como texto final no jogo.\n- [Transcrição integral — páginas 21–30](./transcricao-paginas-021-030.md) — continuação organizada em entradas identificadas; autoria e interpretações permanecem provisórias até conferência visual.
 - [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — síntese por página do lote 1–69, atualizada com o OCR recebido até a página 69.
 - [Inventário OCR — páginas 31–69](./inventario-ocr-paginas-031-069.md) — inventário do OCR enviado, com alertas de coluna, duplicatas, páginas sem texto reconhecido e afirmações que continuam sendo relatos.
 - [Inventário OCR — páginas 70–116](./recebido-ia-paginas-070-116.md) — inventário por página do texto enviado, com tipo de documento, conteúdo principal e alertas de OCR/consistência. Não substitui a transcrição literal.
@@ -40,4 +40,4 @@ Use estas etiquetas no dossiê:
 - **ILEGÍVEL / INCERTO:** leitura que não pode ser confirmada com segurança.
 
 ## Próxima etapa
-Conferir visualmente os dois lotes contra as imagens originais, completar as transcrições literais e só então consolidar o catálogo de pistas e o grafo de dependências do jogo.
+Conferir visualmente as transcrições das páginas 1–30 contra as imagens originais; em seguida continuar com as páginas 31–116, completar as transcrições literais e só então consolidar o catálogo de pistas e o grafo de dependências do jogo.
