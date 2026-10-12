@@ -1,7 +1,7 @@
 # Revisão visual — páginas prioritárias do PDF de Painscreek
 
 **Fonte conferida:** `IMAGENS DE PAINSCREEK.zip` da Biblioteca, arquivo `The Painscreek Killing.pdf`, 116 páginas.  
-**Escopo desta revisão:** páginas 100–107 e 111–116.  
+**Escopo desta revisão:** páginas 100–109 e 111–116. A página 110 também foi lida como contexto complementar.  
 **Método:** inspeção visual das páginas renderizadas e OCR auxiliar. O OCR não é tratado como transcrição definitiva; grafias e trechos ambíguos precisam ser conferidos na imagem original em resolução integral.
 
 ## Resultado por página
@@ -16,6 +16,9 @@
 | 105 | Página de registros de enfermagem de 1993. Entre as entradas, uma funcionária relata ter visto uma mulher do lado de fora da sala do Dr. Johnson após o horário de visitas; diz não ter certeza, mas que ela parecia encharcada. | A página contém um relato de mulher vista perto da sala, não o relato de uma criança perdida sendo guiada para casa. Não transferir esse conteúdo para P-009 sem conferir a página 109 citada no catálogo. |
 | 106 | Livro de segurança da mansão: entrada de 18 de março de 1994 sobre um homem encapuzado que entrou no jardim; nota de 25 de março sobre novas fitas VHS. | Evidências separadas: intrusão e gestão de fitas. Não há nesta página confirmação de que uma fita específica tenha sido destruída. |
 | 107 | Entrada de 6 de abril de 1994 informa que foi encontrado um bilhete de Magdalene Roberts pedindo que procurassem uma fita de vigilância datada de **28 de junho de 1975**; a entrada diz que a fita aparentemente nunca foi encontrada. Outra entrada identifica Samuel Green como novo segurança em 28 de maio de 1994. | P-004 é sustentada quanto ao pedido de procura e à ausência registrada. A página não estabelece quem removeu a fita nem por quê. |
+| 108 | Livro de segurança: em 4 de julho de 1994, Andrew chega bêbado à mansão por volta das 23h e Scott é chamado para levá-lo para casa; outra entrada registra a saída planejada de Tom Parker e uma festa de despedida. | Contextualiza P-011, mas não prova motivo nem relação com a crise de Andrew registrada no diário. |
+| 109 | Livro de segurança relata que Stephanie, de seis anos, se perdeu na floresta no Dia das Bruxas de 1994 e voltou duas horas depois. Ela disse que uma mulher bonita, de cabelos pretos compridos e vestido preto semelhante ao das empregadas da mansão, a encontrou e a trouxe para casa; as empregadas disseram estar trabalhando naquela noite. | Confirma a descrição central de P-009. A identidade da mulher e a discrepância dos relatos permanecem sem resolução. |
+| 110 | Livro de registro da pousada: em março de 1997 há rumores de que Steven Moss foi contratado para investigar a morte de Vivian; em abril, uma entrada diz que Matthew deixará Painscreek e menciona as mortes recentes e Scott. | Contexto narrativo e rumores registrados por um observador; não tratar o rumor como prova independente sobre quem contratou Moss. |
 | 111 | Entrada de 14 de abril de 1997: o detetive Moss interroga o narrador e menciona um incidente de 1975 como possível avanço; o narrador se pergunta se teria relação com a empregada da mansão que deixou Painscreek. | P-002 deve continuar como pista indireta e hipótese do narrador, não como conexão confirmada com Sofia. |
 | 112 | Diário de Dorothy com entradas de 1973 sobre Matthew visitar Sofia e uma conversa em que Sofia fala de não ter pais. | Contexto anterior; não concluir parentesco apenas com esta página. |
 | 113 | Diário de Dorothy, entradas de fevereiro de 1975: Charles pede que Dorothy cuide de Sofia, menciona a gravidez e pede segredo. | Apoia a existência de um segredo relacionado à gravidez; a cronologia completa exige cruzamento com as páginas seguintes. |
@@ -25,12 +28,12 @@
 
 ## Ajustes e limites
 
-1. As páginas 100–107 e 111–116 foram inspecionadas visualmente para esta revisão; isso não equivale à validação de todas as pistas do catálogo nem à transcrição diplomática completa.
-2. A entrada P-009 aponta para a página 109, que **não faz parte deste lote de conferência**. A descrição precisa continuar pendente até a inspeção direta dessa página. A página 105 não deve ser usada como substituta.
-3. As páginas 108–110 também ficaram fora do escopo desta rodada; as pistas que dependem delas não foram confirmadas aqui.
-4. O código 0318, a carta de ameaça e a fita de vigilância devem permanecer como evidências com alcance limitado: a menção a um item não equivale a ter encontrado o item nem comprova uma teoria.
+1. As páginas 100–109 e 111–116 foram inspecionadas visualmente nesta rodada; a leitura de página 110 foi complementar. Isso não equivale à transcrição diplomática completa de todas as páginas.
+2. P-009 foi conferida diretamente na página 109 e sua descrição pode ser considerada apoiada pela fonte. A identidade da mulher permanece desconhecida.
+3. As páginas 80–99 ainda precisam ser comparadas sistematicamente com o catálogo e os lotes anteriores.
+4. O código 0318, a carta de ameaça e a fita de vigilância devem permanecer como evidências de alcance limitado: a menção a um item não equivale a ter encontrado o item nem comprova uma teoria.
 5. Não foram alteradas a interface, os puzzles, o estado de salvamento ou a publicação do jogo nesta etapa.
 
 ## Próximo passo seguro
 
-Conferir visualmente as páginas 80–99 e 108–110 contra o catálogo existente, verificar duplicatas e corrigir P-009 após inspecionar a página 109. Só então conectar o catálogo a um painel isolado de evidências, sem modificar o caso Painscreek já existente nem revelar conclusões prematuras.
+Conferir visualmente as páginas 80–99 contra o catálogo existente, verificar duplicatas e ajustar o estado de revisão de P-009 para refletir a conferência visual da página 109. Só então conectar o catálogo a um painel isolado de evidências, sem modificar o caso Painscreek já existente nem revelar conclusões prematuras.
