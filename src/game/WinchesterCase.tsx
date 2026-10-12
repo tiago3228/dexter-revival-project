@@ -68,6 +68,7 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
 
   const availableEvidence = useMemo(() => EVIDENCE.filter((item) => item.act <= act), [act]);
   const actEvidence = EVIDENCE.filter((item) => item.act === act);
+  const openedEvidence = activeEvidence ? EVIDENCE.find((item) => item.id === activeEvidence) ?? null : null;
   const actFound = actEvidence.filter((item) => found.includes(item.id)).length;
   const progress = Math.round((found.length / EVIDENCE.length) * 100);
   const allHumanThreads = ["blood", "autopsy", "camera", "archive", "ledger"].every((id) => found.includes(id));
@@ -214,6 +215,36 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
           <section className="border border-white/10 bg-[#131419] p-4"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-red-400" /><h2 className="font-display text-xl">Arquivo secreto</h2></div><p className="mt-2 text-sm text-zinc-400">{secretReady?"Condições reunidas. A quarta testemunha está disponível no relatório final.":"Requer 14 evidências, os 6 depoimentos, conexões familiares e financeiras, confiança nos Winchester e zero erros."}</p></section>
         </aside>
       </div>
+      {openedEvidence && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="evidence-detail-title">
+          <button type="button" aria-label="Fechar detalhes da evidência" className="absolute inset-0 cursor-default" onClick={() => setActiveEvidence(null)} />
+          <article className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto border border-red-900/70 bg-[#101115] shadow-2xl shadow-black/60">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5 sm:p-7">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-300">Dossiê · Ato {openedEvidence.act + 1}</p>
+                <h2 id="evidence-detail-title" className="mt-2 font-display text-3xl sm:text-4xl">{openedEvidence.title}</h2>
+                <p className="mt-2 text-sm text-zinc-400">{openedEvidence.source}</p>
+              </div>
+              <button type="button" onClick={() => setActiveEvidence(null)} className="shrink-0 border border-white/15 px-3 py-2 font-mono text-xs text-zinc-300 transition hover:border-red-500 hover:text-white">Fechar ✕</button>
+            </div>
+            <div className="space-y-5 p-5 sm:p-7">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="border border-red-900/70 bg-red-950/30 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-red-200">{openedEvidence.category}</span>
+                <span className={"border px-3 py-1 font-mono text-[10px] uppercase tracking-wider " + (found.includes(openedEvidence.id) ? "border-emerald-900/70 text-emerald-300" : "border-white/15 text-zinc-400")}>{found.includes(openedEvidence.id) ? "Catalogada" : "Ainda não catalogada"}</span>
+              </div>
+              <div className="border-l-2 border-red-700 bg-white/[0.03] p-5">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">Conteúdo da evidência</p>
+                <p className="whitespace-pre-line text-base leading-8 text-zinc-200">{openedEvidence.detail}</p>
+              </div>
+              <p className="text-sm leading-6 text-zinc-400">Leia o conteúdo com atenção e compare com os outros documentos antes de tirar uma conclusão.</p>
+              <div className="flex flex-wrap justify-end gap-3 border-t border-white/10 pt-5">
+                <button type="button" onClick={() => setActiveEvidence(null)} className="min-h-11 border border-white/15 px-5 py-3 font-mono text-xs uppercase tracking-wider text-zinc-300 hover:border-white/40">Voltar aos locais</button>
+                <button type="button" onClick={() => { if (!found.includes(openedEvidence.id)) examine(openedEvidence.id); setActiveEvidence(null); }} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">{found.includes(openedEvidence.id) ? "Concluir leitura" : "Catalogar evidência"}</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      )}
     </main>
   );
 }
