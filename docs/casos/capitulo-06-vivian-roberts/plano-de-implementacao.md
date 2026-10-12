@@ -6,7 +6,7 @@
 - [x] Criar catálogo inicial de personagens, locais e tipos de evidência.
 - [x] Receber os lotes de trabalho do PDF: organização das páginas 1–69 e OCR das páginas 70–116.
 - [x] Criar inventário OCR e matriz preliminar de pistas para as páginas 70–116.
-- [ ] Conferir nomes, datas, documentos e paginação dos dois lotes contra as imagens originais.
+- [ ] Conferir nomes, datas, documentos e paginação dos dois lotes contra as imagens originais, seguindo o [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
 - [ ] Completar as transcrições literais, preservando trechos ilegíveis sem reconstrução inventada.
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
