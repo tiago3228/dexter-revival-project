@@ -4,9 +4,10 @@
 - [x] Criar área documental separada para o capítulo.
 - [x] Definir regras de proveniência e estado de revisão.
 - [x] Criar catálogo inicial de personagens, locais e tipos de evidência.
-- [x] Receber os lotes de trabalho do PDF: organização das páginas 1–69 e OCR das páginas 70–116.
+- [x] Receber os lotes de trabalho do PDF: organização das páginas 1–69, OCR das páginas 31–69 e OCR das páginas 70–116.
+- [x] Criar inventário OCR das páginas 31–69.
 - [x] Criar inventário OCR e matriz preliminar de pistas para as páginas 70–116.
-- [ ] Conferir nomes, datas, documentos e paginação dos dois lotes contra as imagens originais, seguindo o [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
+- [ ] Conferir nomes, datas, documentos e paginação dos lotes 1–69 e 70–116 contra as imagens originais, seguindo o [checklist de conferência visual](./checklist-conferencia-visual-pdf.md). O inventário 31–69 é OCR organizado, não conferência visual.
 - [ ] Completar as transcrições literais, preservando trechos ilegíveis sem reconstrução inventada.
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
