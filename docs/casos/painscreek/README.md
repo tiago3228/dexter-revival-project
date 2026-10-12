@@ -12,6 +12,7 @@
 - [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.
 - [Auditoria de cruzamento das páginas 100–116](./auditoria-cruzamento-paginas-100-116.md) — cruzamento dos registros P-001–P-034, com atenção às possíveis duplicatas e às alegações que não podem ser tratadas como fatos confirmados.
 - [Auditoria de cruzamento das páginas 51–79](./auditoria-cruzamento-paginas-051-079.md) — relações candidatas entre diários, anotações investigativas e catálogo, com separação de códigos, fotografias e relatos indiretos.
+- [Auditoria documental dos personagens](./auditoria-personagens.md) — revisão dos perfis da interface contra as fontes primárias, com estados liberados e incertezas preservadas.
 - [Auditoria preliminar das páginas 1–79](./auditoria-cruzamento-paginas-001-079.md) — OCR preliminar; duplicatas de conteúdo nas páginas 49–51 comparadas visualmente com as páginas 46–48 e confirmadas; auditoria integral ainda pendente.
 
 ## Interface interativa

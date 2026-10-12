@@ -37,6 +37,8 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 ## Pendências documentais e de integração
 
 - A auditoria integral das páginas 1–50 continua pendente. Uma tentativa de orquestrar a revisão em blocos encerrou antes de produzir relatórios; portanto, não há novos achados nem alterações no catálogo resultantes dessa tentativa.
+- A comparação visual página a página das páginas 51–79 foi concluída e registrada em `auditoria-cruzamento-paginas-051-079.md`. A transcrição de trabalho registra a omissão de texto detectada pelo OCR na p. 55, o plural impresso “Sem álibis” na p. 61 e a contradição cronológica interna da p. 56. A revisão de p. 55, 59 e 61 foi cruzada, respectivamente, com p. 116, 86 e 95. A p. 59 também foi conferida diretamente com a imagem nesta atualização.
+- A etapa de revisão dos personagens foi concluída e registrada em `auditoria-personagens.md`: 20 perfis foram liberados com resumos restritos às fontes, Hannah e Nicole permanecem pendentes por lacunas de identificação, Scott e Sofia mantêm contradições abertas, e o placeholder coletivo sem identidade individual foi removido.
 - A auditoria completa de `P-001` a `P-034` ainda precisa verificar fidelidade a cada fonte, classificação do tipo de documento, grau de confiança, estado de revisão, duplicatas e referências cruzadas.
 - A relação entre a página 55 (relato de Scott sobre uma fotografia) e a página 116 (fotografia mencionada no diário) permanece sem confirmação de identidade.
 - Permanecem pendentes as divergências cronológicas e os cruzamentos documentados em `auditoria-cruzamento-paginas-051-079.md`, inclusive o grau de correspondência entre as páginas 59 e 86 e entre as páginas 61 e 95.
@@ -46,6 +48,7 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 ## Limites de interpretação
 
 - Alegações, relatos de personagens, opiniões, inferências e fatos documentados devem continuar identificados separadamente.
+- O status `Confirmado na fonte` se aplica ao resumo restrito exibido para a pessoa, não valida automaticamente todos os relatos ou acusações das páginas citadas.
 - Uma suspeita, uma ausência de álibi, um motivo aparente ou uma coincidência temporal não constituem prova de autoria ou causalidade.
 - Uma duplicata não conta como confirmação independente. Trechos ilegíveis ou incompletos devem permanecer assinalados, sem preenchimento por suposição.
 - Status `visually-checked` indica apenas que houve cotejo com a imagem da página; não confirma automaticamente a verdade das alegações nela contidas.
