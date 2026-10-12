@@ -39,17 +39,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/mapas' | '/linha-do-tempo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
+  to: '/' | '/mapas' | '/linha-do-tempo'
   id: '__root__' | '/' | '/mapas' | '/linha-do-tempo'
   fileRoutesById: FileRoutesById
 }
