@@ -74,9 +74,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Uma nota atribuída a Magdalene pede a localização de uma fita de vigilância de 28 de junho de 1975; o registro informa que ela não foi encontrada.",
     pendingVerification:
-      "Cruzar inventários e referências posteriores sem presumir que a fita foi destruída ou escondida.",
+      "As páginas 106–107 foram conferidas visualmente. Cruzar inventários e referências posteriores sem presumir que a fita foi destruída ou escondida.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A ausência está registrada; a causa e a responsabilidade pela ausência permanecem desconhecidas.",
   },
@@ -158,9 +158,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que tenha matado Vivian. Na carta a Trisha (p. 104), Scott também afirma que não matou Vivian e associa sua descoberta sobre os pais biológicos à oposição do padre Matthew ao relacionamento entre eles.",
     pendingVerification:
-      "As páginas 104 foi cotejada visualmente; separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico, e não tratar a negação de Scott como prova independente.",
+      "As páginas 82–83, 90 e 104 foram cotejadas visualmente; separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico, e não tratar a negação de Scott como prova independente.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "Suspeita, testemunho indireto e negação pessoal são versões a avaliar, não uma conclusão final.",
   },
@@ -172,9 +172,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Registros atribuem a Scott ajuda a Andrew durante uma crise em 1994; em fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy.",
     pendingVerification:
-      "As páginas 104–105 foram consultadas; a carta de Scott (p. 104) foi cotejada visualmente. Confirmar a sequência dos eventos e se há alguma relação documentada entre eles; o registro de enfermagem da p. 105 precisa de transcrição mais cuidadosa.",
+      "As páginas 108, 115 e 116 foram conferidas visualmente. Confirmar a sequência dos eventos e se há alguma relação documentada entre eles; não inferir causalidade entre os episódios.",
     confidence: "high",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "A proximidade no dossiê não prova relação causal entre os eventos.",
   },
@@ -504,7 +504,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pendingVerification:
       "As páginas 115–116 foram conferidas visualmente. A identificação exata do autor dessas anotações e a fotografia emprestada ainda precisam ser confirmadas com outras páginas; não presumir que a fotografia seja uma prova específica.",
     confidence: "medium",
-    status: "incomplete",
+    status: "visually-checked",
     playerInference:
       "As anotações estabelecem uma sequência relatada sobre Andrew e o empréstimo de uma foto; a identidade da foto e sua relevância para a investigação permanecem em aberto.",
   },
