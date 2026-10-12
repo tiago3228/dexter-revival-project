@@ -210,16 +210,16 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   {
     id: "P-014",
     title: "Tragédia na mina de carvão",
-    pages: [86],
-    sourceType: "Notícia comemorativa",
+    pages: [59, 86],
+    sourceType: "Notícia comemorativa e nota biográfica",
     documented:
-      "Uma matéria de 3 de março de 1993 relembra um acidente de demolição na mina de carvão ocorrido vinte anos antes: seis moradores de Painscreek e outros treze de Hillsdale e Old Creek morreram. A Companhia de Mineração Roberts era dona da mina; Vivian organizou uma ação que arrecadou US$ 96.000 e, com US$ 24.000 da própria empresa, resultou em US$ 120.000 de compensação às seis famílias.",
+      "A matéria de 3 de março de 1993 na página 86 relembra um acidente de demolição na mina de carvão ocorrido vinte anos antes: seis moradores de Painscreek e outros treze de Hillsdale e Old Creek morreram. A Companhia de Mineração Roberts era dona da mina; Vivian organizou uma ação que arrecadou US$ 96.000 e, com US$ 24.000 da própria empresa, resultou em US$ 120.000 de compensação às seis famílias. A nota biográfica da página 59 também associa um acidente de mineração de 1973 à crise da companhia, mas serve como contexto e não confirma independentemente todos os detalhes da notícia.",
     pendingVerification:
-      "A página 86 foi cotejada visualmente. Os números e a data foram conferidos na imagem; buscar fontes independentes se o jogo precisar tratar o evento como fato histórico corroborado.",
-    confidence: "high",
-    status: "visually-checked",
+      "A página 86 foi cotejada visualmente. A página 59 menciona um acidente de mineração de 1973; a correspondência temporal e temática é plausível, mas não presumir que ambas as fontes forneçam detalhes idênticos.",
+    confidence: "medium",
+    status: "incomplete",
     playerInference:
-      "O texto registra memória pública e contexto comunitário; a OCR não é suficiente para fixar todos os números ou inferir relação com o caso principal.",
+      "O texto registra memória pública e contexto comunitário. A nota biográfica da página 59 pode apontar para o mesmo acidente, mas não estabelece relação com o caso principal nem permite inferir responsabilidade criminal.",
   },
   {
     id: "P-015",
@@ -309,17 +309,17 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   },
   {
     id: "P-021",
-    title: "Ficha de funcionário de Bernard Hopkins",
-    pages: [95],
-    sourceType: "Ficha de funcionário da mansão",
+    title: "Ficha de Bernard Hopkins com anotação investigativa",
+    pages: [61, 95],
+    sourceType: "Ficha de funcionário com anotação manuscrita de investigação",
     documented:
-      "A ficha identifica Bernard Hopkins como funcionário regular, mordomo responsável pelo gerenciamento dos funcionários e da casa. Registra nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973 e jornada de oito horas por dia, cinco dias por semana.",
+      "A ficha administrativa identifica Bernard Hopkins como mordomo, registra seu nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973, jornada de trabalho e endereço na Avenida Silverlake, n.º 31. A página 61 mostra anotações investigativas sobre a morte do pai em acidente na mina e a afirmação de que Bernard estava em casa na noite da morte de Vivian, acompanhada da nota 'Sem álibi'.",
     pendingVerification:
-      "A página 95 foi cotejada visualmente. Cruzar cargo e datas com outros registros da mansão antes de atribuir relevância ao caso.",
-    confidence: "high",
-    status: "visually-checked",
+      "A página 95 foi cotejada visualmente e a página 61 apresenta escrita manuscrita parcialmente encoberta pelo texto impresso. A correspondência do nome e endereço sustenta que se trata da mesma ficha; preservar separadamente os campos impressos e as notas do investigador. A expressão 'Sem álibi' é uma anotação, não prova de envolvimento.",
+    confidence: "medium",
+    status: "incomplete",
     playerInference:
-      "A ficha confirma a função e os dados administrativos registrados; não indica, por si só, envolvimento em eventos investigados.",
+      "O registro permite relacionar a ficha administrativa à linha investigativa, mas não demonstra que Bernard tenha participado da morte de Vivian. A anotação não deve ser apresentada como conclusão policial confirmada.",
   },
   {
     id: "P-022",
