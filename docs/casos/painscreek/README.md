@@ -8,6 +8,7 @@
 - [Cronologia documental 80–116](./cronologia-documental-080-116.md) — eventos organizados por data, com páginas de origem e questões em aberto.
 - [Registro de pistas 80–116](./registro-de-pistas-080-116.md) — catálogo de evidências, fontes, incertezas e cruzamentos pendentes.
 - [Plano de integração investigativa](./plano-integracao-investigativa.md) — matriz inicial das pistas, regras de validação e sequência segura para implementação.
+- [Revisão visual das páginas 100–107 e 111–116](./revisao-visual-paginas-100-107-111-116.md) — conferência das evidências prioritárias, limites de interpretação e pendências restantes.
 
 ## Critérios de documentação
 1. Manter a paginação conforme o PDF de origem.
