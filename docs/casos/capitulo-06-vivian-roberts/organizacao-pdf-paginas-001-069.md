@@ -48,72 +48,76 @@
 - Charles admite um caso amoroso, mas a identidade da outra pessoa deve ser sustentada pela fonte específica, sem inferência automática.
 - A localização física de diários e documentos não deve ser inventada quando a fonte só apresenta uma captura da interface.
 
-## Parte B — páginas 41–69: catálogo organizado por página
+## Parte B — páginas 31–69: catálogo organizado por página
 
-### Páginas 41–52 — Scott procura saber quem foi Sofia
+O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário OCR — páginas 31–69](./inventario-ocr-paginas-031-069.md). As notas abaixo são sínteses de navegação, não transcrição literal nem conferência visual.
 
-| Página | Fonte / autoria provisória | Registro organizado | Estado / cuidado |
-|---|---|---|---|
-| 41 | Caderno, provavelmente Scott Brooks | Duas entradas de 1993 aparecem lado a lado. Uma menciona o Dia dos Namorados, uma saída de caça com Charles e desconforto de Scott por estar com o pai de Trisha. | Data e trechos ilegíveis no OCR; transcrição pendente. |
-| 42 | Scott Brooks | 22/06/1993: discussão com Father Matthew e frustração por ele não explicar o passado de Scott. 31/07/1993: Scott nota que Matthew evita perguntas sobre os pais biológicos e só fala da igreja. | Resumo de trabalho; conferir o original. |
-| 43 | Scott Brooks | 02/09/1993: Scott deixa a igreja e Charles permite que ele fique na cabana em troca de trabalho de jardinagem. 03/11/1993: Andrew aparece bêbado e murmura nomes que Scott não reconhece; talvez mencione Magdalene. | A referência a Magdalene é incerta. |
-| 44 | Scott Brooks | 07/11/1993: Scott visita o orfanato, descobre que Father Calvin o levou para lá e vê que o registro o associa a Painscreek; não encontra registro hospitalar relevante. 16/11/1993: procura informações no quarto de Matthew sem encontrar algo útil. | Resumo de trabalho. |
-| 45 | Scott Brooks | 20/11/1993: Andrew, bêbado, repete “Sinto muito, Sofia”. Scott começa a perguntar quem é Sofia. | Fala atribuída a Andrew por Scott. |
-| 46 | Scott Brooks | 30/11/1993: Andrew nega conhecer Sofia após reagir com raiva ao nome. 02/12/1993: Wanda diz que Sofia trabalhou na mansão e foi mandada embora; descreve-a como manipuladora. | A avaliação de Wanda é opinião, não prova. |
-| 47 | Scott Brooks | 08/12/1993: Derrick parece evitar conversa sobre Sofia. 13/12/1993: Bernard diz que não a conhecia bem, mas sua reação deixa Scott desconfortável. | Interpretação subjetiva de Scott. |
-| 48 | Scott Brooks | 18/12/1993: Dorothy diz que Sofia era sua amiga e teve um caso com Charles enquanto Vivian estava internada; depois Sofia deixou Painscreek e não houve notícias. Dorothy especula que ela possa ter começado outra vida. | Testemunho de Dorothy; não confirma o destino de Sofia. |
-| 49 | Captura duplicada | Repete parcialmente conteúdo sobre Sofia já apresentado nas páginas anteriores. | Duplicata; não contar como novo acontecimento. |
-| 50 | Captura duplicada | Repete parcialmente conteúdo sobre Sofia já apresentado nas páginas anteriores. | Duplicata; não contar como novo acontecimento. |
-| 51 | Captura duplicada | Repete parcialmente conteúdo sobre Sofia já apresentado nas páginas anteriores. | Duplicata; não contar como novo acontecimento. |
-| 52 | Scott Brooks | 14/02/1994: Trisha dá chocolate a Scott; ele ainda não terminou a caixa de música que pretendia dar a ela. 18/02/1994: Scott evita Matthew após a missa e reconhece que deveria reconciliar-se com ele. | Resumo de trabalho; conferir texto original. |
+### Páginas 31–42 — Matthew Brooks e Scott Brooks
 
-### Páginas 53–62 — Andrew conta sua versão; notas de investigação
+| Página | Registro organizado | Estado / cuidado |
+|---|---|---|
+| 31–32 | Entradas atribuídas a Matthew Brooks em setembro e dezembro de 1975: Father Calvin diz que Sofia deixou Painscreek; Matthew questiona a partida e depois tenta seguir em frente. | OCR de duas colunas; trechos truncados; autoria e datas pendentes de conferência visual. |
+| 33–34 | Entradas de 1995: Matthew ouve de Scott que Sofia pode estar morta, visita o túmulo descrito como cruz de madeira sem nome e sente suspeitas sobre Vivian, Henry e Andrew; pretende fazer Andrew confessar. | Suspeitas e intenção do narrador, não prova. |
+| 35–40 | Diário de Scott sobre chegada ao orfanato/lar de Matthew, adoção do sobrenome Brooks, bullying, amizade com Trisha, admiração por Charles, relação com Derrick e interesse numa possível sala secreta da mansão. | Há palavras corrompidas; a pergunta sobre sala secreta não comprova sua existência. |
+| 41–42 | Scott relata caça com Charles, dúvidas sobre por que Matthew o proibiria de ficar com Trisha e frustração com as respostas evasivas sobre os pais biológicos. | Datas visíveis 14/02/1993, 18/06/1993, 22/06/1993 e 31/07/1993; conferir colunas e trechos truncados. |
+| 43 | Nenhum texto reconhecido pelo OCR. | Conferir imagem; não usar resumo antigo como transcrição confirmada. |
 
-| Página | Fonte / autoria provisória | Registro organizado | Estado / cuidado |
-|---|---|---|---|
-| 53 | Scott Brooks | 19/04/1994: Scott percebe que Andrew deixou de aparecer para cuidar do jardim. 23/09/1994: encontra Andrew inconsciente com um frasco vazio de comprimidos para dormir; uma enfermeira diz que seria a terceira tentativa de suicídio. | A fala da enfermeira é relato; a conclusão de Scott de que Andrew precisa de um amigo é interpretação. |
-| 54 | Scott Brooks relatando conversa com Andrew, 28/09/1994 | No hospital, Andrew conta sua versão: Sofia teria tido um caso com Charles e um filho; em 26/06/1975, às 23h, Vivian, Dr. Johnson e Andrew a confrontaram. Andrew diz que Sofia caiu em um poço, morreu e que Vivian pediu que ele cuidasse do corpo e do bebê. Andrew afirma que o bebê se chamava Vincent. | **Relato indireto de Andrew, não confirmação independente.** |
-| 55 | Scott Brooks | 13/02/1995: Scott vê uma fotografia e reconhece o mesmo cobertor, concluindo que descobriu quem é seu pai e que é o bebê que Andrew entregou a Father Calvin. 07/03/1995: pergunta a Andrew onde esconderam o corpo de sua mãe; Andrew chora e pede que pare. | A identidade do bebê é conclusão de Scott; conferir qual evidência aparece na fotografia. |
-| 56 | Scott Brooks | 13/04/1995: Andrew vai à cabana e revela onde o corpo teria sido escondido. 04/04/1995: Scott encontra um poço seco e enlameado, encontra o corpo que acredita ser o de sua mãe e o enterra no cemitério ao lado de Father Calvin, com uma cruz de madeira. | **As datas aparecem fora de ordem; preservá-las como impressas e registrar a contradição.** |
-| 57 | Scott Brooks | 03/05/1995: Scott se isola e evita Trisha, que o visita diariamente. 13/05/1995: Matthew o visita; Scott chora e diz que Charles é seu pai e que Trisha é sua meia-irmã. | Conclusões relatadas por Scott; a fonte de parentesco precisa ser catalogada. |
-| 58 | Steven Moss, notas de investigação, 26/03/1997 | O investigador comenta o declínio da população, partidas de moradores e que algo parece errado. Planeja entrevistar ex-funcionários da mansão e anota que Matthew parece ser responsável legal por Scott, mas decide não falar com ele ainda. | Nota de investigação, não conclusão probatória. |
-| 59 | Documento/notícia médica, autoria não confirmada | Fragmentos mencionam Trisha Roberts, o acidente da mineração de 1973, a recuperação pública da empresa de Vivian e a internação de Vivian no Hospital Comunitário de Painscreek. | OCR incompleto; não reconstruir o texto integral sem conferir a imagem. |
-| 60 | Captura/documento não identificado | O OCR reconhece apenas fragmentos numéricos. | Ilegível/incompleto; não usar como fonte factual até inspeção visual. |
-| 61 | Ficha de Bernard Hopkins, 1997 | Endereço anotado como 31 Silverlake Avenue, Painscreek, NL 28115. Uma nota menciona a morte do pai em acidente na mina e diz que Bernard estava em casa no dia da morte de Vivian, sem álibi registrado. | Ausência de álibi na ficha não prova envolvimento. |
-| 62 | Notas de Steven Moss | Aparecem “Entrevista com Dorothy” e outro nome parcialmente ilegível; Moss anota encontro com o xerife no posto às 10h em 11/05 e que ele queria mostrar documentos. | Ano e nome adicional não confirmados. |
+### Páginas 44–57 — investigação de Scott sobre Sofia
 
-### Páginas 63–69 — diário de Trisha e sua relação com Scott
+| Página | Registro organizado | Estado / cuidado |
+|---|---|---|
+| 44 | Scott visita o orfanato, descobre que Father Calvin o levou para lá e procura registro no hospital; depois invade o quarto de Matthew sem encontrar informação relevante. | OCR corrompido; ausência de registro encontrado não prova inexistência. |
+| 45 | Andrew, bêbado, balbucia “Sinto muito, Sofia”. | Fala ouvida por Scott, sem confirmação independente. |
+| 46 | Andrew reage com raiva ao nome Sofia e nega conhecê-la; Wanda diz que Sofia trabalhou na mansão e foi mandada embora, chamando-a de manipuladora. | Declarações atribuídas; avaliação de Wanda é opinião. |
+| 47 | Derrick parece evitar o assunto; Bernard diz não conhecer Sofia muito bem, mas Scott se sente desconfortável com ele. | O desconforto é interpretação subjetiva. |
+| 48 | Dorothy diz que Sofia era sua amiga, teve um caso com Charles enquanto Vivian estava internada e depois deixou Painscreek. | Testemunho de Dorothy; não confirma o destino de Sofia. |
+| 49–51 | Repetem, respectivamente, os conteúdos das páginas 46–48 sobre Andrew/Wanda, Derrick/Bernard e Dorothy/Sofia. | Duplicatas no OCR recebido; não contar como novos testemunhos independentes até confirmar visualmente. |
+| 52 | Trisha dá chocolate a Scott; ele ainda não concluiu a caixa de música. Scott também reconhece que precisa reconciliar-se com Matthew. | Duas entradas de fevereiro de 1994; transcrição pendente. |
+| 53 | Scott encontra Andrew inconsciente com frasco vazio de comprimidos para dormir; uma enfermeira diz que seria a terceira tentativa de suicídio. | Relato atribuído à enfermeira. |
+| 54 | Andrew conta a Scott uma versão em que Sofia teve um filho com Charles e morreu após cair num poço durante um confronto em 26/06/1975, às 23h; diz que Vivian pediu que ele cuidasse do corpo e do bebê chamado Vincent. | Relato indireto de Andrew, não fato confirmado; OCR mistura colunas e corta trechos. |
+| 55 | Nenhum texto reconhecido pelo OCR. | Conferir imagem original; não importar resumos prévios como se fossem confirmados por este OCR. |
+| 56 | Scott diz que Andrew revelou onde o corpo estava; em outra entrada, Scott encontra um corpo que acredita ser o de sua mãe e o enterra no cemitério junto a Father Calvin. | OCR mostra entradas em ordem 13/04 e 04/04/1995; preservar a ordem impressa e confirmar visualmente. Identificação do corpo não confirmada de forma independente. |
+| 57 | Scott se isola e depois diz a Matthew que Charles é seu pai e Trisha sua meia-irmã. | Conclusões de Scott; verificar as fontes de parentesco. |
 
-| Página | Fonte / autoria provisória | Registro organizado | Estado / cuidado |
-|---|---|---|---|
-| 63 | Trisha Roberts | 13/11/1988: Trisha considera Scott quieto e estranho e se pergunta por que os outros meninos o intimidam e por que os pais dele não o quiseram. 06/01/1989: rejeita atividades como balé e etiqueta e questiona a expectativa de ser igual à mãe. | Resumo de trabalho; conferir datas e palavras. |
-| 64 | Trisha Roberts, 03/09/1989 | Trisha sente falta do pai, que não vê há algum tempo, e pensa em chamar Dorothy de mãe. Anota o código **71** para a sala de estudo. | Trechos ao redor do código estão parcialmente ilegíveis; não inferir outras funções para o código. |
-| 65 | Trisha Roberts | 26/03/1993: Trisha sente-se confortável com Scott, que não a julga. 01/04/1993: combinam criar um esconderijo para se encontrarem em segredo. | Resumo de trabalho; não confundir o esconderijo combinado com um local já encontrado. |
-| 66 | Trisha Roberts | 03/09/1993: fica feliz porque Scott trabalha na mansão, mas teme que Andrew seja má influência. 16/09/1993: Scott está ocupado com a jardinagem e Trisha sente saudade. | A avaliação sobre Andrew é opinião de Trisha. |
-| 67 | Trisha Roberts, 01/10/1993 | A mãe contrata Oliver para ensiná-la fotografia. Trisha inicialmente o julga velho demais, mas muda de opinião depois de conversar com ele e ver suas fotografias. | Resumo de trabalho; confirmar grafia do nome e texto. |
-| 68 | Trisha Roberts, 05/10/1993 | Scott leva seus pertences para a cabana. Trisha se preocupa com o frio do inverno e pensa em tricotar um cachecol para ele. | Resumo de trabalho. |
-| 69 | Trisha Roberts, 22/05/1994 | Trisha sente que a mãe a julga e quer afastá-la de Scott; questiona quem determina o “nível” social dele e se Matthew também proibiu o relacionamento. | Resumo de trabalho; conferir texto original. |
+### Páginas 58–69 — notas de Steven Moss e diário de Trisha
+
+| Página | Registro organizado | Estado / cuidado |
+|---|---|---|
+| 58 | Steven Moss registra que a investigação é lenta, planeja visitar o Orfanato São Patrício e entrevistar antigos funcionários; evita falar com Matthew por enquanto. | Nota investigativa com trechos corrompidos; não é conclusão probatória. |
+| 59 | Fragmentos mencionam Vivian, a Companhia de Mineração Roberts, acidente na mina de 1973, Trisha e internação em 1974. | OCR severamente misturado; não reconstruir a sequência. |
+| 60 | Só aparece o fragmento “(Mansão?)”. | Documento/contexto não identificado; ilegível/incompleto. |
+| 61 | Ficha de Bernard Hopkins com endereço na Av. Silverlake, n.º 31, e anotação de que estava em casa no dia da morte de Vivian, “Sem álibi”. | Confirmar campos; ausência de álibi não prova culpa. |
+| 62 | Nota “Entrevista com Dorothy” e anotação de encontro com o xerife no posto às 10h em 11/05, que queria mostrar documentos. | Nome adicional e ano incertos. |
+| 63 | Trisha comenta que Scott é quieto e sofre bullying; depois rejeita balé e etiqueta e questiona expectativas da mãe. | Duas entradas em colunas; perspectiva pessoal. |
+| 64 | Trisha sente falta do pai, pensa em chamar Dorothy de mãe e sente que a mãe está ocupada demais. Código da sala de estudo aparece como **44871**. | Corrige a anotação anterior incompleta “71”; conferir visualmente antes de usar em puzzle. |
+| 65 | Trisha diz sentir-se à vontade com Scott; os dois combinam criar um esconderijo para encontros secretos. | A localização do esconderijo não está identificada. |
+| 66 | Trisha fica feliz por Scott trabalhar na mansão, mas teme que Andrew seja má influência; depois sente saudade porque Scott está ocupado. | Opinião de Trisha, não prova sobre Andrew. |
+| 67 | Oliver é contratado para ensinar fotografia a Trisha; ela muda de opinião sobre ele após conversar e ver suas fotos. | Confirmar grafia e texto. |
+| 68 | Scott termina de levar os pertences para a cabana; Trisha se preocupa com o frio e pensa em tricotar um cachecol. | Não presumir que a cabana seja o esconderijo da p. 65. |
+| 69 | Trisha questiona a oposição da mãe ao relacionamento com Scott e se Matthew também proibiu os encontros. | Frase final incompleta no OCR. |
 
 ## Contradições e cuidados prioritários até a página 69
 
-1. **Destino de Sofia:** Dorothy diz que ela deixou Painscreek; Andrew conta que morreu após cair em um poço. Manter as duas versões atribuídas às respectivas fontes.
-2. **Identidade de Vincent / Scott:** a identificação feita por Scott é uma conclusão narrativa; não transformar em fato confirmado sem reunir a documentação de origem e adoção.
-3. **Datas na página 56:** a entrada de 13/04/1995 aparece antes da de 04/04/1995. Não corrigir silenciosamente.
-4. **Father Matthew e Father Calvin:** não fundir as pessoas nem apagar discrepâncias sobre o passado de Scott.
-5. **Morte de Vivian:** páginas até 69 aqui organizadas não estabelecem culpado, motivação ou arma.
-6. **Bernard e outros personagens:** reações estranhas, ausência de álibi ou suspeitas do narrador não constituem prova.
-7. **Duplicatas:** páginas 49–51 não devem virar três pistas independentes.
-8. **Páginas ilegíveis:** 41, 59–60 e 62 precisam de revisão visual antes de qualquer transcrição literal ou uso como evidência jogável.
-9. **Localização física dos itens:** se a fonte não indica onde o item é encontrado no mundo do jogo, marcar “local a definir no design”; não inventar um local.
-10. **Páginas 70 em diante:** não incluídas neste lote organizado; ficam para o trabalho da outra IA, conforme combinado.
+1. **Destino de Sofia:** Matthew é informado por Father Calvin de que ela partiu; Dorothy também diz que ela foi embora; Andrew, em relato registrado por Scott, diz que ela morreu num poço. Manter as fontes separadas.
+2. **Vincent/Scott:** o nome Vincent aparece na versão de Andrew; Scott depois conclui que Charles é seu pai e Trisha sua meia-irmã. Não fundir identidades sem documentação.
+3. **Poço e corpo:** distinguir o relato de Andrew da interpretação de Scott sobre o corpo encontrado.
+4. **Father Matthew e Father Calvin:** não os fundir.
+5. **Páginas 43 e 55:** sem texto reconhecido pelo OCR; precisam de conferência visual.
+6. **Páginas 49–51:** duplicam conteúdo das páginas 46–48 no OCR recebido; não contar como novas fontes independentes.
+7. **Código da sala de estudo:** p. 64 mostra **44871**; substituir a anotação anterior “71”.
+8. **Página 54:** 26/06/1975 às 23h faz parte de um relato atribuído a Andrew, não de cronologia confirmada.
+9. **Página 61:** “Sem álibi” é anotação, não prova de culpa.
+10. **Páginas 58–62:** campos e nomes fragmentários precisam de inspeção visual.
+11. **Página 69:** não completar a frase truncada.
+12. **Escopo:** a organização detalhada deste arquivo abrange 1–69. Páginas 70–116 permanecem fora do lote de revisão atual, conforme o escopo combinado.
 
 ## Checklist deste lote
 
-- [x] Separar resumo, testemunho, suspeita e incerteza.
-- [x] Organizar páginas 41–69 individualmente.
-- [x] Marcar duplicatas e páginas com OCR ruim.
-- [x] Registrar contradições sem resolvê-las artificialmente.
-- [ ] Conferir visualmente as páginas contra o PDF original.
-- [ ] Fazer transcrição literal final das entradas que serão exibidas no jogo.
-- [ ] Recuperar/ligar a documentação completa já revisada das páginas 1–40, pois não foi localizado um arquivo independente desse lote no repositório.
-- [ ] Não editar nem reorganizar páginas 70–116 neste lote.
+- [x] Registrar o OCR fornecido para páginas 31–69 em inventário separado.
+- [x] Atualizar os resumos das páginas 41–69 com o OCR recebido.
+- [x] Corrigir o código da p. 64 para 44871.
+- [x] Sinalizar páginas 43 e 55 sem texto OCR.
+- [x] Marcar as repetições das páginas 49–51.
+- [ ] Conferir visualmente as imagens originais.
+- [ ] Produzir transcrição literal final apenas depois da conferência.
+- [ ] Não editar páginas 70–116 neste lote.
