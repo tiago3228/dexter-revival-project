@@ -110,8 +110,8 @@ function isUnlocked(placeId: PlaceId, found: ClueId[]) {
   if (placeId === "archive") return true;
   if (placeId === "mansion") return found.includes("police-report") && found.includes("scott-denial");
   if (placeId === "hospital") return found.includes("hospital-closure");
-  if (placeId === "church") return found.includes("daniel-letter");
-  if (placeId === "lake") return found.includes("henry-death");
+  if (placeId === "church") return found.includes("charles-secret") || found.includes("code-0318");
+  if (placeId === "lake") return found.includes("funds-investigation");
   return false;
 }
 
@@ -122,7 +122,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [links, setLinks] = useState<LinkId[]>(saved?.links ?? []);
   const [activePlace, setActivePlace] = useState<PlaceId>(saved?.activePlace ?? "archive");
   const [phase, setPhase] = useState<Phase>(saved?.phase ?? "explore");
-  const [timelineOrder, setTimelineOrder] = useState<string[]>(saved?.timelineOrder ?? []);
+  const [timelineOrder, setTimelineOrder] = useState<string[]>(saved?.timelineOrder.length ? saved.timelineOrder : TIMELINE.map((item) => item.id));
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
   const [notice, setNotice] = useState("Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.");
