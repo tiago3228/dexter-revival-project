@@ -34,6 +34,34 @@ const PEOPLE: Person[] = [
   { id: "unidentified", name: "Empregados e residentes não identificados", role: "Grupo de registros", note: "Adicionar indivíduos apenas quando a fonte permitir distingui-los.", status: "pendente" },
 ];
 
+const PERSON_SUMMARIES: Record<string, string> = {
+  vivian: "Esposa de Charles Roberts e figura central da família Roberts. Era conhecida pelo trabalho à frente dos negócios da família e por suas iniciativas filantrópicas em Painscreek.",
+  charles: "Marido de Vivian, pai de Trisha e antigo prefeito de Painscreek. Sua posição pública e os assuntos da família Roberts o tornam uma figura importante para entender a história da cidade.",
+  magdalene: "Mãe de Charles Roberts e matriarca da família. Suas expectativas para a família influenciaram a vida dentro da mansão.",
+  trisha: "Filha de Vivian e Charles Roberts. Cresceu ligada à família Roberts e tem relações importantes com outros jovens de Painscreek.",
+  bernard: "Mordomo da família Roberts, responsável pela equipe e pela administração da mansão. Conhecia a rotina da casa e trabalhava para os Roberts havia anos.",
+  dorothy: "Governanta e uma das funcionárias mais antigas da mansão Roberts. Por trabalhar na casa por muito tempo, conhece os hábitos da família e dos empregados.",
+  derrick: "Morador de Painscreek ligado à família Tyler. Conheceu Scott e Trisha durante a juventude e tem informações sobre o círculo social deles.",
+  sofia: "Antiga empregada da família Roberts. Seu passado em Painscreek está ligado a acontecimentos importantes da família e da história da cidade.",
+  scott: "Também conhecido como Vincent Roberts em registros ligados à sua origem. Foi criado por Father Matthew e manteve uma relação próxima com Trisha.",
+  matthew: "Padre Matthew Brooks, responsável pela criação de Scott. Vive e trabalha ligado à Trinity Church e conhece parte do passado da família.",
+  andrew: "Antigo funcionário da mansão Roberts. Seu trabalho e os registros associados a ele podem ajudar a reconstruir a rotina da casa.",
+  henry: "Dr. Henry Johnson, médico ligado ao Painscreek Community Hospital. Seus registros profissionais podem esclarecer acontecimentos do passado.",
+  moss: "Steven Moss, investigador particular contratado para apurar a morte de Vivian Roberts. Suas anotações ajudam a organizar pistas e depoimentos.",
+  james: "Personagem citado em registros relacionados ao caso. Sua identidade e seu papel precisam ser conferidos nas fontes documentais.",
+  wanda: "Wanda Tyler, mãe de Derrick e antiga funcionária ligada à mansão Roberts. Seus registros podem ajudar a esclarecer relações entre os moradores.",
+  mary: "Mary Martinez, moradora de Painscreek que aparece em relatos ligados aos acontecimentos da cidade. Suas declarações devem ser comparadas com outras fontes.",
+  oliver: "Oliver Gibson, ligado à loja de fotografia da cidade. Fotografias e registros de seu estabelecimento podem servir como evidências.",
+  rachel: "Sister Rachel, religiosa associada à comunidade da igreja. Seu relato precisa ser comparado com os demais documentos.",
+  calvin: "Father Calvin Bennett, sacerdote ligado à Trinity Church e à comunidade local. Registros da igreja podem ajudar a entender seu papel no passado da cidade.",
+  sylvia: "Personagem mencionada nos registros disponíveis. Ainda é necessário confirmar sua identidade completa e seu vínculo com os demais.",
+  hannah: "Uma das pessoas associadas a registros sobre a cápsula do tempo da juventude em Painscreek. Os detalhes devem ser confirmados nas fontes.",
+  nicole: "Uma das pessoas associadas a registros sobre a cápsula do tempo da juventude em Painscreek. Os detalhes devem ser confirmados nas fontes.",
+  katherine: "Enfermeira ligada ao Painscreek Community Hospital. Os registros hospitalares podem ajudar a situar acontecimentos e pessoas na linha do tempo.",
+  daniel: "Pessoa mencionada em correspondências e registros. É importante confirmar a identidade e o contexto antes de estabelecer relações.",
+  unidentified: "Grupo usado para organizar referências a empregados ou residentes que ainda não puderam ser identificados individualmente nos documentos.",
+};
+
 const PLACES: Place[] = [
   { id: "mansion", name: "Roberts Mansion", group: "Residência", description: "Local principal a ser mapeado por cômodos e acessos.", status: "pendente" },
   { id: "charles-study", name: "Escritório de Charles", group: "Roberts Mansion", description: "Sub-local da mansão; documentos e mecanismo de acesso aguardam validação.", status: "pendente" },
@@ -193,8 +221,14 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">Selecionar local</p>
                 <h2 id="place-picker-title" className="mt-2 font-display text-2xl sm:text-3xl">Onde essa pessoa se conecta?</h2>
-                {selectedPerson && <p className="mt-2 text-sm text-[#bdb5a8]">Pessoa selecionada: <strong className="text-[#ead8b8]">{selectedPerson.name}</strong></p>}
-                {selectedPerson && connections.some((item) => item.personId === selectedPerson.id) && <p className="mt-1 text-xs text-[#c4a779]">Os locais já associados serão preservados; selecione outro local para acrescentar uma ligação.</p>}
+                {selectedPerson && (
+                  <div className="mt-3 max-w-2xl border border-[#79664c]/70 bg-[#211f1b] p-3 sm:p-4">
+                    <p className="text-sm text-[#bdb5a8]">Pessoa selecionada: <strong className="text-[#ead8b8]">{selectedPerson.name}</strong></p>
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#c4a779]">Lembrete do personagem</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#d2c9bb]">{PERSON_SUMMARIES[selectedPerson.id] ?? selectedPerson.note}</p>
+                  </div>
+                )}
+                {selectedPerson && connections.some((item) => item.personId === selectedPerson.id) && <p className="mt-2 text-xs text-[#c4a779]">Os locais já associados serão preservados; selecione outro local para acrescentar uma ligação.</p>}
               </div>
               <button type="button" onClick={() => { setSelectedPersonId(null); setStep("people"); setPlaceQuery(""); setNotice("Escolha uma pessoa ou adicione um local a alguém que já aparece nas ligações registradas."); }} className="inline-flex min-h-11 shrink-0 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"><ArrowLeft size={15}/> Voltar</button>
             </div>
