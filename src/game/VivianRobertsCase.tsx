@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X, Volume2, VolumeX, ClipboardList, Network, Clock3 } from "lucide-react";
+import { VivianInvestigationGame } from "./VivianInvestigationGame";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -300,6 +301,7 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
  */
 export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound, musicVolume = 0.3, onMusicVolumeChange }: { onBack?: () => void; soundOn?: boolean; onToggleSound?: () => void; musicVolume?: number; onMusicVolumeChange?: (value: number) => void }) {
   const [showBoard, setShowBoard] = useState(false);
+  const [showPlayableGame, setShowPlayableGame] = useState(false);
   const [ambientOn, setAmbientOn] = useState(true);
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.22;
@@ -377,6 +379,8 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound, music
   const filteredDocuments = useMemo(() => DOCUMENTS.filter((d) => `${d.title} ${d.type} ${d.location}`.toLowerCase().includes(query.toLowerCase())), [query]);
   const closeDetail = () => { setSelectedPerson(null); setSelectedPlace(null); setSelectedDocument(null); };
 
+  if (showPlayableGame) return <VivianInvestigationGame onBack={() => setShowPlayableGame(false)} />;
+
   if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
   return (
@@ -425,7 +429,7 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound, music
 
 
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramentas de investigação</p><p className="mt-1 text-sm text-[#bdb5a8]">Organize conexões entre personagens e consulte os mapas do caso.</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button><Link to="/mapas" onClick={() => { try { window.sessionStorage.setItem("dexter-return-to-vivian-case", "true"); } catch {} }} className="inline-flex min-h-12 items-center gap-2 border border-[#a5a78d] bg-[#a5a78d]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#d9dbc9] transition hover:bg-[#a5a78d]/20"><MapPin size={17}/> Mapa</Link><Link to="/linha-do-tempo" onClick={() => { try { window.sessionStorage.setItem("dexter-return-to-vivian-case", "true"); } catch {} }} className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"><Clock3 size={17}/> Linha do tempo</Link></div></div>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramentas de investigação</p><p className="mt-1 text-sm text-[#bdb5a8]">Organize conexões entre personagens e consulte os mapas do caso.</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setShowPlayableGame(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><FileSearch size={17}/> Iniciar investigação</button><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button><Link to="/mapas" onClick={() => { try { window.sessionStorage.setItem("dexter-return-to-vivian-case", "true"); } catch {} }} className="inline-flex min-h-12 items-center gap-2 border border-[#a5a78d] bg-[#a5a78d]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#d9dbc9] transition hover:bg-[#a5a78d]/20"><MapPin size={17}/> Mapa</Link><Link to="/linha-do-tempo" onClick={() => { try { window.sessionStorage.setItem("dexter-return-to-vivian-case", "true"); } catch {} }} className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"><Clock3 size={17}/> Linha do tempo</Link></div></div>
         <section className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><Users className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Personagens catalogados</p><p className="mt-1 text-3xl">{PEOPLE.length}</p></div>
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><MapPin className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Locais para revisar</p><p className="mt-1 text-3xl">{PLACES.length}</p></div>
