@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X, Volume2, VolumeX, ClipboardList, Network } from "lucide-react";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
@@ -424,7 +425,7 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound, music
 
 
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramenta de dedução</p><p className="mt-1 text-sm text-[#bdb5a8]">Arraste personagens para locais e registre conexões que deseja investigar.</p></div><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button></div>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramentas de investigação</p><p className="mt-1 text-sm text-[#bdb5a8]">Organize conexões entre personagens e consulte os mapas do caso.</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button><Link to="/mapas" className="inline-flex min-h-12 items-center gap-2 border border-[#a5a78d] bg-[#a5a78d]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#d9dbc9] transition hover:bg-[#a5a78d]/20"><MapPin size={17}/> Mapa</Link></div></div>
         <section className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><Users className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Personagens catalogados</p><p className="mt-1 text-3xl">{PEOPLE.length}</p></div>
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><MapPin className="mb-3 text-[#c4a779]" /><p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">Locais para revisar</p><p className="mt-1 text-3xl">{PLACES.length}</p></div>
