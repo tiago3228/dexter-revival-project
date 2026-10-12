@@ -210,7 +210,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setLinks([]);
     setActivePlace("archive");
     setPhase("explore");
-    setTimelineOrder([]);
+    setTimelineOrder(TIMELINE.map((item) => item.id));
     setReportSubmitted(false);
     setChosenConclusion("");
     setSelectedClues([]);
