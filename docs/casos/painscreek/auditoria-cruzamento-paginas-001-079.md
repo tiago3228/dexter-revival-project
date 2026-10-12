@@ -1,16 +1,16 @@
 # Auditoria preliminar de cruzamento — páginas 1–79
 
-**Estado:** primeira passagem por OCR, ainda sujeita a conferência visual. O PDF original tem 116 páginas digitalizadas como imagem. Esta auditoria registra correspondências claras e linhas de investigação; não substitui a revisão página a página em resolução legível.
+**Estado:** auditoria preliminar com conferência visual específica das páginas 46–51. O PDF original tem 116 páginas digitalizadas como imagem. Os três pares descritos abaixo foram comparados visualmente; as demais correspondências e linhas de investigação continuam sujeitas a revisão.
 
-## Duplicatas identificadas com alta confiança na primeira passagem
+## Duplicatas confirmadas por comparação visual
 
 | Página | Correspondência | Base da comparação | Decisão |
 |---|---|---|---|
-| 49 | Página 46 | O OCR mostra a mesma entrada do diário de Scott datada de 30 de novembro de 1993: pergunta a Andrew sobre Sofia e recebe uma reação evasiva. | Tratar como provável duplicata visual; confirmar alinhamento/layout antes de eliminar qualquer referência. |
-| 50 | Página 47 | O OCR mostra a mesma entrada de 8 de dezembro de 1993, na qual Scott pergunta a Derrick sobre Sofia. | Tratar como provável duplicata visual; não criar pista independente. |
-| 51 | Página 48 | O OCR mostra a entrada de 18 de dezembro de 1993, em que Scott pergunta a Dorothy sobre Sofia; o conteúdo inicial coincide. | Provável repetição do mesmo documento. Conferir imagem completa e limites da entrada. |
+| 49 | Página 46 | Comparação visual das duas imagens: mesmas entradas do diário de Scott, datadas de 30 de novembro e 2 de dezembro de 1993, incluindo a conversa com Andrew e Wanda sobre Sofia. Diferenças no OCR são ruído de reconhecimento. | Duplicata de conteúdo confirmada; manter a referência às duas páginas para rastreabilidade. |
+| 50 | Página 47 | Comparação visual: mesma entrada de 8 de dezembro de 1993 sobre Derrick e Sofia, seguida pela entrada de 13 de dezembro sobre Bernard. | Duplicata de conteúdo confirmada; não contar como pista independente. |
+| 51 | Página 48 | Comparação visual: mesma entrada de 18 de dezembro de 1993, na qual Dorothy conta a Scott sobre Sofia e o caso com Charles. O layout e o conteúdo da entrada coincidem; variações do OCR são ruído de reconhecimento. | Duplicata de conteúdo confirmada; manter ambas as referências de página. |
 
-**Nota importante:** a numeração acima é a paginação do PDF, não necessariamente a numeração impressa nos documentos retratados. A decisão final deve se basear na comparação visual das imagens, não apenas no OCR.
+**Nota importante:** a numeração acima é a paginação do PDF, não necessariamente a numeração impressa nos documentos retratados. A comparação visual confirmou a repetição de conteúdo nos três pares; nenhuma página foi apagada e as duas localizações devem permanecer registradas para rastreabilidade.
 
 ## Linhas documentais que podem cruzar com o catálogo P-001–P-012 (páginas 80–116)
 
@@ -24,11 +24,11 @@
 ## Limitações e próximos passos
 
 1. O OCR foi executado em resolução reduzida e produziu erros de nomes, datas e frases. Nenhum trecho incerto foi corrigido por inferência.
-2. Algumas páginas parecem ser reproduções de entradas já vistas em outras páginas; conferir as imagens em resolução adequada antes de consolidar a deduplicação.
+2. A comparação visual confirmou os pares 49/46, 50/47 e 51/48; a auditoria integral de todas as páginas 1–79 ainda está pendente.
 3. Cruzar cada documento candidato com as transcrições existentes e com o catálogo P-001–P-012.
 4. Manter separadas a existência de uma anotação, a alegação feita por uma personagem e qualquer conclusão investigativa.
 5. Não alterar a lógica do jogo ou adicionar novas pistas à interface com base apenas nesta auditoria preliminar.
 
 ## Resultado desta etapa
 
-A primeira passagem encontrou pelo menos três prováveis repetições no lote 46–51 (páginas 49–51 repetindo entradas já presentes nas páginas 46–48) e mapeou conjuntos de documentos que merecem comparação com as páginas 80–116. Ainda não é uma auditoria visual final.
+A conferência visual confirmou três repetições de conteúdo no lote 46–51: páginas 49–51 repetem, respectivamente, as entradas das páginas 46–48. O restante do lote 1–79 continua sendo uma auditoria preliminar; os cruzamentos com as páginas 80–116 ainda precisam de revisão.
