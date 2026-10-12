@@ -110,7 +110,7 @@ function isUnlocked(placeId: PlaceId, found: ClueId[]) {
   if (placeId === "archive") return true;
   if (placeId === "mansion") return found.includes("police-report") && found.includes("scott-denial");
   if (placeId === "hospital") return found.includes("hospital-closure");
-  if (placeId === "church") return found.includes("charles-secret") || found.includes("code-0318");
+  if (placeId === "church") return found.includes("charles-secret");
   if (placeId === "lake") return found.includes("funds-investigation");
   return false;
 }
@@ -198,9 +198,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       setNotice("Relatório bloqueado: colete ao menos 6 evidências, registre 2 conexões e verifique a cronologia.");
       return;
     }
-    setReportSubmitted(true);
     setPhase("report");
-    setNotice("Relatório provisório salvo. O sistema não declara um culpado sem que a solução seja confirmada por fontes revisadas.");
+    setNotice("Requisitos cumpridos. Escolha qual linha de investigação merece prioridade no relatório provisório.");
   };
 
   const resetSave = () => {
@@ -215,7 +214,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setReportSubmitted(false);
     setChosenConclusion("");
     setSelectedClues([]);
-    setExpandedClue(null);
     setTimelineChecked(false);
     setNotice("Investigação reiniciada. Nenhuma evidência foi mantida.");
   };
