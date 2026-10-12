@@ -1,53 +1,71 @@
-# Auditoria de cruzamento — páginas 51–79
+# Auditoria visual e cruzamento — páginas 51–79
 
-**Objetivo:** cruzar as transcrições de trabalho das páginas 51–79 com o catálogo P-001–P-034 e as auditorias existentes, registrando relações documentais sem transformar recorrência temática em confirmação independente.
+**Escopo:** cotejo página a página das imagens originais 51–79 de *The Painscreek Killing.pdf* com a transcrição consolidada enviada pelo usuário e com as transcrições de trabalho versionadas no projeto. Para resolver cruzamentos pontuais, também foram comparadas as imagens das páginas 48, 86, 95 e 116.
 
-**Limite:** este documento parte das transcrições e notas já versionadas no repositório. Não substitui a inspeção das imagens originais página por página; onde a identidade ou o conteúdo ainda é incerto, a relação é marcada como candidata.
+**Fonte:** `IMAGENSDEPAINSCREEK.zip` → `IMAGENS DE PAINSCREEK/The Painscreek Killing.pdf` (116 páginas; SHA-256 `54e1cbbd0884793ea921227e118566045d109abec2e9be9250d732ac3e28aa8e`). O ZIP tem SHA-256 `fbd1804b32542cf0cb63217493ceebaf136cda62b2011b4bf8c891966f975cb5`.
 
-## Cruzamento com o catálogo atual
+**Método e limites:** páginas 51–79 renderizadas a 180 dpi (2104 × 1487 px); p. 61 também ampliada a 360 dpi para ler a palavra impressa sob escrita manuscrita. A imagem original é a fonte de autoridade. O OCR consolidado tem erros de ordem de colunas, diacríticos e omissões; a transcrição de trabalho do repositório foi comparada separadamente. Não se reconstruíram escritas de fundo parcialmente encobertas. “Visualmente conferido” atesta apenas o cotejo com a imagem, não a veracidade das alegações nela contidas.
 
-| Página(s) | Conteúdo nas transcrições | Relação possível | Decisão editorial |
-|---|---|---|---|
-| 51 | Entrada de Scott sobre Dorothy e Sofia, já comparada visualmente com a p. 48 | Duplicata da p. 48 | Confirmar como duplicata, não criar uma segunda pista nem contar como testemunho independente. |
-| 52 | Scott registra presentes de Valentine e afastamento do padre Matthew | Contexto de relações Scott–Trisha–Matthew | Manter como contexto biográfico; não há vínculo direto demonstrado com P-001–P-034. |
-| 53 | Scott encontra Andrew inconsciente em setembro de 1994 e chama ajuda | P-011, contexto de Andrew | Não é o mesmo episódio da chegada embriagada à mansão (p. 108). Manter eventos separados e registrar a informação sobre tentativas como fala atribuída à enfermeira. |
-| 54 | Andrew conta a Scott sua versão sobre Sofia, Charles, Vivian e o bebê Vincent; menciona o confronto de 26/06/1975 | P-002, P-006; contexto de P-010 | Fonte central, mas indireta: é Andrew falando, registrado por Scott. Confrontar com cartas e diários antes de tratar a narrativa como fato. Não inferir identidade ou destino do bebê além do que a fonte relata. |
-| 55 | Scott diz reconhecer-se numa fotografia e depois confronta Andrew sobre a origem; menciona o corpo da mãe | P-005, P-006; contexto de P-002 | A fotografia é descrita como gatilho da conclusão de Scott, mas não é identificada no trecho. Não afirmar que seja a mesma fotografia emprestada em p. 116 sem prova adicional. |
-| 56 | Scott registra duas entradas sobre Andrew indicar o local do corpo e a descoberta do corpo; as datas aparecem em ordem não cronológica | P-002/P-006 como contexto | Preservar a ordem visual e a discrepância das datas. Não corrigir a cronologia silenciosamente nem tratar o diário como fonte independente dos fatos que Scott relata. |
-| 57 | Scott conta ao padre Matthew sua conclusão sobre Charles e Trisha | P-006; contexto de P-010 | É uma conclusão pessoal de Scott sobre parentesco. A entrada de Matthew na mesma data, se houver, é outra perspectiva narrativa e não deve ser fundida com esta. |
-| 58 | Notas de Steven Moss sobre a investigação e uma visita planejada ao orfanato | P-002, P-025 e P-032 como contexto | São impressões do investigador e planos de trabalho; a página não especifica qual evidência ele encontrou. Não a contar como confirmação independente do rumor da pousada. |
-| 59 | Notas biográficas de Vivian: empresa de mineração, apoio ao hospital e internação após o nascimento de Trisha | P-007, P-008, P-013, P-014, P-020 como contexto | As conexões são temáticas. Não usar esta nota biográfica como prova de desvio financeiro, causa da morte de Henry ou detalhe médico sem corroboração específica. O acidente da mina em 1973 pode ser relacionado à notícia da p. 86 apenas como hipótese de correspondência. |
-| 60 | Anotação “Sala de segurança: 025241 (Mansão?)” | Nenhum registro atual do catálogo; comparar com P-003 | Registrar o código separadamente de 0318 e 44871. A própria localização é incerta; não declarar que seja senha funcional nem que a sala exista no local sugerido. |
-| 61 | Ficha de Bernard Hopkins: endereço, anotação sobre acidente da mina e ausência de álibi | P-021; possível contexto de P-014 | P-021 já representa a ficha de funcionário da p. 95. Verificar se é a mesma pessoa/ficha antes de consolidar páginas; “sem álibi” é uma anotação, não prova de participação. |
-| 62 | Notas de Steven Moss, duas entrevistas riscadas e encontro planejado com o xerife | Contexto investigativo | Anotações riscadas não comprovam que as entrevistas ocorreram. O ano do encontro de 11/05 e a leitura de uma palavra manuscrita permanecem incertos. |
-| 63–69 | Diário de Trisha sobre Scott, relações familiares, fotografia e códigos | Contexto de P-005/P-006; código 44871 na p. 64 | Não criar pistas só por recorrência dos nomes. O código 44871 é distinto de 0318 (p. 102) e 025241 (p. 60); não presumir que os três sejam códigos equivalentes ou funcionais. |
-| 70 | Trisha relata discussão de Scott com Matthew e pergunta de Scott sobre um irmão chamado Vincent | P-006; contexto de P-002 | A pergunta sobre Vincent e a resposta de Trisha documentam uma conversa e uma reação, não confirmam por si só parentesco, existência ou destino de uma criança. |
-| 71 | Trisha pergunta à mãe sobre Vincent; depois relata que Scott foi demitido | P-006; contexto de P-002 | A reação da mãe é registrada por Trisha; o motivo da demissão não está estabelecido independentemente. Não tratar o silêncio ou a raiva como confissão. |
-| 72 | Trisha se pergunta se há uma sala secreta na cabana | Sem pista correspondente confirmada | Manter como suspeita/percepção da personagem. Não registrar sala secreta como local confirmado sem evidência espacial ou interação do jogo. |
-| 73–74 | Diário de Vivian sobre campanha, casamento, aborto espontâneo, relações comerciais | Contexto de P-007/P-020 | Contexto histórico e pessoal. Não inferir motivação criminal a partir de conflitos comerciais ou de relações familiares. |
-| 75 | Vivian critica Andrew, menciona Scott perguntando por Sofia e pede a Bernard que o observe | P-002, P-006, P-021; contexto de P-011 | É a perspectiva de Vivian sobre Andrew e Scott. Não confirma que Andrew tenha contado a Scott nem valida a avaliação de Vivian sobre a saúde mental dele. |
-| 76 | Vivian menciona evento beneficente e acordo com Howard Medical | P-007, P-013, P-019 como contexto | Não comprova desvio de fundos nem relação entre contrato e investigação financeira. Manter separados o evento, o acordo comercial e a acusação do relatório privado. |
-| 77 | Vivian registra tensão com Trisha e oposição à relação com Scott | Contexto de P-006/P-010 | Demonstra a perspectiva de Vivian sobre a relação; não estabelece sozinha a razão completa das decisões familiares. |
-| 78 | Diário de Wanda sobre Derrick e a internação de Vivian | P-012; contexto de P-020 | Cruzamento temático, não duplicata. A interpretação de Wanda sobre as expectativas de Magdalene é opinião atribuída a ela. |
-| 79 | Wanda expressa hostilidade contra Sofia | P-006/P-012 como contexto | Não é confirmação independente de que Sofia explorava a família. Registrar explicitamente como opinião hostil do narrador. |
+## Resultado por página
 
-## Duplicatas e relações que exigem atenção
+| Página | Resultado do cotejo visual | Decisão documental |
+|---|---|---|
+| 51 | Entrada de Scott de 18/12/1993 sobre Dorothy e Sofia. Conteúdo da transcrição de trabalho compatível; OCR integral embaralha linhas. Comparação direta com p. 48 confirma a mesma entrada. | Duplicata textual confirmada; manter as duas referências de página, sem contar como fonte independente. |
+| 52 | Entradas de 14 e 18/02/1994 sobre Trisha, a caixa de música e o afastamento do padre Matthew. | Transcrição de trabalho compatível; contexto biográfico, sem nova evidência criminal. |
+| 53 | Entradas de 19/04 e 23/09/1994. O comentário de que seria a terceira tentativa de Andrew é atribuído à enfermeira. | Transcrição compatível; manter a atribuição, sem tratar a contagem como verificação independente. |
+| 54 | Scott registra a versão narrada por Andrew sobre Sofia, Charles, Vivian e o bebê; o relato situa o confronto em 26/06/1975 às 23h (“11 da noite” na página). | Transcrição de trabalho compatível. É relato de Andrew registrado por Scott; não é confirmação independente do que ocorreu nem do destino da criança. |
+| 55 | A compilação OCR diz “nenhum texto reconhecido”, mas a imagem contém duas entradas legíveis: 13/02/1995, foto e descoberta de Scott sobre sua origem; 07/03/1995, conversa de Scott com Andrew sobre o corpo da mãe e o padre Calvin. A transcrição de trabalho já resumia o conteúdo. | Corrigir a afirmação de que a página estaria vazia. O texto da transcrição de trabalho foi mantido e complementado com a omissão do OCR. Scott não nomeia o pai na primeira entrada; é conclusão dele, não prova independente. |
+| 56 | Duas entradas: à esquerda, 13/04/1995, Andrew informa onde o corpo foi escondido; à direita, 04/04/1995, Scott relata encontrar e enterrar o corpo. | Preservar as datas impressas e a posição visual. Há conflito cronológico substantivo: a descoberta aparece datada nove dias antes da informação que, segundo a própria entrada, a possibilitou. Não corrigir datas nem inventar uma explicação. |
+| 57 | Entradas de 03 e 13/05/1995. Scott conta a Matthew sua conclusão sobre Charles e Trisha. | Transcrição compatível. A conclusão de Scott sobre parentesco permanece relato/conclusão pessoal; registro de outra perspectiva com a mesma data não deve ser fundido. |
+| 58 | Nota de Steven Moss de 26/03/1997 sobre o andamento da investigação e a visita planejada ao orfanato. O OCR integral desorganiza a ordem. | Transcrição de trabalho recompõe a sequência; preservar como impressões e planos de Moss, sem inferir qual evidência ele encontrou. |
+| 59 | Nota biográfica de Moss de 30/03/1997 associa a crise da Companhia de Mineração Roberts a um acidente de 1973, além de tratar da cirurgia de Vivian em 1974. | Transcrição compatível. A relação com a notícia da p. 86 é muito provável pelo ano e pela empresa, mas p. 59 não fornece o número de vítimas nem os valores citados na notícia. |
+| 60 | A anotação de interface é “Sala de segurança: 025241 (Mansão?)”. | Leitura de trabalho compatível. Manter o ponto de interrogação e não declarar que o código seja senha funcional ou confirme a localização. |
+| 61 | Nota em caderno com o nome e endereço de Bernard, seguida de texto impresso sobre o pai morto em acidente na mina, Bernard estar em casa na noite da morte de Vivian e “Sem álibis.” A ampliação confirma o plural. Há manuscrito inglês sobreposto, parcialmente encoberto. | Corrigir “Sem álibi” para “Sem álibis”. É uma nota investigativa, não prova de envolvimento. A página 95 é outro documento: ficha funcional separada, ligada a Bernard pelo nome/endereço, não a mesma folha nem corroboração independente da anotação. |
+| 62 | Notas de “Entrevista com Dorothy” e “Entrevista com Mary amanhã na Cafeteria Moon” riscadas; nota mantida planeja encontro com o xerife às 10h em 11/05. | Transcrição de trabalho compatível. Ano, motivo dos riscos e leitura exata de palavra manuscrita continuam incertos; anotações riscadas não provam entrevistas realizadas. |
+| 63 | Diário de Trisha, 13/11/1988 e 06/01/1989, sobre Scott, bullying e atividades escolares. | Transcrição de trabalho compatível; sem divergência material. |
+| 64 | Diário de Trisha, 03/08/1989, sobre sentir falta do pai e pensar em chamar Dorothy de mãe; código `44871`. | Transcrição compatível; não declarar o código como senha funcional. |
+| 65 | Diário de Trisha, 26/03 e 01/04/1993, sobre a relação com Scott e o esconderijo. | Transcrição compatível; a página não permite localizar o esconderijo com precisão. |
+| 66 | Diário de Trisha, 03 e 16/09/1993, sobre o trabalho de Scott e as tarefas de jardinagem. | Transcrição compatível; notas de fundo não foram usadas para acrescentar conteúdo. |
+| 67 | Diário de Trisha, 01/10/1993, sobre as aulas de fotografia com Oliver. | Transcrição compatível; o sobrenome de Oliver não é informado nesta página. |
+| 68 | Diário de Trisha, 05/10/1993, sobre Scott levando seus pertences para a cabana. | Transcrição compatível; sem divergência material. |
+| 69 | Entrada de 22/05/1994 de Trisha aparece em duas páginas; a continuação impressa vem na página direita. | O OCR integral desloca a continuação para o início do bloco, mas a transcrição de trabalho recompõe a leitura. Preservar a sequência: proibição de encontros, dúvida sobre a conversa da mãe com Matthew e conclusão de Trisha sobre o namoro. |
+| 70 | Entradas de 24/07 e 10/10/1994; discussão de Scott com Matthew e pergunta sobre um irmão chamado Vincent. | Transcrição compatível, apesar de erros de OCR. A pergunta e a resposta registram conversa/rumor, não confirmam parentesco. |
+| 71 | Entradas de 11 e 26/10/1994; Trisha pergunta à mãe sobre Vincent e reage à demissão de Scott. | Transcrição compatível. O motivo da demissão e a percepção de Trisha sobre quem gosta de Scott permanecem atribuídos à narradora. |
+| 72 | Entrada de 22/11/1994 sobre Scott aparecer na cabana depois de Trisha não o encontrar. | Transcrição compatível. “Sala secreta” é pergunta de Trisha, não local confirmado. |
+| 73 | Entradas de Vivian de 28/04 e 30/06/1972 sobre a candidatura de Charles e o aniversário do casal. | Transcrição compatível; sem divergência material. |
+| 74 | Entradas de Vivian de 09/08 e 13/10/1972 sobre recuperação após aborto espontâneo e pressão comercial de Edwards. | Transcrição compatível. Manter as declarações como relato de Vivian. |
+| 75 | Entradas de Vivian de 02 e 03/01/1994 sobre Andrew, Scott e a pergunta de Scott sobre Sofia. | A imagem confirma o resumo do projeto; pequenas falhas de reconhecimento do OCR não mudam o sentido. Suspeitas e avaliação sobre Andrew são de Vivian, não confirmação independente. |
+| 76 | Entradas de Vivian de 08 e 12/04/1994 sobre Oliver, evento beneficente e Howard Medical. | Transcrição compatível. A finalidade do evento é o que Vivian informa, não comprovação contábil independente. |
+| 77 | Entradas de Vivian de 14/05 e 06/07/1994 sobre afastamento de Trisha e oposição à relação com Scott. | Transcrição compatível; manter como perspectiva de Vivian. |
+| 78 | Entradas de Wanda de 03/05 e 22/08/1974 sobre Derrick e a internação de Vivian. | Transcrição compatível; atribuir a Wanda a interpretação sobre as expectativas de Magdalene. |
+| 79 | Entrada de Wanda de 09/10/1974 expressa hostilidade contra Sofia. | Transcrição compatível; opinião hostil não é prova de que Sofia explorava a família. |
 
-1. **Duplicata confirmada:** p. 51 repete a p. 48. Preservar ambas as localizações para rastreabilidade, mas não contá-las como dois documentos independentes.
-2. **P-021 / p. 61:** a ficha de Bernard da p. 61 e a ficha administrativa da p. 95 foram consolidadas no catálogo como o mesmo registro, sustentado pela correspondência de nome e endereço. P-021 agora referencia ambas as páginas e está como `incomplete`, pois as notas manuscritas da p. 61 estão parcialmente encobertas. “Sem álibi” permanece uma anotação investigativa, não prova de envolvimento.
-3. **P-014 / p. 59:** o catálogo agora inclui as páginas 59 e 86 como fontes relacionadas ao acidente de mineração de 1973. A correspondência temporal e temática é plausível, mas P-014 foi rebaixada para confiança média e revisão incompleta, pois a nota biográfica da p. 59 não confirma independentemente todos os detalhes da notícia da p. 86.
-4. **P-005 / p. 55:** Scott menciona uma fotografia que o faz reconhecer sua origem; P-005 trata de uma fotografia emprestada por Scott em 1995. Não afirmar que é o mesmo objeto sem uma referência explícita.
-5. **P-002 / p. 54 e p. 58:** o relato de Andrew e as notas de Moss são fontes diferentes e indiretas. Uma não corrobora automaticamente a outra; comparar o que cada uma afirma sobre 1975.
-6. **P-003 / p. 60 / p. 64:** 0318, 025241 e 44871 são códigos distintos em documentos diferentes. Não os agrupar como um sistema de senhas sem teste funcional ou documentação explícita.
-7. **P-006 / p. 70–71:** as conversas sobre Vincent documentam a reação dos personagens, mas não equivalem a uma certidão ou confirmação independente de parentesco.
-8. **P-012 / p. 78–79:** as entradas de Wanda ajudam a contextualizar a família Tyler e a relação com Sofia; a hostilidade de Wanda não deve ser transformada em fato sobre as intenções de Sofia.
+## Cruzamentos verificados
 
-## Próximas ações
+### Páginas 51 e 48 — duplicata
 
-- Conferir visualmente a ficha de Bernard nas páginas 61 e 95 e decidir se é o mesmo registro ou dois documentos relacionados.
-- Confrontar as datas e a descrição do acidente de mineração nas páginas 59 e 86.
-- Revisar a fotografia mencionada nas páginas 55 e 116 sem pressupor identidade do objeto.
-- Continuar a auditoria integral das páginas 1–50 com as imagens originais; os pares 46–49, 47–50 e 48–51 já foram registrados como duplicatas visuais, mas isso não significa que o lote inteiro esteja deduplicado.
-- Só depois da conferência de fonte e metadados, decidir quais pistas devem ser integradas à mecânica jogável.
+A comparação visual direta confirma que p. 51 repete a entrada de 18/12/1993 da p. 48, inclusive a conversa com Dorothy sobre Sofia e a conclusão de que ela provavelmente começou vida nova em outro lugar. As páginas são duas localizações do mesmo conteúdo, não dois testemunhos independentes.
 
-**Resultado:** este cruzamento reduz o risco de duplicação conceitual e documenta possíveis conexões; não altera a solução do caso, não confirma teorias e não representa uma nova publicação do jogo.
+### Páginas 55 e 116 — fotografia
+
+A página 55 traz uma entrada de Scott datada de 13/02/1995: ao ver uma fotografia, ele reconhece um cobertor igual e conclui que sabe quem é seu pai. Na mesma data, a p. 116 registra que Scott viu o álbum de Dorothy e pediu emprestada uma das fotografias. A coincidência de data, personagem e contexto indica com força que os registros tratam da mesma foto, mas nenhuma das páginas mostra ou identifica a imagem. A relação deve ser apresentada como **provável, não comprovada**; a identidade do objeto permanece em aberto.
+
+### Páginas 59 e 86 — acidente na mina
+
+A página 59 associa a crise da Companhia de Mineração Roberts a um acidente de mineração em 1973. A notícia memorial da p. 86, de 03/03/1993, relembra um acidente de demolição na mina de carvão da Companhia de Mineração Roberts ocorrido vinte anos antes; relata 19 mortes (seis moradores de Painscreek e treze de Hillsdale/Old Creek), arrecadação de US$ 96.000 e mais US$ 24.000 da empresa para indenização às seis famílias. É muito provável que as duas passagens se refiram ao mesmo evento, mas só p. 86 sustenta esses números. A nota da p. 61 sobre o pai de Bernard morrer em acidente na mina não informa data ou identificação suficiente para ligá-lo a esse evento.
+
+### Páginas 61 e 95 — Bernard Hopkins
+
+A p. 61 é uma nota de caderno com nome/endereço e comentários investigativos; a p. 95 é a ficha administrativa formal, com data de nascimento, função, contratação e jornada. O nome e o endereço (Av. Silverlake, n.º 31; mesmo código postal) sustentam que se trata do mesmo Bernard, mas são documentos distintos. A ficha funcional não confirma a anotação “Sem álibis” nem a afirmação sobre o pai.
+
+### Cronologia de Scott — página 56
+
+A própria p. 56 relata que Andrew informa a Scott o local do corpo em 13/04/1995 e, em outro bloco datado de 04/04/1995, Scott diz que finalmente encontrou e enterrou o corpo. Se os dois cabeçalhos se referem ao mesmo ano e a sequência textual é causal, a data da descoberta antecede a informação que supostamente a possibilitou. A imagem não fornece correção nem explicação. Preservar os cabeçalhos como impressos e assinalar a contradição em vez de trocar a data ou ordenar os eventos por inferência.
+
+## Efeito no catálogo e estado desta etapa
+
+- P-005 agora referencia também p. 55 e descreve a ligação com p. 116 como provável, não certa; o item continua incompleto quanto à identidade e ao retorno da fotografia.
+- P-021 agora distingue a nota de caderno da p. 61 da ficha administrativa da p. 95 e registra a grafia impressa “Sem álibis”; o item continua incompleto e a nota não é apresentada como prova.
+- P-014 permanece com confiança média/incompleto: a correspondência entre pp. 59 e 86 é forte, mas só a notícia memorial informa detalhes de vítimas e indenizações.
+- Nenhum novo ID P-xxx foi criado. Não houve alteração de puzzles, lógica de investigação, salvamento ou publicação.
+- A cobertura visual página a página de 51–79 está concluída. A auditoria integral do catálogo P-001–P-034 e o teste manual das rotas permanecem tarefas separadas.

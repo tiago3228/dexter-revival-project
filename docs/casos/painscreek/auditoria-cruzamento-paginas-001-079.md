@@ -1,6 +1,6 @@
 # Auditoria preliminar de cruzamento — páginas 1–79
 
-**Estado:** auditoria preliminar com conferência visual específica das páginas 46–51. O PDF original tem 116 páginas digitalizadas como imagem. Os três pares descritos abaixo foram comparados visualmente; as demais correspondências e linhas de investigação continuam sujeitas a revisão.
+**Estado:** este resumo reúne as duplicatas visuais confirmadas nas páginas 46–51 e a auditoria visual página a página das páginas 51–79, documentada em `auditoria-cruzamento-paginas-051-079.md`. Isso não representa uma nova revisão integral de todas as páginas 1–50 nem valida as alegações narradas nos documentos.
 
 ## Duplicatas confirmadas por comparação visual
 
@@ -24,11 +24,11 @@
 ## Limitações e próximos passos
 
 1. O OCR foi executado em resolução reduzida e produziu erros de nomes, datas e frases. Nenhum trecho incerto foi corrigido por inferência.
-2. A comparação visual confirmou os pares 49/46, 50/47 e 51/48; a auditoria integral de todas as páginas 1–79 ainda está pendente.
-3. Cruzar cada documento candidato com as transcrições existentes e com o catálogo P-001–P-012.
+2. As páginas 51–79 foram comparadas visualmente com o PDF e as transcrições; correções e limites estão detalhados no relatório do lote. A cobertura integral das páginas 1–50 permanece conforme os registros anteriores, sem nova inspeção de cada página neste ciclo.
+3. Prosseguir com a auditoria individual do catálogo P-001–P-034 e conferir as fontes fora do intervalo apenas nos cruzamentos documentados.
 4. Manter separadas a existência de uma anotação, a alegação feita por uma personagem e qualquer conclusão investigativa.
-5. Não alterar a lógica do jogo ou adicionar novas pistas à interface com base apenas nesta auditoria preliminar.
+5. Não alterar a lógica do jogo ou ampliar a integração de pistas com base apenas em uma relação provável ou em uma alegação sem corroboração.
 
 ## Resultado desta etapa
 
-A conferência visual confirmou três repetições de conteúdo no lote 46–51: páginas 49–51 repetem, respectivamente, as entradas das páginas 46–48. O restante do lote 1–79 continua sendo uma auditoria preliminar; os cruzamentos com as páginas 80–116 ainda precisam de revisão.
+A conferência visual confirmou três repetições de conteúdo no lote 46–51: páginas 49–51 repetem, respectivamente, as entradas das páginas 46–48. A revisão visual das páginas 51–79 também está concluída; os cruzamentos e a classificação de todos os registros do catálogo P-001–P-034 continuam sendo uma tarefa separada.
