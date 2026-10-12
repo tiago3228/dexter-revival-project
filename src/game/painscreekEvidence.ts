@@ -32,7 +32,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "O remetente anônimo afirma ter incluído uma cópia de uma carta de ameaça recebida por Vivian no dia de sua morte.",
     pendingVerification:
-      "Localizar a carta citada e verificar texto, data, remetente e destinatário.",
+      "A página 100 foi cotejada visualmente, mas a carta de ameaça anexada não aparece no documento consultado. Identificar o remetente anônimo apenas se outra fonte o confirmar.",
     confidence: "high",
     status: "incomplete",
     playerInference:
@@ -46,7 +46,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Steven Moss teria mencionado um incidente de 1975 como possível avanço. O autor do livro de registro pergunta se ele se relaciona à empregada que deixou Painscreek.",
     pendingVerification:
-      "Identificar o incidente referido e confirmar se está ligado a Sofia ou a outra pessoa.",
+      "As páginas 98–99 foram cotejadas visualmente; as demais referências agrupadas (102, 103, 111) ainda precisam de conferência individual para consolidar cronologia e identidade sem duplicar fatos.",
     confidence: "medium",
     status: "incomplete",
     playerInference:
@@ -335,4 +335,62 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     playerInference:
       "A carta registra a despedida e o vínculo afetivo de Dorothy com Trisha; a referência a acontecimentos em Painscreek não explica quais foram nem demonstra culpa de alguém.",
   },
+
+  {
+    id: "P-023",
+    title: "Conselho de Henry sobre Sofia e o bebê",
+    pages: [98],
+    sourceType: "Carta pessoal com conteúdo médico e familiar",
+    documented:
+      "Em carta datada de 18 de junho de 1975, Henry Johnson escreve a Vivian como amigo e a aconselha a fazer Sofia e o bebê deixarem Charles e Painscreek, oferecendo compensação. Ele alerta que a divulgação do caso poderia prejudicar a carreira política de Charles e menciona a possibilidade de Charles registrar o menino.",
+    pendingVerification:
+      "A página 98 foi cotejada visualmente. Comparar a carta com outros documentos sobre Sofia, o bebê e a pressão familiar; o conselho não prova que a proposta foi executada.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta evidencia o conselho dado por Henry e sua preocupação com as consequências públicas; não demonstra, isoladamente, o destino de Sofia e da criança.",
+  },
+  {
+    id: "P-024",
+    title: "Carta de Rachel Davis sobre a origem de Scott",
+    pages: [99],
+    sourceType: "Carta do orfanato São Patrício",
+    documented:
+      "Em carta datada de 2 de fevereiro de 1994, Rachel Davis escreve a Scott que ele foi levado ao orfanato pelo padre Calvin em 4 de julho de 1975, ainda bebê, e que lhe disseram que perdera os pais. Ela também relata que o padre Matthew o visitava depois de assumir a Igreja da Trindade de Painscreek e deixava dinheiro para ele e para o orfanato.",
+    pendingVerification:
+      "A página 99 foi cotejada visualmente. Os fatos sobre a chegada de Scott são relatados por Rachel; procurar registros independentes do orfanato e da adoção.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta fornece a versão de Rachel sobre a infância de Scott, mas não identifica seus pais biológicos nem confirma de forma independente as circunstâncias de sua chegada.",
+  },
+  {
+    id: "P-025",
+    title: "Contratação de Steven Moss",
+    pages: [100],
+    sourceType: "Carta de contratação de investigador particular",
+    documented:
+      "Em 13 de março de 1997, uma pessoa anônima contrata Steven Moss para investigar o assassinato de Vivian Roberts. O remetente diz que Scott foi detido como suspeito e depois solto por falta de evidências, que o caso foi arquivado como não solucionado e que incluiu uma cópia da carta de ameaça recebida por Vivian no dia de sua morte.",
+    pendingVerification:
+      "A página 100 foi cotejada visualmente. A carta de ameaça mencionada como anexo não está visível neste documento; a identidade do contratante permanece desconhecida.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta registra a versão do contratante sobre a investigação e indica um anexo ausente; não comprova, por si só, a história processual ou o conteúdo da ameaça.",
+  },
+  {
+    id: "P-026",
+    title: "Advogado aceita representar Scott",
+    pages: [101],
+    sourceType: "Carta jurídica",
+    documented:
+      "Brendan O’Mally informa ao Sr. Brooks que seu escritório aceitou representar Scott no tribunal e está preparando um recurso para sua libertação. Pede que o pai não faça declarações públicas antes de consultar os advogados e solicita cópias de documentos governamentais relacionados ao filho.",
+    pendingVerification:
+      "A página 101 foi cotejada visualmente. A carta não informa o resultado do recurso; localizar documentos judiciais posteriores se forem necessários para completar a cronologia.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "A carta confirma a contratação de representação jurídica conforme o remetente, mas não estabelece o resultado do recurso nem a culpa ou inocência de Scott.",
+  },
+
 ];
