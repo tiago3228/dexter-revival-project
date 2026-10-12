@@ -301,7 +301,7 @@ export function Game() {
 
     const track = introMusicActive
       ? aberturaAudio.url
-      : !showMenu && caseMode === "painscreek"
+      : !showMenu && (caseMode === "painscreek" || caseMode === "vivian")
         ? "/audio/painscreek/painscreek-case-theme.mp3"
         : !showMenu && caseMode === "mentalist"
           ? "/audio/mentalist/red-john-theme.mp3"
