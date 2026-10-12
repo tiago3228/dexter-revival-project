@@ -127,7 +127,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
   const [notice, setNotice] = useState("Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.");
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
-  const [expandedClue, setExpandedClue] = useState<ClueId | null>(null);
   const [timelineChecked, setTimelineChecked] = useState(false);
 
   useEffect(() => {
@@ -137,7 +136,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const currentPlace = PLACES.find((place) => place.id === activePlace)!;
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
-  const availableLinks = LINKS.filter((link) => link.clues.every((id) => found.includes(id)));
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
 
@@ -150,18 +148,15 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setVisited((items) => items.includes(place.id) ? items : [...items, place.id]);
     setPhase("explore");
     setSelectedClues([]);
-    setExpandedClue(null);
     setNotice("Local acessado. Examine os documentos disponíveis e registre o que cada fonte realmente afirma.");
   };
 
   const collectClue = (clue: Clue) => {
     if (found.includes(clue.id)) {
-      setExpandedClue(clue.id);
       setNotice("Você já catalogou esta evidência. Releia a ressalva antes de usá-la em uma conclusão.");
       return;
     }
     setFound((items) => [...items, clue.id]);
-    setExpandedClue(clue.id);
     setNotice("Evidência adicionada ao caderno: " + clue.title);
   };
 
