@@ -192,4 +192,104 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     playerInference:
       "O diário documenta a perspectiva de Wanda; a relevância para a investigação principal ainda não está estabelecida.",
   },
+
+  {
+    id: "P-013",
+    title: "Fechamento do Hospital Comunitário",
+    pages: [84],
+    sourceType: "Notícia de jornal",
+    documented:
+      "Uma notícia datada de 21 de fevereiro de 1956 relata o fechamento do Hospital Comunitário de Painscreek após cerca de 60 anos de serviço. A matéria aponta suspeitas de desvio de fundos como possível fator, mas também descreve declínio populacional e dificuldades de atendimento.",
+    pendingVerification:
+      "Conferir visualmente a data e os trechos sobre o fechamento; cruzar as alegações financeiras com os documentos de 1993 sem presumir que se trata do mesmo episódio.",
+    confidence: "medium",
+    status: "unverified",
+    playerInference:
+      "A notícia oferece contexto histórico do hospital, mas não comprova por si só desvio de fundos nem ligação direta com os eventos posteriores.",
+  },
+  {
+    id: "P-014",
+    title: "Tragédia na mina de carvão",
+    pages: [86],
+    sourceType: "Notícia comemorativa",
+    documented:
+      "Uma matéria datada de maio de 1993 relembra a morte de trabalhadores em um acidente na mina de carvão vinte anos antes e menciona uma ação beneficente associada à família Roberts.",
+    pendingVerification:
+      "Conferir a data exata, o número de vítimas e os valores arrecadados na imagem original; verificar se outras fontes documentam o acidente.",
+    confidence: "low",
+    status: "unverified",
+    playerInference:
+      "O texto registra memória pública e contexto comunitário; a OCR não é suficiente para fixar todos os números ou inferir relação com o caso principal.",
+  },
+  {
+    id: "P-015",
+    title: "Morte de Andrew Reed em incêndio",
+    pages: [87],
+    sourceType: "Notícia de jornal e relato de investigação",
+    documented:
+      "A notícia relata que Andrew Reed foi encontrado morto após um incêndio em sua casa. O texto menciona queimaduras graves, uma possível origem do fogo relacionada a álcool derramado e relatos de que Reed havia bebido naquela noite.",
+    pendingVerification:
+      "Conferir visualmente o endereço, a data e a formulação sobre a causa do incêndio; procurar o restante da matéria e eventuais registros policiais.",
+    confidence: "medium",
+    status: "unverified",
+    playerInference:
+      "A matéria contém hipóteses e relatos atribuídos a terceiros; não estabelece definitivamente a causa do incêndio nem se houve crime.",
+  },
+  {
+    id: "P-016",
+    title: "Scott declara-se inocente",
+    pages: [88],
+    sourceType: "Notícia de jornal sobre declaração em tribunal",
+    documented:
+      "Uma notícia relata que Scott Brooks se declarou inocente da morte de Vivian Roberts e afirmou que a encontrou na floresta, mas foi embora antes do assassinato.",
+    pendingVerification:
+      "Cruzar a declaração com o relatório policial da página 90 e distinguir a versão de Scott das conclusões da investigação.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "A declaração é a versão atribuída a Scott, não uma confirmação independente de seu relato nem uma conclusão sobre culpa.",
+  },
+  {
+    id: "P-017",
+    title: "Realocação do xerife James Howard",
+    pages: [89],
+    sourceType: "Carta administrativa",
+    documented:
+      "Uma carta do Departamento do Xerife informa James Howard de sua transferência para Grand County, com data prevista de início em maio de 1998.",
+    pendingVerification:
+      "Conferir o texto integral, o nome do distrito e as datas na imagem original; procurar referências posteriores à transferência.",
+    confidence: "medium",
+    status: "unverified",
+    playerInference:
+      "A carta registra uma mudança de lotação. Sem outras fontes, não se deve inferir que ela tenha relação com a investigação de Vivian.",
+  },
+  {
+    id: "P-018",
+    title: "Carta de recuperação endereçada a Daniel",
+    pages: [91],
+    sourceType: "Carta pessoal",
+    documented:
+      "Uma carta dirigida a Daniel relata melhora durante a recuperação, acompanhamento do Dr. Johnson e trabalho em tempo integral na mansão. O trecho visível menciona alucinações que teriam passado.",
+    pendingVerification:
+      "Identificar o remetente pela página completa e conferir o restante da carta; não inferir diagnóstico nem identidade apenas pelo trecho OCR.",
+    confidence: "low",
+    status: "incomplete",
+    playerInference:
+      "O fragmento é uma comunicação pessoal sobre recuperação; autoria, contexto clínico e relação com outros registros ainda precisam ser estabelecidos.",
+  },
+  {
+    id: "P-019",
+    title: "Contrato de fornecimento do hospital",
+    pages: [92],
+    sourceType: "Carta comercial",
+    documented:
+      "Uma carta datada de 16 de outubro de 1973 agradece à Sra. Roberts por designar Jackson & Lewis como fornecedora do Hospital Comunitário e menciona os benefícios comerciais do contrato.",
+    pendingVerification:
+      "Confirmar visualmente a identidade completa da destinatária, os termos do contrato e se os documentos contratuais citados aparecem em outras páginas.",
+    confidence: "medium",
+    status: "unverified",
+    playerInference:
+      "A carta documenta uma relação comercial e uma percepção sobre seus benefícios; não comprova irregularidade por si só.",
+  },
+
 ];
