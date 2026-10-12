@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, BookOpen, FileSearch, MapPin, Users, X, Volume2, VolumeX, ClipboardList, Network } from "lucide-react";
-import { CaseHeroImage } from "./CaseHeroImage";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
