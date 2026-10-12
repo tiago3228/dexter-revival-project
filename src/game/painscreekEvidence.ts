@@ -454,17 +454,17 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   },
   {
     id: "P-031",
-    title: "Desaparecimento temporário de Stephanie",
+    title: "Referência duplicada ao desaparecimento de Stephanie — ver P-009",
     pages: [109],
-    sourceType: "Livro de segurança da mansão",
+    sourceType: "Referência editorial duplicada; mesma fonte de P-009",
     documented:
-      "Uma anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween após seguir vaga-lumes. Uma busca não a encontrou, mas ela voltou para casa duas horas depois e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. As empregadas afirmaram que estavam trabalhando naquela noite.",
+      "Esta entrada repete o episódio já catalogado em P-009: a anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. Não é uma segunda fonte nem uma confirmação independente.",
     pendingVerification:
-      "A página 109 foi conferida visualmente. O relato não identifica a mulher; a semelhança do vestido é uma descrição atribuída à criança, não uma identificação confirmada.",
-    confidence: "high",
-    status: "visually-checked",
+      "A página 109 foi conferida visualmente. Manter este ID apenas para rastreabilidade histórica do catálogo; não contar P-031 como evidência independente nem como novo achado. Consolidar referências futuras em P-009.",
+    confidence: "low",
+    status: "incomplete",
     playerInference:
-      "O episódio deixa uma discrepância entre o relato de Stephanie e as declarações das empregadas; não prova a existência de uma pessoa específica nem um evento sobrenatural.",
+      "P-031 é uma duplicata editorial de P-009, não um segundo evento. A descrição da mulher continua sem identificação confirmada."
   },
   {
     id: "P-032",
