@@ -1,6 +1,6 @@
 # Capítulo 6 — O Caso Vivian Roberts
 
-**Status:** estrutura documental em preparação; conteúdo documental pendente de conferência visual.
+**Status:** estrutura documental em preparação; transcrições OCR pendentes de conferência visual.
 
 ## Objetivo
 Preparar um caso investigativo independente para Dexter Revival Project, inspirado na estrutura de exploração e descoberta de documentos de The Painscreek Killings. O capítulo existente chamado Painscreek permanece separado e não deve ser sobrescrito, renomeado ou reutilizado como se fosse este caso.
@@ -8,6 +8,7 @@ Preparar um caso investigativo independente para Dexter Revival Project, inspira
 ## Documentos de trabalho
 - [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — lote organizado até a página 69; contém resumos de trabalho e sinaliza o que ainda precisa ser conferido no PDF original.
 - [Inventário OCR — páginas 70–116](./recebido-ia-paginas-070-116.md) — inventário por página do texto enviado, com tipo de documento, conteúdo principal e alertas de OCR/consistência. Não substitui a transcrição literal.
+- [Matriz preliminar de pistas — páginas 70–116](./matriz-pistas-paginas-070-116.md) — documentos e afirmações separados por tema, com limites probatórios e conexões candidatas. Todas as ligações são provisórias.
 - [Extração do PDF — páginas 41–116](./extracao-pdf-paginas-041-116.md) — registro prévio de extração por OCR; verificar contra as imagens originais.
 - [Catálogo inicial](./catalogo-inicial.md) — personagens, locais e grupos de evidências a inventariar.
 - [Modelo de evidência e dependências](./modelo-de-evidencias.md) — esquema para documentar pistas sem inventar relações.
@@ -28,7 +29,7 @@ Use estas etiquetas no dossiê:
 - **CONFIRMADO NA FONTE:** conferido diretamente no PDF/documento original.
 - **TRANSCRIÇÃO PENDENTE:** item conhecido, mas texto ainda não conferido integralmente.
 - **RELATO / TESTEMUNHO:** afirmação atribuída a uma pessoa, não necessariamente verdadeira.
-- **INFERÊNCIA:** interpretação que precisa citar as pistas de suporte.
+- **INFERÊNCIA:** interpretação que precisa citar os itens de suporte.
 - **HIPÓTESE DE DESIGN:** elemento planejado para a rota alternativa, não pertencente à fonte original.
 - **CONTRADIÇÃO EM ABERTO:** duas fontes ou registros parecem incompatíveis.
 - **ILEGÍVEL / INCERTO:** leitura que não pode ser confirmada com segurança.
