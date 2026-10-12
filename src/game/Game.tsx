@@ -312,14 +312,16 @@ export function Game() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const track = introMusicActive
-      ? aberturaAudio.url
-      : !showMenu && (caseMode === "painscreek" || caseMode === "vivian")
-        ? "/audio/painscreek/painscreek-case-theme.mp3"
-        : !showMenu && caseMode === "mentalist"
-          ? "/audio/mentalist/red-john-theme.mp3"
-          : !showMenu && caseMode === "winchester"
-            ? "/audio/winchester/o-sangue-dos-condenados.mp3"
+    // A trilha específica do caso deve ter prioridade sobre a música da abertura.
+    // Assim, Vivian Roberts usa a mesma faixa da página de mapas.
+    const track = !showMenu && (caseMode === "painscreek" || caseMode === "vivian")
+      ? "/audio/painscreek/painscreek-case-theme.mp3"
+      : !showMenu && caseMode === "mentalist"
+        ? "/audio/mentalist/red-john-theme.mp3"
+        : !showMenu && caseMode === "winchester"
+          ? "/audio/winchester/o-sangue-dos-condenados.mp3"
+          : introMusicActive
+            ? aberturaAudio.url
             : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const trackUrl = new URL(track, window.location.href).href;
     if (audio.src !== trackUrl) {
