@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, Search, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { recordCaseCompletion } from "./achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
+import oTrioAsset from "@/assets/o-trio.png.asset.json";
 
 type Act = 0 | 1 | 2 | 3 | 4 | 5;
 type Evidence = { id: string; title: string; source: string; detail: string; act: Act; category: string };
@@ -173,6 +175,11 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
           <button onClick={onBack} className="min-h-10 border border-white/20 px-3 py-2 font-mono text-xs text-zinc-300 hover:border-red-500"><ArrowLeft className="mr-2 inline h-4 w-4" /> Menu de casos</button>
         </div>
       </header>
+      <CaseHeroImage
+        src={oTrioAsset.url}
+        alt="Dexter Morgan com Sam e Dean Winchester em frente ao Impala"
+        caption="Arquivo de cena · Dexter Morgan, Sam e Dean Winchester"
+      />
       <div className="mx-auto grid max-w-7xl gap-5 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_320px] sm:px-8">
         <section className="min-w-0">
           <div className="border border-red-950 bg-gradient-to-br from-[#211317] via-[#151316] to-[#101116] p-5 sm:p-7">
