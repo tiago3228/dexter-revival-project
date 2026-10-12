@@ -7,7 +7,8 @@
 - [x] Receber os lotes de trabalho do PDF: organização das páginas 1–69, OCR das páginas 31–69 e OCR das páginas 70–116.
 - [x] Criar inventário OCR das páginas 31–69.
 - [x] Criar inventário OCR e matriz preliminar de pistas para as páginas 70–116.
-- [ ] Conferir nomes, datas, documentos e paginação dos lotes 1–69 e 70–116 contra as imagens originais, seguindo o [checklist de conferência visual](./checklist-conferencia-visual-pdf.md). O inventário 31–69 é OCR organizado, não conferência visual.
+- [x] Fazer uma primeira inspeção visual das imagens das páginas 31–69 e corrigir omissões evidentes do OCR (p. 43, p. 55 e código da p. 60); ver [inventário OCR 31–69](./inventario-ocr-paginas-031-069.md) e [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
+- [ ] Continuar a conferência ampliada, palavra por palavra, dos lotes 1–69 e 70–116; a inspeção inicial não equivale a transcrição diplomática integral.
 - [ ] Completar as transcrições literais, preservando trechos ilegíveis sem reconstrução inventada.
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
