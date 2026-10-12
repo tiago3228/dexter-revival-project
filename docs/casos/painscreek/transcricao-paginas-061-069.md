@@ -6,15 +6,17 @@
 
 ## Página 61 — Steven Moss / Bernard Hopkins
 
-A ficha de Bernard Hopkins mostra o endereço **Av. Silverlake, n.º 31, Painscreek, NL 28115**. A nota investigativa parece dizer que o pai morreu em um acidente na mina e que Bernard estava em casa no dia em que Vivian foi morta, ficando sem álibi.
+A ficha de Bernard Hopkins mostra o endereço **Av. Silverlake, n.º 31, Painscreek, NL 28115**. O texto visível registra: “Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibi.” Há escrita manuscrita por trás do texto impresso; parte dela fica encoberta e não deve ser reconstruída por suposição.
 
-**Trecho incerto:** a formulação exata da nota manuscrita deve ser conferida na imagem ampliada. A anotação “sem álibi” é uma avaliação investigativa, não prova de envolvimento.
+**Leitura e proveniência:** o registro associa Bernard a uma circunstância investigativa, mas “sem álibi” é uma anotação, não prova de envolvimento. A causa da morte do pai é anotada, mas a formulação manuscrita exata permanece parcialmente encoberta.
 
 ## Página 62 — Steven Moss / entrevista com Dorothy
 
-A página contém uma anotação aparentemente intitulada “Entrevista com Dorothy”. Há referência à **Cafeteria Moon** e a um encontro com o xerife no posto, às 10h de **11/05**. O xerife teria mencionado que queria mostrar alguns documentos.
+A página contém duas anotações riscadas: **“Entrevista com Dorothy”** e **“Entrevista com Mary amanhã na Cafeteria Moon”**. Não as tratar como entrevistas realizadas: o risco indica que foram canceladas ou substituídas, embora o motivo não esteja informado.
 
-**Trechos incertos:** a linha superior e a data podem estar parcialmente obscurecidas ou mal reconhecidas pelo OCR. Não inferir o ano nem a natureza dos documentos sem conferir o original ampliado.
+A anotação mantida registra: **“Encontro com o xerife no posto às 10h em 11/05. Ele mencionou querer me mostrar alguns arquivos/documentos.”** A imagem não esclarece o ano. A palavra manuscrita final parece ser *files*.
+
+**Trechos incertos:** não inferir o ano, o motivo dos riscos nem o conteúdo dos arquivos. A menção à Cafeteria Moon pertence a uma anotação riscada, não ao encontro com o xerife.
 
 ## Página 63 — Trisha Roberts
 
@@ -76,6 +78,11 @@ Trisha considera que a mãe a julga por querer ficar perto de Scott e diz que a 
 - As entradas pessoais mostram as percepções de Trisha; suas opiniões e suspeitas não constituem confirmação independente sobre outros personagens.
 - O código `44871` está associado textualmente à sala de estudo, mas sua função prática permanece por testar.
 
-## Próxima etapa
+## Revisão das páginas 61–62 concluída nesta etapa
 
-Conferir em ampliação as páginas 61–62, a nota manuscrita da página 61 e o título/data da página 62. Depois, comparar as novas entradas com o inventário completo de páginas 1–60. Este arquivo é documentação de investigação: **não foi integrado à interface jogável e não houve publicação de nova versão**.
+- [x] Ampliar e conferir a ficha de Bernard e as anotações visíveis da página 61.
+- [x] Distinguir na página 62 as duas anotações riscadas do encontro registrado com o xerife.
+- [x] Preservar como incertos o ano de 11/05, a razão dos riscos e a leitura exata de *files*.
+- [ ] Comparar o lote 70–79 com todas as transcrições integrais anteriores; a cobertura dos lotes 1–50 continua parcial.
+
+Este arquivo é documentação de investigação: **não foi integrado à interface jogável e não houve publicação de nova versão**.
