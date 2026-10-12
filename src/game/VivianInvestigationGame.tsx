@@ -47,8 +47,8 @@ const PLACES: Place[] = [
   { id: "archive", name: "Arquivo do xerife", description: "Relatórios oficiais, recortes de jornal e versões registradas sobre a morte de Vivian.", unlockHint: "Disponível desde o início." },
   { id: "mansion", name: "Mansão Roberts", description: "Cartas, registros da equipe e relações privadas da família.", unlockHint: "Encontre o relatório policial e examine a versão de Scott." },
   { id: "hospital", name: "Hospital Comunitário", description: "Registros médicos e a história financeira da instituição.", unlockHint: "Encontre a notícia sobre o fechamento do hospital." },
-  { id: "church", name: "Trinity Church", description: "Correspondências que podem esclarecer pessoas, datas e segredos antigos.", unlockHint: "Encontre a carta endereçada a Daniel." },
-  { id: "lake", name: "Lago Cherry Creek", description: "Um local ligado à notícia sobre a morte do Dr. Henry Johnson.", unlockHint: "Encontre a notícia sobre a morte de Henry Johnson." },
+  { id: "church", name: "Trinity Church", description: "Correspondências que podem esclarecer pessoas, datas e segredos antigos.", unlockHint: "Encontre a carta sobre os segredos da família na mansão." },
+  { id: "lake", name: "Lago Cherry Creek", description: "Um local ligado à notícia sobre a morte do Dr. Henry Johnson.", unlockHint: "Encontre o relatório sobre os fundos da Roberts Relief no hospital." },
 ];
 
 const CLUES: Clue[] = [
