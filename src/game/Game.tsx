@@ -17,6 +17,7 @@ import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
 import { MentalistCase } from "./MentalistCase";
 import { WinchesterCase } from "./WinchesterCase";
+import { VivianRobertsCase } from "./VivianRobertsCase";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
 import { ORTEGA_DIALOGUE } from "./ortegaDialogues";
 import {
@@ -204,7 +205,7 @@ export function Game() {
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
   const [caseMode, setCaseMode] = useState<
-    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester"
+    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
   >("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
@@ -480,6 +481,10 @@ export function Game() {
         onToggleSound={toggleSound}
       />
     );
+  }
+
+  if (caseMode === "vivian") {
+    return <VivianRobertsCase onBack={() => setShowMenu(true)} />;
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
@@ -1986,7 +1991,7 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester") => void;
+  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian") => void;
   playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
@@ -2032,6 +2037,11 @@ function MainMenu({
       title: "O Sangue dos Condenados",
       detail: "Abrindo um dossiê de homicídios com evidências que desafiam a perícia.",
     },
+    vivian: {
+      index: "CAPÍTULO 06 · PAINSCREEK",
+      title: "O Caso Vivian Roberts",
+      detail: "Abrindo o arquivo investigativo e o catálogo inicial de evidências.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -2045,6 +2055,7 @@ function MainMenu({
     painscreek: "Painscreek Case",
     mentalist: "O Mentalista: O Caso Red John",
     winchester: "O Sangue dos Condenados",
+    vivian: "O Caso Vivian Roberts",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2601,9 +2612,29 @@ function MainMenu({
               {chapterStatus("winchester")}
             </span>
           </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("vivian")}
+            className="group border border-amber-700/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-amber-500 hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-300">
+              Capítulo 06 · Painscreek
+            </p>
+            <h2 className="mt-3 font-display text-3xl">O Caso Vivian Roberts</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Investigue personagens, locais e documentos de um caso em preparação. Esta versão-base ainda não contém a solução nem as rotas investigativas completas.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-amber-300 group-hover:underline">
+              Abrir arquivo-base →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("vivian")}
+            </span>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 05</p>
+          <p>ARQUIVOS DISPONÍVEIS: 06</p>
           <p className="mt-2">
             CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
           </p>
