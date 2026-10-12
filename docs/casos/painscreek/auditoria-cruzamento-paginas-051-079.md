@@ -34,8 +34,8 @@
 ## Duplicatas e relações que exigem atenção
 
 1. **Duplicata confirmada:** p. 51 repete a p. 48. Preservar ambas as localizações para rastreabilidade, mas não contá-las como dois documentos independentes.
-2. **P-021 / p. 61:** comparar a ficha de Bernard da p. 61 com a ficha já catalogada na p. 95. A relação é plausível, mas não consolidar sem conferir se os campos e a identidade correspondem.
-3. **P-014 / p. 59:** ambas as páginas mencionam contexto de mineração; ainda é necessário comparar a descrição do acidente, as datas e a empresa antes de dizer que se trata do mesmo evento.
+2. **P-021 / p. 61:** a ficha de Bernard da p. 61 e a ficha administrativa da p. 95 foram consolidadas no catálogo como o mesmo registro, sustentado pela correspondência de nome e endereço. P-021 agora referencia ambas as páginas e está como `incomplete`, pois as notas manuscritas da p. 61 estão parcialmente encobertas. “Sem álibi” permanece uma anotação investigativa, não prova de envolvimento.
+3. **P-014 / p. 59:** o catálogo agora inclui as páginas 59 e 86 como fontes relacionadas ao acidente de mineração de 1973. A correspondência temporal e temática é plausível, mas P-014 foi rebaixada para confiança média e revisão incompleta, pois a nota biográfica da p. 59 não confirma independentemente todos os detalhes da notícia da p. 86.
 4. **P-005 / p. 55:** Scott menciona uma fotografia que o faz reconhecer sua origem; P-005 trata de uma fotografia emprestada por Scott em 1995. Não afirmar que é o mesmo objeto sem uma referência explícita.
 5. **P-002 / p. 54 e p. 58:** o relato de Andrew e as notas de Moss são fontes diferentes e indiretas. Uma não corrobora automaticamente a outra; comparar o que cada uma afirma sobre 1975.
 6. **P-003 / p. 60 / p. 64:** 0318, 025241 e 44871 são códigos distintos em documentos diferentes. Não os agrupar como um sistema de senhas sem teste funcional ou documentação explícita.
