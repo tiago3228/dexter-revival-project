@@ -9,7 +9,10 @@
 - [x] Criar inventário OCR e matriz preliminar de pistas para as páginas 70–116.
 - [x] Fazer uma primeira inspeção visual das imagens das páginas 31–69 e corrigir omissões evidentes do OCR (p. 43, p. 55 e código da p. 60); ver [inventário OCR 31–69](./inventario-ocr-paginas-031-069.md) e [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
 - [ ] Continuar a conferência ampliada, palavra por palavra, dos lotes 1–69 e 70–116; a inspeção inicial não equivale a transcrição diplomática integral.
-- [x] Organizar a transcrição recebida das páginas 1–20 com IDs de diário/entrada e notas de incerteza; ver [transcrição dos lotes 01–02](./transcricao-lotes-01-02-paginas-001-020.md).\n- [x] Organizar a transcrição recebida das páginas 21–30 com IDs de diário/entrada e notas de incerteza; ver [transcrição das páginas 21–30](./transcricao-paginas-021-030.md).\n- [ ] Conferir a transcrição das páginas 1–20 palavra por palavra contra as imagens originais; o texto recebido ainda não foi validado de forma independente.\n- [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
+- [x] Organizar a transcrição recebida das páginas 1–20 com IDs de diário/entrada e notas de incerteza; ver [transcrição dos lotes 01–02](./transcricao-lotes-01-02-paginas-001-020.md).
+- [x] Organizar a transcrição recebida das páginas 21–30 com IDs de diário/entrada e notas de incerteza; ver [transcrição das páginas 21–30](./transcricao-paginas-021-030.md).
+- [ ] Conferir as transcrições das páginas 1–30 palavra por palavra contra as imagens originais; o texto recebido ainda não foi validado de forma independente.
+- [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
 ## Fase 2 — Design investigativo
