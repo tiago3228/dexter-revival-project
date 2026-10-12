@@ -26,7 +26,7 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. O ZIP conté
 
 ## Verificação ainda pendente
 
-- Executar `npm run build`, `npm test` e `npm run lint` num ambiente com dependências instaladas. Não foi possível executar essas verificações neste turno; o clone local falhou por indisponibilidade de DNS para `github.com`, e o commit ainda não reporta checks de CI.
+- Workflow de CI adicionado em `.github/workflows/ci.yml`, acionado em push para `main`, pull requests para `main` e execução manual. Ele instala com `bun install --frozen-lockfile` e executa testes, lint e build. O workflow foi commitado, mas o resultado da primeira execução ainda precisa ser conferido; adicionar o arquivo não significa que os testes já passaram.
 - Testar o ciclo completo no navegador: desbloqueios de locais, coleta duplicada, conexões válidas/inválidas, cronologia, bloqueio do relatório e persistência após recarregar.
 - Abrir `/painscreek-evidence` e testar pesquisa, filtro, expansão de fontes e links de ida/volta no navegador.
 - A auditoria de cruzamento das páginas 100–116 foi adicionada em `docs/casos/painscreek/auditoria-cruzamento-paginas-100-116.md`. Ela identificou uma duplicidade entre P-009 e P-031 (ambas associadas ao relato de Stephanie na p. 109); P-031 foi corrigida no catálogo para funcionar como referência duplicada, sem valor de confirmação independente, além de distinguir episódios de Andrew, o empréstimo da fotografia e as referências indiretas ao incidente de 1975. A auditoria documental não substitui a revisão visual nem a validação no jogo.
