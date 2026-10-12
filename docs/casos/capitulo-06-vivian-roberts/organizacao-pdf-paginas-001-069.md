@@ -3,9 +3,9 @@
 
 **Escopo deste arquivo:** organizar o material que foi revisado até a página 69. A partir da página 70, a organização fica fora deste lote, conforme combinado. Este documento é um catálogo de trabalho e não substitui a transcrição literal conferida nas imagens.
 
-## Transcrição detalhada recebida — páginas 1–20
+## Transcrições detalhadas/de trabalho — páginas 1–40
 
-A transcrição por entrada, com os textos narrativos e notas de incerteza, está em [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md). Ela foi organizada a partir do texto fornecido pelo usuário e ainda precisa de conferência visual independente, palavra por palavra. As notas não transformam relatos de personagens, acusações de terceiros ou interpretações em fatos comprovados.
+A transcrição por entrada das páginas 1–20 está em [Transcrição dos lotes 01–02 — páginas 1–20](./transcricao-lotes-01-02-paginas-001-020.md), e a das páginas 21–30 em [Transcrição integral — páginas 21–30](./transcricao-paginas-021-030.md). Ambas foram organizadas a partir do texto fornecido pelo usuário e ainda precisam de conferência visual independente, palavra por palavra. A leitura de trabalho das páginas 31–40, auxiliada por OCR e com trechos incertos assinalados, está em [Transcrição de trabalho — páginas 31–40](./transcricao-paginas-031-040.md). As notas não transformam relatos de personagens, acusações de terceiros ou interpretações em fatos comprovados.
 
 ## Regras de proveniência
 
