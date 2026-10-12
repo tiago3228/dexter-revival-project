@@ -206,9 +206,22 @@ export function Game() {
   });
   const [caseMode, setCaseMode] = useState<
     "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
-  >("ortega");
-  const [showMenu, setShowMenu] = useState(true);
-  const [showIntro, setShowIntro] = useState(true);
+  >(() => {
+    try {
+      return window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true" ? "vivian" : "ortega";
+    } catch { return "ortega"; }
+  });
+  const [showMenu, setShowMenu] = useState(() => {
+    try { return window.sessionStorage.getItem("dexter-return-to-vivian-case") !== "true"; }
+    catch { return true; }
+  });
+  const [showIntro, setShowIntro] = useState(() => {
+    try {
+      const shouldResume = window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true";
+      if (shouldResume) window.sessionStorage.removeItem("dexter-return-to-vivian-case");
+      return !shouldResume;
+    } catch { return true; }
+  });
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
   const [introMusicActive, setIntroMusicActive] = useState(true);
   const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName());
