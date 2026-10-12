@@ -11,13 +11,15 @@
 - [Revisão visual das páginas 100–107 e 111–116](./revisao-visual-paginas-100-107-111-116.md) — conferência das evidências prioritárias, limites de interpretação e pendências restantes (inclui adendo sobre 108–110).
 - [Auditoria de cruzamento das páginas 80–99](./auditoria-cruzamento-paginas-080-099.md) — deduplicação das fontes e distinção entre alegações, relatos e fatos documentados.
 - [Auditoria de cruzamento das páginas 100–116](./auditoria-cruzamento-paginas-100-116.md) — cruzamento dos registros P-001–P-034, com atenção às possíveis duplicatas e às alegações que não podem ser tratadas como fatos confirmados.
+- [Auditoria de cruzamento das páginas 1–50](./auditoria-cruzamento-paginas-001-050.md) — confronto visual com o PDF original; registra duas entradas omitidas na página 43 e confirma as duplicatas das páginas 49–50.
 - [Auditoria de cruzamento das páginas 51–79](./auditoria-cruzamento-paginas-051-079.md) — relações candidatas entre diários, anotações investigativas e catálogo, com separação de códigos, fotografias e relatos indiretos.
 - [Auditoria preliminar das páginas 1–79](./auditoria-cruzamento-paginas-001-079.md) — OCR preliminar; duplicatas de conteúdo nas páginas 49–51 comparadas visualmente com as páginas 46–48 e confirmadas; auditoria integral ainda pendente.
+- [Adendo de transcrição da página 43](./transcricao-pagina-043-adendo.md) — duas entradas impressas legíveis de Scott Brooks recuperadas da imagem original após falha do OCR.
 
 ## Interface interativa
 - [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo documental tem 34 registros (P-001–P-034) em `src/game/painscreekEvidence.ts`; esse arquivo de dados continua separado da mecânica de solução do caso e não altera o caso Painscreek já presente na tela principal.
 
-**Limite atual:** a interface apresenta o catálogo documental das páginas 80–116; a deduplicação integral contra as páginas 1–79 continua pendente. O PDF original está dentro de `IMAGENS DE PAINSCREEK.zip` e tem 116 páginas digitalizadas como imagem, exigindo OCR/conferência visual para comparação confiável.
+**Limite atual:** a interface apresenta o catálogo documental das páginas 80–116; as páginas 1–50 receberam uma auditoria inicial e revelaram duas entradas ainda ausentes da transcrição editorial na página 43. A deduplicação integral contra as páginas 51–79 e a revisão editorial da transcrição da página 43 continuam pendentes. O PDF original está dentro de `IMAGENS DE PAINSCREEK.zip` e tem 116 páginas digitalizadas como imagem, exigindo OCR/conferência visual para comparação confiável.
 
 ## Critérios de documentação
 1. Manter a paginação conforme o PDF de origem.

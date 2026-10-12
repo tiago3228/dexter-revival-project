@@ -1,6 +1,6 @@
 # Auditoria preliminar de cruzamento — páginas 1–79
 
-**Estado:** auditoria preliminar com conferência visual específica das páginas 46–51. O PDF original tem 116 páginas digitalizadas como imagem. Os três pares descritos abaixo foram comparados visualmente; as demais correspondências e linhas de investigação continuam sujeitas a revisão.
+**Estado:** auditoria preliminar, agora complementada pela conferência visual inicial das páginas 1–50. O detalhamento dessa etapa está em [auditoria-cruzamento-paginas-001-050.md](./auditoria-cruzamento-paginas-001-050.md). O PDF original tem 116 páginas digitalizadas como imagem; as demais correspondências e linhas de investigação continuam sujeitas a revisão.
 
 ## Duplicatas confirmadas por comparação visual
 
@@ -9,6 +9,10 @@
 | 49 | Página 46 | Comparação visual das duas imagens: mesmas entradas do diário de Scott, datadas de 30 de novembro e 2 de dezembro de 1993, incluindo a conversa com Andrew e Wanda sobre Sofia. Diferenças no OCR são ruído de reconhecimento. | Duplicata de conteúdo confirmada; manter a referência às duas páginas para rastreabilidade. |
 | 50 | Página 47 | Comparação visual: mesma entrada de 8 de dezembro de 1993 sobre Derrick e Sofia, seguida pela entrada de 13 de dezembro sobre Bernard. | Duplicata de conteúdo confirmada; não contar como pista independente. |
 | 51 | Página 48 | Comparação visual: mesma entrada de 18 de dezembro de 1993, na qual Dorothy conta a Scott sobre Sofia e o caso com Charles. O layout e o conteúdo da entrada coincidem; variações do OCR são ruído de reconhecimento. | Duplicata de conteúdo confirmada; manter ambas as referências de página. |
+
+## Página com conteúdo omitido pela transcrição
+
+- **Página 43:** a imagem contém duas entradas legíveis de Scott Brooks, datadas de 2 de setembro e 3 de novembro de 1993. A transcrição recebida marcou essa página como sem texto reconhecido pelo OCR. O conteúdo foi registrado, com suas limitações interpretativas, no documento específico das páginas 1–50. Nenhum novo ID de catálogo foi criado.
 
 **Nota importante:** a numeração acima é a paginação do PDF, não necessariamente a numeração impressa nos documentos retratados. A comparação visual confirmou a repetição de conteúdo nos três pares; nenhuma página foi apagada e as duas localizações devem permanecer registradas para rastreabilidade.
 
@@ -24,7 +28,7 @@
 ## Limitações e próximos passos
 
 1. O OCR foi executado em resolução reduzida e produziu erros de nomes, datas e frases. Nenhum trecho incerto foi corrigido por inferência.
-2. A comparação visual confirmou os pares 49/46, 50/47 e 51/48; a auditoria integral de todas as páginas 1–79 ainda está pendente.
+2. A comparação visual confirmou os pares 49/46, 50/47 e 51/48 e identificou conteúdo omitido na página 43; a auditoria integral de todas as páginas 1–79 ainda está pendente.
 3. Cruzar cada documento candidato com as transcrições existentes e com o catálogo P-001–P-012.
 4. Manter separadas a existência de uma anotação, a alegação feita por uma personagem e qualquer conclusão investigativa.
 5. Não alterar a lógica do jogo ou adicionar novas pistas à interface com base apenas nesta auditoria preliminar.

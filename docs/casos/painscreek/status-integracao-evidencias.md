@@ -1,10 +1,12 @@
 # Estado da integração de evidências de Painscreek
 
-Atualizado em 2026-10-12.
+Atualizado em 2026-10-12 após a auditoria inicial das páginas 1–50.
 
 ## Material de origem
 
 O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. Ele contém o PDF `The Painscreek Killing.pdf` (116 páginas) e cinco mapas em PNG. O PDF é composto por páginas digitalizadas; a extração de texto direta não retorna texto selecionável. A conferência visual do PDF é a fonte de autoridade; OCR serve apenas como apoio.
+
+Nesta etapa, o ZIP recebido foi conferido com SHA-256 `fbd1804b32542cf0cb63217493ceebaf136cda62b2011b4bf8c891966f975cb5`; o PDF extraído foi conferido com SHA-256 `54e1cbbd0884793ea921227e118566045d109abec2e9be9250d732ac3e28aa8e`.
 
 ## Estado confirmado no repositório
 
@@ -23,19 +25,19 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. Ele contém 
 - Teste de roteamento para `/painscreek-evidence`.
 - Testes estruturais do catálogo para IDs `P-001`–`P-034`, unicidade, páginas e campos obrigatórios, além da contagem exibida na introdução.
 - Testes das regras do Caso Vivian para custos graduais, deduplicação de dicas em saves, limite mínimo zero, chaves malformadas e deduplicação de IDs restaurados.
+- Auditoria documental das páginas 1–50 em `auditoria-cruzamento-paginas-001-050.md`, incluindo a confirmação visual das duplicatas nas páginas 49–50 e o achado de duas entradas legíveis omitidas na página 43.
 
 Esses testes verificam estrutura e regras de código; não substituem o cotejo documental página a página nem um teste manual do fluxo completo no navegador.
 
 ## CI e validações
 
-- O workflow está em `.github/workflows/ci.yml`. A execução [38315052983](https://github.com/tiago3228/dexter-revival-project/actions/runs/38315052983) terminou com sucesso no commit `194b65e6c449cae625950ad929a5d21cf2a3ba7a`, dentro do PR #10. A execução anterior [38314003065](https://github.com/tiago3228/dexter-revival-project/actions/runs/38314003065) também passou no commit `27d434f5440632d1cd7fc6a46e25393c02b08309`.
-- Este registro documental foi atualizado depois do commit validado `194b65e`; o commit que registrar esta própria atualização ainda precisa passar pelo CI antes de qualquer merge.
-- Na validação local final desta etapa: `bun run lint` terminou com 0 erros e 7 avisos; `bun run test` passou em 7 arquivos e 25 testes; `bunx tsc --noEmit`, `bun run build` e `git diff --check` passaram.
+- O workflow está em `.github/workflows/ci.yml`. A PR #10 foi mesclada na `main` pelo commit `27f8e849e34f8ab492bad5502c583f1eb671bc58`. O CI pós-merge [38315789718](https://github.com/tiago3228/dexter-revival-project/actions/runs/38315789718) terminou com sucesso em testes, lint e build.
+- Na validação local desta etapa, `pnpm run test` passou em 7 arquivos e 25 testes; `pnpm exec tsc --noEmit` e `pnpm run build` também passaram.
 - A correspondência estrutural da rota foi testada; ainda falta conferir a rota e o ciclo de investigação no navegador.
 
 ## Pendências documentais e de integração
 
-- A auditoria integral das páginas 1–50 continua pendente. Uma tentativa de orquestrar a revisão em blocos encerrou antes de produzir relatórios; portanto, não há novos achados nem alterações no catálogo resultantes dessa tentativa.
+- A auditoria inicial das páginas 1–50 foi registrada em `auditoria-cruzamento-paginas-001-050.md`. Ela encontrou duas entradas impressas omitidas na transcrição editorial da página 43 e confirmou que as páginas 49–50 repetem as páginas 46–47. A atualização editorial da transcrição ainda está pendente.
 - A auditoria completa de `P-001` a `P-034` ainda precisa verificar fidelidade a cada fonte, classificação do tipo de documento, grau de confiança, estado de revisão, duplicatas e referências cruzadas.
 - A relação entre a página 55 (relato de Scott sobre uma fotografia) e a página 116 (fotografia mencionada no diário) permanece sem confirmação de identidade.
 - Permanecem pendentes as divergências cronológicas e os cruzamentos documentados em `auditoria-cruzamento-paginas-051-079.md`, inclusive o grau de correspondência entre as páginas 59 e 86 e entre as páginas 61 e 95.
@@ -49,4 +51,4 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 - Uma duplicata não conta como confirmação independente. Trechos ilegíveis ou incompletos devem permanecer assinalados, sem preenchimento por suposição.
 - Status `visually-checked` indica apenas que houve cotejo com a imagem da página; não confirma automaticamente a verdade das alegações nela contidas.
 
-Nenhuma publicação do jogo foi feita por esta atualização.
+Nenhuma publicação do jogo foi feita por esta atualização; apenas a documentação de auditoria foi alterada.
