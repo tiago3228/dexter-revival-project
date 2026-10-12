@@ -9,8 +9,10 @@ Preparar um caso investigativo independente para Dexter Revival Project, inspira
 - [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — lote organizado até a página 69; contém resumos de trabalho e sinaliza o que ainda precisa ser conferido no PDF original.
 - [Inventário OCR — páginas 70–116](./recebido-ia-paginas-070-116.md) — inventário por página do texto enviado, com tipo de documento, conteúdo principal e alertas de OCR/consistência. Não substitui a transcrição literal.
 - [Matriz preliminar de pistas — páginas 70–116](./matriz-pistas-paginas-070-116.md) — documentos e afirmações separados por tema, com limites probatórios e conexões candidatas. Todas as ligações são provisórias.
+- [Grafo provisório de dependências](./grafo-dependencias-provisorio.md) — caminhos candidatos para cruzar fontes e orientar a progressão, sem confirmar conclusões.
+- [Contradições e lacunas](./contradicoes-e-lacunas.md) — divergências, autoria incerta, itens citados mas ausentes e pontos que precisam de revisão visual.
 - [Extração do PDF — páginas 41–116](./extracao-pdf-paginas-041-116.md) — registro prévio de extração por OCR; verificar contra as imagens originais.
-- [Catálogo inicial](./catalogo-inicial.md) — personagens, locais e grupos de evidências a inventariar.
+- [Catálogo inicial](./catalogo-inicial.md) — personagens, locais e grupos de evidências a inventariar, com controles de proveniência.
 - [Modelo de evidência e dependências](./modelo-de-evidencias.md) — esquema para documentar pistas sem inventar relações.
 - [Plano de implementação](./plano-de-implementacao.md) — etapas até integração e validação.
 
