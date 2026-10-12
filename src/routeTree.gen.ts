@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MapasRouteImport } from './routes/mapas'
+import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,9 +25,16 @@ const MapasRoute = MapasRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 
+const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
+  id: '/linha-do-tempo',
+  path: '/linha-do-tempo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mapas': typeof MapasRoute
+  '/linha-do-tempo': typeof LinhaDoTempoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -39,15 +47,16 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mapas'
+  fullPaths: '/' | '/mapas' | '/linha-do-tempo'
   fileRoutesByTo: FileRoutesByTo
   to: '/'
-  id: '__root__' | '/' | '/mapas'
+  id: '__root__' | '/' | '/mapas' | '/linha-do-tempo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MapasRoute: typeof MapasRoute
+  LinhaDoTempoRoute: typeof LinhaDoTempoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/linha-do-tempo': {
+      id: '/linha-do-tempo'
+      path: '/linha-do-tempo'
+      fullPath: '/linha-do-tempo'
+      preLoaderRoute: typeof LinhaDoTempoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MapasRoute: MapasRoute,
+  LinhaDoTempoRoute: LinhaDoTempoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
