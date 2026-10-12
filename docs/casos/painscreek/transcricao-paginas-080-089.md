@@ -43,7 +43,7 @@ Vivian de fato era uma pessoa muito respeitada e adorada. Seu sucesso nos negóc
 
 A polícia deteve Scott Brooks ontem à tarde. Ele estava morando na cabana de caça dos Roberts no início da trilha.
 
-Uma testemunha, que no momento prefere não revelar sua identidade, alega ter visto Scott andando para longe da mansão dos Roberts com pressa em direção a Silverlake quando estava indo para casa por volta das 23h50 do dia 19 de julho. Embora Scott parecesse zangado, a testemunha não achou estranho até alguns dias depois, quando viu o artigo de jornal sobre o assassinato de Vivian Roberts. Sentindo-se inquieta quanto à situação, ela ligou para a polícia.
+Uma testemunha, que no momento prefere não revelar sua identidade, alega ter visto Scott andando para longe da mansão dos Roberts com pressa em direção a Silverlake quando estava indo para casa por volta das 23h30 do dia 19 de julho. Embora Scott parecesse zangado, a testemunha não achou estranho até alguns dias depois, quando viu o artigo de jornal sobre o assassinato de Vivian Roberts. Sentindo-se inquieta quanto à situação, ela ligou para a polícia.
 
 Pouco depois da ligação, a polícia chegou à cabana de Scott e o questionou sobre onde estava na noite da morte de Vivian. Scott disse que de fato a encontrou naquela noite, mas que não tinha nada a ver com a morte dela.
 
