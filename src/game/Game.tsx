@@ -196,6 +196,7 @@ export function Game() {
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
+  const [introMusicActive, setIntroMusicActive] = useState(true);
   const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName());
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordedEndingRef = useRef(false);
@@ -284,7 +285,7 @@ export function Game() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const track = showIntro || showInvestigatorSetup
+    const track = introMusicActive
       ? aberturaAudio.url
       : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
@@ -300,7 +301,7 @@ export function Game() {
       audio.load();
     }
     audio.volume = musicVolumeRef.current;
-    if (showIntro || showInvestigatorSetup) {
+    if (introMusicActive) {
       audio.onerror = () => {
         // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
         audio.onerror = null;
@@ -322,7 +323,7 @@ export function Game() {
       void sfxRef.current?.close();
       sfxRef.current = null;
     };
-  }, [caseMode, showIntro, showInvestigatorSetup, showMenu]);
+  }, [caseMode, introMusicActive, showMenu]);
 
   const fadingRef = useRef(false);
   useEffect(() => {
@@ -401,6 +402,7 @@ export function Game() {
           const normalized = setCurrentPlayerName(name);
           setPlayerName(normalized);
           fadeOutIntroMusic(() => {
+            setIntroMusicActive(false);
             setShowInvestigatorSetup(false);
             setShowMenu(true);
           });
