@@ -484,7 +484,15 @@ export function Game() {
   }
 
   if (caseMode === "vivian") {
-    return <VivianRobertsCase onBack={() => setShowMenu(true)} />;
+    return (
+      <VivianRobertsCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+      />
+    );
   }
 
   const playSfx = (kind: "click" | "evidence" | "success" | "error") => {
