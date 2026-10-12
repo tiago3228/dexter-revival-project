@@ -395,7 +395,8 @@ export function Game() {
     if (s.solved.length >= 14) {
       return {
         title: "Concluir a investigação",
-        detail: "Abra o quadro do alvo na cena do Apartamento de Dexter e escolha quem será acusado.",
+        detail:
+          "Abra o quadro do alvo na cena do Apartamento de Dexter e escolha quem será acusado.",
         location: "apartamento" as LocationId,
         action: "Abrir o quadro do alvo",
       };
@@ -403,7 +404,8 @@ export function Game() {
     if (!done("sangue")) {
       return {
         title: "Examinar a cena do crime",
-        detail: "No Laboratório forense, abra a fotografia da trilha de sangue e observe a sequência das gotas.",
+        detail:
+          "No Laboratório forense, abra a fotografia da trilha de sangue e observe a sequência das gotas.",
         location: "lab" as LocationId,
         action: "Ver fotografia da cena",
       };
@@ -411,7 +413,8 @@ export function Game() {
     if (!done("relatorio")) {
       return {
         title: "Conferir o relatório do legista",
-        detail: "Ainda no Laboratório forense, examine o relatório e identifique o campo incompatível com as medições.",
+        detail:
+          "Ainda no Laboratório forense, examine o relatório e identifique o campo incompatível com as medições.",
         location: "lab" as LocationId,
         action: "Examinar relatório",
       };
@@ -419,7 +422,8 @@ export function Game() {
     if (!done("hora")) {
       return {
         title: "Reconstruir a hora da morte",
-        detail: "Cruze a temperatura do relatório com a tabela de resfriamento e resolva o enigma da hora.",
+        detail:
+          "Cruze a temperatura do relatório com a tabela de resfriamento e resolva o enigma da hora.",
         location: "lab" as LocationId,
         action: "Comparar os registros",
       };
@@ -427,7 +431,8 @@ export function Game() {
     if (!done("contradicao")) {
       return {
         title: "Conferir os depoimentos",
-        detail: "Na Homicídios, compare o relato de Carlos Ruiz com os registros oficiais de horário.",
+        detail:
+          "Na Homicídios, compare o relato de Carlos Ruiz com os registros oficiais de horário.",
         location: "corredor" as LocationId,
         action: "Investigar depoimentos",
       };
@@ -435,7 +440,8 @@ export function Game() {
     if (!done("janela") || !done("fechadura") || !done("luva")) {
       return {
         title: "Examinar a sala de evidências",
-        detail: "Leia o registro de rondas e investigue o armário 17. A fechadura e a luva dependem das pistas encontradas antes.",
+        detail:
+          "Leia o registro de rondas e investigue o armário 17. A fechadura e a luva dependem das pistas encontradas antes.",
         location: "evidencias" as LocationId,
         action: "Investigar armário 17",
       };
@@ -443,7 +449,8 @@ export function Game() {
     if (!done("cifra")) {
       return {
         title: "Decifrar o bilhete",
-        detail: "Volte ao Laboratório forense e use a mensagem encontrada no armário 17. Procure a chave nos documentos.",
+        detail:
+          "Volte ao Laboratório forense e use a mensagem encontrada no armário 17. Procure a chave nos documentos.",
         location: "lab" as LocationId,
         action: "Decifrar mensagem",
       };
@@ -451,7 +458,8 @@ export function Game() {
     if (!done("rede") || !done("reacao")) {
       return {
         title: "Cruzar nomes e endereços",
-        detail: "No Laboratório forense, conecte os nomes, endereços e horários; depois examine a reação deixada na bancada.",
+        detail:
+          "No Laboratório forense, conecte os nomes, endereços e horários; depois examine a reação deixada na bancada.",
         location: "lab" as LocationId,
         action: "Cruzar as pistas",
       };
@@ -459,7 +467,8 @@ export function Game() {
     if (!done("vestigio") || !done("lamina")) {
       return {
         title: "Confirmar os vestígios físicos",
-        detail: "Compare a luva, as fichas sanguíneas e os documentos. Não confunda uma suspeita com uma prova conclusiva.",
+        detail:
+          "Compare a luva, as fichas sanguíneas e os documentos. Não confunda uma suspeita com uma prova conclusiva.",
         location: "evidencias" as LocationId,
         action: "Analisar vestígios",
       };
@@ -467,14 +476,16 @@ export function Game() {
     if (!done("segredo") || !done("caderno")) {
       return {
         title: "Revisar o Código de Harry",
-        detail: "No Apartamento de Dexter, examine o caderno e o compartimento oculto antes de fechar as pontas soltas.",
+        detail:
+          "No Apartamento de Dexter, examine o caderno e o compartimento oculto antes de fechar as pontas soltas.",
         location: "apartamento" as LocationId,
         action: "Revisar o Código",
       };
     }
     return {
       title: "Revisar as evidências restantes",
-      detail: "Consulte o Caderno e retorne aos locais com pistas pendentes. Resolva os enigmas restantes antes de acusar.",
+      detail:
+        "Consulte o Caderno e retorne aos locais com pistas pendentes. Resolva os enigmas restantes antes de acusar.",
       location: s.loc,
       action: "Abrir Caderno",
     };
@@ -1138,9 +1149,10 @@ export function Game() {
             {
               number: "04",
               title: "Concluir",
-              text: s.solved.length >= 14
-                ? "Todos os enigmas foram resolvidos. Você já pode abrir o quadro do alvo."
-                : "A acusação conclusiva fica disponível após resolver os 14 enigmas.",
+              text:
+                s.solved.length >= 14
+                  ? "Todos os enigmas foram resolvidos. Você já pode abrir o quadro do alvo."
+                  : "A acusação conclusiva fica disponível após resolver os 14 enigmas.",
               complete: s.solved.length >= 14,
             },
           ].map((step) => (
@@ -1151,7 +1163,14 @@ export function Game() {
               <div className="flex items-center gap-2">
                 <span className="font-mono text-xs text-primary">{step.number}</span>
                 <h3 className="font-mono text-xs uppercase tracking-wider">{step.title}</h3>
-                {step.complete && <span className="ml-auto text-xs text-primary" aria-label="Etapa iniciada ou concluída">✓</span>}
+                {step.complete && (
+                  <span
+                    className="ml-auto text-xs text-primary"
+                    aria-label="Etapa iniciada ou concluída"
+                  >
+                    ✓
+                  </span>
+                )}
               </div>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{step.text}</p>
             </div>
@@ -1172,12 +1191,19 @@ export function Game() {
                 return;
               }
               if (nextObjective.title === "Examinar a cena do crime") openImage("blood-trail");
-              else if (nextObjective.title === "Conferir o relatório do legista") openImage("autopsy-report");
-              else if (nextObjective.title === "Reconstruir a hora da morte") setModal({ kind: "puzzle", id: "hora" });
-              else if (nextObjective.title === "Conferir os depoimentos") setModal({ kind: "puzzle", id: "contradicao" });
+              else if (nextObjective.title === "Conferir o relatório do legista")
+                openImage("autopsy-report");
+              else if (nextObjective.title === "Reconstruir a hora da morte")
+                setModal({ kind: "puzzle", id: "hora" });
+              else if (nextObjective.title === "Conferir os depoimentos")
+                setModal({ kind: "puzzle", id: "contradicao" });
               else if (nextObjective.title === "Examinar a sala de evidências")
-                setModal({ kind: "puzzle", id: !done("janela") ? "janela" : !done("fechadura") ? "fechadura" : "luva" });
-              else if (nextObjective.title === "Decifrar o bilhete") setModal({ kind: "puzzle", id: "cifra" });
+                setModal({
+                  kind: "puzzle",
+                  id: !done("janela") ? "janela" : !done("fechadura") ? "fechadura" : "luva",
+                });
+              else if (nextObjective.title === "Decifrar o bilhete")
+                setModal({ kind: "puzzle", id: "cifra" });
               else if (nextObjective.title === "Cruzar nomes e endereços")
                 setModal({ kind: "puzzle", id: !done("rede") ? "rede" : "reacao" });
               else if (nextObjective.title === "Confirmar os vestígios físicos")
@@ -1191,7 +1217,8 @@ export function Game() {
             {nextObjective.action} →
           </button>
           <p className="text-xs text-muted-foreground">
-            Clique nos nomes dos locais para se deslocar; textos sublinhados e cartões de imagem abrem pistas e enigmas.
+            Clique nos nomes dos locais para se deslocar; textos sublinhados e cartões de imagem
+            abrem pistas e enigmas.
           </p>
         </div>
       </section>
