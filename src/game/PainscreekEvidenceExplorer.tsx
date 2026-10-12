@@ -132,7 +132,7 @@ export function PainscreekEvidenceExplorer() {
             Catálogo de evidências
           </h1>
           <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
-            Consulte as 28 referências catalogadas a partir das páginas 80–116 do PDF. Busque por
+            Consulte as 34 referências catalogadas a partir das páginas 80–116 do PDF. Busque por
             título, página ou conteúdo e abra cada registro para ver suas ressalvas.
           </p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">

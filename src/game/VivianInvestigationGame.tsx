@@ -12,6 +12,13 @@ import {
   RotateCcw,
 } from "lucide-react";
 
+import {
+  calculateInvestigationScore,
+  HINT_COSTS,
+  MAX_SCORE,
+  normalizeSavedIds,
+} from "@/game/vivianInvestigationRules";
+
 type PlaceId = "archive" | "mansion" | "hospital" | "church" | "lake";
 type ClueId =
   | "police-report"
@@ -236,8 +243,6 @@ const LINKS: { id: LinkId; title: string; clues: [ClueId, ClueId]; insight: stri
   },
 ];
 
-const HINT_COSTS = [20, 50, 100] as const;
-const MAX_SCORE = 1000;
 const CLUE_HINTS: Record<ClueId, [string, string, string]> = {
   "police-report": [
     "Identifique quem aparece como suspeito no relatório.",
@@ -312,10 +317,7 @@ function readSave(): SaveData | null {
       version?: 1 | 2;
     };
     if (value.version !== 1 && value.version !== 2) return null;
-    const ids = <T extends string>(list: unknown, valid: readonly T[]) =>
-      Array.isArray(list)
-        ? list.filter((id): id is T => typeof id === "string" && valid.includes(id as T))
-        : [];
+    const ids = normalizeSavedIds;
     return {
       version: 2,
       found: ids(
@@ -416,11 +418,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
-  const scorePenalty = usedHints.reduce((total, key) => {
-    const level = Number(key.split(":")[1]);
-    return total + (HINT_COSTS[level - 1] ?? 0);
-  }, 0);
-  const score = Math.max(0, MAX_SCORE - scorePenalty);
+  const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints);
   const scoreRank =
     score >= 900
       ? "Detetive excepcional"
