@@ -10,5 +10,11 @@
 - [x] Foto do trio (Sam, Dean e Dexter no Impala) na tela inicial do Caso 02 · O Sangue dos Condenados, via CaseHeroImage
 - [x] Integração do Caso 02 Winchester ao menu (Game.tsx) e conquistas (achievements.ts), aplicando as mudanças do PR #2
 
+## Concluído (12/10/2026)
+- [x] Registro investigativo de trabalho para Painscreek, páginas 51–60, adicionado em `docs/casos/painscreek/paginas-51-60-notas-investigativas.md`
+- [x] Incertezas, cronologia a conferir e comparação de duplicatas pendente explicitamente documentadas
+
 ## Pendente
+- [ ] Conferir visualmente as páginas 51–60 e comparar com o inventário das páginas 1–50
+- [ ] Integrar as entradas confirmadas à interface investigativa sem converter relatos em fatos comprovados
 - [ ] O usuário decide quando publicar — não publicar sem pedido explícito
