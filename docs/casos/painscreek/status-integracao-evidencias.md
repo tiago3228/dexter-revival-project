@@ -4,7 +4,7 @@ Atualizado em 2026-10-12.
 
 ## Material de origem
 
-O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. Ele contém o PDF `The Painscreek Killing.pdf` (116 páginas) e cinco mapas em PNG. O PDF é composto por páginas digitalizadas; a extração de texto direta não retorna texto selecionável. A conferência visual do PDF é a fonte de autoridade; OCR serve apenas como apoio.
+O arquivo `IMAGENSDEPAINSCREEK.zip` foi fornecido pelo usuário e contém o PDF `The Painscreek Killing.pdf` (116 páginas) e cinco mapas em PNG. SHA-256 do ZIP: `fbd1804b32542cf0cb63217493ceebaf136cda62b2011b4bf8c891966f975cb5`; SHA-256 do PDF: `54e1cbbd0884793ea921227e118566045d109abec2e9be9250d732ac3e28aa8e`. O PDF é composto por páginas digitalizadas; a extração de texto direta não retorna texto selecionável. A imagem é a fonte de autoridade; OCR serve apenas como apoio.
 
 ## Estado confirmado no repositório
 
@@ -36,12 +36,13 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 
 ## Pendências documentais e de integração
 
-- A auditoria integral das páginas 1–50 continua pendente. Uma tentativa de orquestrar a revisão em blocos encerrou antes de produzir relatórios; portanto, não há novos achados nem alterações no catálogo resultantes dessa tentativa.
-- A comparação visual página a página das páginas 51–79 foi concluída e registrada em `auditoria-cruzamento-paginas-051-079.md`. A transcrição de trabalho registra a omissão de texto detectada pelo OCR na p. 55, o plural impresso “Sem álibis” na p. 61 e a contradição cronológica interna da p. 56. A revisão de p. 55, 59 e 61 foi cruzada, respectivamente, com p. 116, 86 e 95. A p. 59 também foi conferida diretamente com a imagem nesta atualização.
+- A auditoria das páginas 1–50 está registrada em `auditoria-cruzamento-paginas-001-050.md`, incluindo as duas entradas legíveis recuperadas da p. 43 e as duplicatas confirmadas das pp. 49–50.
+- A comparação visual página a página das páginas 51–79 foi concluída e registrada em `auditoria-cruzamento-paginas-051-079.md`. A transcrição de trabalho registra a omissão de texto detectada pelo OCR na p. 55, o plural impresso “Sem álibis” na p. 61 e a contradição cronológica interna da p. 56. As páginas 55, 59 e 61 foram cruzadas, respectivamente, com as páginas 116, 86 e 95; a p. 59 também foi conferida diretamente com a imagem.
 - A etapa de revisão dos personagens foi concluída e registrada em `auditoria-personagens.md`: 20 perfis foram liberados com resumos restritos às fontes, Hannah e Nicole permanecem pendentes por lacunas de identificação, Scott e Sofia mantêm contradições abertas, e o placeholder coletivo sem identidade individual foi removido.
 - A auditoria completa de `P-001` a `P-034` ainda precisa verificar fidelidade a cada fonte, classificação do tipo de documento, grau de confiança, estado de revisão, duplicatas e referências cruzadas.
-- A relação entre a página 55 (relato de Scott sobre uma fotografia) e a página 116 (fotografia mencionada no diário) permanece sem confirmação de identidade.
-- Permanecem pendentes as divergências cronológicas e os cruzamentos documentados em `auditoria-cruzamento-paginas-051-079.md`, inclusive o grau de correspondência entre as páginas 59 e 86 e entre as páginas 61 e 95.
+- Páginas 55 e 116, ambas datadas de 13/02/1995, provavelmente se referem à mesma fotografia, mas não a identificam visualmente; P-005 continua incompleto quanto à identidade e ao retorno da foto.
+- Páginas 59 e 86 provavelmente se referem ao mesmo acidente de 1973; p. 86 fornece os detalhes das vítimas e indenizações. A nota da p. 61 sobre o pai de Bernard não pode ser ligada a esse acidente sem data ou identificação adicional. Páginas 61 e 95 são documentos distintos associados ao mesmo Bernard; a ficha funcional não corrobora a nota investigativa.
+- A contradição de datas/ações de Scott na p. 56 permanece sem explicação. Preservar os cabeçalhos como impressos; não corrigir por inferência.
 - O catálogo não deve ser descrito como plenamente integrado ao jogo: a interface de consulta documental não está conectada ao ciclo jogável de Vivian.
 - Ainda falta teste manual no navegador de desbloqueios, coleta duplicada, conexões válidas e inválidas, cronologia, bloqueio do relatório e persistência após recarga.
 

@@ -57,6 +57,8 @@ Scott visita Andrew para descobrir onde esconderam o corpo de sua mãe. Andrew c
 
 **Incerteza:** a entrada da fotografia não nomeia o pai no trecho visível. A conclusão de que Charles é o pai depende de outras entradas e deve ser registrada como conclusão de Scott, não como prova isolada desta página.
 
+**Conferência visual:** a imagem contém as duas entradas acima. A transcrição consolidada enviada pelo usuário marcou a página como “nenhum texto reconhecido pelo OCR”; essa marcação é uma omissão do OCR, não uma página vazia. A transcrição de trabalho acima foi cotejada com a imagem original.
+
 ## Página 56 — Scott Brooks; ordem das datas a preservar
 
 ### Segunda-feira, 13 de abril de 1995
@@ -67,7 +69,7 @@ Scott relata que o poço havia secado e estava coberto de lodo. Diz que só sabe
 
 Scott escreve que a enterrou no cemitério ao lado do padre Calvin. Não havia lápide, apenas uma cruz de madeira. Ele acredita que o padre Calvin não se importaria, pois foi quem o salvou.
 
-**Discrepância cronológica:** a entrada de 13 de abril aparece antes da entrada de 4 de abril na página. Preservar essa ordem visual na transcrição, mas não assumir que seja a ordem cronológica dos acontecimentos. A relação exata entre as duas entradas requer conferência adicional.
+**Discrepância cronológica:** a entrada de 13 de abril aparece à esquerda e a de 4 de abril à direita. Além da ordem visual invertida, há uma contradição narrativa se ambas forem do mesmo ano: Andrew informa o local do corpo em 13/04, mas a entrada datada de 04/04 já diz que Scott encontrou e enterrou o corpo. Preservar as datas exatamente como impressas; não corrigir nem explicar por inferência.
 
 ## Página 57 — Scott Brooks
 
