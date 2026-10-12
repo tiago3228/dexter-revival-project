@@ -144,10 +144,16 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
  * Base isolada do Capítulo 6. Ainda não está ligada ao menu principal:
  * integrar somente após revisar as transcrições e as dependências do caso.
  */
-export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { onBack?: () => void; soundOn?: boolean; onToggleSound?: () => void }) {
+export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound, musicVolume = 0.3, onMusicVolumeChange }: { onBack?: () => void; soundOn?: boolean; onToggleSound?: () => void; musicVolume?: number; onMusicVolumeChange?: (value: number) => void }) {
   const [showBoard, setShowBoard] = useState(false);
   const [ambientOn, setAmbientOn] = useState(true);
-  const [ambientVolume, setAmbientVolume] = useState(0.22);
+  const [ambientVolume, setAmbientVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.22;
+    const saved = window.localStorage.getItem("vivian-ambient-volume");
+    if (saved === null) return 0.22;
+    const parsed = Number(saved);
+    return Number.isFinite(parsed) ? Math.min(1, Math.max(0, parsed)) : 0.22;
+  });
   const ambientRef = useRef<{ context: AudioContext; nodes: AudioScheduledSourceNode[]; gains: GainNode[] } | null>(null);
   const [section, setSection] = useState<"pessoas" | "locais" | "documentos">("pessoas");
   const [query, setQuery] = useState("");
@@ -170,13 +176,13 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { o
       filter.type = "lowpass";
       filter.frequency.value = 360;
       const windGain = context.createGain();
-      windGain.gain.value = 0.055 * ambientVolume;
+      windGain.gain.value = 0.11 * ambientVolume;
       noise.connect(filter).connect(windGain).connect(context.destination);
       const hum = context.createOscillator();
       hum.type = "sine";
       hum.frequency.value = 54;
       const humGain = context.createGain();
-      humGain.gain.value = 0.018 * ambientVolume;
+      humGain.gain.value = 0.036 * ambientVolume;
       hum.connect(humGain).connect(context.destination);
       noise.start();
       hum.start();
@@ -187,9 +193,12 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { o
   }, [ambientOn, ambientVolume]);
   useEffect(() => {
     if (ambientRef.current) {
-      ambientRef.current.gains[0].gain.value = 0.055 * ambientVolume;
-      ambientRef.current.gains[1].gain.value = 0.018 * ambientVolume;
+      ambientRef.current.gains[0].gain.value = 0.11 * ambientVolume;
+      ambientRef.current.gains[1].gain.value = 0.036 * ambientVolume;
     }
+  }, [ambientVolume]);
+  useEffect(() => {
+    window.localStorage.setItem("vivian-ambient-volume", String(ambientVolume));
   }, [ambientVolume]);
   useEffect(() => {
     if (ambientOn) return;
@@ -232,21 +241,35 @@ export function VivianRobertsCase({ onBack, soundOn = true, onToggleSound }: { o
             <button type="button" onClick={() => setAmbientOn((value) => !value)} aria-pressed={ambientOn} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5">{ambientOn ? <Volume2 size={16}/> : <VolumeX size={16}/>} Ambiente: {ambientOn ? "ligado" : "desligado"}</button>
           </div>
         </header>
+        <div className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 px-0" aria-label="Controles de áudio">
+          <button type="button" onClick={onToggleSound} aria-pressed={soundOn} className="min-h-10 border border-[#79664c] px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-[#c4a779]">
+            Trilha: {soundOn ? "ligada" : "desligada"}
+          </button>
+          <label className="flex min-h-10 items-center gap-2 border border-[#4b4439] px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-[#bdb5a8]">
+            Música {Math.round(musicVolume * 100)}%
+            <input type="range" min="0" max="1" step="0.01" value={musicVolume} onChange={(event) => onMusicVolumeChange?.(Number(event.target.value))} aria-label="Volume da trilha musical" className="w-24 accent-[#c4a779]" />
+          </label>
+          <button type="button" onClick={() => setAmbientOn((value) => !value)} aria-pressed={ambientOn} className="min-h-10 border border-[#4b4439] px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-[#c4a779]">
+            Ambiente: {ambientOn ? "ligado" : "desligado"}
+          </button>
+          <label className="flex min-h-10 items-center gap-2 border border-[#4b4439] px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-[#bdb5a8]">
+            Ambiente {Math.round(ambientVolume * 100)}%
+            <input type="range" min="0" max="1" step="0.01" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} aria-label="Volume do som ambiente" className="w-24 accent-[#c4a779]" />
+          </label>
+        </div>
         <figure className="relative mx-auto mt-6 w-full overflow-hidden border border-[#79664c] bg-black shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
           <div className="relative aspect-[16/7] min-h-[230px] w-full sm:min-h-[320px]">
             <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/624270/header.jpg" alt="Arte oficial de The Painscreek Killings, jogo que inspira o caso Vivian Roberts" loading="eager" className="h-full w-full object-cover object-center" />
             <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/5" />
             <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 sm:p-6">
               <div><p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#e1c18d]">Trilha sonora · atmosfera de investigação</p><p className="mt-1 font-display text-xl text-white sm:text-3xl">O Caso Vivian Roberts</p><p className="mt-1 text-xs text-white/75">Tema musical de Painscreek + ambiente contínuo</p></div>
-              <div className="flex flex-wrap items-center gap-2">
-                {onToggleSound && <button type="button" onClick={onToggleSound} aria-pressed={soundOn} className="inline-flex min-h-10 items-center gap-2 border border-white/40 bg-black/55 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-white backdrop-blur hover:bg-black/80">{soundOn ? <Volume2 size={15}/> : <VolumeX size={15}/>} Música {soundOn ? "ligada" : "desligada"}</button>}
-                <button type="button" onClick={() => setAmbientOn((value) => !value)} aria-pressed={ambientOn} className="inline-flex min-h-10 items-center gap-2 border border-white/40 bg-black/55 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-white backdrop-blur hover:bg-black/80">{ambientOn ? <Volume2 size={15}/> : <VolumeX size={15}/>} Ambiente {ambientOn ? "ligado" : "desligado"}</button>
-                <label className="flex min-h-10 items-center gap-2 border border-white/30 bg-black/55 px-3 py-2 text-[10px] text-white backdrop-blur">VOLUME AMBIENTE <input aria-label="Volume do som ambiente" type="range" min="0" max="0.5" step="0.01" value={ambientVolume} onChange={(event) => setAmbientVolume(Number(event.target.value))} className="w-24 accent-[#c4a779]"/><span>{Math.round(ambientVolume * 200)}%</span></label>
-              </div>
+
             </div>
           </div>
           <figcaption className="border-t border-[#79664c] bg-[#171512] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#a9a092] sm:px-4">Arquivo visual · The Painscreek Killings · EQ Studios</figcaption>
         </figure>
+
+
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#4b4439] bg-[#1b1a17] p-4"><div><p className="font-mono text-xs uppercase tracking-widest text-[#c4a779]">Ferramenta de dedução</p><p className="mt-1 text-sm text-[#bdb5a8]">Arraste personagens para locais e registre conexões que deseja investigar.</p></div><button type="button" onClick={() => setShowBoard(true)} className="inline-flex min-h-12 items-center gap-2 border border-[#c4a779] bg-[#c4a779]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#ead8b8] transition hover:bg-[#c4a779]/20"><ClipboardList size={17}/> Quadro investigativo</button></div>
         <section className="mt-5 grid gap-3 sm:grid-cols-3">
