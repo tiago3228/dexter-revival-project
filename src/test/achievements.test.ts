@@ -78,7 +78,7 @@ describe("game achievements", () => {
     expect(imperfect.unlockedIds).not.toContain("red-john-profiler");
   });
 
-  it("unlocks the collection trophy only after all four chapters are completed", () => {
+  it("unlocks the collection trophy only after all five chapters are completed", () => {
     let progress = emptyAchievementProgress();
     progress = applyCasePerformance(progress, performance);
     progress = applyCasePerformance(progress, { ...performance, caseId: "monroe" });
@@ -86,8 +86,10 @@ describe("game achievements", () => {
     progress = applyCasePerformance(progress, { ...performance, caseId: "painscreek" });
     expect(progress.unlockedIds).not.toContain("all-cases");
     progress = applyCasePerformance(progress, { ...performance, caseId: "mentalist" });
-
     expect(progress.completedCases).toHaveLength(4);
+    expect(progress.unlockedIds).not.toContain("all-cases");
+    progress = applyCasePerformance(progress, { ...performance, caseId: "winchester" });
+    expect(progress.completedCases).toHaveLength(5);
     expect(progress.unlockedIds).toContain("all-cases");
   });
 
@@ -108,6 +110,11 @@ describe("game achievements", () => {
       score: 90,
       correctInterrogations: 3,
       interrogationMistakes: 0,
+    });
+    progress = applyCasePerformance(progress, {
+      ...performance,
+      caseId: "winchester",
+      score: 90,
     });
 
     expect(progress.unlockedIds).toContain("blood-slide-box");
