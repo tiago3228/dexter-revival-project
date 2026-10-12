@@ -28,8 +28,8 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 
 ## CI e validações
 
-- O workflow está em `.github/workflows/ci.yml`. A execução [38314003065](https://github.com/tiago3228/dexter-revival-project/actions/runs/38314003065) terminou com sucesso no commit `27d434f5440632d1cd7fc6a46e25393c02b08309`, dentro do PR #10.
-- As alterações posteriores a esse commit precisam da execução de CI no novo head do PR antes de se declarar o estado remoto validado.
+- O workflow está em `.github/workflows/ci.yml`. A execução [38315052983](https://github.com/tiago3228/dexter-revival-project/actions/runs/38315052983) terminou com sucesso no commit `194b65e6c449cae625950ad929a5d21cf2a3ba7a`, dentro do PR #10. A execução anterior [38314003065](https://github.com/tiago3228/dexter-revival-project/actions/runs/38314003065) também passou no commit `27d434f5440632d1cd7fc6a46e25393c02b08309`.
+- Este registro documental foi atualizado depois do commit validado `194b65e`; o commit que registrar esta própria atualização ainda precisa passar pelo CI antes de qualquer merge.
 - Na validação local final desta etapa: `bun run lint` terminou com 0 erros e 7 avisos; `bun run test` passou em 7 arquivos e 25 testes; `bunx tsc --noEmit`, `bun run build` e `git diff --check` passaram.
 - A correspondência estrutural da rota foi testada; ainda falta conferir a rota e o ciclo de investigação no navegador.
 
