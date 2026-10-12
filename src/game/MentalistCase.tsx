@@ -537,7 +537,9 @@ export function MentalistCase({
               Conversa reservada: Dexter e Patrick Jane
             </button>
             {found.length === 0 && (
-              <p className="mt-2 text-xs text-muted-foreground">Colete uma evidência para abrir a conversa.</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Colete uma evidência para abrir a conversa.
+              </p>
             )}
           </div>
         </section>
@@ -689,7 +691,7 @@ export function MentalistCase({
                             ? "Rever depoimento correto"
                             : interviewed.includes(suspect.id)
                               ? "Tentar novo confronto"
-                            : "Interrogar"}
+                              : "Interrogar"}
                         </button>
                         {interviewed.includes(suspect.id) && (
                           <button

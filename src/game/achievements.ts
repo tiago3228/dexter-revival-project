@@ -1,6 +1,13 @@
 import { loadCurrentPlayerName, recordPlayerPerformance } from "./playerRanking";
 
-export const CASE_IDS = ["ortega", "monroe", "painscreek", "mentalist", "winchester", "vivian"] as const;
+export const CASE_IDS = [
+  "ortega",
+  "monroe",
+  "painscreek",
+  "mentalist",
+  "winchester",
+  "vivian",
+] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
 export const ACHIEVEMENTS = [

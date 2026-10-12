@@ -6,10 +6,7 @@
  * independente de que a alegação seja verdadeira.
  */
 export type PainscreekEvidenceStatus =
-  | "unverified"
-  | "visually-checked"
-  | "incomplete"
-  | "contradictory";
+  "unverified" | "visually-checked" | "incomplete" | "contradictory";
 
 export type PainscreekEvidence = {
   id: string;
@@ -57,8 +54,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     title: "Código 0318",
     pages: [102],
     sourceType: "Código mencionado em carta",
-    documented:
-      "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
+    documented: "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
     pendingVerification:
       "Verificar eventual correspondência com objeto ou mecanismo do jogo; a carta foi conferida visualmente, mas a função de puzzle não foi validada.",
     confidence: "medium",
@@ -175,8 +171,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
       "As páginas 108, 115 e 116 foram conferidas visualmente. Confirmar a sequência dos eventos e se há alguma relação documentada entre eles; não inferir causalidade entre os episódios.",
     confidence: "high",
     status: "visually-checked",
-    playerInference:
-      "A proximidade no dossiê não prova relação causal entre os eventos.",
+    playerInference: "A proximidade no dossiê não prova relação causal entre os eventos.",
   },
   {
     id: "P-012",
@@ -292,7 +287,6 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
       "A carta documenta uma relação comercial e uma percepção sobre seus benefícios; não comprova irregularidade por si só.",
   },
 
-
   {
     id: "P-020",
     title: "Laudo médico de Vivian Roberts",
@@ -393,7 +387,6 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
       "A carta confirma a contratação de representação jurídica conforme o remetente, mas não estabelece o resultado do recurso nem a culpa ou inocência de Scott.",
   },
 
-
   {
     id: "P-027",
     title: "Carta de Scott para Trisha",
@@ -463,7 +456,7 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     confidence: "low",
     status: "incomplete",
     playerInference:
-      "P-031 é uma duplicata editorial de P-009, não um segundo evento. A descrição da mulher continua sem identificação confirmada."
+      "P-031 é uma duplicata editorial de P-009, não um segundo evento. A descrição da mulher continua sem identificação confirmada.",
   },
   {
     id: "P-032",
