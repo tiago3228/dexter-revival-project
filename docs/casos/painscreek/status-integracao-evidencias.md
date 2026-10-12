@@ -10,7 +10,7 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. O ZIP conté
 
 - Rota `/painscreek-evidence` existe em `src/routes/painscreek-evidence.tsx`.
 - A árvore de rotas registra a página em `src/routeTree.gen.ts`.
-- O explorador usa os 19 registros de `src/game/painscreekEvidence.ts`, descritos como catálogo documental preliminar para as páginas 80–116, ampliado nesta etapa com sete registros das páginas 84–92.
+- O explorador usa 22 registros em `src/game/painscreekEvidence.ts`, cobrindo referências das páginas 80–116. Nesta revisão, os registros das páginas 84–97 foram cotejados com as imagens originais; três documentos novos (laudo médico de Vivian, ficha de Bernard Hopkins e despedida de Dorothy) foram acrescentados.
 - O catálogo documental continua separado do sistema de solução de casos; não confundir o catálogo com a mecânica jogável.
 - `src/game/VivianInvestigationGame.tsx` implementa o primeiro ciclo jogável do Caso Vivian Roberts: coleta de evidências em locais desbloqueáveis, cruzamento de pares documentais, cronologia ordenável, relatório provisório e salvamento local.
 - `src/game/VivianRobertsCase.tsx` expõe o novo modo pelo botão “Iniciar investigação” e mantém o dossiê/quadro investigativo acessíveis.
@@ -29,7 +29,8 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. O ZIP conté
 - Executar `npm run build`, `npm test` e `npm run lint` num ambiente com dependências instaladas. Não foi possível executar essas verificações neste turno; o clone local falhou por indisponibilidade de DNS para `github.com`, e o commit ainda não reporta checks de CI.
 - Testar o ciclo completo no navegador: desbloqueios de locais, coleta duplicada, conexões válidas/inválidas, cronologia, bloqueio do relatório e persistência após recarregar.
 - Abrir `/painscreek-evidence` e testar pesquisa, filtro, expansão de fontes e links de ida/volta no navegador.
-- Comparar as páginas restantes do PDF com as transcrições já existentes, eliminar duplicatas e preservar leituras incertas. Sete registros preliminares novos das páginas 84–92 foram acrescentados a partir de OCR e continuam pendentes de cotejo visual completo.
-- Só marcar evidência como conferida visualmente depois de cotejá-la com a página original.
+- Continuar a revisão das páginas fora do lote 84–97 e comparar cada documento com o catálogo para eliminar duplicatas, identificar personagens/lugares e preservar leituras incertas.
+- O relatório financeiro da página 97, a notícia de fechamento do hospital (p. 84), a notícia da mina (p. 86), a notícia sobre Andrew Reed (p. 87), a declaração de Scott (p. 88), a carta de realocação (p. 89), a carta para Daniel (p. 91), a carta comercial (p. 92), o laudo médico (p. 94), a ficha de Bernard Hopkins (p. 95) e a carta de Dorothy (p. 96) foram cotejados visualmente. A carta para Daniel continua marcada como incompleta porque a página não identifica o remetente nem mostra o fim da carta.
+- Os status `visually-checked` confirmam apenas o cotejo com a imagem; não confirmam automaticamente que acusações, relatos ou inferências do documento sejam verdadeiros.
 
 Nenhuma publicação do jogo foi feita por esta atualização.
