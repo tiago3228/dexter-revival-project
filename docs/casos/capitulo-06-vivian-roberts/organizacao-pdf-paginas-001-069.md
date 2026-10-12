@@ -60,7 +60,7 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 | 33–34 | Entradas de 1995: Matthew ouve de Scott que Sofia pode estar morta, visita o túmulo descrito como cruz de madeira sem nome e sente suspeitas sobre Vivian, Henry e Andrew; pretende fazer Andrew confessar. | Suspeitas e intenção do narrador, não prova. |
 | 35–40 | Diário de Scott sobre chegada ao orfanato/lar de Matthew, adoção do sobrenome Brooks, bullying, amizade com Trisha, admiração por Charles, relação com Derrick e interesse numa possível sala secreta da mansão. | Há palavras corrompidas; a pergunta sobre sala secreta não comprova sua existência. |
 | 41–42 | Scott relata caça com Charles, dúvidas sobre por que Matthew o proibiria de ficar com Trisha e frustração com as respostas evasivas sobre os pais biológicos. | Datas visíveis 14/02/1993, 18/06/1993, 22/06/1993 e 31/07/1993; conferir colunas e trechos truncados. |
-| 43 | Nenhum texto reconhecido pelo OCR. | Conferir imagem; não usar resumo antigo como transcrição confirmada. |
+| 43 | **Conferida na imagem:** Scott relata que Charles o deixou ficar na cabana sob condição de trabalhar como ajudante de jardinagem; na entrada seguinte, descreve Andrew bêbado e balbuciando nomes, entre eles Magdalene. | O OCR falhou; conteúdo visível foi recuperado pela inspeção da imagem. A referência a Magdalene permanece sem interpretação. |
 
 ### Páginas 44–57 — investigação de Scott sobre Sofia
 
@@ -75,7 +75,7 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 | 52 | Trisha dá chocolate a Scott; ele ainda não concluiu a caixa de música. Scott também reconhece que precisa reconciliar-se com Matthew. | Duas entradas de fevereiro de 1994; transcrição pendente. |
 | 53 | Scott encontra Andrew inconsciente com frasco vazio de comprimidos para dormir; uma enfermeira diz que seria a terceira tentativa de suicídio. | Relato atribuído à enfermeira. |
 | 54 | Andrew conta a Scott uma versão em que Sofia teve um filho com Charles e morreu após cair num poço durante um confronto em 26/06/1975, às 23h; diz que Vivian pediu que ele cuidasse do corpo e do bebê chamado Vincent. | Relato indireto de Andrew, não fato confirmado; OCR mistura colunas e corta trechos. |
-| 55 | Nenhum texto reconhecido pelo OCR. | Conferir imagem original; não importar resumos prévios como se fossem confirmados por este OCR. |
+| 55 | **Conferida na imagem:** Scott vê uma foto, nota que tem o mesmo cobertor, conclui que sabe quem é seu pai; depois confronta Andrew sobre o corpo de sua mãe e diz ser o menino que Andrew entregou a Father Calvin para ser salvo. | O OCR falhou, mas a imagem contém texto legível. Preservar como declaração de Scott e reação de Andrew, não como comprovação independente de toda a identidade. |
 | 56 | Scott diz que Andrew revelou onde o corpo estava; em outra entrada, Scott encontra um corpo que acredita ser o de sua mãe e o enterra no cemitério junto a Father Calvin. | OCR mostra entradas em ordem 13/04 e 04/04/1995; preservar a ordem impressa e confirmar visualmente. Identificação do corpo não confirmada de forma independente. |
 | 57 | Scott se isola e depois diz a Matthew que Charles é seu pai e Trisha sua meia-irmã. | Conclusões de Scott; verificar as fontes de parentesco. |
 
@@ -85,7 +85,7 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 |---|---|---|
 | 58 | Steven Moss registra que a investigação é lenta, planeja visitar o Orfanato São Patrício e entrevistar antigos funcionários; evita falar com Matthew por enquanto. | Nota investigativa com trechos corrompidos; não é conclusão probatória. |
 | 59 | Fragmentos mencionam Vivian, a Companhia de Mineração Roberts, acidente na mina de 1973, Trisha e internação em 1974. | OCR severamente misturado; não reconstruir a sequência. |
-| 60 | Só aparece o fragmento “(Mansão?)”. | Documento/contexto não identificado; ilegível/incompleto. |
+| 60 | **Conferida na imagem:** anotação “Sala de segurança: 005241 (Mansão?)”. | Código visível: **005241**. A identificação da mansão mantém o ponto de interrogação da fonte. Diferente do código da sala de estudo 44871 da p. 64. |
 | 61 | Ficha de Bernard Hopkins com endereço na Av. Silverlake, n.º 31, e anotação de que estava em casa no dia da morte de Vivian, “Sem álibi”. | Confirmar campos; ausência de álibi não prova culpa. |
 | 62 | Nota “Entrevista com Dorothy” e anotação de encontro com o xerife no posto às 10h em 11/05, que queria mostrar documentos. | Nome adicional e ano incertos. |
 | 63 | Trisha comenta que Scott é quieto e sofre bullying; depois rejeita balé e etiqueta e questiona expectativas da mãe. | Duas entradas em colunas; perspectiva pessoal. |
