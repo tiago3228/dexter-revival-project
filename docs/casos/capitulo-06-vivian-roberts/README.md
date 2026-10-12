@@ -6,7 +6,8 @@
 Preparar um caso investigativo independente para Dexter Revival Project, inspirado na estrutura de exploração e descoberta de documentos de The Painscreek Killings. O capítulo existente chamado Painscreek permanece separado e não deve ser sobrescrito, renomeado ou reutilizado como se fosse este caso.
 
 ## Documentos de trabalho
-- [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — lote organizado até a página 69; contém resumos de trabalho e sinaliza o que ainda precisa ser conferido no PDF original.
+- [Organização do PDF — páginas 1–69](./organizacao-pdf-paginas-001-069.md) — síntese por página do lote 1–69, atualizada com o OCR recebido até a página 69.
+- [Inventário OCR — páginas 31–69](./inventario-ocr-paginas-031-069.md) — inventário do OCR enviado, com alertas de coluna, duplicatas, páginas sem texto reconhecido e afirmações que continuam sendo relatos.
 - [Inventário OCR — páginas 70–116](./recebido-ia-paginas-070-116.md) — inventário por página do texto enviado, com tipo de documento, conteúdo principal e alertas de OCR/consistência. Não substitui a transcrição literal.
 - [Matriz preliminar de pistas — páginas 70–116](./matriz-pistas-paginas-070-116.md) — documentos e afirmações separados por tema, com limites probatórios e conexões candidatas. Todas as ligações são provisórias.
 - [Grafo provisório de dependências](./grafo-dependencias-provisorio.md) — caminhos candidatos para cruzar fontes e orientar a progressão, sem confirmar conclusões.
