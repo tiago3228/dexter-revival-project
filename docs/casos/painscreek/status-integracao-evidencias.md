@@ -14,6 +14,8 @@ O arquivo `IMAGENS DE PAINSCREEK.zip` foi localizado na Biblioteca. O ZIP conté
 - O catálogo documental continua separado do sistema de solução de casos; não confundir o catálogo com a mecânica jogável.
 - `src/game/VivianInvestigationGame.tsx` implementa o primeiro ciclo jogável do Caso Vivian Roberts: coleta de evidências em locais desbloqueáveis, cruzamento de pares documentais, cronologia ordenável, relatório provisório e salvamento local.
 - `src/game/VivianRobertsCase.tsx` expõe o novo modo pelo botão “Iniciar investigação” e mantém o dossiê/quadro investigativo acessíveis.
+- O modo jogável agora oferece três níveis de dica por evidência, com penalidades de 20, 50 e 100 pontos. O total parte de 1.000 pontos, é limitado a zero e aparece na exploração e no relatório provisório.
+- As dicas usadas são persistidas no navegador, não podem ser cobradas duas vezes e são limpas ao reiniciar. A leitura de progresso aceita saves antigos da versão 1 e migra para a versão 2.
 - O protótipo não declara culpado nem motivo final: há transcrições ainda incertas e a solução precisa ser confirmada antes de habilitar um veredito definitivo.
 - O catálogo mantém alegações, relatos, inferências e verificações pendentes separados.
 
