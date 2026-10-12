@@ -25,7 +25,7 @@
 
 ## Duplicatas e normalização prioritárias
 
-1. **P-009 versus P-031:** ambos apontam para o episódio da mulher vista por Stephanie na floresta (p. 109). Antes de usar os dois como itens independentes, verificar se P-031 acrescenta um documento ou apenas repete a descrição de P-009. Se for a mesma fonte, preservar um registro canônico e adicionar a outra referência como alias/contexto.
+1. **P-009 versus P-031:** ambos apontam para o episódio da mulher vista por Stephanie na floresta (p. 109). O catálogo foi corrigido: P-031 está explicitamente marcado como duplicata editorial de P-009, com status incompleto e confiança baixa, e não deve contar como evidência independente. O ID foi preservado para rastreabilidade histórica.
 2. **P-005, P-011 e P-034:** o empréstimo da fotografia em p. 116 e a relação de Scott com Andrew são temas conectados no mesmo diário, mas não são o mesmo acontecimento. Evitar duplicar o fato da fotografia em múltiplas entradas sem declarar o vínculo entre registros.
 3. **P-002 e P-032:** a menção ao incidente de 1975 aparece em relato indireto. A entrada da pousada contextualiza a linha investigativa, mas não confirma a identidade do incidente nem da empregada.
 4. **P-003:** o significado documental de 0318 está descrito; a sua utilização como senha ou mecanismo interativo continua uma hipótese de implementação.
