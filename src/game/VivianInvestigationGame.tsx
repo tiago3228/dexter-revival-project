@@ -29,7 +29,7 @@ type Clue = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 1;
+  version: 2;
   found: ClueId[];
   visited: PlaceId[];
   links: LinkId[];
@@ -39,6 +39,7 @@ type SaveData = {
   reportSubmitted: boolean;
   chosenConclusion: string;
   mistakes: number;
+  usedHints: string[];
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
@@ -73,6 +74,23 @@ const LINKS: { id: LinkId; title: string; clues: [ClueId, ClueId]; insight: stri
   { id: "photo-scott", title: "Scott e a fotografia", clues: ["dorothy-photo", "police-report"], insight: "A fotografia aparece no diário de Dorothy, enquanto o relatório situa Scott na investigação. Sem localizar a imagem e seu conteúdo, a ligação é apenas uma pergunta investigativa." },
 ];
 
+
+const HINT_COSTS = [20, 50, 100] as const;
+const MAX_SCORE = 1000;
+const CLUE_HINTS: Record<ClueId, [string, string, string]> = {
+  "police-report": ["Identifique quem aparece como suspeito no relatório.", "As testemunhas ouviram uma discussão, mas não entenderam as palavras.", "Compare com a declaração de Scott na página 88; suspeita não é prova."],
+  "scott-denial": ["Observe o que Scott afirma ter feito após encontrar Vivian.", "A notícia registra a versão dele, não uma confirmação independente.", "Cruze com o relatório policial da página 90 e procure corroboração."],
+  "hospital-closure": ["Confira o ano do fechamento e os motivos financeiros citados.", "A notícia menciona suspeitas, não comprovação de desvio.", "Compare com documentos financeiros posteriores sem presumir que sejam o mesmo esquema."],
+  "hospital-contract": ["Confira a data e o motivo da correspondência dirigida a Vivian.", "A carta relaciona fornecimento ao hospital e candidatura de Charles.", "Use como pista de relações comerciais; ela não comprova desvio."],
+  "henry-death": ["Localize onde Henry Johnson foi encontrado.", "A descoberta do corpo não explica sozinha a causa da morte.", "Compare com a carta financeira, sem presumir relação causal."],
+  "funds-investigation": ["Procure quem é acusado e para onde o dinheiro teria ido.", "A carta atribui os dados a investigadores privados.", "Cruze com outros documentos, mas trate o conteúdo como acusação até confirmação."],
+  "vivian-medical": ["Observe quem assina o relatório e o estado clínico descrito.", "O texto menciona reabilitação e o efeito da presença de Charles.", "Cruze com a carta familiar, separando contexto pessoal de prova criminal."],
+  "charles-secret": ["Procure os nomes além de Vivian e Charles.", "A carta cita Sofia e o filho, mas o trecho está incompleto.", "Compare datas e nomes com outras correspondências antes de concluir."],
+  "dorothy-photo": ["A pista envolve um objeto emprestado a Scott.", "O diário menciona uma fotografia, mas não identifica seguramente a imagem.", "Busque outros registros antes de afirmar o conteúdo ou a importância da foto."],
+  "daniel-letter": ["Observe as referências a recuperação, Dr. Johnson e mansão.", "O autor e o contexto da carta não estão totalmente identificados.", "Procure confirmação independente de autoria, datas e contexto."],
+  "code-0318": ["Observe a associação entre Matthew, 0318 e Sofia.", "A carta liga o código a uma data relacionada ao orfanato.", "Não há confirmação de que o número funcione como senha de fechadura."],
+};
+
 const TIMELINE = [
   { id: "hospital-1956", label: "Fechamento do Hospital Comunitário (1956)", year: 1956 },
   { id: "letter-1973", label: "Carta sobre fornecimento ao hospital (1973)", year: 1973 },
@@ -86,11 +104,11 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Partial<SaveData>;
-    if (value.version !== 1) return null;
+    if (value.version !== 1 && value.version !== 2) return null;
     const ids = <T extends string>(list: unknown, valid: readonly T[]) =>
       Array.isArray(list) ? list.filter((id): id is T => typeof id === "string" && valid.includes(id as T)) : [];
     return {
-      version: 1,
+      version: 2,
       found: ids(value.found, CLUES.map((item) => item.id)),
       visited: ids(value.visited, PLACES.map((item) => item.id)),
       links: ids(value.links, LINKS.map((item) => item.id)),
@@ -100,6 +118,7 @@ function readSave(): SaveData | null {
       reportSubmitted: value.reportSubmitted === true,
       chosenConclusion: typeof value.chosenConclusion === "string" ? value.chosenConclusion : "",
       mistakes: typeof value.mistakes === "number" && Number.isFinite(value.mistakes) ? Math.max(0, Math.floor(value.mistakes)) : 0,
+      usedHints: ids(value.usedHints, Object.keys(CLUE_HINTS).flatMap((id) => [1, 2, 3].map((level) => `${id}:${level}`)),),
     };
   } catch {
     return null;
@@ -118,6 +137,7 @@ function isUnlocked(placeId: PlaceId, found: ClueId[]) {
 export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [saved] = useState(readSave);
   const [found, setFound] = useState<ClueId[]>(saved?.found ?? []);
+  const [usedHints, setUsedHints] = useState<string[]>(saved?.usedHints ?? []);
   const [visited, setVisited] = useState<PlaceId[]>(saved?.visited ?? ["archive"]);
   const [links, setLinks] = useState<LinkId[]>(saved?.links ?? []);
   const [activePlace, setActivePlace] = useState<PlaceId>(saved?.activePlace ?? "archive");
@@ -130,14 +150,23 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [timelineChecked, setTimelineChecked] = useState(false);
 
   useEffect(() => {
-    const save: SaveData = { version: 1, found, visited, links, activePlace, phase, timelineOrder, reportSubmitted, chosenConclusion, mistakes: 0 };
+    const save: SaveData = { version: 2, found, visited, links, activePlace, phase, timelineOrder, reportSubmitted, chosenConclusion, mistakes: 0, usedHints };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
-  }, [found, visited, links, activePlace, phase, timelineOrder, reportSubmitted, chosenConclusion]);
+  }, [found, visited, links, activePlace, phase, timelineOrder, reportSubmitted, chosenConclusion, usedHints]);
 
   const currentPlace = PLACES.find((place) => place.id === activePlace)!;
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
+  const scorePenalty = usedHints.reduce((total, key) => total + HINT_COSTS[Number(key.split(":")[1]) - 1], 0);
+  const score = Math.max(0, MAX_SCORE - scorePenalty);
+  const scoreRank = score >= 900 ? "Detetive excepcional" : score >= 750 ? "Investigador atento" : score >= 500 ? "Investigador assistido" : score > 0 ? "Precisou de bastante ajuda" : "Assistência máxima";
+  const useHint = (clueId: ClueId, level: 1 | 2 | 3) => {
+    const key = `${clueId}:${level}`;
+    if (usedHints.includes(key)) { setNotice("Esta dica já foi consultada e a penalidade já foi aplicada."); return; }
+    setUsedHints((current) => [...current, key]);
+    setNotice(`Dica ${level}: ${CLUE_HINTS[clueId][level - 1]} Penalidade: -${HINT_COSTS[level - 1]} pontos.`);
+  };
 
   const enterPlace = (place: Place) => {
     if (!isUnlocked(place.id, found)) {
@@ -206,6 +235,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     if (!window.confirm("Apagar o progresso desta investigação neste navegador?")) return;
     window.localStorage.removeItem(SAVE_KEY);
     setFound([]);
+    setUsedHints([]);
     setVisited(["archive"]);
     setLinks([]);
     setActivePlace("archive");
@@ -238,10 +268,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           <div className="flex flex-wrap gap-2"><button type="button" onClick={onBack} className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs"><ArrowLeft size={16}/> Voltar ao dossiê</button><button type="button" onClick={resetSave} className="inline-flex min-h-11 items-center gap-2 border border-red-900/70 px-4 py-2 font-mono text-xs text-red-200"><RotateCcw size={15}/> Reiniciar</button></div>
         </header>
 
-        <section className="mt-5 grid gap-3 sm:grid-cols-3">
+        <section className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><p className="font-mono text-[10px] uppercase tracking-widest text-[#bdb5a8]">Evidências coletadas</p><p className="mt-1 text-3xl">{found.length}<span className="text-base text-[#81796d]"> / {CLUES.length}</span></p></div>
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><p className="font-mono text-[10px] uppercase tracking-widest text-[#bdb5a8]">Conexões confirmadas</p><p className="mt-1 text-3xl">{links.length}<span className="text-base text-[#81796d]"> / {LINKS.length}</span></p></div>
-          <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><p className="font-mono text-[10px] uppercase tracking-widest text-[#bdb5a8]">Progresso documental</p><p className="mt-1 text-3xl">{progress}%</p><div className="mt-2 h-1.5 bg-[#342e25]"><div className="h-full bg-[#c4a779] transition-all" style={{ width: progress + "%" }}/></div></div>
+          <div className="border border-[#4b4439] bg-[#1b1a17] p-4"><p className="font-mono text-[10px] uppercase tracking-widest text-[#bdb5a8]">Progresso documental</p><p className="mt-1 text-3xl">{progress}%</p><div className="mt-2 h-1.5 bg-[#342e25]"><div className="h-full bg-[#c4a779] transition-all" style={{ width: progress + "%" }}/></div></div><div className="border border-[#4b4439] bg-[#1b1a17] p-4"><p className="font-mono text-[10px] uppercase tracking-widest text-[#bdb5a8]">Pontuação atual</p><p className="mt-1 text-3xl">{score}<span className="text-base text-[#81796d]"> / {MAX_SCORE}</span></p><p className="mt-1 text-[10px] text-[#c4a779]">{usedHints.length} dicas usadas · -{scorePenalty} pts</p></div>
         </section>
 
         <nav className="mt-5 flex flex-wrap gap-2" aria-label="Fases da investigação">
@@ -252,14 +282,14 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
         {phase === "explore" && <div className="mt-5 grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
           <aside className="border border-[#4b4439] bg-[#191714] p-4"><h2 className="font-display text-2xl">Locais</h2><p className="mt-2 text-xs leading-relaxed text-[#a9a092]">Novos locais abrem quando uma pista documental justifica o próximo passo.</p><div className="mt-4 space-y-2">{PLACES.map((place) => { const unlocked = isUnlocked(place.id, found); return <button key={place.id} type="button" disabled={!unlocked} onClick={() => enterPlace(place)} className={`flex min-h-16 w-full items-start gap-3 border p-3 text-left ${activePlace === place.id ? "border-[#c4a779] bg-[#c4a779]/10" : unlocked ? "border-[#4b4439] hover:border-[#79664c]" : "cursor-not-allowed border-[#302b24] opacity-50"}`}>{unlocked ? <DoorOpen size={17} className="mt-0.5 shrink-0 text-[#c4a779]"/> : <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[#81796d]"/>}<span><span className="block text-sm">{place.name}</span><span className="mt-1 block text-[10px] leading-relaxed text-[#a9a092]">{unlocked ? place.description : place.unlockHint}</span></span></button>; })}</div></aside>
-          <section className="border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">Local atual</p><h2 className="mt-2 font-display text-3xl">{currentPlace.name}</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">{currentPlace.description}</p><div className="mt-5 grid gap-3 md:grid-cols-2">{currentClues.map((clue) => { const collected = found.includes(clue.id); return <article key={clue.id} className="border border-[#4b4439] bg-[#211f1b] p-4"><div className="flex items-start justify-between gap-3"><h3 className="font-display text-xl">{clue.title}</h3>{collected && <Check size={17} className="shrink-0 text-emerald-300"/>}</div><p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">{clue.source}</p><p className="mt-3 text-sm leading-relaxed text-[#c9c1b5]">{collected ? clue.summary : "Documento encontrado no local. Examine para registrar a evidência no caderno."}</p>{collected && <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-[#bdb5a8]"><strong>Ressalva:</strong> {clue.caution}</p>}<button type="button" onClick={() => collectClue(clue)} className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#79664c] px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-[#c4a779]"><FileSearch size={14}/>{collected ? "Rever evidência" : "Examinar e coletar"}</button></article>; })}</div></section>
+          <section className="border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">Local atual</p><h2 className="mt-2 font-display text-3xl">{currentPlace.name}</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">{currentPlace.description}</p><div className="mt-5 grid gap-3 md:grid-cols-2">{currentClues.map((clue) => { const collected = found.includes(clue.id); return <article key={clue.id} className="border border-[#4b4439] bg-[#211f1b] p-4"><div className="flex items-start justify-between gap-3"><h3 className="font-display text-xl">{clue.title}</h3>{collected && <Check size={17} className="shrink-0 text-emerald-300"/>}</div><p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">{clue.source}</p><p className="mt-3 text-sm leading-relaxed text-[#c9c1b5]">{collected ? clue.summary : "Documento encontrado no local. Examine para registrar a evidência no caderno."}</p>{collected && <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-[#bdb5a8]"><strong>Ressalva:</strong> {clue.caution}</p>}<button type="button" onClick={() => collectClue(clue)} className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#79664c] px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-[#c4a779]"><FileSearch size={14}/>{collected ? "Rever evidência" : "Examinar e coletar"}</button><div className="mt-4 border-t border-[#4b4439] pt-3"><p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">Pedir dica · perde pontos</p><div className="mt-2 flex flex-wrap gap-2">{([1, 2, 3] as const).map((level) => { const key = `${clue.id}:${level}`; const used = usedHints.includes(key); return <button key={key} type="button" onClick={() => useHint(clue.id, level)} disabled={used} className="min-h-9 border border-[#79664c] px-2 py-1 text-[10px] disabled:opacity-40">{used ? `Dica ${level} usada` : `Dica ${level} (-${HINT_COSTS[level - 1]})`}</button>; })}</div>{([1, 2, 3] as const).filter((level) => usedHints.includes(`${clue.id}:${level}`)).map((level) => <p key={level} className="mt-2 border-l-2 border-[#c4a779] pl-3 text-xs leading-relaxed text-[#d5c9b5]"><strong>Dica {level}:</strong> {CLUE_HINTS[clue.id][level - 1]}</p>)}</div></article>; })}</div></section>
         </div>}
 
         {phase === "board" && <section className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"><div className="border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><h2 className="font-display text-2xl">Caderno de evidências</h2><p className="mt-2 text-sm text-[#bdb5a8]">Selecione duas evidências para cruzar. O sistema só registra conexões previstas; outras hipóteses continuam abertas.</p><div className="mt-4 space-y-2">{CLUES.filter((clue) => found.includes(clue.id)).map((clue) => <label key={clue.id} className="flex cursor-pointer items-start gap-3 border border-[#4b4439] bg-[#211f1b] p-3"><input type="checkbox" checked={selectedClues.includes(clue.id)} onChange={() => toggleSelectedClue(clue.id)} className="mt-1 accent-[#c4a779]"/><span><span className="block text-sm">{clue.title}</span><span className="mt-1 block text-[10px] text-[#a9a092]">{clue.source}</span></span></label>)}</div><button type="button" onClick={makeConnection} className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider">Cruzar as duas selecionadas</button></div><div className="border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><h2 className="font-display text-2xl">Conexões registradas</h2>{links.length ? <div className="mt-4 space-y-3">{LINKS.filter((link) => links.includes(link.id)).map((link) => <article key={link.id} className="border border-[#79664c] bg-[#211f1b] p-4"><h3 className="font-display text-xl">{link.title}</h3><p className="mt-2 text-sm leading-relaxed text-[#c9c1b5]">{link.insight}</p></article>)}</div> : <p className="mt-4 border border-dashed border-[#4b4439] p-5 text-sm text-[#a9a092]">Nenhuma conexão registrada ainda.</p>}</div></section>}
 
         {phase === "timeline" && <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><h2 className="font-display text-2xl">Reconstrua a cronologia</h2><p className="mt-2 text-sm leading-relaxed text-[#bdb5a8]">Ordene os marcos do mais antigo ao mais recente. Use as datas dos documentos; não confunda data de publicação com data do acontecimento.</p><div className="mt-5 space-y-2">{(sortedTimeline.length ? sortedTimeline : TIMELINE.map((item) => item.id)).map((id) => { const item = TIMELINE.find((entry) => entry.id === id)!; const index = (sortedTimeline.length ? sortedTimeline : TIMELINE.map((entry) => entry.id)).indexOf(id); return <div key={id} className="flex items-center gap-3 border border-[#4b4439] bg-[#211f1b] p-3"><span className="font-mono text-xs text-[#c4a779]">{String(index + 1).padStart(2, "0")}</span><span className="flex-1 text-sm">{item.label}</span><div className="flex gap-1"><button type="button" aria-label={`Mover ${item.label} para cima`} disabled={index === 0} onClick={() => moveTimeline(id, -1)} className="min-h-9 min-w-9 border border-[#79664c] disabled:opacity-30">↑</button><button type="button" aria-label={`Mover ${item.label} para baixo`} disabled={index === 3} onClick={() => moveTimeline(id, 1)} className="min-h-9 min-w-9 border border-[#79664c] disabled:opacity-30">↓</button></div></div>; })}</div><button type="button" onClick={checkTimeline} className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider">Verificar cronologia</button>{timelineChecked && <p className="mt-3 text-xs text-[#bdb5a8]">A verificação está refletida no aviso acima. Você pode reorganizar e conferir novamente.</p>}</section>}
 
-        {phase === "report" && <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><h2 className="font-display text-3xl">Relatório provisório</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">O objetivo desta etapa é registrar uma hipótese responsável, não adivinhar um culpado. As evidências atuais ainda têm ressalvas de OCR e de verificação documental.</p><div className="mt-5 grid gap-3 sm:grid-cols-2">{[{ id: "scott", label: "Priorizar a contradição entre suspeita e negativa de Scott" }, { id: "finances", label: "Priorizar a linha financeira envolvendo hospital e Roberts Relief" }, { id: "family", label: "Priorizar as relações e correspondências da família Roberts" }, { id: "insufficient", label: "Conclusão insuficiente: solicitar mais verificação documental" }].map((item) => <button key={item.id} type="button" onClick={() => setChosenConclusion(item.id)} className={`min-h-20 border p-4 text-left text-sm leading-relaxed ${chosenConclusion === item.id ? "border-[#c4a779] bg-[#c4a779]/10" : "border-[#4b4439] bg-[#211f1b]"}`}>{item.label}</button>)}</div><button type="button" disabled={!chosenConclusion} onClick={() => { setReportSubmitted(true); setNotice("Conclusão provisória registrada. Nenhuma pessoa foi declarada culpada; a investigação permanece aberta até a revisão das fontes."); }} className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider disabled:opacity-40">Registrar conclusão provisória</button>{reportSubmitted && <div className="mt-5 border border-emerald-900/70 bg-emerald-950/20 p-4"><p className="font-mono text-xs uppercase tracking-wider text-emerald-200">Relatório salvo neste navegador</p><p className="mt-2 text-sm leading-relaxed text-[#d5c9b5]">{({ scott: "Linha de investigação: versões conflitantes sobre Scott.", finances: "Linha de investigação: histórico financeiro e documentos sobre a Roberts Relief.", family: "Linha de investigação: relações familiares e correspondências.", insufficient: "Conclusão: evidências insuficientes para um veredito responsável." } as Record<string, string>)[chosenConclusion] ?? "Relatório provisório registrado."}</p><p className="mt-2 text-xs text-[#a9a092]">O caso continua aberto. A lógica de veredito final será habilitada quando a solução e as fontes estiverem verificadas.</p></div>}<button type="button" onClick={() => setPhase("explore")} className="mt-4 flex min-h-10 items-center gap-2 text-sm text-[#c4a779]"><ArrowLeft size={15}/> Voltar à exploração</button></section>}
+        {phase === "report" && <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6"><h2 className="font-display text-3xl">Relatório provisório</h2><p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">O objetivo desta etapa é registrar uma hipótese responsável, não adivinhar um culpado. As evidências atuais ainda têm ressalvas de OCR e de verificação documental.</p><div className="mt-4 grid gap-3 sm:grid-cols-3"><div className="border border-[#4b4439] bg-[#211f1b] p-4"><p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">Pontuação final</p><p className="mt-1 text-3xl">{score} / {MAX_SCORE}</p><p className="mt-1 text-xs text-[#c4a779]">{scoreRank}</p></div><div className="border border-[#4b4439] bg-[#211f1b] p-4"><p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">Penalidade por dicas</p><p className="mt-1 text-3xl">-{scorePenalty}</p><p className="mt-1 text-xs text-[#bdb5a8]">{usedHints.length} dicas consultadas</p></div><div className="border border-[#4b4439] bg-[#211f1b] p-4"><p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">Pontuação máxima</p><p className="mt-1 text-3xl">{MAX_SCORE}</p><p className="mt-1 text-xs text-[#bdb5a8]">Sem usar dicas</p></div></div><div className="mt-5 grid gap-3 sm:grid-cols-2">{[{ id: "scott", label: "Priorizar a contradição entre suspeita e negativa de Scott" }, { id: "finances", label: "Priorizar a linha financeira envolvendo hospital e Roberts Relief" }, { id: "family", label: "Priorizar as relações e correspondências da família Roberts" }, { id: "insufficient", label: "Conclusão insuficiente: solicitar mais verificação documental" }].map((item) => <button key={item.id} type="button" onClick={() => setChosenConclusion(item.id)} className={`min-h-20 border p-4 text-left text-sm leading-relaxed ${chosenConclusion === item.id ? "border-[#c4a779] bg-[#c4a779]/10" : "border-[#4b4439] bg-[#211f1b]"}`}>{item.label}</button>)}</div><button type="button" disabled={!chosenConclusion} onClick={() => { setReportSubmitted(true); setNotice("Conclusão provisória registrada. Nenhuma pessoa foi declarada culpada; a investigação permanece aberta até a revisão das fontes."); }} className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider disabled:opacity-40">Registrar conclusão provisória</button>{reportSubmitted && <div className="mt-5 border border-emerald-900/70 bg-emerald-950/20 p-4"><p className="font-mono text-xs uppercase tracking-wider text-emerald-200">Relatório salvo neste navegador</p><p className="mt-2 text-sm leading-relaxed text-[#d5c9b5]">{({ scott: "Linha de investigação: versões conflitantes sobre Scott.", finances: "Linha de investigação: histórico financeiro e documentos sobre a Roberts Relief.", family: "Linha de investigação: relações familiares e correspondências.", insufficient: "Conclusão: evidências insuficientes para um veredito responsável." } as Record<string, string>)[chosenConclusion] ?? "Relatório provisório registrado."}</p><p className="mt-2 text-xs text-[#a9a092]">O caso continua aberto. A lógica de veredito final será habilitada quando a solução e as fontes estiverem verificadas.</p></div>}<button type="button" onClick={() => setPhase("explore")} className="mt-4 flex min-h-10 items-center gap-2 text-sm text-[#c4a779]"><ArrowLeft size={15}/> Voltar à exploração</button></section>}
 
         <footer className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#4b4439] pt-4 text-xs leading-relaxed text-[#81796d]"><span>O progresso é salvo automaticamente neste navegador.</span><span>Protótipo de lógica · sem culpado ou motivo inventados.</span></footer>
       </div>
