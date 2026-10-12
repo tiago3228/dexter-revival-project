@@ -60,9 +60,9 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     documented:
       "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
     pendingVerification:
-      "Conferir visualmente a carta completa e verificar eventual correspondência com objeto ou mecanismo.",
+      "Verificar eventual correspondência com objeto ou mecanismo do jogo; a carta foi conferida visualmente, mas a função de puzzle não foi validada.",
     confidence: "medium",
-    status: "unverified",
+    status: "visually-checked",
     playerInference:
       "O código pode ser relevante, mas não deve ser tratado como solução de puzzle sem validação adicional.",
   },
@@ -142,11 +142,11 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     pages: [109],
     sourceType: "Relato indireto em livro de segurança",
     documented:
-      "Uma entrada atribui a uma criança perdida o relato de que uma mulher de cabelos pretos e vestido escuro a encontrou e a levou de volta.",
+      "Uma entrada relata que Stephanie, de seis anos, se perdeu na floresta no Dia das Bruxas de 1994 e disse que uma mulher bonita, de cabelos pretos compridos e vestido preto semelhante ao das empregadas da mansão, a encontrou e a levou para casa; as empregadas disseram estar trabalhando naquela noite.",
     pendingVerification:
-      "Recuperar o final da entrada e procurar relatos independentes semelhantes.",
+      "Procurar relatos independentes semelhantes; a identidade da mulher e a discrepância dos relatos permanecem sem solução.",
     confidence: "medium",
-    status: "incomplete",
+    status: "visually-checked",
     playerInference:
       "É um relato atribuído à criança, registrado por terceiro; a identidade da mulher não está estabelecida.",
   },
