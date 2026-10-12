@@ -284,7 +284,7 @@ export function Game() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const track = showIntro
+    const track = showIntro || showInvestigatorSetup
       ? aberturaAudio.url
       : !showMenu && caseMode === "painscreek"
         ? "/audio/painscreek/painscreek-case-theme.mp3"
@@ -300,7 +300,7 @@ export function Game() {
       audio.load();
     }
     audio.volume = musicVolumeRef.current;
-    if (showIntro) {
+    if (showIntro || showInvestigatorSetup) {
       audio.onerror = () => {
         // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
         audio.onerror = null;
@@ -322,7 +322,7 @@ export function Game() {
       void sfxRef.current?.close();
       sfxRef.current = null;
     };
-  }, [caseMode, showIntro, showMenu]);
+  }, [caseMode, showIntro, showInvestigatorSetup, showMenu]);
 
   const fadingRef = useRef(false);
   useEffect(() => {
@@ -354,11 +354,15 @@ export function Game() {
     else if (soundOnRef.current) void audioRef.current?.play().catch(() => undefined);
   };
 
-  const startGameFadeOut = () => {
+  const showInvestigatorSetupScreen = () => {
+    setShowIntro(false);
+    setShowInvestigatorSetup(true);
+  };
+
+  const fadeOutIntroMusic = (onComplete: () => void) => {
     const audio = audioRef.current;
     if (!audio || !soundOnRef.current) {
-      setShowIntro(false);
-      setShowInvestigatorSetup(true);
+      onComplete();
       return;
     }
     if (fadingRef.current) return;
@@ -374,14 +378,19 @@ export function Game() {
         window.clearInterval(interval);
         fadingRef.current = false;
         audio.pause();
-        setShowIntro(false);
-        setShowInvestigatorSetup(true);
+        onComplete();
       }
     }, 50);
   };
 
   if (showIntro) {
-    return <IntroScreen onStart={startGameFadeOut} soundOn={soundOn} onToggleSound={toggleSound} />;
+    return (
+      <IntroScreen
+        onStart={showInvestigatorSetupScreen}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+      />
+    );
   }
 
   if (showInvestigatorSetup) {
@@ -391,8 +400,10 @@ export function Game() {
         onSubmit={(name) => {
           const normalized = setCurrentPlayerName(name);
           setPlayerName(normalized);
-          setShowInvestigatorSetup(false);
-          setShowMenu(true);
+          fadeOutIntroMusic(() => {
+            setShowInvestigatorSetup(false);
+            setShowMenu(true);
+          });
         }}
       />
     );
