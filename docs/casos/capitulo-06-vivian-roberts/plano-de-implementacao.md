@@ -11,7 +11,9 @@
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
 ## Fase 2 — Design investigativo
-- [ ] Modelar grafo de dependências por pista, com referência às fontes.
+- [x] Criar grafo provisório de dependências por tema, com referência às fontes candidatas.
+- [x] Abrir registro central de contradições e lacunas documentais.
+- [ ] Validar o grafo item a item após conferência visual e estabilizar IDs duplicados.
 - [ ] Definir progressão de exploração sem bloqueios impossíveis.
 - [ ] Definir a rota original com base apenas em evidências confirmadas.
 - [ ] Projetar a rota alternativa em documento separado e marcá-la como design novo.
