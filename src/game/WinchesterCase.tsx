@@ -38,7 +38,147 @@ const SUSPECTS = [
   { id: "archivist", name: "Dr. Peter Hales", role: "Arquivista municipal", clue: "A assinatura dele aparece em transferências de registros.", question: "Por que os registros desapareceram?", answer: "Recebi ordens com carimbo oficial. Quando tentei contestar, meu próprio arquivo pessoal foi esvaziado." },
 ] as const;
 
-type InterviewDetails = { id: string; name: string; role: string; question: string; answer: string };
+type DialogueLine = { speaker: string; text: string };
+type DialogueOption = { id: string; label: string; lines: DialogueLine[] };
+type InterviewDetails = { id: string; name: string; role: string; opening: DialogueLine[]; followUps: DialogueOption[] };
+type InterviewProgress = { lines: DialogueLine[]; explored: string[] };
+
+const WINCHESTER_DIALOGUES: Record<string, InterviewDetails> = {
+  sam: {
+    id: "sam",
+    name: "Sam Winchester",
+    role: "Pesquisador · registros históricos",
+    opening: [
+      { speaker: "Dexter", text: "Você pediu para conversar fora do relatório. Isso costuma significar que alguém quer esconder alguma coisa." },
+      { speaker: "Sam", text: "Ou que o relatório já foi escrito para esconder. Em três cidades, desaparecimentos foram arquivados como fugas." },
+      { speaker: "Dean", text: "E cada vez que alguém chega perto, o arquivo some ou a testemunha muda de ideia." },
+      { speaker: "Dexter", text: "Então vocês atravessaram estados para discutir estatística comigo?" },
+      { speaker: "Sam", text: "Não. O seu laudo percebeu o que os outros ignoraram: havia sangue na cena, mas nenhuma vítima ferida." },
+      { speaker: "Dean", text: "Se alguém montou a cena, está tentando nos fazer olhar para o lugar errado." },
+    ],
+    followUps: [
+      {
+        id: "sam-pattern",
+        label: "Perguntar sobre o padrão entre as cidades",
+        lines: [
+          { speaker: "Dexter", text: "Mostre-me o padrão. Sem folclore, só o que os registros dizem." },
+          { speaker: "Sam", text: "Onze desaparecimentos em oito anos. Cada cidade tinha uma obra abandonada, uma câmera desligada e um sobrevivente que depois mudou a versão." },
+          { speaker: "Dean", text: "E agora Miami tem um relógio parado, onze minutos apagados e gente jurando que viu olhos amarelos." },
+          { speaker: "Dexter", text: "Coincidências empilhadas ainda são coincidências. Mas alguém está escolhendo os lugares e editando as provas." },
+          { speaker: "Sam", text: "É por isso que precisamos das duas coisas: a sua perícia e o que aprendemos seguindo os casos." },
+        ],
+      },
+      {
+        id: "sam-family",
+        label: "Perguntar sobre a tragédia da família Winchester",
+        lines: [
+          { speaker: "Dexter", text: "Você disse que as datas coincidem com uma tragédia da sua família. O que aconteceu?" },
+          { speaker: "Sam", text: "Quando eu era criança, algo entrou na nossa casa. Minha mãe morreu naquela noite. Meu pai passou o resto da vida procurando uma explicação que ninguém queria ouvir." },
+          { speaker: "Dean", text: "Ele nos ensinou a procurar pistas antes de chamar qualquer coisa de monstro. Sam só está tentando fazer o mesmo." },
+          { speaker: "Sam", text: "Eu saí da estrada por um tempo. Dean continuou. Quando os desaparecimentos recomeçaram, ele veio me buscar." },
+          { speaker: "Dexter", text: "Uma família pode transformar dor em método. Às vezes, o método protege. Às vezes, só mantém a ferida aberta." },
+        ],
+      },
+      {
+        id: "sam-dean",
+        label: "Perguntar por que Dean desconfia tanto da polícia",
+        lines: [
+          { speaker: "Dexter", text: "Dean age como se cada distintivo nesta cidade fosse uma ameaça. Isso vem do trabalho ou de vocês dois?" },
+          { speaker: "Sam", text: "Ele já viu arquivos desaparecerem depois de uma ligação. Para ele, confiar primeiro é dar vantagem a quem está mentindo." },
+          { speaker: "Dean", text: "Não precisa me explicar como se eu não estivesse aqui, Sam." },
+          { speaker: "Sam", text: "Então explica você." },
+          { speaker: "Dean", text: "Eu confio nele para encontrar o que eu não vejo. Só não confio no sistema para deixar a gente terminar." },
+          { speaker: "Dexter", text: "Uma parceria construída na desconfiança. Curiosamente, entendo o apelo." },
+        ],
+      },
+    ],
+  },
+  dean: {
+    id: "dean",
+    name: "Dean Winchester",
+    role: "Agente federal · campo",
+    opening: [
+      { speaker: "Dexter", text: "Seu recibo põe você nas docas antes da polícia. Quer explicar por quê?" },
+      { speaker: "Dean", text: "Eu procurava Mateo Ruiz. Sumiu há duas semanas. O nome dele aparece no livro de entrada do cais." },
+      { speaker: "Dexter", text: "Não há Mateo no relatório oficial." },
+      { speaker: "Sam", text: "Porque alguém removeu a ficha dele do arquivo. O mesmo padrão aparece em outras cidades." },
+      { speaker: "Dean", text: "A gente não veio roubar a sua investigação. Viemos descobrir quem está apagando pessoas antes que o próximo nome suma." },
+      { speaker: "Dexter", text: "Você quer que eu confie em dois agentes que omitiram metade da história." },
+      { speaker: "Dean", text: "Não. Quero que confira cada palavra. É assim que a gente continua vivo." },
+    ],
+    followUps: [
+      {
+        id: "dean-mateo",
+        label: "Perguntar quem é Mateo Ruiz",
+        lines: [
+          { speaker: "Dexter", text: "Quem era Mateo antes de virar um nome que alguém apagou?" },
+          { speaker: "Dean", text: "Mecânico. Consertava caminhões perto das docas e fazia perguntas demais sobre cargas sem registro." },
+          { speaker: "Sam", text: "A irmã dele recebeu uma ligação dizendo que Mateo tinha ido embora. A conta bancária, o apartamento e o carro ficaram para trás." },
+          { speaker: "Dexter", text: "Uma fuga que deixa tudo para trás costuma ser uma cena montada." },
+          { speaker: "Dean", text: "Agora você está entendendo por que eu estava lá antes da perícia." },
+        ],
+      },
+      {
+        id: "dean-skeptic",
+        label: "Perguntar se ele acredita na hipótese de Sam",
+        lines: [
+          { speaker: "Dexter", text: "Sam fala em um padrão, símbolos e uma tragédia antiga. Você acredita nele?" },
+          { speaker: "Dean", text: "Acredito que ele pesquisa melhor do que qualquer um que conheço. Isso não significa que eu aceite toda conclusão antes de ver a prova." },
+          { speaker: "Sam", text: "Dean já viu coisas que não consegue explicar. Ele só prefere chamar de problema até não haver outra palavra." },
+          { speaker: "Dean", text: "E você prefere transformar tudo em teoria. É por isso que funcionamos — um de nós sempre pede a prova que o outro esqueceu." },
+          { speaker: "Dexter", text: "No meu trabalho, essa discussão costuma começar depois que alguém já limpou a cena." },
+        ],
+      },
+      {
+        id: "dean-dexter",
+        label: "Perguntar por que ele escolheu envolver Dexter",
+        lines: [
+          { speaker: "Dexter", text: "Você podia ter procurado um detetive federal. Por que veio até mim?" },
+          { speaker: "Dean", text: "Porque você percebeu que o sangue foi colocado ali depois. A maioria viu vermelho e concluiu que tinha um corpo." },
+          { speaker: "Sam", text: "E porque você não escreveu 'fuga voluntária' só para fechar o caso antes do fim do turno." },
+          { speaker: "Dexter", text: "Não confunda persistência com confiança. Eu ainda vou verificar tudo o que disserem." },
+          { speaker: "Dean", text: "Ótimo. A gente também." },
+        ],
+      },
+    ],
+  },
+  "family-photo": {
+    id: "family-photo",
+    name: "Sam e Dean Winchester",
+    role: "Conversa no arquivo municipal · fotografia queimada",
+    opening: [
+      { speaker: "Dexter", text: "As iniciais no verso são S. W. Sam Winchester. Por que seu nome aparece numa fotografia ligada a Elias Voss?" },
+      { speaker: "Sam", text: "Não é minha letra. A foto foi tirada durante uma investigação antiga. Nós chegamos à cidade depois que três pessoas desapareceram." },
+      { speaker: "Dean", text: "A polícia disse que a família da foto tinha ido embora. O carro foi encontrado queimado, mas ninguém procurou os corpos." },
+      { speaker: "Dexter", text: "E vocês deixaram isso fora do depoimento." },
+      { speaker: "Sam", text: "Porque a última vez que entregamos essa informação, o arquivo sumiu e uma testemunha retirou tudo o que disse." },
+      { speaker: "Dean", text: "Agora você tem a foto. Decide se quer uma versão conveniente ou uma investigação de verdade." },
+    ],
+    followUps: [
+      {
+        id: "photo-date",
+        label: "Perguntar o que aconteceu na noite da fotografia",
+        lines: [
+          { speaker: "Dexter", text: "Sam, conte a sequência desde o começo. Quem tirou a foto?" },
+          { speaker: "Sam", text: "Um vizinho. Ele viu a família discutindo perto do carro e chamou a polícia. Quando voltamos, a casa estava vazia e o relatório dizia que nunca houve chamado." },
+          { speaker: "Dean", text: "A única coisa que sobrou foi essa cópia. Alguém queimou as bordas, mas esqueceu o verso." },
+          { speaker: "Dexter", text: "Destruir o conteúdo e preservar a identificação. Um erro pequeno, mas muito humano." },
+        ],
+      },
+      {
+        id: "photo-trust",
+        label: "Questionar por que os irmãos esconderam a ligação",
+        lines: [
+          { speaker: "Dexter", text: "Vocês pedem confiança, mas guardaram a pista mais pessoal até eu encontrá-la." },
+          { speaker: "Dean", text: "Eu não sabia que a foto estava aqui. Sam reconheceu as iniciais e tentou ganhar tempo." },
+          { speaker: "Sam", text: "Eu não queria que uma pista antiga virasse prova de que estamos envolvidos no desaparecimento." },
+          { speaker: "Dexter", text: "O silêncio sempre parece proteção para quem o escolhe. Para quem investiga, parece motivo." },
+          { speaker: "Dean", text: "Então não aceite nossa palavra. Compare com o livro-caixa e com o registro do arquivo." },
+        ],
+      },
+    ],
+  },
+};
 
 export function WinchesterCase({
   onBack,
@@ -66,6 +206,10 @@ export function WinchesterCase({
   const [feedback, setFeedback] = useState("A primeira cena parece simples demais. Comece examinando os vestígios do canal.");
   const [activeEvidence, setActiveEvidence] = useState<string | null>(null);
   const [activeInterview, setActiveInterview] = useState<InterviewDetails | null>(null);
+  const [dialogueLines, setDialogueLines] = useState<DialogueLine[]>([]);
+  const [availableFollowUps, setAvailableFollowUps] = useState<DialogueOption[]>([]);
+  const [interviewProgress, setInterviewProgress] = useState<Record<string, InterviewProgress>>({});
+  const dialogueEndRef = useRef<HTMLDivElement | null>(null);
   const [ambientOn, setAmbientOn] = useState(true);
   const [ambientVolume, setAmbientVolume] = useState(() => {
     const stored = typeof window === "undefined" ? null : window.localStorage.getItem("dexter-winchester-ambient-volume");
@@ -191,20 +335,51 @@ export function WinchesterCase({
   };
 
   const interview = (id: string) => {
-    if (interrogated.includes(id)) return;
     const person = SUSPECTS.find((p) => p.id === id);
-    const winchesterInterviews: Record<string, InterviewDetails> = {
-      sam: { id: "sam", name: "Sam Winchester", role: "Pesquisador · registros históricos", question: "Pergunte sobre desaparecimentos semelhantes.", answer: "Os desaparecimentos seguem um padrão entre cidades. Não é prova de um demônio — ainda não. Mas as datas coincidem com uma tragédia da minha família." },
-      dean: { id: "dean", name: "Dean Winchester", role: "Agente federal · campo", question: "Pergunte sobre a presença nas docas.", answer: "Eu estava nas docas procurando alguém que desapareceu. Não vim prender um assassino comum. E não vou contar tudo até saber o que você encontrou." },
-    };
     const interviewDetails: InterviewDetails | undefined = person
-      ? { id, name: person.name, role: person.role, question: person.question, answer: person.answer }
-      : winchesterInterviews[id];
+      ? {
+          id,
+          name: person.name,
+          role: person.role,
+          opening: [
+            { speaker: "Dexter", text: person.question },
+            { speaker: person.name, text: person.answer },
+          ],
+          followUps: [],
+        }
+      : WINCHESTER_DIALOGUES[id];
     if (!interviewDetails) return;
-    setInterrogated((current) => [...current, id]);
+    if (id !== "family-photo") {
+      setInterrogated((current) => current.includes(id) ? current : [...current, id]);
+    }
+    const progress = interviewProgress[id];
     setActiveInterview(interviewDetails);
-    setFeedback(`${interviewDetails.name}: “${interviewDetails.answer}”`);
+    setDialogueLines(progress?.lines ?? interviewDetails.opening);
+    setAvailableFollowUps(
+      interviewDetails.followUps.filter((option) => !progress?.explored.includes(option.id)),
+    );
+    setFeedback(`Dexter abriu uma conversa com ${interviewDetails.name}.`);
   };
+
+  const chooseDialogueOption = (option: DialogueOption) => {
+    if (!activeInterview) return;
+    const existing = interviewProgress[activeInterview.id] ?? {
+      lines: activeInterview.opening,
+      explored: [],
+    };
+    const nextLines = [...existing.lines, ...option.lines];
+    const nextExplored = [...existing.explored, option.id];
+    setDialogueLines(nextLines);
+    setInterviewProgress((current) => ({
+      ...current,
+      [activeInterview.id]: { lines: nextLines, explored: nextExplored },
+    }));
+    setAvailableFollowUps((current) => current.filter((item) => item.id !== option.id));
+  };
+
+  useEffect(() => {
+    if (activeInterview) dialogueEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [activeInterview, dialogueLines.length]);
 
   const advance = () => {
     if (act === 0 && !["blood", "clock"].every((id) => found.includes(id))) return setFeedback("A cena ainda não foi documentada. Examine o sangue e o relógio antes de avançar.");
@@ -291,7 +466,8 @@ export function WinchesterCase({
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {actEvidence.map((item) => <button key={item.id} onClick={() => examine(item.id)} className={`min-h-28 border p-4 text-left transition hover:border-red-500 ${found.includes(item.id) ? "border-emerald-900/70 bg-emerald-950/20" : "border-white/10 bg-black/20"}`}><div className="flex items-start justify-between gap-2"><span className="font-mono text-[10px] uppercase tracking-wider text-red-300">{item.category}</span>{found.includes(item.id) ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <FileSearch className="h-4 w-4 text-zinc-500" />}</div><h4 className="mt-2 font-display text-xl">{item.title}</h4><p className="mt-1 text-xs text-zinc-500">{item.source}</p></button>)}
             </div>
-            {act === 2 && <div className="mt-4 grid gap-3 sm:grid-cols-2">{[{id:"sam",name:"Sam Winchester",role:"Pesquisador · registros históricos",prompt:"Pergunte sobre desaparecimentos semelhantes."},{id:"dean",name:"Dean Winchester",role:"Agente federal · campo",prompt:"Pergunte sobre a presença nas docas."}].map((person) => <button key={person.id} onClick={() => interview(person.id)} disabled={interrogated.includes(person.id)} className="border border-white/10 p-4 text-left hover:border-red-500 disabled:opacity-40"><p className="font-display text-xl">{person.name}</p><p className="mt-1 text-xs text-zinc-500">{person.role}</p><p className="mt-2 text-sm text-zinc-400">{person.prompt}</p><span className="mt-3 block font-mono text-[10px] uppercase text-red-300">{interrogated.includes(person.id) ? "Depoimento registrado" : "Registrar depoimento"}</span></button>)}</div>}
+            {act === 2 && <div className="mt-4 grid gap-3 sm:grid-cols-2">{[{id:"sam",name:"Sam Winchester",role:"Pesquisador · registros históricos",prompt:"Converse sobre os casos, a família e o padrão."},{id:"dean",name:"Dean Winchester",role:"Agente federal · campo",prompt:"Converse sobre as docas, Mateo e a parceria com Sam."}].map((person) => <button key={person.id} onClick={() => interview(person.id)} className="border border-white/10 p-4 text-left hover:border-red-500"><p className="font-display text-xl">{person.name}</p><p className="mt-1 text-xs text-zinc-500">{person.role}</p><p className="mt-2 text-sm text-zinc-400">{person.prompt}</p><span className="mt-3 block font-mono text-[10px] uppercase text-red-300">{interrogated.includes(person.id) ? "Continuar conversa" : "Iniciar conversa"}</span></button>)}</div>}
+            {act === 3 && found.includes("family") && <button type="button" onClick={() => interview("family-photo")} className="mt-4 w-full border border-amber-900/60 bg-amber-950/10 p-4 text-left transition hover:border-amber-500"><span className="font-mono text-[10px] uppercase tracking-wider text-amber-300">Nova conversa · pista pessoal</span><h4 className="mt-1 font-display text-xl">Confrontar Sam e Dean com a fotografia</h4><p className="mt-1 text-sm text-zinc-400">As iniciais no verso mudam o tom da investigação. Ouça os dois lados e escolha o que perguntar.</p></button>}
             {act === 4 && <div className="mt-5 border border-amber-900/60 bg-amber-950/10 p-4"><p className="font-mono text-xs uppercase tracking-wider text-amber-300">Decisão de confiança</p><p className="mt-2 text-sm text-zinc-300">Sam pede que você preserve o símbolo; Dean quer destruir tudo antes que alguém volte. Você confia neles o bastante para dividir as provas?</p><div className="mt-3 flex flex-wrap gap-3"><button onClick={() => {setTrustWinchesters(true); setFeedback("Você entrega uma cópia das provas aos Winchester. A colaboração abre uma linha de investigação adicional.");}} className={`min-h-10 border px-4 py-2 text-sm ${trustWinchesters === true ? "border-emerald-500 bg-emerald-950/30" : "border-white/20"}`}>Confiar nos irmãos</button><button onClick={() => {setTrustWinchesters(false); setFeedback("Você mantém as provas consigo. Pode fechar o caso, mas o arquivo secreto ficará inacessível.");}} className={`min-h-10 border px-4 py-2 text-sm ${trustWinchesters === false ? "border-red-500 bg-red-950/30" : "border-white/20"}`}>Guardar só para Dexter</button></div></div>}
             {act === 5 && <div className="mt-5 border border-red-900/60 bg-red-950/10 p-4"><p className="font-mono text-xs uppercase tracking-wider text-red-300">Relatório final</p><p className="mt-2 text-sm text-zinc-300">Escolha uma conclusão. A hipótese sobrenatural só se confirma se a cadeia de provas for consistente.</p><div className="mt-4 grid gap-3 sm:grid-cols-2"><button onClick={() => conclude("false")} className="border border-white/15 p-4 text-left hover:border-white/50"><span className="font-mono text-[10px] text-zinc-500">FINAL A</span><h4 className="mt-1 font-display text-xl">Explicação humana</h4><p className="mt-1 text-xs text-zinc-400">Encerrar com o que a polícia consegue provar.</p></button><button onClick={() => conclude("partial")} className="border border-white/15 p-4 text-left hover:border-amber-500"><span className="font-mono text-[10px] text-amber-300">FINAL B</span><h4 className="mt-1 font-display text-xl">Verdade pela metade</h4><p className="mt-1 text-xs text-zinc-400">Expor o encobrimento, sem concluir o inexplicável.</p></button><button onClick={() => conclude("true")} className="border border-red-700/70 p-4 text-left hover:bg-red-950/30"><span className="font-mono text-[10px] text-red-300">FINAL C</span><h4 className="mt-1 font-display text-xl">Seguir a pista sobrenatural</h4><p className="mt-1 text-xs text-zinc-400">Exige prova forense, linha histórica e testemunho.</p></button><button onClick={() => conclude("secret")} className="border border-amber-700/60 p-4 text-left hover:bg-amber-950/20"><span className="font-mono text-[10px] text-amber-300"><LockKeyhole className="mr-1 inline h-3 w-3" /> FINAL SECRETO</span><h4 className="mt-1 font-display text-xl">A quarta testemunha</h4><p className="mt-1 text-xs text-zinc-400">Todas as evidências, os seis depoimentos, três conexões corretas, confiança e nenhum erro.</p></button></div></div>}
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4"><p className="text-xs text-zinc-500">Evidências neste ato: {actFound}/{actEvidence.length}</p>{act < 5 && <button onClick={advance} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-200 hover:bg-red-900/40">Avançar investigação →</button>}</div>
@@ -317,17 +493,36 @@ export function WinchesterCase({
           <article className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto border border-red-900/70 bg-[#101115] shadow-2xl shadow-black/60">
             <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5 sm:p-7">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-300">Depoimento · entrevista registrada</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-red-300">Conversa de investigação · escolha os assuntos</p>
                 <h2 id="interview-title" className="mt-2 font-display text-3xl sm:text-4xl">{activeInterview.name}</h2>
                 <p className="mt-2 text-sm text-zinc-400">{activeInterview.role}</p>
               </div>
-              <button type="button" onClick={() => setActiveInterview(null)} className="shrink-0 border border-white/15 px-3 py-2 font-mono text-xs text-zinc-300 hover:border-red-500">Fechar ✕</button>
+              <button type="button" onClick={() => setActiveInterview(null)} className="shrink-0 border border-white/15 px-3 py-2 font-mono text-xs text-zinc-300 hover:border-red-500">Pausar conversa ✕</button>
             </div>
             <div className="space-y-5 p-5 sm:p-7">
-              <div><p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">Pergunta</p><p className="mt-2 text-base leading-7 text-zinc-200">{activeInterview.question}</p></div>
-              <blockquote className="border-l-2 border-red-700 bg-white/[0.03] p-5 text-base leading-8 text-zinc-200">“{activeInterview.answer}”</blockquote>
+              <div className="space-y-3" aria-live="polite">
+                {dialogueLines.map((line, index) => (
+                  <div key={`${activeInterview.id}-${index}`} className={`max-w-[95%] border p-4 ${line.speaker === "Dexter" ? "ml-auto border-red-800/70 bg-red-950/20" : line.speaker === "Sam Winchester" || line.speaker === "Sam" ? "border-amber-900/60 bg-amber-950/10" : "border-blue-900/50 bg-blue-950/10"}`}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-red-300">{line.speaker}</p>
+                    <p className="mt-2 text-sm leading-7 text-zinc-200">{line.text}</p>
+                  </div>
+                ))}
+                <div ref={dialogueEndRef} />
+              </div>
+              {availableFollowUps.length > 0 ? (
+                <div className="border-t border-white/10 pt-5">
+                  <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-zinc-500">O que Dexter pergunta agora?</p>
+                  <div className="grid gap-2">
+                    {availableFollowUps.map((option) => (
+                      <button key={option.id} type="button" onClick={() => chooseDialogueOption(option)} className="min-h-11 border border-white/15 px-4 py-3 text-left text-sm text-zinc-200 transition hover:border-red-500 hover:bg-red-950/20">{option.label}</button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="border-t border-white/10 pt-5 text-sm leading-6 text-zinc-400">Todos os assuntos desta conversa foram explorados. Você pode pausá-la e voltar à investigação.</p>
+              )}
               <div className="flex justify-end border-t border-white/10 pt-5">
-                <button type="button" onClick={() => setActiveInterview(null)} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">Fechar depoimento</button>
+                <button type="button" onClick={() => setActiveInterview(null)} className="min-h-11 border border-red-700 bg-red-950/30 px-5 py-3 font-mono text-xs uppercase tracking-wider text-red-100 hover:bg-red-900/40">Voltar à investigação</button>
               </div>
             </div>
           </article>
