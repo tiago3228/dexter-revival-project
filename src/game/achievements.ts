@@ -1,3 +1,5 @@
+import { loadCurrentPlayerName, recordPlayerPerformance } from "./playerRanking";
+
 export const CASE_IDS = ["ortega", "monroe", "painscreek", "mentalist", "winchester"] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
@@ -250,6 +252,11 @@ export function recordCaseCompletion(performance: CasePerformance): AchievementP
     } catch {
       // Keep the current session functional when browser storage is unavailable.
     }
+    recordPlayerPerformance(loadCurrentPlayerName(), {
+      score: performance.score,
+      mistakes: performance.mistakes,
+      hints: performance.hints,
+    });
   }
   return progress;
 }

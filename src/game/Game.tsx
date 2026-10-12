@@ -28,6 +28,12 @@ import {
 import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
+import {
+  loadCurrentPlayerName,
+  loadPlayerRanking,
+  setCurrentPlayerName,
+  type PlayerRankingEntry,
+} from "./playerRanking";
 import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
 
 type PuzzleId =
@@ -189,6 +195,8 @@ export function Game() {
   >("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
+  const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
+  const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName());
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordedEndingRef = useRef(false);
   const soundOnRef = useRef(soundOn);
@@ -350,6 +358,7 @@ export function Game() {
     const audio = audioRef.current;
     if (!audio || !soundOnRef.current) {
       setShowIntro(false);
+      setShowInvestigatorSetup(true);
       return;
     }
     if (fadingRef.current) return;
@@ -366,12 +375,27 @@ export function Game() {
         fadingRef.current = false;
         audio.pause();
         setShowIntro(false);
+        setShowInvestigatorSetup(true);
       }
     }, 50);
   };
 
   if (showIntro) {
     return <IntroScreen onStart={startGameFadeOut} soundOn={soundOn} onToggleSound={toggleSound} />;
+  }
+
+  if (showInvestigatorSetup) {
+    return (
+      <InvestigatorSetupScreen
+        initialName={playerName}
+        onSubmit={(name) => {
+          const normalized = setCurrentPlayerName(name);
+          setPlayerName(normalized);
+          setShowInvestigatorSetup(false);
+          setShowMenu(true);
+        }}
+      />
+    );
   }
 
   if (showMenu) {
@@ -386,6 +410,7 @@ export function Game() {
           setCaseMode(nextCase);
           setShowMenu(false);
         }}
+        playerName={playerName}
         musicVolume={musicVolume}
         onMusicVolumeChange={setMusicVolume}
         soundOn={soundOn}
@@ -1777,6 +1802,69 @@ export function Game() {
   );
 }
 
+function InvestigatorSetupScreen({
+  initialName,
+  onSubmit,
+}: {
+  initialName: string;
+  onSubmit: (name: string) => void;
+}) {
+  const [name, setName] = useState(initialName);
+  const normalizedName = name.trim().replace(/\s+/g, " ");
+
+  return (
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0d0d0f] px-4 py-8 text-white sm:px-8">
+      <section className="w-full max-w-xl border border-[#a71925]/70 bg-[#171719] p-6 shadow-[0_0_60px_rgba(167,25,37,0.16)] sm:p-10">
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#d52c39]">
+          Novo registro de investigação
+        </p>
+        <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
+          Quem está no arquivo?
+        </h1>
+        <p className="mt-4 text-sm leading-relaxed text-[#d5d0cd] sm:text-base">
+          Adicione seu apelido ou nome de investigador. Sua pontuação, erros e dicas serão usados
+          para ordenar o ranking neste navegador.
+        </p>
+        <form
+          className="mt-8"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (normalizedName) onSubmit(normalizedName);
+          }}
+        >
+          <label
+            htmlFor="investigator-name"
+            className="font-mono text-xs uppercase tracking-[0.2em] text-[#bcb4b0]"
+          >
+            Apelido do investigador
+          </label>
+          <input
+            id="investigator-name"
+            autoFocus
+            value={name}
+            onChange={(event) => setName(event.target.value.slice(0, 24))}
+            placeholder="Ex.: Morgan Silva"
+            maxLength={24}
+            required
+            className="mt-3 min-h-12 w-full border border-white/25 bg-black/50 px-4 font-mono text-base text-white outline-none transition placeholder:text-white/35 focus:border-[#d52c39] focus:ring-1 focus:ring-[#d52c39]"
+          />
+          <div className="mt-2 flex justify-between gap-3 font-mono text-[10px] text-white/45">
+            <span>Esse nome aparecerá no quadro de honra.</span>
+            <span>{name.length}/24</span>
+          </div>
+          <button
+            type="submit"
+            disabled={!normalizedName}
+            className="mt-7 min-h-12 w-full border-2 border-[#f4ece8] bg-[#b21f2c] px-6 py-3 font-mono text-sm font-bold uppercase tracking-[0.2em] text-white shadow-[5px_5px_0_#6f111a] transition hover:bg-[#d12a37] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Abrir quadro de investigação
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}
+
 function IntroScreen({
   onStart,
   soundOn,
@@ -1837,6 +1925,7 @@ function IntroScreen({
 
 function MainMenu({
   onSelect,
+  playerName,
   musicVolume,
   onMusicVolumeChange,
   soundOn,
@@ -1844,6 +1933,7 @@ function MainMenu({
   onReflectionModalOpenChange,
 }: {
   onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester") => void;
+  playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
@@ -1854,8 +1944,10 @@ function MainMenu({
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
   const [showTrophies, setShowTrophies] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
+  const [showRanking, setShowRanking] = useState(false);
   const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
+  const [playerRanking] = useState<PlayerRankingEntry[]>(() => loadPlayerRanking());
   const bloodSlideTrophy = ACHIEVEMENTS.find(
     (achievement) => achievement.id === "blood-slide-box",
   )!;
@@ -2112,6 +2204,77 @@ function MainMenu({
             />
           </label>
         </section>
+        <button
+          type="button"
+          onClick={() => setShowRanking((visible) => !visible)}
+          aria-expanded={showRanking}
+          className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
+        >
+          {showRanking ? "Fechar quadro de honra" : "Quadro de honra"}
+        </button>
+        {showRanking && (
+          <section
+            className="mt-5 border border-primary/50 bg-card/40 p-4 sm:p-6"
+            aria-label="Ranking de jogadores"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                  Investigadores registrados
+                </p>
+                <h2 className="mt-2 font-display text-2xl">Ranking global deste navegador</h2>
+              </div>
+              <p className="font-mono text-[10px] text-muted-foreground">Jogador: {playerName}</p>
+            </div>
+            {playerRanking.length === 0 ? (
+              <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+                Nenhum caso concluído ainda. Feche um dossiê para entrar no ranking.
+              </p>
+            ) : (
+              <div className="mt-5 overflow-x-auto">
+                <table className="w-full min-w-[34rem] border-collapse text-left font-mono text-xs">
+                  <thead>
+                    <tr className="border-b border-border text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <th className="px-3 py-3">Pos.</th>
+                      <th className="px-3 py-3">Investigador</th>
+                      <th className="px-3 py-3">Pontos</th>
+                      <th className="px-3 py-3">Casos</th>
+                      <th className="px-3 py-3">Erros</th>
+                      <th className="px-3 py-3">Dicas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {playerRanking.slice(0, 10).map((entry, index) => {
+                      const isCurrent =
+                        entry.name.toLocaleLowerCase("pt-BR") ===
+                        playerName.toLocaleLowerCase("pt-BR");
+                      return (
+                        <tr
+                          key={`${entry.name}-${entry.lastPlayedAt}`}
+                          className={`border-b border-border/60 ${isCurrent ? "bg-primary/10 text-primary" : "text-foreground"}`}
+                        >
+                          <td className="px-3 py-3 font-bold">{index + 1}º</td>
+                          <td className="px-3 py-3 font-semibold">
+                            {entry.name}
+                            {isCurrent ? " · você" : ""}
+                          </td>
+                          <td className="px-3 py-3">{entry.score}</td>
+                          <td className="px-3 py-3">{entry.casesCompleted}</td>
+                          <td className="px-3 py-3">{entry.mistakes}</td>
+                          <td className="px-3 py-3">{entry.hints}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              Pontos de casos concluídos fazem você subir. Erros e dicas reduzem a pontuação da
+              investigação e, em empates, deixam o investigador mais disciplinado à frente.
+            </p>
+          </section>
+        )}
         <button
           type="button"
           onClick={() => setShowStatistics((visible) => !visible)}
