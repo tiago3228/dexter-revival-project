@@ -1,6 +1,6 @@
 import { loadCurrentPlayerName, recordPlayerPerformance } from "./playerRanking";
 
-export const CASE_IDS = ["ortega", "monroe", "painscreek", "mentalist", "winchester"] as const;
+export const CASE_IDS = ["ortega", "monroe", "painscreek", "mentalist", "winchester", "vivian"] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
 export const ACHIEVEMENTS = [
@@ -49,14 +49,14 @@ export const ACHIEVEMENTS = [
   {
     id: "all-cases",
     title: "Arquivo completo",
-    description: "Conclua os cinco capítulos disponíveis.",
+    description: "Conclua os seis capítulos disponíveis.",
     tier: "Ouro",
   },
   {
     id: "blood-slide-box",
     title: "Caixa de lâminas de sangue",
     description:
-      "Conclua os cinco capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
+      "Conclua os seis capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
     tier: "Lendário",
   },
 ] as const;
