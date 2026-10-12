@@ -25,7 +25,7 @@
 
 **Pergunta que o jogador pode formular:** quais documentos apoiam ou contradizem as versões sobre Sofia, o bebê e a origem de Scott?
 
-**Limites:** não equiparar Vincent a Scott sem ligação explícita e independente; não tratar cartas retrospectivas ou lembranças como confirmação automática. `EV-104-01` aparece duas vezes na matriz para documentos diferentes na mesma página; corrigir para IDs únicos antes da implementação.
+**Limites:** não equiparar Vincent a Scott sem ligação explícita e independente; não tratar cartas retrospectivas ou lembranças como confirmação automática. A referência `EV-104-01` é um único documento (carta de Scott a Trisha, p. 104) citado em mais de um tema. A matriz foi consolidada para tratá-lo como uma única evidência, não como duas fontes independentes.
 
 ### 2. Relação Scott–Trisha e acesso à cabana
 
