@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, ClipboardList, Eye, FileSearch, LockKeyhole, Search, ShieldAlert, Skull, Sparkles, Users } from "lucide-react";
 import { recordCaseCompletion } from "./achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 
@@ -131,7 +131,7 @@ export function WinchesterCase({ onBack }: { onBack: () => void }) {
     if (act === 4 && !["ledger", "symbol"].every((id) => found.includes(id))) return setFeedback("O armazém ainda não foi documentado. Não avance sem registrar o livro-caixa e a marca.");
     if (act < 5) setAct((current) => (current + 1) as Act);
     setActiveEvidence(null);
-    setFeedback(ACTS[Math.min(5, act + 1)].desc);
+    setFeedback(ACTS[Math.min(5, act + 1)]?.desc ?? ACTS[5].desc);
   };
 
   const conclude = (choice: "false" | "partial" | "true" | "secret") => {

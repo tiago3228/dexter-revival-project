@@ -432,13 +432,7 @@ export function Game() {
 
   if (caseMode === "winchester") {
     return (
-      <WinchesterCase
-        onBack={() => setShowMenu(true)}
-        soundOn={soundOn}
-        onToggleSound={toggleSound}
-        musicVolume={musicVolume}
-        onMusicVolumeChange={setMusicVolume}
-      />
+      <WinchesterCase onBack={() => setShowMenu(true)} />
     );
   }
 
