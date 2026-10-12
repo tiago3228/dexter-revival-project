@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Search, ZoomIn } from "lucide-react";
 import {
   CIPHER_KEY,
   CIPHER_TEXT,
@@ -20,6 +21,7 @@ import {
   CASE_IDS,
   loadAchievementProgress,
   recordCaseCompletion,
+  type AchievementId,
   type CaseId,
 } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
@@ -47,6 +49,7 @@ type Modal =
   | { kind: "doc"; id: DocId }
   | { kind: "puzzle"; id: PuzzleId }
   | { kind: "image"; id: ImageId }
+  | { kind: "zoom"; title: string; src: string; alt: string; description?: string }
   | { kind: "acusar" }
   | null;
 type InfoModal = "como-jogar" | "dicas" | null;
@@ -89,6 +92,44 @@ const SCENE_IMAGES: Record<LocationId, { src: string; alt: string }> = {
   apartamento: {
     src: "/images/scene-dexter-apartment.jpg",
     alt: "Apartamento de Dexter com vista noturna para Miami",
+  },
+};
+
+const TROPHY_ART: Record<
+  Exclude<AchievementId, "blood-slide-box">,
+  { src: string; alt: string }
+> = {
+  "first-case": {
+    src: "/images/dexter-items/latex-gloves.webp",
+    alt: "Luvas forenses azuis ao lado de uma lâmina de evidência",
+  },
+  "sharp-eye": {
+    src: "/images/dexter-items/forensics-badge.webp",
+    alt: "Crachá fictício de laboratório forense com vestígio de sangue em lâmina",
+  },
+  "no-hints": {
+    src: "/images/dexter-items/knife-kit.webp",
+    alt: "Estojo de facas de Dexter aberto e organizado",
+  },
+  "clean-run": {
+    src: "/images/dexter-items/dexter-work-shirt.webp",
+    alt: "Camisa escura de trabalho de Dexter dobrada como evidência",
+  },
+  "correct-verdict": {
+    src: "/images/dexter-items/blood-slide-sample.webp",
+    alt: "Lâmina de vidro com amostra de sangue preservada",
+  },
+  "master-interrogator": {
+    src: "/images/dexter-items/forensics-badge.webp",
+    alt: "Crachá do laboratório forense acompanhado por uma lâmina de evidência",
+  },
+  "red-john-profiler": {
+    src: "/images/dexter-items/latex-gloves.webp",
+    alt: "Luvas forenses azuis de Dexter em uma bancada de evidências",
+  },
+  "all-cases": {
+    src: "/images/dexter-items/dexter-work-shirt.webp",
+    alt: "Camisa escura de Dexter preservada no arquivo de investigação",
   },
 };
 
@@ -161,6 +202,15 @@ export function Game() {
   useEffect(() => {
     musicVolumeRef.current = musicVolume;
   }, [musicVolume]);
+
+  useEffect(() => {
+    if (!modal) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setModal(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [modal]);
 
   useEffect(() => {
     if (!ending) {
@@ -388,6 +438,11 @@ export function Game() {
     setModal({ kind: "image", id });
   };
 
+  const openZoom = (title: string, src: string, alt: string, description?: string) => {
+    playSfx("evidence");
+    setModal({ kind: "zoom", title, src, alt, description });
+  };
+
   const has = (d: DocId) => s.docs.includes(d);
   const done = (p: PuzzleId) => s.solved.includes(p);
 
@@ -585,10 +640,13 @@ export function Game() {
 
   const Hot = ({ onClick, children }: { onClick: () => void; children: ReactNode }) => (
     <button
+      type="button"
       onClick={onClick}
-      className="inline text-foreground underline-offset-4 decoration-primary/0 hover:underline hover:decoration-primary"
+      className="my-1 inline-flex min-h-10 max-w-full touch-manipulation flex-wrap items-center gap-2 border border-primary/60 bg-black/80 px-3 py-2 align-middle font-mono text-xs text-primary transition hover:bg-primary/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
     >
-      {children}
+      <Search aria-hidden="true" className="size-3.5 shrink-0" />
+      <span className="text-[9px] uppercase tracking-widest text-white/60">examinar</span>
+      <span className="text-left">{children}</span>
     </button>
   );
 
@@ -863,6 +921,93 @@ export function Game() {
           </Hot>
           .
         </p>
+        <section
+          className="mt-5 max-w-4xl border border-primary/40 bg-black/55 p-3 sm:p-4"
+          aria-label="Arquivo particular de Dexter"
+        >
+          <div className="mb-3">
+            <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+              Arquivo particular · itens de Dexter
+            </h3>
+            <p className="mt-1 text-xs text-white/65">
+              Toque em qualquer peça para ver a imagem ampliada.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ArtifactCard
+              src="/images/dexter-items/blood-slides-box-open.webp"
+              alt="Caixa aberta de lâminas de sangue de Dexter"
+              title="Caixa de lâminas de sangue"
+              onClick={() =>
+                openZoom(
+                  "Caixa de lâminas de sangue",
+                  "/images/dexter-items/blood-slides-box-open.webp",
+                  "Caixa de Dexter aberta com lâminas de sangue catalogadas",
+                )
+              }
+            />
+            <ArtifactCard
+              src="/images/dexter-items/blood-slide-sample.webp"
+              alt="Lâmina de vidro com amostra de sangue preservada"
+              title="Lâmina catalogada"
+              onClick={() =>
+                openZoom(
+                  "Lâmina catalogada",
+                  "/images/dexter-items/blood-slide-sample.webp",
+                  "Lâmina de vidro com uma amostra de sangue preservada",
+                )
+              }
+            />
+            <ArtifactCard
+              src="/images/dexter-items/knife-kit.webp"
+              alt="Conjunto de facas de Dexter guardado em um estojo"
+              title="Conjunto de facas"
+              onClick={() =>
+                openZoom(
+                  "Conjunto de facas",
+                  "/images/dexter-items/knife-kit.webp",
+                  "Estojo aberto com facas e ferramentas organizadas",
+                )
+              }
+            />
+            <ArtifactCard
+              src="/images/dexter-items/latex-gloves.webp"
+              alt="Luvas forenses junto a uma lâmina de evidência"
+              title="Luvas de proteção"
+              onClick={() =>
+                openZoom(
+                  "Luvas de proteção",
+                  "/images/dexter-items/latex-gloves.webp",
+                  "Luvas forenses azuis ao lado de uma lâmina de evidência",
+                )
+              }
+            />
+            <ArtifactCard
+              src="/images/dexter-items/dexter-work-shirt.webp"
+              alt="Camisa escura de trabalho de Dexter dobrada como evidência"
+              title="Roupa do arquivo"
+              onClick={() =>
+                openZoom(
+                  "Roupa do arquivo",
+                  "/images/dexter-items/dexter-work-shirt.webp",
+                  "Camisa escura de trabalho dobrada ao lado de uma etiqueta de evidência",
+                )
+              }
+            />
+            <ArtifactCard
+              src="/images/dexter-items/forensics-badge.webp"
+              alt="Crachá fictício de laboratório forense ao lado de vestígio em lâmina"
+              title="Crachá do laboratório"
+              onClick={() =>
+                openZoom(
+                  "Crachá do laboratório",
+                  "/images/dexter-items/forensics-badge.webp",
+                  "Crachá fictício de laboratório forense e lâmina com vestígio de sangue",
+                )
+              }
+            />
+          </div>
+        </section>
         <button
           type="button"
           onClick={() => openImage("harry-notebook")}
@@ -1217,8 +1362,8 @@ export function Game() {
             {nextObjective.action} →
           </button>
           <p className="text-xs text-muted-foreground">
-            Clique nos nomes dos locais para se deslocar; textos sublinhados e cartões de imagem
-            abrem pistas e enigmas.
+            Use os botões de evidência destacados para investigar. Toque na imagem da cena para
+            ampliá-la.
           </p>
         </div>
       </section>
@@ -1272,6 +1417,17 @@ export function Game() {
                 <h2 className="font-display text-2xl text-white">{LOCATION_NAMES[s.loc]}</h2>
                 <div className="max-w-3xl space-y-4 text-white/95">{scenes[s.loc]}</div>
               </div>
+              <button
+                type="button"
+                onClick={() =>
+                  openZoom(LOCATION_NAMES[s.loc], SCENE_IMAGES[s.loc].src, SCENE_IMAGES[s.loc].alt)
+                }
+                aria-label={`Ampliar imagem da cena: ${LOCATION_NAMES[s.loc]}`}
+                className="absolute bottom-4 right-4 z-20 inline-flex min-h-11 items-center gap-2 border border-primary bg-black/90 px-4 py-2 font-mono text-xs text-primary shadow-lg transition hover:bg-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+              >
+                <ZoomIn aria-hidden="true" className="size-4" />
+                Ampliar imagem
+              </button>
             </div>
           ) : (
             <div className="grid gap-2 sm:grid-cols-2">
@@ -1310,9 +1466,32 @@ export function Game() {
           onClick={() => setModal(null)}
         >
           <div
-            className="max-h-[90vh] w-full max-w-xl overflow-auto border border-border bg-card p-6"
+            className={`max-h-[90vh] w-full overflow-auto border border-border bg-card p-4 sm:p-6 ${modal.kind === "zoom" ? "max-w-6xl" : modal.kind === "image" ? "max-w-4xl" : "max-w-xl"}`}
             onClick={(e) => e.stopPropagation()}
           >
+            {modal.kind === "zoom" && (
+              <>
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="font-display text-xl sm:text-2xl">{modal.title}</h2>
+                  <button
+                    type="button"
+                    onClick={() => setModal(null)}
+                    className="min-h-11 shrink-0 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+                    aria-label="Fechar imagem ampliada"
+                  >
+                    Fechar
+                  </button>
+                </div>
+                <img
+                  src={modal.src}
+                  alt={modal.alt}
+                  className="mt-4 max-h-[72vh] w-full border border-border/70 bg-black object-contain"
+                />
+                {modal.description && (
+                  <p className="mt-3 text-sm text-muted-foreground">{modal.description}</p>
+                )}
+              </>
+            )}
             {modal.kind === "doc" && (
               <>
                 <h2 className="font-display text-2xl">{DOCS[modal.id].title}</h2>
@@ -2022,6 +2201,18 @@ function MainMenu({
                       key={achievement.id}
                       className={`border p-4 ${unlocked ? "border-primary bg-primary/5" : "border-border bg-background/40 opacity-70"}`}
                     >
+                      <img
+                        src={
+                          TROPHY_ART[achievement.id as Exclude<AchievementId, "blood-slide-box">]
+                            .src
+                        }
+                        alt={
+                          TROPHY_ART[achievement.id as Exclude<AchievementId, "blood-slide-box">]
+                            .alt
+                        }
+                        loading="lazy"
+                        className="mb-4 aspect-[4/3] w-full border border-border/70 bg-black object-cover"
+                      />
                       <p
                         className={`font-mono text-[10px] uppercase tracking-wider ${unlocked ? "text-primary" : "text-muted-foreground"}`}
                       >
@@ -2135,6 +2326,38 @@ function MainMenu({
         </div>
       </div>
     </main>
+  );
+}
+
+function ArtifactCard({
+  src,
+  alt,
+  title,
+  onClick,
+}: {
+  src: string;
+  alt: string;
+  title: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group min-h-44 touch-manipulation border border-white/20 bg-black/60 p-2 text-left transition hover:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      aria-label={`Ampliar item: ${title}`}
+    >
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-32 w-full object-cover transition group-hover:brightness-110 sm:h-36"
+      />
+      <span className="mt-2 flex items-center justify-between gap-2 px-1 font-mono text-xs text-primary">
+        {title}
+        <ZoomIn aria-hidden="true" className="size-4 shrink-0" />
+      </span>
+    </button>
   );
 }
 
