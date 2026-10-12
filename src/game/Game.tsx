@@ -16,6 +16,7 @@ import {
 import { MonroeCase } from "./MonroeCase";
 import { DexterCase } from "./DexterCase";
 import { MentalistCase } from "./MentalistCase";
+import { WinchesterCase } from "./WinchesterCase";
 import {
   ACHIEVEMENTS,
   CASE_IDS,
@@ -183,9 +184,9 @@ export function Game() {
     const saved = Number(window.localStorage.getItem("dexter-ortega-ambient-volume"));
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<"ortega" | "monroe" | "painscreek" | "mentalist">(
-    "ortega",
-  );
+  const [caseMode, setCaseMode] = useState<
+    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester"
+  >("ortega");
   const [showMenu, setShowMenu] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -380,6 +381,10 @@ export function Game() {
     return (
       <DexterCase onBack={() => setShowMenu(true)} soundOn={soundOn} onToggleSound={toggleSound} />
     );
+  }
+
+  if (caseMode === "winchester") {
+    return <WinchesterCase onBack={() => setShowMenu(true)} />;
   }
 
   if (caseMode === "mentalist") {
@@ -1808,7 +1813,7 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist") => void;
+  onSelect: (nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester") => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
   soundOn: boolean;
@@ -1846,6 +1851,11 @@ function MainMenu({
       title: "O Mentalista: O Caso Red John",
       detail: "Conectando as evidências de Dexter e Patrick Jane.",
     },
+    winchester: {
+      index: "CAPÍTULO 05 · MIAMI / DOCAS",
+      title: "O Sangue dos Condenados",
+      detail: "Abrindo um dossiê de homicídios com evidências que desafiam a perícia.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -1858,6 +1868,7 @@ function MainMenu({
     monroe: "O Caso Monroe",
     painscreek: "Painscreek Case",
     mentalist: "O Mentalista: O Caso Red John",
+    winchester: "O Sangue dos Condenados",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2196,7 +2207,7 @@ function MainMenu({
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
                   {bloodSlideUnlocked
                     ? "Conquistado"
-                    : "Bloqueado · requer excelência nos quatro capítulos e interrogatórios perfeitos"}
+                    : "Bloqueado · requer excelência nos cinco capítulos e interrogatórios perfeitos"}
                 </p>
               </div>
             </section>
@@ -2237,7 +2248,7 @@ function MainMenu({
             </div>
           </section>
         )}
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           <button
             type="button"
             disabled={transitionChapter !== null}
@@ -2322,9 +2333,31 @@ function MainMenu({
               {chapterStatus("mentalist")}
             </span>
           </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("winchester")}
+            className="group border border-red-900/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-red-600 hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-red-300">
+              Capítulo 05 · Miami / Docas
+            </p>
+            <h2 className="mt-3 font-display text-3xl">O Sangue dos Condenados</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Um caso maior em seis atos: perícia contraditória, arquivos apagados,
+              interrogatórios, conexões ocultas e uma hipótese sobrenatural que só se confirma
+              perto do fim.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-red-300 group-hover:underline">
+              Abrir dossiê →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("winchester")}
+            </span>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 04</p>
+          <p>ARQUIVOS DISPONÍVEIS: 05</p>
           <p className="mt-2">
             CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
           </p>
