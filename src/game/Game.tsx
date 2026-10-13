@@ -611,7 +611,7 @@ export function Game() {
       return {
         title: "Examinar a cena do crime",
         detail:
-          "No Laboratório forense, abra a fotografia da trilha de sangue e observe a sequência das gotas.",
+          "Passo 1: vá ao Laboratório forense e abra a foto em vermelho. Observe o formato e a direção das gotas.",
         location: "lab" as LocationId,
         action: "Ver fotografia da cena",
       };
@@ -620,16 +620,16 @@ export function Game() {
       return {
         title: "Conferir o relatório do legista",
         detail:
-          "Ainda no Laboratório forense, examine o relatório e identifique o campo incompatível com as medições.",
+          "Passo 2: abra o relatório do legista e compare os números com as medições da cena.",
         location: "lab" as LocationId,
-        action: "Examinar relatório",
+        action: "Abrir relatório",
       };
     }
     if (!done("hora")) {
       return {
         title: "Reconstruir a hora da morte",
         detail:
-          "Cruze a temperatura do relatório com a tabela de resfriamento e resolva o enigma da hora.",
+          "Passo 3: compare a temperatura do relatório com a tabela na parede para estimar o horário.",
         location: "lab" as LocationId,
         action: "Comparar os registros",
       };
@@ -698,7 +698,7 @@ export function Game() {
   })();
 
   const hint = !done("sangue")
-    ? "No laboratório, clique na miniatura 'Ver fotografia da cena e descrição'. Observe as características das gotas: a forma delas indica o ritmo do movimento."
+    ? "No laboratório, clique na miniatura 'Foto da cena'. Observe as características das gotas: a forma delas indica o ritmo do movimento."
     : !done("relatorio")
       ? "Examine o relatório do legista e marque o campo que não combina com as medições da cena."
       : !done("hora")
@@ -793,11 +793,10 @@ export function Game() {
     <button
       type="button"
       onClick={onClick}
-      className="my-1 inline-flex min-h-10 max-w-full touch-manipulation flex-wrap items-center gap-2 border border-primary/60 bg-black/80 px-3 py-2 align-middle font-mono text-xs text-primary transition hover:bg-primary/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      className="mx-0.5 inline touch-manipulation rounded-sm bg-transparent px-0.5 py-0.5 align-baseline font-semibold text-primary underline decoration-primary/40 decoration-dotted underline-offset-4 transition hover:text-primary/75 hover:decoration-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+      aria-label={`Abrir: ${children}`}
     >
-      <Search aria-hidden="true" className="size-3.5 shrink-0" />
-      <span className="text-[9px] uppercase tracking-widest text-white/60">examinar</span>
-      <span className="text-left">{children}</span>
+      {children}
     </button>
   );
 
@@ -835,9 +834,7 @@ export function Game() {
             alt="Fotografia forense com uma trilha de gotas de sangue pelo apartamento"
             className="h-44 w-full object-cover transition group-hover:opacity-90 sm:h-60"
           />
-          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Ver fotografia da cena e descrição
-          </span>
+          <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">Foto da cena</span>
         </button>
         <button
           type="button"
@@ -850,7 +847,7 @@ export function Game() {
             className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
           />
           <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Ver relatório do legista e descrição
+            Relatório do legista
           </span>
         </button>
         <p>
@@ -1170,7 +1167,7 @@ export function Game() {
             className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
           />
           <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Ver caderno de Harry e descrição
+            Caderno de Harry
           </span>
         </button>
         <button
@@ -1189,7 +1186,7 @@ export function Game() {
             className="h-40 w-full object-cover transition group-hover:opacity-90 sm:h-52"
           />
           <span className="mt-2 block px-1 pb-1 font-mono text-xs text-white/75">
-            Examinar o estojo de ferramentas
+            Estojo de ferramentas
           </span>
         </button>
         {has("codigo") && !done("segredo") && (
@@ -1404,10 +1401,10 @@ export function Game() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
-              Briefing · objetivo atual
+              Guia de investigação · passo a passo
             </p>
-            <h2 id="case-guide-title" className="mt-1 font-display text-2xl">
-              {nextObjective.title}
+            <h2 id="case-guide-title" className="mt-1 font-display text-2xl sm:text-3xl">
+              Seu próximo passo: {nextObjective.title.replace(/^Examinar/, "Investigar")}
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               {nextObjective.detail}
@@ -1416,13 +1413,13 @@ export function Game() {
           <div className="grid min-w-[140px] grid-cols-2 gap-2 sm:min-w-[190px]">
             <div className="border border-border bg-background/70 p-3">
               <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                Enigmas
+                Passos
               </p>
               <p className="mt-1 font-mono text-xl text-primary">{s.solved.length}/14</p>
             </div>
             <div className="border border-border bg-background/70 p-3">
               <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                Documentos
+                Arquivos
               </p>
               <p className="mt-1 font-mono text-xl text-primary">{s.docs.length}/20</p>
             </div>
@@ -1446,19 +1443,19 @@ export function Game() {
             {
               number: "01",
               title: "Investigar",
-              text: "Escolha um local e examine fotos, objetos e textos destacados.",
+              text: "Comece no local indicado. Os nomes em vermelho podem ser clicados para abrir pistas.",
               complete: s.docs.length > 0,
             },
             {
               number: "02",
               title: "Analisar",
-              text: "Resolva os enigmas e consulte os documentos no Caderno.",
+              text: "Leia cada pista com calma. Use o Caderno para rever documentos quando quiser.",
               complete: s.solved.length > 0,
             },
             {
               number: "03",
               title: "Cruzar provas",
-              text: "Compare horários, depoimentos e vestígios antes de tirar conclusões.",
+              text: "Compare horários, relatos e vestígios. Uma pista sozinha não prova tudo.",
               complete: done("rede") && done("vestigio") && done("lamina"),
             },
             {
@@ -1466,8 +1463,8 @@ export function Game() {
               title: "Concluir",
               text:
                 s.solved.length >= 14
-                  ? "Todos os enigmas foram resolvidos. Você já pode abrir o quadro do alvo."
-                  : "A acusação conclusiva fica disponível após resolver os 14 enigmas.",
+                  ? "Você reuniu as provas. Abra o quadro do alvo e escolha sua conclusão."
+                  : "Continue seguindo os passos e conectando as provas antes de concluir.",
               complete: s.solved.length >= 14,
             },
           ].map((step) => (
@@ -1532,8 +1529,8 @@ export function Game() {
             {nextObjective.action} →
           </button>
           <p className="text-xs text-muted-foreground">
-            Use os botões de evidência destacados para investigar. Toque na imagem da cena para
-            ampliá-la.
+            Dica: os textos em vermelho são interativos. Você também pode tocar nas imagens para
+            ampliá-las.
           </p>
         </div>
       </section>
@@ -1707,7 +1704,7 @@ export function Game() {
                   className="mt-5 min-h-11 border border-primary px-4 py-3 font-mono text-sm text-primary hover:bg-primary/10"
                   onClick={() => setModal({ kind: "puzzle", id: "sangue" })}
                 >
-                  Examinar as manchas
+                  Analisar as manchas
                 </button>
               </>
             )}
@@ -1850,8 +1847,8 @@ export function Game() {
                 <h2 className="font-display text-2xl">Como jogar</h2>
                 <div className="mt-4 space-y-3 text-sm leading-relaxed">
                   <p>
-                    Leia tudo com atenção e clique nas frases interativas dentro de cada cena. As
-                    pistas não aparecem como setas ou marcadores brilhantes.
+                    Siga o passo destacado no dossiê. Os nomes e objetos em vermelho são clicáveis e
+                    abrem fotos, documentos ou enigmas.
                   </p>
                   <p>
                     Visite os quatro locais, abra o Caderno para rever documentos e conecte nomes,
