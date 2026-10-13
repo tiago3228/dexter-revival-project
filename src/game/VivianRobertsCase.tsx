@@ -283,7 +283,7 @@ const PLACES: Place[] = [
     name: "Quarto de Vivian",
     group: "Roberts Mansion",
     description:
-      "O nome não aparece nas plantas fornecidas nem há fonte primária que identifique este quarto como local separado; não atribuir documentos a ele.",
+      "A planta do primeiro andar identifica uma “Suíte master”, mas não informa quem a ocupa; nenhuma fonte primária fornecida nomeia um quarto separado como sendo de Vivian. Manter a atribuição sem confirmação.",
     status: "contradicao",
   },
   {
@@ -328,10 +328,10 @@ const PLACES: Place[] = [
   },
   {
     id: "morgue",
-    name: "Porão / necrotério",
+    name: "Necrotério (B1)",
     group: "Hospital",
     description:
-      "Necrotério identificado no nível B1 da planta do hospital; o mapa não confirma a denominação ‘porão’ como descrição arquitetônica geral.",
+      "A planta do hospital identifica o necrotério no nível B1; não tratar todo o nível como descrição arquitetônica geral de “porão”.",
     status: "confirmado",
   },
   {
