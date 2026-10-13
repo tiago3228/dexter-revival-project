@@ -1134,19 +1134,6 @@ export function VivianRobertsCase({
               aria-hidden="true"
               className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/5"
             />
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 sm:p-6">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#e1c18d]">
-                  Trilha sonora · atmosfera de investigação
-                </p>
-                <p className="mt-1 font-display text-xl text-white sm:text-3xl">
-                  O Caso Vivian Roberts
-                </p>
-                <p className="mt-1 text-xs text-white/75">
-                  Tema musical de Painscreek + ambiente contínuo
-                </p>
-              </div>
-            </div>
           </div>
           <figcaption className="border-t border-[#79664c] bg-[#171512] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#a9a092] sm:px-4">
             Arquivo visual · The Painscreek Killings · EQ Studios

@@ -476,12 +476,26 @@ export function Game() {
   }
 
   if (caseMode === "monroe") {
-    return <MonroeCase onBack={() => setShowMenu(true)} />;
+    return (
+      <MonroeCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+      />
+    );
   }
 
   if (caseMode === "painscreek") {
     return (
-      <DexterCase onBack={() => setShowMenu(true)} soundOn={soundOn} onToggleSound={toggleSound} />
+      <DexterCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+      />
     );
   }
 
@@ -1299,61 +1313,20 @@ export function Game() {
 
   return (
     <Shell>
-      <header className="game-header flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-4">
+      <header className="game-header flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
             Dexter — Episódio 1
           </p>
           <h1 className="font-display text-3xl">Turno da Noite</h1>
         </div>
-        <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
-          <button
-            type="button"
-            onClick={() => setInfoModal("como-jogar")}
-            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
-          >
-            Como jogar
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setHintConfirmed(false);
-              setInfoModal("dicas");
-            }}
-            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
-          >
-            Dicas
-          </button>
-          <button
-            type="button"
-            onClick={toggleSound}
-            className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
-            aria-label={soundOn ? "Desligar música" : "Ligar música"}
-          >
-            Som: {soundOn ? "ligado" : "desligado"}
-          </button>
-          <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-xs text-muted-foreground">
-            Ambientação {Math.round(ambientVolume * 100)}%
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={ambientVolume}
-              onChange={(event) => setAmbientVolume(Number(event.target.value))}
-              className="w-24 accent-primary"
-              aria-label="Volume da ambientação"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => setShowMenu(true)}
-            className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-          >
-            ← Voltar aos casos
-          </button>
-          <p className="clock-glow font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowMenu(true)}
+          className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+        >
+          ← Menu de casos
+        </button>
       </header>
 
       <CaseHeroImage
@@ -1361,6 +1334,64 @@ export function Game() {
         alt="Dexter examina evidências forenses em um laboratório de Miami à noite"
         caption="Arquivo de cena · Miami Metro · Caso Ortega"
       />
+
+      <div
+        className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
+        aria-label="Controles e ferramentas do caso"
+      >
+        <button
+          type="button"
+          onClick={() => setInfoModal("como-jogar")}
+          className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+        >
+          Como jogar
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setHintConfirmed(false);
+            setInfoModal("dicas");
+          }}
+          className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+        >
+          Dicas
+        </button>
+        <button
+          type="button"
+          onClick={toggleSound}
+          aria-pressed={soundOn}
+          className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+        >
+          Trilha: {soundOn ? "ligada" : "desligada"}
+        </button>
+        <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          Música {Math.round(musicVolume * 100)}%
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={musicVolume}
+            onChange={(event) => setMusicVolume(Number(event.target.value))}
+            aria-label="Volume da música"
+            className="w-24 accent-primary"
+          />
+        </label>
+        <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          Ambientação {Math.round(ambientVolume * 100)}%
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={ambientVolume}
+            onChange={(event) => setAmbientVolume(Number(event.target.value))}
+            aria-label="Volume da ambientação"
+            className="w-24 accent-primary"
+          />
+        </label>
+        <p className="clock-glow ml-auto font-mono text-2xl text-primary">{fmtClock(s.clock)}</p>
+      </div>
 
       <section
         aria-labelledby="case-guide-title"

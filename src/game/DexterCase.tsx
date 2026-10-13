@@ -286,10 +286,14 @@ export function DexterCase({
   onBack,
   soundOn,
   onToggleSound,
+  musicVolume,
+  onMusicVolumeChange,
 }: {
   onBack: () => void;
   soundOn: boolean;
   onToggleSound: () => void;
+  musicVolume: number;
+  onMusicVolumeChange: (value: number) => void;
 }) {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 1024,
@@ -613,21 +617,13 @@ export function DexterCase({
     return (
       <main className="min-h-screen bg-background px-4 py-10 text-foreground sm:px-10 sm:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+          <div className="mb-8 flex justify-end">
             <button
               type="button"
               onClick={onBack}
-              className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+              className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
             >
-              ← VOLTAR AOS CASOS
-            </button>
-            <button
-              type="button"
-              onClick={onToggleSound}
-              aria-pressed={soundOn}
-              className="min-h-11 border border-border px-4 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
-            >
-              Som: {soundOn ? "ligado" : "desligado"}
+              ← Menu de casos
             </button>
           </div>
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
@@ -673,23 +669,6 @@ export function DexterCase({
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
           <div>
-            <div className="mb-4 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={onBack}
-                className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-              >
-                ← VOLTAR AOS CASOS
-              </button>
-              <button
-                type="button"
-                onClick={onToggleSound}
-                aria-pressed={soundOn}
-                className="min-h-11 border border-border px-4 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
-              >
-                Som: {soundOn ? "ligado" : "desligado"}
-              </button>
-            </div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Caso 03 · Greybridge, Flórida · 1998
             </p>
@@ -698,6 +677,47 @@ export function DexterCase({
               Dexter Morgan revisita a morte de Eleanor Whitmore depois que uma fita anônima chega
               ao laboratório de Miami Metro.
             </p>
+          </div>
+          <button
+            type="button"
+            onClick={onBack}
+            className="min-h-10 border border-primary px-3 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+          >
+            ← Menu de casos
+          </button>
+        </div>
+
+        <CaseHeroImage
+          src="/images/painscreek-investigation.webp"
+          alt="Investigador diante de uma cidade abandonada e da mansão Whitmore em Greybridge"
+          caption="Arquivo de cena · Greybridge · 1998"
+        />
+        <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <div
+            className="flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
+            aria-label="Controles de áudio"
+          >
+            <button
+              type="button"
+              onClick={onToggleSound}
+              aria-pressed={soundOn}
+              className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+            >
+              Trilha: {soundOn ? "ligada" : "desligada"}
+            </button>
+            <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Música {Math.round(musicVolume * 100)}%
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={musicVolume}
+                onChange={(event) => onMusicVolumeChange(Number(event.target.value))}
+                aria-label="Volume da música de Painscreek"
+                className="w-24 accent-primary"
+              />
+            </label>
           </div>
           <div className="border border-border px-4 py-3 font-mono text-xs text-muted-foreground">
             <p>
@@ -720,13 +740,35 @@ export function DexterCase({
               Reiniciar / trocar dificuldade
             </button>
           </div>
+          <div className="flex flex-wrap gap-2 lg:col-span-2">
+            <button
+              type="button"
+              onClick={() =>
+                setHintDialog({
+                  id: "how",
+                  hint: "Investigue os locais, reúna evidências e compare os depoimentos.",
+                  revealed: true,
+                })
+              }
+              className="min-h-10 border border-border px-3 py-2 font-mono text-xs"
+            >
+              Como jogar
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setHintDialog({
+                  id: "hint",
+                  hint: "Cruze evidências independentes antes de acusar alguém.",
+                  revealed: false,
+                })
+              }
+              className="min-h-10 border border-border px-3 py-2 font-mono text-xs"
+            >
+              Dicas
+            </button>
+          </div>
         </div>
-
-        <CaseHeroImage
-          src="/images/painscreek-investigation.webp"
-          alt="Investigador diante de uma cidade abandonada e da mansão Whitmore em Greybridge"
-          caption="Arquivo de cena · Greybridge · 1998"
-        />
 
         <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 

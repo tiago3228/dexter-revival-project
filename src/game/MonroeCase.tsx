@@ -209,7 +209,19 @@ function speak(text: string) {
   window.speechSynthesis.speak(utterance);
 }
 
-export function MonroeCase({ onBack }: { onBack: () => void }) {
+export function MonroeCase({
+  onBack,
+  soundOn,
+  onToggleSound,
+  musicVolume,
+  onMusicVolumeChange,
+}: {
+  onBack: () => void;
+  soundOn: boolean;
+  onToggleSound: () => void;
+  musicVolume: number;
+  onMusicVolumeChange: (value: number) => void;
+}) {
   const [objective, setObjective] = useState<Objective>(1);
   const [opened, setOpened] = useState<Evidence | null>(null);
   const [activeDialogue, setActiveDialogue] = useState<
@@ -222,7 +234,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   const [decoded, setDecoded] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [completed, setCompleted] = useState<Objective[]>([]);
-  const [soundOn, setSoundOn] = useState(true);
+  const [ambientOn, setAmbientOn] = useState(true);
   const [volume, setVolume] = useState(() => {
     if (typeof window === "undefined") return 0.65;
     const saved = Number(window.localStorage.getItem("dexter-monroe-ambient-volume"));
@@ -264,12 +276,12 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   }, []);
 
   useEffect(() => {
-    if (!soundOn && ambientRef.current) {
+    if (!ambientOn && ambientRef.current) {
       ambientRef.current.sources.forEach((source) => source.stop());
       void ambientRef.current.context.close();
       ambientRef.current = null;
     }
-  }, [soundOn]);
+  }, [ambientOn]);
   useEffect(() => {
     if (ambientRef.current) {
       const [gainAmbient, gainDetail] = ambientRef.current.gains;
@@ -287,7 +299,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
   }, [notes]);
 
   const startAmbient = (force = false) => {
-    if ((!soundOn && !force) || ambientRef.current || typeof window === "undefined") return;
+    if ((!ambientOn && !force) || ambientRef.current || typeof window === "undefined") return;
     const context = new AudioContext();
     const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
     const data = buffer.getChannelData(0);
@@ -559,25 +571,6 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           >
             ← Menu de casos
           </button>
-          <button
-            onClick={() => setBriefingOpen(true)}
-            className="min-h-11 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
-          >
-            Briefing do caso
-          </button>
-          <button
-            onClick={() => setBoardOpen(true)}
-            className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
-          >
-            Quadro de investigação
-          </button>
-          <button
-            disabled={completed.length < 4}
-            onClick={() => setReportOpen(true)}
-            className="min-h-11 border border-border px-4 py-2 font-mono text-xs disabled:opacity-40"
-          >
-            Relatório final
-          </button>
         </div>
         <div className="mt-5 grid grid-cols-4 gap-2">
           {[1, 2, 3, 4].map((item) => (
@@ -593,20 +586,46 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         </div>
       </header>
 
+      <CaseHeroImage
+        src="/images/monroe-investigation.webp"
+        alt="Mesa de investigação com documentos e objetos ligados ao caso Monroe em Greenfield"
+        caption="Dossiê de cena · Greenfield · Caso Monroe"
+      />
       <div
         className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
         aria-label="Controles de áudio"
       >
         <button
           type="button"
-          onClick={() => {
-            setSoundOn((value) => !value);
-            if (!soundOn) startAmbient(true);
-          }}
+          onClick={onToggleSound}
           aria-pressed={soundOn}
           className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary hover:border-primary"
         >
-          Ambiente: {soundOn ? "ligado" : "desligado"}
+          Trilha: {soundOn ? "ligada" : "desligada"}
+        </button>
+        <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          Música {Math.round(musicVolume * 100)}%
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={musicVolume}
+            onChange={(event) => onMusicVolumeChange(Number(event.target.value))}
+            aria-label="Volume da música"
+            className="w-24 accent-primary"
+          />
+        </label>
+        <button
+          type="button"
+          onClick={() => {
+            setAmbientOn((value) => !value);
+            if (!ambientOn) startAmbient(true);
+          }}
+          aria-pressed={ambientOn}
+          className="min-h-10 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+        >
+          Ambiente: {ambientOn ? "ligado" : "desligado"}
         </button>
         <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
           Ambiente {Math.round(volume * 100)}%
@@ -623,11 +642,27 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
         </label>
       </div>
 
-      <CaseHeroImage
-        src="/images/monroe-investigation.webp"
-        alt="Mesa de investigação com documentos e objetos ligados ao caso Monroe em Greenfield"
-        caption="Dossiê de cena · Greenfield · Caso Monroe"
-      />
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          onClick={() => setBriefingOpen(true)}
+          className="min-h-10 border border-border px-4 py-2 font-mono text-xs hover:border-primary hover:text-primary"
+        >
+          Briefing do caso
+        </button>
+        <button
+          onClick={() => setBoardOpen(true)}
+          className="min-h-10 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
+        >
+          Quadro de investigação
+        </button>
+        <button
+          disabled={completed.length < 4}
+          onClick={() => setReportOpen(true)}
+          className="min-h-10 border border-border px-4 py-2 font-mono text-xs disabled:opacity-40"
+        >
+          Relatório final
+        </button>
+      </div>
 
       <HarryCodePanel line={harryLine} onDismiss={() => setHarryLine(null)} />
 
