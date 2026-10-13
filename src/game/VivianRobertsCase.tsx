@@ -30,7 +30,7 @@ const PEOPLE: Person[] = [
     id: "vivian",
     name: "Vivian Roberts",
     role: "Vítima central do caso",
-    note: "Fontes: pp. 82, 94 e 100. Laudo: esposa de Charles; notícia relata sua morte; carta anônima chama o caso de assassinato.",
+    note: "Fontes: pp. 73–77, 82, 94 e 100. Os diários registram sua perspectiva; laudo confirma a relação com Charles, notícia relata sua morte e carta anônima chama o caso de assassinato.",
     status: "confirmado",
   },
   {
@@ -198,7 +198,7 @@ const PEOPLE: Person[] = [
 
 const PERSON_SUMMARIES: Record<string, string> = {
   vivian:
-    "O laudo hospitalar a identifica como esposa de Charles. A notícia relata que ela foi encontrada morta; uma carta anônima chama o caso de assassinato, sem identificar autor.",
+    "Os diários de Vivian (pp. 73–77) registram sua perspectiva sobre Charles, Trisha, Scott, Sofia e a vida pública. O laudo hospitalar a identifica como esposa de Charles; a notícia relata sua morte, e uma carta anônima chama o caso de assassinato sem identificar autor.",
   charles:
     "Diários e documentos identificam Charles como marido de Vivian e pai de Trisha; uma notícia o chama de ex-prefeito. Suas interpretações pessoais permanecem atribuídas a ele.",
   magdalene:
@@ -453,9 +453,9 @@ const DOCUMENTS: DocumentItem[] = [
     id: "diary-vivian",
     title: "Diários de Vivian Roberts",
     type: "Diário",
-    location: "Local não identificado",
-    status: "contradicao",
-    body: "A transcrição fornecida não apresenta um caderno identificado como diário de Vivian Roberts. Não atribuir entradas de outros autores a Vivian sem uma fonte adicional.",
+    location: "Transcrição · páginas 73–77",
+    status: "confirmado",
+    body: "Diários identificados como de Vivian Roberts nas páginas 73–77. As entradas cobrem 1972 e 1994 e registram sua perspectiva sobre Charles, Trisha, Scott, Sofia, Andrew, Bernard e Oliver. O local físico do caderno não é informado.",
   },
   {
     id: "letters",
