@@ -127,14 +127,7 @@ export function PainscreekEvidenceExplorer() {
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <header className="border-b border-border pb-6">
           <a
-            href="/"
-            onClick={() => {
-              try {
-                window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-              } catch {
-                // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-              }
-            }}
+            href="/?resumeVivian=1"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             ← Voltar ao jogo

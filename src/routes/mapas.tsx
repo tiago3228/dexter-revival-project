@@ -283,13 +283,7 @@ function MapasPage() {
             </Link>
             <Link
               to="/"
-              onClick={() => {
-                try {
-                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-                } catch {
-                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-                }
-              }}
+              search={{ resumeVivian: true }}
               className="inline-flex items-center gap-2 border border-[#56594c] px-3 py-2 text-sm hover:bg-[#292c24]"
             >
               <ArrowLeft size={16} /> Voltar ao jogo

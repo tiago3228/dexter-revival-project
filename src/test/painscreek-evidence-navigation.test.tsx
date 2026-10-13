@@ -1,6 +1,7 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { PainscreekEvidenceExplorer } from "@/game/PainscreekEvidenceExplorer";
+import { validateHomeSearch } from "@/game/vivianCaseNavigation";
 
 describe("Painscreek evidence catalog navigation", () => {
   beforeEach(() => {
@@ -11,11 +12,18 @@ describe("Painscreek evidence catalog navigation", () => {
     cleanup();
   });
 
-  it("preserves the active Vivian case when returning to the game", () => {
+  it("returns to the game with an explicit Painscreek resume parameter", () => {
     render(<PainscreekEvidenceExplorer />);
 
-    fireEvent.click(screen.getByRole("link", { name: /voltar ao jogo/i }));
+    const returnLink = screen.getByRole("link", { name: /voltar ao jogo/i });
 
-    expect(window.sessionStorage.getItem("dexter-return-to-vivian-case")).toBe("true");
+    expect(returnLink).toHaveAttribute("href", "/?resumeVivian=1");
+  });
+
+  it("recognizes only the explicit Vivian resume parameter", () => {
+    expect(validateHomeSearch({ resumeVivian: "1" })).toEqual({ resumeVivian: true });
+    expect(validateHomeSearch({ resumeVivian: "true" })).toEqual({ resumeVivian: true });
+    expect(validateHomeSearch({ resumeVivian: true })).toEqual({ resumeVivian: true });
+    expect(validateHomeSearch({ resumeVivian: "0" })).toEqual({});
   });
 });

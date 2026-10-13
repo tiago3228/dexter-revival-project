@@ -658,13 +658,7 @@ function TimelinePage() {
           </Link>
           <Link
             to="/"
-            onClick={() => {
-              try {
-                window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-              } catch {
-                // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-              }
-            }}
+            search={{ resumeVivian: true }}
             className="inline-flex min-h-10 items-center gap-2 border border-[#5c5143] px-3 py-2 text-xs uppercase tracking-wider hover:border-[#c4a779]"
           >
             <ArrowLeft size={15} /> Voltar ao caso

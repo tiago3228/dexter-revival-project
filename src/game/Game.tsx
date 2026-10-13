@@ -174,7 +174,7 @@ function getInvestigatorScore(state: ReturnType<typeof initial>): InvestigatorSc
   return { points, rank, solvedPoints, timePoints, disciplinePoints };
 }
 
-export function Game() {
+export function Game({ resumeVivianCase = false }: { resumeVivianCase?: boolean } = {}) {
   const [s, setS] = useState(initial);
   const [modal, setModal] = useState<Modal>(null);
   const [activeStoryDialogue, setActiveStoryDialogue] = useState<StoryDialogueScene | null>(null);
@@ -206,31 +206,9 @@ export function Game() {
   });
   const [caseMode, setCaseMode] = useState<
     "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
-  >(() => {
-    try {
-      return window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true"
-        ? "vivian"
-        : "ortega";
-    } catch {
-      return "ortega";
-    }
-  });
-  const [showMenu, setShowMenu] = useState(() => {
-    try {
-      return window.sessionStorage.getItem("dexter-return-to-vivian-case") !== "true";
-    } catch {
-      return true;
-    }
-  });
-  const [showIntro, setShowIntro] = useState(() => {
-    try {
-      const shouldResume = window.sessionStorage.getItem("dexter-return-to-vivian-case") === "true";
-      if (shouldResume) window.sessionStorage.removeItem("dexter-return-to-vivian-case");
-      return !shouldResume;
-    } catch {
-      return true;
-    }
-  });
+  >(() => (resumeVivianCase ? "vivian" : "ortega"));
+  const [showMenu, setShowMenu] = useState(() => !resumeVivianCase);
+  const [showIntro, setShowIntro] = useState(() => !resumeVivianCase);
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
   const [introMusicActive, setIntroMusicActive] = useState(true);
   const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName());

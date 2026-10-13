@@ -1271,26 +1271,12 @@ export function VivianRobertsCase({
             </button>
             <Link
               to="/mapas"
-              onClick={() => {
-                try {
-                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-                } catch {
-                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-                }
-              }}
               className="inline-flex min-h-12 items-center gap-2 border border-[#a5a78d] bg-[#a5a78d]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#d9dbc9] transition hover:bg-[#a5a78d]/20"
             >
               <MapPin size={17} /> Mapa
             </Link>
             <Link
               to="/linha-do-tempo"
-              onClick={() => {
-                try {
-                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-                } catch {
-                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-                }
-              }}
               className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"
             >
               <Clock3 size={17} /> Linha do tempo
@@ -1298,13 +1284,6 @@ export function VivianRobertsCase({
             <Link
               to="/painscreek-evidence"
               hash="galeria-imagens"
-              onClick={() => {
-                try {
-                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
-                } catch {
-                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
-                }
-              }}
               className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"
             >
               <BookOpen size={17} /> Galeria de imagens

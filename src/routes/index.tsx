@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Game } from "@/game/Game";
+import { validateHomeSearch } from "@/game/vivianCaseNavigation";
 
 const pageTitle = "Dexter — The Game | Investigação Criminal";
 const pageDescription =
@@ -8,6 +10,7 @@ const siteUrl = "https://dexter-the-game.lovable.app/";
 const socialImage = "https://dexter-the-game.lovable.app/images/og-dexter.jpg";
 
 export const Route = createFileRoute("/")({
+  validateSearch: validateHomeSearch,
   head: () => ({
     meta: [
       { title: pageTitle },
@@ -36,5 +39,21 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: siteUrl }],
   }),
-  component: Game,
+  component: IndexPage,
 });
+
+function IndexPage() {
+  const { resumeVivian } = Route.useSearch();
+  const navigate = Route.useNavigate();
+
+  useEffect(() => {
+    if (resumeVivian) {
+      void navigate({
+        search: (previous) => ({ ...previous, resumeVivian: undefined }),
+        replace: true,
+      });
+    }
+  }, [navigate, resumeVivian]);
+
+  return <Game resumeVivianCase={Boolean(resumeVivian)} />;
+}
