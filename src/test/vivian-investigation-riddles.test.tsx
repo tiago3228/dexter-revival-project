@@ -18,7 +18,7 @@ const ALL_CLUES = [
   "code-0318",
 ];
 
-function seedCompleteInvestigation() {
+function seedCompleteInvestigation(reportSubmitted = false) {
   window.localStorage.setItem(
     SAVE_KEY,
     JSON.stringify({
@@ -30,7 +30,7 @@ function seedCompleteInvestigation() {
       activePlace: "archive",
       phase: "explore",
       timelineOrder: ["letter-1973", "funds-1993", "vivian-1995", "hospital-1996"],
-      reportSubmitted: false,
+      reportSubmitted,
       chosenConclusion: "",
       mistakes: 0,
       usedHints: [],
@@ -61,6 +61,47 @@ describe("investigation riddles", () => {
     expect(dossier).toHaveTextContent("Sofia Miller");
     expect(dossier).toHaveTextContent("19–20/07/1995");
     expect(dossier).toHaveTextContent("Código 0318");
+  });
+
+  it("keeps the complete dossier locked until the case is submitted and M99 is entered", () => {
+    render(<VivianInvestigationGame onBack={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
+
+    const gate = screen.getByRole("dialog", { name: "Dossiê completo" });
+    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
+      target: { value: "M99" },
+    });
+    fireEvent.submit(
+      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
+    );
+    expect(gate).toHaveTextContent("Resolva o caso");
+    expect(
+      screen.queryByRole("heading", { name: "Dossiê completo de Painscreek" }),
+    ).not.toBeInTheDocument();
+
+    cleanup();
+    window.localStorage.clear();
+    seedCompleteInvestigation(true);
+    render(<VivianInvestigationGame onBack={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
+      target: { value: "senha-incorreta" },
+    });
+    fireEvent.submit(
+      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent("Senha incorreta");
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
+      target: { value: "m99" },
+    });
+    fireEvent.submit(
+      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/fita secreta procurada por Magdalene/)).toBeInTheDocument();
   });
 
   it("rejects a wrong answer and unlocks all nine riddle clues with correct answers", () => {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   BookOpen,
@@ -88,6 +88,7 @@ type SaveData = {
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
+const FINAL_DOSSIER_PASSWORD = "M99";
 
 const RIDDLES: Riddle[] = [
   {
@@ -210,6 +211,106 @@ const CASE_DOSSIER = [
       "Cofre da galeria — código 611975, ligado ao aniversário de Vincent.",
       "Armário da enfermeira Katherine — código 1964, visto no verso de um alfinete.",
       "Cartão de acesso de Henry Johnson — encontrado no hospital; o escritório também depende da energia restaurada.",
+    ],
+  },
+];
+
+const COMPLETE_CASE_DOSSIER = [
+  {
+    title: "1 · Perfil dos personagens e relações",
+    items: [
+      "Vivian Roberts — vítima central em 1995; esposa de Charles e reformadora do hospital.",
+      "Charles Roberts — prefeito de Painscreek e marido de Vivian.",
+      "Magdalene Roberts — mãe de Charles; morreu em 1975 enquanto procurava uma fita secreta.",
+      "Bernard Hopkins — mordomo de Vivian; tinha uma paixão por ela e uma coleção de machados.",
+      "Dorothy Patterson — chefe das empregadas; desconfiava da relação entre Matthew e Sofia.",
+      "Derrick Tyler — motorista de Vivian, filho de Wanda e amigo de infância de Trisha e Scott.",
+      "Sofia Miller — ex-empregada contratada em 1972; mãe de Vincent e desaparecida em 1975.",
+      "Scott Brooks — principal suspeito; adotado pelo Padre Matthew em 1985 e namorado de Trisha.",
+      "Trisha Roberts — filha de Vivian e Charles; amiga de infância de Scott e Derrick.",
+      "Padre Matthew Brooks — padre da Trinity Church; adotou Scott e esteve ligado ao passado de Sofia.",
+      "Andrew Reed — ex-funcionário internado no hospital; deixou a frase ‘estamos todos juntos nessa’.",
+      "Dr. Henry Johnson — médico ligado a Andrew, ao hospital e ao relatório clínico de Vivian.",
+      "Steven Moss — investigador particular que chegou em 1997 e desapareceu depois.",
+      "James Howard — xerife original do caso, realocado em 1998.",
+    ],
+  },
+  {
+    title: "2 · Cronologia completa dos eventos",
+    items: [
+      "30/06/1971 — casamento de Vivian e Charles Roberts.",
+      "Meados de 1970 — Vivian reforma o Hospital Comunitário.",
+      "Nov/1972 — Sofia Miller é contratada para a mansão.",
+      "1973 — acidente na mina de carvão dos Roberts.",
+      "11/06/1974 — nascimento de Trisha Roberts.",
+      "Maio/1975 — nascimento de Scott Brooks; a identidade de Vincent permanece como teoria.",
+      "26/06/1975 — provável morte de Sofia Miller; em julho ela já consta como desaparecida.",
+      "Out/1975 — morte de Magdalene Roberts, com suspeita de envenenamento.",
+      "06/04/1985 — Padre Matthew adota Scott oficialmente.",
+      "19/05/1993 — Henry Johnson começa a ficar inacessível e estranho.",
+      "04/09/1993 — Scott começa a trabalhar na mansão e morar na cabana de caça.",
+      "23/09/1994 — Andrew Reed é internado; em jan/1995 Scott é demitido por Vivian.",
+      "18–19/06/1995 — Andrew morre; 28/06 é a última vez que Henry é visto vivo.",
+      "12/07/1995 — corpo de Henry é encontrado submerso no Lago Cherry Creek.",
+      "19–20/07/1995 — Vivian Roberts é assassinada entre 23h e 01h.",
+      "20/02/1996 — Hospital Comunitário é fechado; em 1997 Moss chega e desaparece.",
+    ],
+  },
+  {
+    title: "3 · Teorias e pontos de investigação",
+    items: [
+      "Teoria de 1975: Sofia teria sido morta e um pacto de silêncio teria envolvido Vivian, Henry e Andrew.",
+      "A fita secreta procurada por Magdalene seria uma peça central para confirmar ou refutar essa teoria.",
+      "A frase ‘estamos todos juntos nessa’ pode apontar para o pacto, mas não prova autoria ou cumplicidade.",
+      "Identidade de Scott: a coincidência entre seu nascimento em 1975 e Vincent sustenta uma suspeita não confirmada.",
+      "Derrick tinha sentimentos por Trisha e evitava Vivian; isso é contexto, não prova criminal.",
+      "Bernard tinha paixão por Vivian e acesso a machados; acesso e motivo aparente não estabelecem autoria.",
+      "A linha financeira envolve Henry e a Roberts Relief; acusações precisam de confirmação independente.",
+    ],
+  },
+  {
+    title: "4 · Guia de acessos, códigos e itens",
+    items: [
+      "Portão do cemitério — 1131.",
+      "Sala de segurança da mansão — 025241.",
+      "Cofre da galeria — 611975, relacionado ao aniversário de Vincent.",
+      "Gaveta da mesa do estudo — 5194, ligado ao enigma das peças de xadrez.",
+      "Armário da enfermeira Katherine — 1964, número estampado no verso de um alfinete.",
+      "Caixa de Sofia — 0526, número gravado no broche encontrado no jardim/poço.",
+      "Gaveta de Bernard — 0137, obtido pela pontuação dos dardos vermelhos menos a dos amarelos.",
+      "Presente de Sofia — 1203, associado à caça ao tesouro espalhada pela cidade.",
+      "Código 0318 — Matthew o associa à chegada de Sofia ao orfanato e à data de 18 de março.",
+      "Cartão de Henry — encontrado no hospital; o escritório depende da restauração da energia.",
+      "Pá e chave inglesa — encontradas na loja de fotografia de Oliver, após obter a chave na casa de Dorothy.",
+      "Lanterna e mapa — disponíveis no Gabinete do Xerife desde o início.",
+    ],
+  },
+  {
+    title: "5 · Guia de acessos por local e documentos importantes",
+    items: [
+      "Gabinete do Xerife — lanterna, mapa, mensagens de Moss, jornais, diário de James e chave da mesa.",
+      "Hospital — diários de Wanda, registros médicos, cartão de Henry e investigação de fraude por fax.",
+      "Trinity Church — jornal sobre Andrew, recorte de Scott e diário de Scott de 1985.",
+      "Mansão do prefeito — diários da família, chave da igreja e pistas sobre Sofia, Matthew e Scott.",
+      "Cabana de Scott — porões levam à sala secreta, ao quadro de conspiração e à chave dos esgotos.",
+      "Casa de Dorothy — diários de 1975 e 1995, chave da loja de Oliver e caixa de Sofia.",
+      "Casa de Andrew — carta a Daniel, diário de Andrew e a frase ameaçadora sobre ‘ela’.",
+      "Casa de Bernard — diários, foto apagada de Vivian, enigma dos dardos e faca ensanguentada.",
+      "Casa de Wanda e Derrick — diários e a pista da cápsula do tempo perto de uma grande pedra.",
+      "Anne’s Courtyard Inn — pasta de Moss, códigos, chaves, notas rasgadas e diários de 1997.",
+      "Esgotos e porão do hospital — exigem a chave de acesso encontrada na sala secreta de Scott.",
+      "Cemitério — a cápsula do tempo exige localização, pá e investigação perto da grande pedra.",
+      "Loja de fotografia de Oliver — fornece a pá e a chave inglesa depois que a casa de Dorothy é acessada.",
+    ],
+  },
+  {
+    title: "6 · Método de investigação",
+    items: [
+      "Leia o verso das fotos, as últimas páginas dos diários e as datas incorporadas nos objetos.",
+      "Portões exigem chaves físicas, códigos ou conhecimento de uma pista anterior.",
+      "Pistas apontam para chaves e soluções, mas podem ser descobertas por exploração independente.",
+      "Separe fato documentado, relato de personagem, teoria e coincidência temporal.",
+      "Uma conexão entre documentos orienta a investigação, mas não prova culpa por si só.",
     ],
   },
 ];
@@ -578,6 +679,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
   const [pendingHint, setPendingHint] = useState<{ clueId: ClueId; level: 1 | 2 | 3 } | null>(null);
+  const [dossierOpen, setDossierOpen] = useState(false);
+  const [dossierUnlocked, setDossierUnlocked] = useState(false);
+  const [dossierPassword, setDossierPassword] = useState("");
+  const [dossierNotice, setDossierNotice] = useState("");
   const [notice, setNotice] = useState(
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
   );
@@ -780,6 +885,22 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     );
   };
 
+  const submitDossierPassword = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!reportSubmitted) {
+      setDossierNotice(
+        "Resolva o caso e registre a conclusão no relatório para obter a senha final.",
+      );
+      return;
+    }
+    if (dossierPassword.trim().toUpperCase() !== FINAL_DOSSIER_PASSWORD) {
+      setDossierNotice("Senha incorreta. Acesso negado.");
+      return;
+    }
+    setDossierUnlocked(true);
+    setDossierNotice("");
+  };
+
   const resetSave = () => {
     if (!window.confirm("Apagar o progresso desta investigação neste navegador?")) return;
     window.localStorage.removeItem(SAVE_KEY);
@@ -833,6 +954,17 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDossierOpen(true);
+                setDossierPassword("");
+                setDossierNotice("");
+              }}
+              className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs"
+            >
+              <LockKeyhole size={15} /> Dossiê completo
+            </button>
             <button
               type="button"
               onClick={onBack}
@@ -1402,6 +1534,129 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <ArrowLeft size={15} /> Voltar à exploração
             </button>
           </section>
+        )}
+
+        {dossierOpen && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/90 p-4">
+            {dossierUnlocked ? (
+              <section
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="complete-dossier-title"
+                className="max-h-[90vh] w-full max-w-6xl overflow-auto border border-[#c4a779] bg-[#171512] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.8)] sm:p-8"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#5c5143] pb-5">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                      Arquivo liberado · senha final confirmada
+                    </p>
+                    <h2
+                      id="complete-dossier-title"
+                      className="mt-2 font-display text-3xl sm:text-4xl"
+                    >
+                      Dossiê completo de Painscreek
+                    </h2>
+                    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
+                      Relações, cronologia, teorias, códigos, acessos e método de investigação
+                      reunidos em um só arquivo.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDossierOpen(false);
+                      setDossierUnlocked(false);
+                    }}
+                    className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider"
+                  >
+                    <ArrowLeft size={15} /> Voltar
+                  </button>
+                </div>
+                <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                  {COMPLETE_CASE_DOSSIER.map((section) => (
+                    <details
+                      key={section.title}
+                      open
+                      className="border border-[#4b4439] bg-[#211f1b] p-4 sm:p-5"
+                    >
+                      <summary className="cursor-pointer list-none font-display text-2xl text-[#ead8b8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c4a779]">
+                        {section.title}
+                      </summary>
+                      <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[#c9c1b5]">
+                        {section.items.map((item) => (
+                          <li key={item} className="border-l-2 border-[#79664c] pl-3">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            ) : (
+              <section
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="dossier-gate-title"
+                className="w-full max-w-lg border border-[#c4a779] bg-[#1b1a17] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.8)] sm:p-7"
+              >
+                <div className="flex items-start gap-4">
+                  <LockKeyhole size={24} className="mt-1 shrink-0 text-[#c4a779]" />
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                      Arquivo lacrado
+                    </p>
+                    <h2 id="dossier-gate-title" className="mt-2 font-display text-3xl">
+                      Dossiê completo
+                    </h2>
+                  </div>
+                </div>
+                <p className="mt-5 text-sm leading-relaxed text-[#d5c9b5]">
+                  Este arquivo só pode ser aberto com a senha final. Resolva o caso, registre sua
+                  conclusão no relatório e descubra a senha.
+                </p>
+                {!reportSubmitted && (
+                  <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-amber-100">
+                    O relatório ainda não foi registrado. O acesso permanecerá bloqueado mesmo com
+                    uma senha correta.
+                  </p>
+                )}
+                <form className="mt-5 space-y-3" onSubmit={submitDossierPassword}>
+                  <label className="block font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                    Senha final
+                    <input
+                      autoFocus
+                      value={dossierPassword}
+                      onChange={(event) => setDossierPassword(event.target.value)}
+                      placeholder="Digite a senha"
+                      aria-label="Senha final do dossiê"
+                      className="mt-2 min-h-12 w-full border border-[#4b4439] bg-[#11100e] px-3 text-base normal-case tracking-normal text-[#eee9df] outline-none focus:border-[#c4a779]"
+                    />
+                  </label>
+                  {dossierNotice && (
+                    <p role="alert" className="text-sm text-amber-100">
+                      {dossierNotice}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap justify-end gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setDossierOpen(false)}
+                      className="min-h-11 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider"
+                    >
+                      Voltar
+                    </button>
+                    <button
+                      type="submit"
+                      className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
+                    >
+                      Desbloquear dossiê
+                    </button>
+                  </div>
+                </form>
+              </section>
+            )}
+          </div>
         )}
 
         {pendingHint && (
