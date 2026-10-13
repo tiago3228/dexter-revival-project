@@ -468,6 +468,8 @@ export function Game() {
         playerName={playerName}
         musicVolume={musicVolume}
         onMusicVolumeChange={setMusicVolume}
+        ambientVolume={ambientVolume}
+        onAmbientVolumeChange={setAmbientVolume}
         soundOn={soundOn}
         onToggleSound={toggleSound}
         onReflectionModalOpenChange={handleReflectionModalOpenChange}
@@ -495,6 +497,8 @@ export function Game() {
         onToggleSound={toggleSound}
         musicVolume={musicVolume}
         onMusicVolumeChange={setMusicVolume}
+        ambientVolume={ambientVolume}
+        onAmbientVolumeChange={setAmbientVolume}
       />
     );
   }
@@ -2048,6 +2052,8 @@ function MainMenu({
   playerName,
   musicVolume,
   onMusicVolumeChange,
+  ambientVolume,
+  onAmbientVolumeChange,
   soundOn,
   onToggleSound,
   onReflectionModalOpenChange,
@@ -2058,6 +2064,8 @@ function MainMenu({
   playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
+  ambientVolume: number;
+  onAmbientVolumeChange: (value: number) => void;
   soundOn: boolean;
   onToggleSound: () => void;
   onReflectionModalOpenChange: (open: boolean) => void;
@@ -2331,6 +2339,29 @@ function MainMenu({
               aria-label="Volume da música do Dexter"
             />
           </label>
+          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-4">
+            <button
+              type="button"
+              onClick={() => onAmbientVolumeChange(ambientVolume > 0 ? 0 : 0.28)}
+              aria-pressed={ambientVolume > 0}
+              className="min-h-10 border border-border px-3 py-2 font-mono text-xs text-muted-foreground hover:border-primary hover:text-primary"
+            >
+              Ambiente: {ambientVolume > 0 ? "ligado" : "desligado"}
+            </button>
+            <label className="flex min-h-10 flex-1 items-center gap-3 font-mono text-xs text-muted-foreground">
+              Ambiente {Math.round(ambientVolume * 100)}%
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={ambientVolume}
+                onChange={(event) => onAmbientVolumeChange(Number(event.target.value))}
+                className="min-w-32 flex-1 accent-primary"
+                aria-label="Volume do ambiente"
+              />
+            </label>
+          </div>
         </section>
         <button
           type="button"

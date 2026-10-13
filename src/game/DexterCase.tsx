@@ -288,12 +288,16 @@ export function DexterCase({
   onToggleSound,
   musicVolume,
   onMusicVolumeChange,
+  ambientVolume,
+  onAmbientVolumeChange,
 }: {
   onBack: () => void;
   soundOn: boolean;
   onToggleSound: () => void;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
+  ambientVolume: number;
+  onAmbientVolumeChange: (value: number) => void;
 }) {
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 1024,
@@ -717,6 +721,27 @@ export function DexterCase({
                 value={musicVolume}
                 onChange={(event) => onMusicVolumeChange(Number(event.target.value))}
                 aria-label="Volume da música de Painscreek"
+                className="w-24 accent-primary"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => onAmbientVolumeChange(ambientVolume > 0 ? 0 : 0.28)}
+              aria-pressed={ambientVolume > 0}
+              className="min-h-10 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-primary"
+            >
+              Ambiente: {ambientVolume > 0 ? "ligado" : "desligado"}
+            </button>
+            <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Ambiente {Math.round(ambientVolume * 100)}%
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={ambientVolume}
+                onChange={(event) => onAmbientVolumeChange(Number(event.target.value))}
+                aria-label="Volume do ambiente"
                 className="w-24 accent-primary"
               />
             </label>
