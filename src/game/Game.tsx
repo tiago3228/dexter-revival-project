@@ -2816,21 +2816,47 @@ type FailFn = (text: string, minutes?: number, susp?: number) => void;
 function Choice({
   options,
   onPick,
+  hints = [],
 }: {
   options: { label: string; value: string }[];
   onPick: (v: string) => void;
+  hints?: string[];
 }) {
+  const [hintStage, setHintStage] = useState(0);
+  const [attempt, setAttempt] = useState(0);
+  const hintsKey = hints.join("\u0000");
+  useEffect(() => {
+    if (!hintsKey || hintStage >= hints.length) return;
+    const timer = window.setTimeout(() => setHintStage((stage) => stage + 1), 8000);
+    return () => window.clearTimeout(timer);
+  }, [hintsKey, hintStage, attempt, hints.length]);
+
   return (
     <div className="mt-4 grid gap-2">
       {options.map((o) => (
         <button
           key={o.value}
-          onClick={() => onPick(o.value)}
+          onClick={() => {
+            setHintStage(0);
+            setAttempt((count) => count + 1);
+            onPick(o.value);
+          }}
           className="min-h-11 touch-manipulation border border-border px-4 py-3 text-left hover:border-primary"
         >
           {o.label}
         </button>
       ))}
+      {hintStage > 0 && (
+        <aside
+          className="investigation-guidance-pulse mt-2 border border-primary/60 bg-primary/5 p-3"
+          aria-live="polite"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+            Dica progressiva · {hintStage}/{hints.length}
+          </p>
+          <p className="mt-1 text-sm leading-relaxed">{hints[hintStage - 1]}</p>
+        </aside>
+      )}
     </div>
   );
 }
@@ -2902,6 +2928,10 @@ function Puzzle({
               value: "victim",
             },
             { label: "O sangue prova sozinho que Teresa plantou a luva.", value: "teresa" },
+          ]}
+          hints={[
+            "Compare os dois tipos de sangue e lembre que a amostra veio do punho interno da luva.",
+            "O O− é compatível com Lucía; o microtraço O+ é compatível com Ruiz. Isso liga a luva a pessoas, mas não prova sozinho quem a plantou.",
           ]}
           onPick={(value) => {
             if (value === "ruiz") {
