@@ -7,6 +7,8 @@ import {
   MapPin,
   Users,
   X,
+  Volume2,
+  VolumeX,
   ClipboardList,
   Network,
   Clock3,
@@ -30,7 +32,7 @@ const PEOPLE: Person[] = [
     id: "vivian",
     name: "Vivian Roberts",
     role: "Vítima central do caso",
-    note: "Fontes: pp. 73–77, 82, 94 e 100. Os diários registram sua perspectiva; laudo confirma a relação com Charles, notícia relata sua morte e carta anônima chama o caso de assassinato.",
+    note: "Fontes: pp. 82, 94 e 100. Laudo: esposa de Charles; notícia relata sua morte; carta anônima chama o caso de assassinato.",
     status: "confirmado",
   },
   {
@@ -169,16 +171,16 @@ const PEOPLE: Person[] = [
   {
     id: "hannah",
     name: "Hannah",
-    role: "Nome não localizado nas fontes fornecidas",
-    note: "Contradição em aberto: a busca nas páginas 1–116 e nos mapas anexos não localizou documento ou contexto que identifique Hannah.",
-    status: "contradicao",
+    role: "Identidade não confirmada nos documentos revisados",
+    note: "Revisão pendente: não foi localizada identificação primária suficiente na transcrição fornecida; aguarda documento original que a nomeie.",
+    status: "pendente",
   },
   {
     id: "nicole",
     name: "Nicole",
-    role: "Nome não localizado nas fontes fornecidas",
-    note: "Contradição em aberto: a busca nas páginas 1–116 e nos mapas anexos não localizou documento ou contexto que identifique Nicole.",
-    status: "contradicao",
+    role: "Identidade não confirmada nos documentos revisados",
+    note: "Revisão pendente: não foi localizada identificação primária suficiente na transcrição fornecida; aguarda documento original que a nomeie.",
+    status: "pendente",
   },
   {
     id: "katherine",
@@ -198,7 +200,7 @@ const PEOPLE: Person[] = [
 
 const PERSON_SUMMARIES: Record<string, string> = {
   vivian:
-    "Os diários de Vivian (pp. 73–77) registram sua perspectiva sobre Charles, Trisha, Scott, Sofia e a vida pública. O laudo hospitalar a identifica como esposa de Charles; a notícia relata sua morte, e uma carta anônima chama o caso de assassinato sem identificar autor.",
+    "O laudo hospitalar a identifica como esposa de Charles. A notícia relata que ela foi encontrada morta; uma carta anônima chama o caso de assassinato, sem identificar autor.",
   charles:
     "Diários e documentos identificam Charles como marido de Vivian e pai de Trisha; uma notícia o chama de ex-prefeito. Suas interpretações pessoais permanecem atribuídas a ele.",
   magdalene:
@@ -236,9 +238,9 @@ const PERSON_SUMMARIES: Record<string, string> = {
   sylvia:
     "A interface intitula o documento da p. 93 “Carta de confissão de Sylvia”; a página não mostra assinatura visível, e o título não valida as alegações narradas.",
   hannah:
-    "Hannah aparece no catálogo anterior, mas seu nome não foi localizado na transcrição das páginas 1–116 nem nos mapas fornecidos. A identidade permanece em contradição documental aberta.",
+    "A identidade de Hannah e sua relação com os registros do caso não puderam ser confirmadas nas fontes primárias localizadas; aguarda-se documento identificador.",
   nicole:
-    "Nicole aparece no catálogo anterior, mas seu nome não foi localizado na transcrição das páginas 1–116 nem nos mapas fornecidos. A identidade permanece em contradição documental aberta.",
+    "A identidade de Nicole e sua relação com os registros do caso não puderam ser confirmadas nas fontes primárias localizadas; aguarda-se documento identificador.",
   katherine:
     "Um registro de enfermagem de 1993 menciona que Katherine telefonou dizendo estar doente; não identifica seu sobrenome nem confirma sua função profissional.",
   daniel:
@@ -250,201 +252,176 @@ const PLACES: Place[] = [
     id: "mansion",
     name: "Roberts Mansion",
     group: "Residência",
-    description:
-      "Mansão da família Roberts, na Rua Maple, nº 1; confirmada no mapa da cidade e nas notícias das páginas 82 e 87.",
-    status: "confirmado",
+    description: "Local principal a ser mapeado por cômodos e acessos.",
+    status: "pendente",
   },
   {
     id: "charles-study",
-    name: "Sala de estudo",
+    name: "Escritório de Charles",
     group: "Roberts Mansion",
-    description:
-      "Sala de estudo da mansão, com código 44871 registrado no diário de Trisha (p. 64); o mapa a nomeia como sala de estudo.",
-    status: "confirmado",
+    description: "Sub-local da mansão; documentos e mecanismo de acesso aguardam validação.",
+    status: "pendente",
   },
   {
     id: "tea-room",
     name: "Sala de chá",
     group: "Roberts Mansion",
-    description:
-      "Cômodo identificado na planta do segundo andar da mansão; a transcrição não atribui documentos específicos a ele.",
-    status: "confirmado",
+    description: "Sub-local da mansão; registrar cada documento e objeto encontrado.",
+    status: "pendente",
   },
   {
     id: "gallery",
     name: "Galeria",
     group: "Roberts Mansion",
-    description:
-      "Galeria da mansão, confirmada na planta e no diário de Mary (p. 26), que menciona a pintura e o clique na porta.",
-    status: "confirmado",
+    description: "Sub-local da mansão; eventuais cofres e pistas serão ligados às fontes.",
+    status: "pendente",
   },
   {
     id: "vivian-room",
     name: "Quarto de Vivian",
     group: "Roberts Mansion",
-    description:
-      "A planta do primeiro andar identifica uma “Suíte master”, mas não informa quem a ocupa; nenhuma fonte primária fornecida nomeia um quarto separado como sendo de Vivian. Manter a atribuição sem confirmação.",
-    status: "contradicao",
+    description: "Sub-local da mansão; diários e objetos aguardam transcrição verificada.",
+    status: "pendente",
   },
   {
     id: "trisha-room",
     name: "Quarto de Trisha",
     group: "Roberts Mansion",
-    description:
-      "Quarto identificado na planta do segundo andar; o diário de Trisha também registra que ela se trancou no quarto (p. 16).",
-    status: "confirmado",
+    description: "Sub-local da mansão; registrar acessos e documentos.",
+    status: "pendente",
   },
   {
     id: "security-room",
     name: "Sala de segurança",
     group: "Roberts Mansion",
-    description:
-      "Sala de segurança identificada na planta do segundo andar; o livro de segurança da mansão aparece nas páginas 106–109.",
-    status: "confirmado",
+    description: "Sub-local da mansão; registros e chaves precisam de conferência.",
+    status: "pendente",
   },
   {
     id: "attic",
     name: "Sótão",
     group: "Roberts Mansion / Igreja",
-    description:
-      "Sótão identificado nas plantas da mansão e da igreja; Mary relata a limpeza do sótão da mansão (p. 24) e Scott menciona o sótão da igreja (p. 113).",
-    status: "confirmado",
+    description: "A localização exata e os acessos devem ser validados na fonte.",
+    status: "pendente",
   },
   {
     id: "well",
     name: "Poço do jardim",
     group: "Roberts Mansion",
-    description:
-      "A existência de um poço é relatada no testemunho transcrito (p. 54); Scott depois diz que o poço secou e foi coberto de lodo (p. 56). O vínculo exato com o jardim não é especificado.",
-    status: "confirmado",
+    description: "Local provisório; confirmar objetos, acesso e contexto.",
+    status: "pendente",
   },
   {
     id: "hospital",
     name: "Painscreek Community Hospital",
     group: "Hospital",
-    description:
-      "Hospital confirmado pelo mapa interno e pelas notícias das páginas 84–85, além dos laudos e registros de enfermagem.",
-    status: "confirmado",
+    description: "Mapear arquivos, salas, escritório médico e áreas de serviço.",
+    status: "pendente",
   },
   {
     id: "morgue",
-    name: "Necrotério (B1)",
+    name: "Porão / necrotério",
     group: "Hospital",
-    description:
-      "A planta do hospital identifica o necrotério no nível B1; não tratar todo o nível como descrição arquitetônica geral de “porão”.",
-    status: "confirmado",
+    description: "Sub-local provisório; confirmar os objetos e documentos encontrados.",
+    status: "pendente",
   },
   {
     id: "church",
     name: "Trinity Church",
     group: "Religioso",
-    description:
-      "Igreja da Trindade de Painscreek, confirmada no mapa da cidade e nos diários de Matthew, Scott e outros documentos.",
-    status: "confirmado",
+    description: "Mapear quartos, depósito, confessionário e áreas superiores.",
+    status: "pendente",
   },
   {
     id: "scott-cabin",
     name: "Cabana de Scott",
     group: "Residência",
-    description:
-      "Cabana de caça dos Roberts no início da trilha, usada por Scott; confirmada nas notícias das páginas 83 e 88 e nos diários.",
-    status: "confirmado",
+    description: "Mapear cômodos e passagens somente após conferir a fonte.",
+    status: "pendente",
   },
   {
     id: "inn",
     name: "Anne’s Courtyard Inn & Suites",
     group: "Hospedagem",
-    description:
-      "Hospedagem identificada no mapa da cidade e na notícia da morte de Andrew (p. 87), que o situa saindo do estabelecimento.",
-    status: "confirmado",
+    description: "Mapear recepção, quartos e registros associados.",
+    status: "pendente",
   },
   {
     id: "dorothy-house",
     name: "Casa de Dorothy",
     group: "Residência",
-    description:
-      "Casa própria de Dorothy, na Rua Blackpine, 40, Painscreek; endereço registrado no diário de Mary (p. 25).",
-    status: "confirmado",
+    description: "Local e documentos pendentes de conferência.",
+    status: "pendente",
   },
   {
     id: "bernard-house",
     name: "Casa de Bernard",
     group: "Residência",
-    description:
-      "Não foi localizada fonte que identifique uma casa própria de Bernard ou seu endereço; manter a entrada sem associar documentos a este local.",
-    status: "contradicao",
+    description: "Local e objetos pendentes de conferência.",
+    status: "pendente",
   },
   {
     id: "andrew-house",
     name: "Casa de Andrew",
     group: "Residência",
-    description:
-      "Casa de Andrew na Rua Blackpine, nº 7; confirmada pela notícia da morte e do incêndio (p. 87).",
-    status: "confirmado",
+    description: "Local e documentos pendentes de conferência.",
+    status: "pendente",
   },
   {
     id: "cemetery",
     name: "Cemitério",
     group: "Público",
-    description:
-      "Cemitério de Painscreek confirmado pelos diários e pelo túmulo de Sofia, marcado por uma cruz de madeira (p. 33 e p. 56).",
-    status: "confirmado",
+    description: "Conferir inscrições, túmulos e pistas de acesso.",
+    status: "pendente",
   },
   {
     id: "sheriff",
     name: "Escritório do xerife",
     group: "Institucional",
-    description:
-      "Posto/departamento do xerife identificado no mapa da cidade; James Howard aparece como xerife nos documentos das páginas 82 e 89–90.",
-    status: "confirmado",
+    description: "Conferir arquivos, livros de registro e cadeia de custódia.",
+    status: "pendente",
   },
   {
     id: "wanda-house",
     name: "Casa de Wanda e Derrick",
     group: "Residência",
-    description:
-      "A transcrição confirma Wanda e Derrick como mãe e filho e menciona residência na infância, mas não identifica uma casa separada nem seu endereço.",
-    status: "contradicao",
+    description: "Local e diários pendentes de conferência.",
+    status: "pendente",
   },
   {
     id: "photo-shop",
     name: "Loja de fotografia de Oliver",
     group: "Comércio",
-    description:
-      "O mapa da cidade identifica ‘Oliver Fotografias’; Oliver é mencionado como fotógrafo/professor, mas a transcrição não detalha o inventário da loja.",
-    status: "confirmado",
+    description: "Conferir fotos, registros e ferramentas citadas.",
+    status: "pendente",
   },
   {
     id: "lake",
     name: "Lago",
     group: "Exterior",
-    description:
-      "Lago Cherry Creek confirmado pela notícia da morte do Dr. Johnson (p. 85); não confundir com o Rio Painscreek do mapa da cidade.",
-    status: "confirmado",
+    description: "Vínculo com a cronologia e a descoberta de um corpo precisa de fonte.",
+    status: "pendente",
   },
   {
     id: "river",
     name: "Área do rio",
     group: "Exterior",
-    description:
-      "Rio Painscreek identificado no mapa da cidade; o registro de enfermagem situa ali a descoberta do corpo de Timothy, perto da cabana de caça (p. 105).",
-    status: "confirmado",
+    description: "Relação com Sofia a confirmar documentalmente.",
+    status: "pendente",
   },
   {
     id: "drain",
     name: "Dreno junto à igreja",
     group: "Exterior",
-    description:
-      "Um ralo de drenagem é mencionado no relato da caçada perto do rio (p. 11); o mapa subterrâneo mostra acessos próximos à igreja, mas não nomeia este ponto como dreno da igreja.",
-    status: "confirmado",
+    description: "Acesso e objetos associados pendentes de verificação.",
+    status: "pendente",
   },
   {
     id: "sewers",
     name: "Esgotos e acessos subterrâneos",
     group: "Infraestrutura",
-    description:
-      "Rede de esgotos confirmada pelo mapa subterrâneo, com acesso antigo, conexões para hospital, mansão, igreja, mercado e áreas residenciais.",
-    status: "confirmado",
+    description: "Mapear entradas, conexões e mecanismos após validar os documentos.",
+    status: "pendente",
   },
 ];
 
@@ -453,121 +430,41 @@ const DOCUMENTS: DocumentItem[] = [
     id: "diary-vivian",
     title: "Diários de Vivian Roberts",
     type: "Diário",
-    location: "Transcrição · páginas 73–77",
-    status: "confirmado",
-    body: "Diários identificados como de Vivian Roberts nas páginas 73–77. As entradas cobrem 1972 e 1994 e registram sua perspectiva sobre Charles, Trisha, Scott, Sofia, Andrew, Bernard e Oliver. O local físico do caderno não é informado.",
-  },
-  {
-    id: "diary-andrew",
-    title: "Caderno de Andrew Reed",
-    type: "Diário",
-    location: "Transcrição · páginas 1–2",
-    status: "confirmado",
-    body: "Caderno identificado como de Andrew Reed nas páginas 1–2. Registra sua rotina como funcionário da mansão, a relação com Scott e a preocupação com Sofia.",
-  },
-  {
-    id: "diary-bernard",
-    title: "Caderno de Bernard Hopkins",
-    type: "Diário",
-    location: "Transcrição · páginas 3–5",
-    status: "confirmado",
-    body: "Caderno identificado como de Bernard Hopkins nas páginas 3–5. As observações sobre Vivian, Scott e Derrick são relatos pessoais do mordomo e não constituem prova independente.",
-  },
-  {
-    id: "diary-charles",
-    title: "Caderno de Charles Roberts",
-    type: "Diário",
-    location: "Transcrição · páginas 6–7",
-    status: "confirmado",
-    body: "Caderno identificado como de Charles Roberts nas páginas 6–7. Registra sua relação com Vivian, Trisha e Scott e suas próprias interpretações sobre a família.",
-  },
-  {
-    id: "diary-derrick",
-    title: "Caderno de Derrick Tyler",
-    type: "Diário",
-    location: "Transcrição · páginas 8–12",
-    status: "confirmado",
-    body: "Caderno atribuído a Derrick Tyler nas páginas 8–12. Registra sua convivência com a família Roberts, Scott e Trisha; os trechos sobre Sofia devem ser lidos como memória do autor.",
-  },
-  {
-    id: "diary-mary",
-    title: "Caderno de Mary Martinez",
-    type: "Diário",
-    location: "Transcrição · páginas 13–17 e 21–27",
-    status: "confirmado",
-    body: "Caderno identificado como de Mary Martinez nas páginas 13–17 e continuação nas páginas 21–27. O conteúdo cobre a rotina na mansão, Sofia, Scott, Trisha e o caso do Dr. Johnson.",
-  },
-  {
-    id: "diary-james",
-    title: "Caderno de James Howard",
-    type: "Diário",
-    location: "Transcrição · páginas 18–20",
-    status: "confirmado",
-    body: "Caderno identificado como de James Howard nas páginas 18–20. Registra o funeral de Vivian, o andamento do caso e o fechamento do hospital; são anotações do xerife, não uma decisão judicial.",
-  },
-  {
-    id: "diary-scott",
-    title: "Caderno de Scott Brooks",
-    type: "Diário",
-    location: "Transcrição · páginas 31–57",
-    status: "confirmado",
-    body: "As páginas 31–57 contêm entradas identificadas como de Scott Brooks, incluindo sua adoção, a busca por Sofia e a relação com Trisha. A possível ligação com Vincent permanece sem prova conclusiva.",
-  },
-  {
-    id: "diary-matthew",
-    title: "Caderno de Matthew Brooks",
-    type: "Diário",
-    location: "Transcrição · páginas 28–34",
-    status: "confirmado",
-    body: "As páginas 28–34 contêm entradas identificadas como de Matthew Brooks, sobre Sofia, a Igreja da Trindade e Scott. O texto deve ser separado das interpretações de outros autores.",
-  },
-  {
-    id: "diary-trisha",
-    title: "Diário de Trisha Roberts",
-    type: "Diário",
-    location: "Transcrição · páginas 63–72",
-    status: "confirmado",
-    body: "As páginas 63–72 são identificadas como entradas de Trisha Roberts. Registram sua relação com Scott, a família e o código da sala de estudo; rumores permanecem atribuídos à autora.",
-  },
-  {
-    id: "diary-wanda",
-    title: "Diário de Wanda Tyler",
-    type: "Diário",
-    location: "Transcrição · páginas 78–81",
-    status: "confirmado",
-    body: "As páginas 78–81 são identificadas como entradas de Wanda Tyler. Registram sua relação com Derrick e Vivian e sua opinião sobre Sofia, sem confirmar por si só as acusações narradas.",
+    location: "Local a confirmar",
+    status: "pendente",
+    body: "Transcrição integral ainda não incorporada. Este registro é um marcador de planejamento, não o conteúdo do diário.",
   },
   {
     id: "letters",
     title: "Cartas e bilhetes",
     type: "Correspondência",
     location: "Múltiplos locais",
-    status: "confirmado",
-    body: "Categoria confirmada por cartas e bilhetes nas páginas 89–94, 99–104 e 110–111, incluindo a realocação de James, a carta para Daniel, o laudo/correspondência hospitalar e as cartas de Rachel e Moss. Cada peça deve manter sua página de origem.",
+    status: "pendente",
+    body: "Adicionar cada documento como item separado depois de registrar a página de origem e transcrever o texto.",
   },
   {
     id: "medical-records",
     title: "Registros médicos e laudos",
     type: "Documento oficial",
-    location: "Painscreek Community Hospital",
-    status: "confirmado",
-    body: "Categoria confirmada pelo laudo médico de Vivian (p. 94), pelos registros de enfermagem (p. 105) e pelas referências ao hospital nas páginas 84–85. Autoria, data e limites de cada documento devem permanecer separados.",
+    location: "Hospital — local exato a confirmar",
+    status: "pendente",
+    body: "Adicionar apenas após conferir texto, autoria, data, rasuras e página de origem.",
   },
   {
     id: "photos",
     title: "Fotografias e versos",
     type: "Fotografia",
-    location: "Múltiplos locais",
-    status: "confirmado",
-    body: "Fotografias são mencionadas nos diários de Trisha e Oliver (p. 67), na investigação sobre Vivian (p. 102) e em outros registros. A descrição visual e qualquer verso devem ser catalogados por imagem, sem completar trechos ilegíveis.",
+    location: "Local a confirmar",
+    status: "pendente",
+    body: "Cada fotografia deve ter sua própria ficha, com descrição visual e transcrição do verso quando legível.",
   },
   {
     id: "recordings",
     title: "Gravações e mensagens",
     type: "Áudio",
-    location: "Sala de segurança da mansão",
-    status: "confirmado",
-    body: "O livro de segurança registra novas fitas VHS e uma fita de vigilância desaparecida (p. 106–107). A existência das gravações é confirmada, mas o conteúdo da fita ausente não deve ser reconstruído por suposição.",
+    location: "Local a confirmar",
+    status: "pendente",
+    body: "Transcrever sem completar trechos incertos. Guardar a referência à fonte e distinguir gravação original de interpretação.",
   },
 ];
 
@@ -1161,7 +1058,7 @@ export function VivianRobertsCase({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">
               Arquivo confidencial · Capítulo 06
             </p>
-            <h1 className="mt-2 font-display text-3xl sm:text-5xl">The Painscreek Case</h1>
+            <h1 className="mt-2 font-display text-3xl sm:text-5xl">O Caso Vivian Roberts</h1>
             <p className="mt-2 max-w-3xl text-xs uppercase tracking-[0.2em] text-[#bdb5a8]">
               Painscreek, 1995 · O caso que a cidade tentou esquecer
             </p>
@@ -1170,18 +1067,40 @@ export function VivianRobertsCase({
               evidências. Não confunda suspeita com prova.
             </p>
           </div>
-          {onBack && (
+          <div className="flex flex-wrap gap-2">
+            {onBack && (
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
+              >
+                <ArrowLeft size={16} /> Voltar aos capítulos
+              </button>
+            )}
+            {onToggleSound && (
+              <button
+                type="button"
+                onClick={onToggleSound}
+                aria-pressed={soundOn}
+                className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
+              >
+                {soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />} Música:{" "}
+                {soundOn ? "ligada" : "desligada"}
+              </button>
+            )}
             <button
               type="button"
-              onClick={onBack}
-              className="min-h-10 border border-[#79664c] px-3 py-2 font-mono text-xs text-[#d6c9b5] hover:border-[#c4a779]"
+              onClick={() => setAmbientOn((value) => !value)}
+              aria-pressed={ambientOn}
+              className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
             >
-              <ArrowLeft size={16} className="mr-2 inline" /> Menu de casos
+              {ambientOn ? <Volume2 size={16} /> : <VolumeX size={16} />} Ambiente:{" "}
+              {ambientOn ? "ligado" : "desligado"}
             </button>
-          )}
+          </div>
         </header>
         <div
-          className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 border border-[#4b4439] bg-[#1b1a17] p-3"
+          className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 px-0"
           aria-label="Controles de áudio"
         >
           <button
@@ -1239,6 +1158,19 @@ export function VivianRobertsCase({
               aria-hidden="true"
               className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/5"
             />
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-4 sm:p-6">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#e1c18d]">
+                  Trilha sonora · atmosfera de investigação
+                </p>
+                <p className="mt-1 font-display text-xl text-white sm:text-3xl">
+                  O Caso Vivian Roberts
+                </p>
+                <p className="mt-1 text-xs text-white/75">
+                  Tema musical de Painscreek + ambiente contínuo
+                </p>
+              </div>
+            </div>
           </div>
           <figcaption className="border-t border-[#79664c] bg-[#171512] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-[#a9a092] sm:px-4">
             Arquivo visual · The Painscreek Killings · EQ Studios
@@ -1271,22 +1203,29 @@ export function VivianRobertsCase({
             </button>
             <Link
               to="/mapas"
+              onClick={() => {
+                try {
+                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
+                } catch {
+                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
+                }
+              }}
               className="inline-flex min-h-12 items-center gap-2 border border-[#a5a78d] bg-[#a5a78d]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#d9dbc9] transition hover:bg-[#a5a78d]/20"
             >
               <MapPin size={17} /> Mapa
             </Link>
             <Link
               to="/linha-do-tempo"
+              onClick={() => {
+                try {
+                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
+                } catch {
+                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
+                }
+              }}
               className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"
             >
               <Clock3 size={17} /> Linha do tempo
-            </Link>
-            <Link
-              to="/painscreek-evidence"
-              hash="galeria-imagens"
-              className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"
-            >
-              <BookOpen size={17} /> Galeria de imagens
             </Link>
           </div>
         </div>
@@ -1301,7 +1240,7 @@ export function VivianRobertsCase({
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4">
             <MapPin className="mb-3 text-[#c4a779]" />
             <p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">
-              Locais catalogados
+              Locais para revisar
             </p>
             <p className="mt-1 text-3xl">{PLACES.length}</p>
           </div>

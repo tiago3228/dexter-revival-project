@@ -78,16 +78,16 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
   {
     id: "P-005",
     title: "Fotografia emprestada por Scott",
-    pages: [104, 116],
+    pages: [55, 104, 116],
     sourceType: "Entrada de diário",
     documented:
-      "Em 13 de fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy após uma conversa sobre Charles e Vivian.",
+      "Em 13 de fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy após uma conversa sobre Charles e Vivian. Uma entrada de Scott na página 55, também datada desse dia, relata que uma fotografia lhe permitiu reconhecer o mesmo cobertor e concluir que sabia quem era seu pai.",
     pendingVerification:
-      "Identificar a fotografia, verificar se foi devolvida e procurar outras referências.",
+      "A coincidência de data, personagem e contexto fotográfico entre as páginas 55 e 116 sugere fortemente que se trata da mesma foto, mas nenhum dos registros a identifica de modo explícito nem mostra a imagem. Manter a relação como provável, não certa; ainda falta identificar a fotografia e verificar se foi devolvida.",
     confidence: "high",
     status: "incomplete",
     playerInference:
-      "O empréstimo é relatado por Dorothy; a identidade da foto e seu significado não estão estabelecidos.",
+      "O empréstimo é relatado por Dorothy, e Scott registra uma descoberta ao ver uma fotografia na mesma data. A ligação entre os dois registros é provável, mas a imagem não confirma qual fotografia era nem prova, por si só, a identidade dos pais de Scott.",
   },
   {
     id: "P-006",
@@ -302,13 +302,13 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
   },
   {
     id: "P-021",
-    title: "Ficha de Bernard Hopkins com anotação investigativa",
+    title: "Registro investigativo e ficha de Bernard Hopkins",
     pages: [61, 95],
-    sourceType: "Ficha de funcionário com anotação manuscrita de investigação",
+    sourceType: "Nota em caderno investigativo (p. 61) e ficha administrativa (p. 95)",
     documented:
-      "A ficha administrativa identifica Bernard Hopkins como mordomo, registra seu nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973, jornada de trabalho e endereço na Avenida Silverlake, n.º 31. A página 61 mostra anotações investigativas sobre a morte do pai em acidente na mina e a afirmação de que Bernard estava em casa na noite da morte de Vivian, acompanhada da nota 'Sem álibi'.",
+      "A ficha administrativa da página 95 identifica Bernard Hopkins como mordomo, registra seu nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973, jornada de trabalho e endereço na Avenida Silverlake, n.º 31, código postal NL 28115. Separadamente, a página 61 exibe uma nota de caderno com o mesmo nome e endereço e o texto impresso: 'Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibis.'",
     pendingVerification:
-      "A página 95 foi cotejada visualmente e a página 61 apresenta escrita manuscrita parcialmente encoberta pelo texto impresso. A correspondência do nome e endereço sustenta que se trata da mesma ficha; preservar separadamente os campos impressos e as notas do investigador. A expressão 'Sem álibi' é uma anotação, não prova de envolvimento.",
+      "A comparação visual confirma dois documentos distintos; o mesmo nome, número de endereço e código postal sustentam que se referem ao mesmo Bernard, não que sejam a mesma ficha. A página 61 tem escrita manuscrita parcialmente sobreposta; preservar sua origem e autoria como incertas. 'Sem álibis' é uma anotação, não prova de envolvimento, e a ficha administrativa da página 95 não a corrobora.",
     confidence: "medium",
     status: "incomplete",
     playerInference:

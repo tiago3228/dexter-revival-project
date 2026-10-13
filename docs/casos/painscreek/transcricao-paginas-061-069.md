@@ -4,11 +4,11 @@
 **Método:** leitura das páginas renderizadas com OCR auxiliar.  
 **Estado:** transcrição preliminar. Corrigir nomes, pontuação e trechos incompletos somente após ampliação/conferência. Não tratar anotações de investigação como fatos provados.
 
-## Página 61 — Steven Moss / Bernard Hopkins
+## Página 61 — nota de caderno sobre Bernard Hopkins
 
-A ficha de Bernard Hopkins mostra o endereço **Av. Silverlake, n.º 31, Painscreek, NL 28115**. O texto visível registra: “Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibi.” Há escrita manuscrita por trás do texto impresso; parte dela fica encoberta e não deve ser reconstruída por suposição.
+A página exibe o nome de Bernard Hopkins e o endereço **Av. Silverlake, n.º 31, Painscreek, NL 28115**. O texto impresso registra: “Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibis.” A palavra final foi conferida em ampliação: está impressa no plural. Há escrita inglesa manuscrita sobreposta, em parte legível como “killed. No alibi”; não reconstruir o que fica encoberto.
 
-**Leitura e proveniência:** o registro associa Bernard a uma circunstância investigativa, mas “sem álibi” é uma anotação, não prova de envolvimento. A causa da morte do pai é anotada, mas a formulação manuscrita exata permanece parcialmente encoberta.
+**Leitura e proveniência:** a p. 61 é uma nota em caderno, não a ficha funcional formal. A ficha administrativa da p. 95 é um documento separado; nome, número de endereço e código postal sustentam que se referem ao mesmo Bernard. A nota “Sem álibis” não é prova de envolvimento e a p. 95 não a corrobora.
 
 ## Página 62 — Steven Moss / entrevista com Dorothy
 
