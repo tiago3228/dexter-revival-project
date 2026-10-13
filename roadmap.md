@@ -10,6 +10,9 @@
 - [x] Foto do trio (Sam, Dean e Dexter no Impala) na tela inicial do Caso 02 · O Sangue dos Condenados, via CaseHeroImage
 - [x] Integração do Caso 02 Winchester ao menu (Game.tsx) e conquistas (achievements.ts), aplicando as mudanças do PR #2
 
+## Concluído (13/10/2026)
+- [x] Conferência do commit 88b90a2 (docs/painscreek-people-audit): já está salvo no GitHub em tiago3228/dexter-revival-project — nada a fazer push; branch de docs separada do jogo, sem risco de mistura
+
 ## Concluído (12/10/2026)
 - [x] Registro investigativo de trabalho para Painscreek, páginas 51–60, adicionado em `docs/casos/painscreek/paginas-51-60-notas-investigativas.md`
 - [x] Incertezas, cronologia a conferir e comparação de duplicatas pendente explicitamente documentadas
