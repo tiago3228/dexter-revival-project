@@ -2876,8 +2876,12 @@ function Puzzle({
   const [bloodHintReady, setBloodHintReady] = useState(false);
   const [pins, setPins] = useState<number[]>([]);
   const [noise, setNoise] = useState(0);
+  const [lockHintStage, setLockHintStage] = useState(0);
+  const [lockInteraction, setLockInteraction] = useState(0);
   const [key, setKey] = useState("");
   const [decoded, setDecoded] = useState<string | null>(null);
+  const [cipherHintStage, setCipherHintStage] = useState(0);
+  const [cipherInteraction, setCipherInteraction] = useState(0);
   const [liar, setLiar] = useState<string | null>(null);
   useEffect(() => {
     if (id !== "sangue") return;
@@ -2885,6 +2889,28 @@ function Puzzle({
     const timer = window.setTimeout(() => setBloodHintReady(true), 8000);
     return () => window.clearTimeout(timer);
   }, [id, order.length]);
+
+  useEffect(() => {
+    if (id !== "fechadura") return;
+    setLockHintStage(0);
+    const firstHint = window.setTimeout(() => setLockHintStage(1), 8000);
+    const nextControlHint = window.setTimeout(() => setLockHintStage(2), 16000);
+    return () => {
+      window.clearTimeout(firstHint);
+      window.clearTimeout(nextControlHint);
+    };
+  }, [id, pins.length, noise, lockInteraction]);
+
+  useEffect(() => {
+    if (id !== "cifra") return;
+    setCipherHintStage(0);
+    const firstHint = window.setTimeout(() => setCipherHintStage(1), 8000);
+    const secondHint = window.setTimeout(() => setCipherHintStage(2), 16000);
+    return () => {
+      window.clearTimeout(firstHint);
+      window.clearTimeout(secondHint);
+    };
+  }, [id, key, cipherInteraction]);
 
   if (id === "lamina") {
     return (
@@ -3050,6 +3076,10 @@ function Puzzle({
             { label: "O local do apartamento", value: "local" },
             { label: "O tipo de evidência fotografada", value: "evidencia" },
           ]}
+          hints={[
+            "Não comece pelo conteúdo narrativo: procure no formulário o campo que foi alterado à caneta.",
+            "Compare o campo rasurado com a medição de temperatura e com a tabela antes de aceitar qualquer horário.",
+          ]}
           onPick={(v) =>
             v === "hora"
               ? solve(
@@ -3076,6 +3106,10 @@ function Puzzle({
             { label: "Por volta de 22:30", value: "b" },
             { label: "01:00, como está no relatório", value: "c" },
             { label: "Por volta de 02:15", value: "d" },
+          ]}
+          hints={[
+            "A leitura foi feita às 03:00. Primeiro descubra quantos graus o corpo perdeu desde 37,0 °C.",
+            "Use a perda média de 1,5 °C por hora: o resultado deve ser comparado ao horário da medição, não repetido do relatório.",
           ]}
           onPick={(v) =>
             v === "b"
@@ -3116,6 +3150,10 @@ function Puzzle({
               { label: "Marco Tellez", value: "tellez" },
               { label: "Teresa Vidal", value: "teresa" },
             ]}
+            hints={[
+              "Compare cada depoimento com a hora real da morte e procure quem afirma estar em um lugar incompatível.",
+              "A pessoa que diz estar no bar desde as 21h precisa ser confrontada com um registro oficial da delegacia.",
+            ]}
             onPick={setLiar}
           />
         ) : (
@@ -3127,6 +3165,10 @@ function Puzzle({
                 { label: "Ponto eletrônico do porto", value: "ponto" },
                 { label: "Fichas dos envolvidos", value: "fichas" },
                 { label: "Relatório do legista", value: "legista" },
+              ]}
+              hints={[
+                "A prova precisa registrar onde o suspeito estava no começo da noite, antes de chegar ao bar.",
+                "Procure um documento com entrada e liberação de Carlos Ruiz; ele transforma o depoimento em uma contradição verificável.",
               ]}
               onPick={(doc) => {
                 if (liar === "ruiz" && doc === "detencao")
@@ -3165,6 +3207,10 @@ function Puzzle({
             { label: "Agora mesmo", value: "now" },
             ...DOAKES_WINDOWS.map((w, i) => ({ label: `Na janela ${w.label}`, value: String(i) })),
           ]}
+          hints={[
+            "Não desafie Doakes no corredor: leia o registro de rondas e espere uma saída para o café.",
+            "As janelas se repetem a cada duas horas. Escolha uma que ainda não tenha passado no relógio atual.",
+          ]}
           onPick={(v) => {
             if (v === "now") {
               const inWin = DOAKES_WINDOWS.some((w) => s.clock >= w.start && s.clock < w.end);
@@ -3201,12 +3247,20 @@ function Puzzle({
           Defina a altura de cada pino, em ordem. Cada erro faz barulho. Pinos:{" "}
           {pins.join(" · ") || "—"}
         </p>
+        <p
+          className="mt-2 border-l-2 border-primary/60 pl-3 text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          Se você ficar 8 segundos sem interagir, a próxima observação da fechadura será destacada;
+          a assistência não penaliza nem bloqueia suas escolhas.
+        </p>
         <div className="mt-4 flex gap-2">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
-              className="h-12 w-12 border border-border font-mono hover:border-primary"
+              className={`h-12 w-12 border border-border font-mono hover:border-primary ${lockHintStage >= 2 && correct[pins.length] === n ? "investigation-guidance-pulse border-primary text-primary" : ""}`}
               onClick={() => {
+                setLockInteraction((count) => count + 1);
                 if (correct[pins.length] === n) {
                   const np = [...pins, n];
                   setPins(np);
@@ -3230,6 +3284,21 @@ function Puzzle({
             </button>
           ))}
         </div>
+        {lockHintStage > 0 && (
+          <aside
+            className="investigation-guidance-pulse mt-3 border border-primary/60 bg-primary/5 p-3"
+            aria-live="polite"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+              Dica progressiva · {lockHintStage}/2
+            </p>
+            <p className="mt-1 text-sm leading-relaxed">
+              {lockHintStage === 1
+                ? "A anotação de Masuka diz que os pinos descem sem repetir. Comece observando o controle mais alto."
+                : `O próximo pino sugerido é o controle ${correct[pins.length]}; a indicação reinicia depois de cada tentativa.`}
+            </p>
+          </aside>
+        )}
         <p className="mt-3 font-mono text-xs text-muted-foreground">
           Barulho: {"▮".repeat(noise)}
           {"▯".repeat(3 - noise)}
@@ -3247,16 +3316,28 @@ function Puzzle({
           Cada letra foi deslocada por um número. Assassinos metódicos usam datas que importam para
           eles. Cada tentativa leva tempo.
         </p>
+        <p
+          className="mt-2 border-l-2 border-primary/60 pl-3 text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          A assistência aparece após um período sem interação e apenas orienta onde procurar a
+          chave. Ela não penaliza nem impede tentativas.
+        </p>
         <div className="mt-4 flex gap-2">
           <input
             value={key}
-            onChange={(e) => setKey(e.target.value.replace(/\D/g, ""))}
-            className="w-24 border border-input bg-background px-3 py-2 font-mono"
+            onChange={(e) => {
+              setKey(e.target.value.replace(/\D/g, ""));
+              setCipherInteraction((count) => count + 1);
+            }}
+            className={`w-24 border border-input bg-background px-3 py-2 font-mono ${cipherHintStage > 0 ? "investigation-guidance-pulse border-primary" : ""}`}
             placeholder="chave"
+            aria-label="Chave numérica da cifra"
           />
           <button
-            className="border border-border px-4 font-mono text-sm hover:border-primary"
+            className={`border border-border px-4 font-mono text-sm hover:border-primary ${cipherHintStage > 0 ? "investigation-guidance-pulse border-primary text-primary" : ""}`}
             onClick={() => {
+              setCipherInteraction((count) => count + 1);
               const k = Number(key);
               if (!key) return;
               setDecoded(caesar(CIPHER_TEXT, -k));
@@ -3271,6 +3352,21 @@ function Puzzle({
             aplicar
           </button>
         </div>
+        {cipherHintStage > 0 && (
+          <aside
+            className="investigation-guidance-pulse mt-3 border border-primary/60 bg-primary/5 p-3"
+            aria-live="polite"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+              Dica progressiva · {cipherHintStage}/2
+            </p>
+            <p className="mt-1 text-sm leading-relaxed">
+              {cipherHintStage === 1
+                ? "Procure nos documentos uma data que o caso chama de primeiro crime; ela é a pista para o deslocamento."
+                : "A referência é 7 de março. O dia dessa data é o próximo valor a testar no decifrador."}
+            </p>
+          </aside>
+        )}
         {decoded && <p className="mt-3 font-mono text-sm text-muted-foreground">{decoded}</p>}
       </>
     );
@@ -3300,6 +3396,10 @@ function Puzzle({
             { label: "Ruiz — apartamento 4B — 22:30 — armazém 9", value: "ruiz" },
             { label: "Tellez — bar Tropicana — 01:00 — apartamento 4B", value: "tellez" },
             { label: "Teresa — Porto de Miami — 22:05 — armazém 17", value: "teresa" },
+          ]}
+          hints={[
+            "Siga uma única pessoa pelos três eixos: nome, endereço e horário. Desconfie de uma combinação que mistura locais de pessoas diferentes.",
+            "A cadeia coerente passa pelo apartamento 4B, pelo horário real de 22:30 e pela referência ao armazém 9 nas docas.",
           ]}
           onPick={(v) =>
             v === "ruiz"
@@ -3341,6 +3441,10 @@ function Puzzle({
               value: "teresa",
             },
           ]}
+          hints={[
+            "Separe as três observações: tamanho, tipo sanguíneo e recibo respondem a perguntas diferentes.",
+            "Cruze o tamanho M com as fichas, o O− com a vítima e o recibo com os registros; nenhuma pista isolada identifica quem plantou a luva.",
+          ]}
           onPick={(v) =>
             v === "cruzar"
               ? solve(
@@ -3380,6 +3484,10 @@ function Puzzle({
               value: "reacao",
             },
           ]}
+          hints={[
+            "O Código começa com observação e confirmação, antes de qualquer decisão sobre um suspeito.",
+            "A prova vem antes da acusação: feche as pontas soltas e só então escolha uma conclusão.",
+          ]}
           onPick={(v) =>
             v === "certa"
               ? solve(
@@ -3412,6 +3520,10 @@ function Puzzle({
               label: "A caixa de lâminas prova que Tellez esteve no apartamento",
               value: "laminas",
             },
+          ]}
+          hints={[
+            "O esconderijo explica como a pista foi preservada, mas ainda falta relacioná-la à linha do tempo.",
+            "Concentre-se no horário do recibo e compare-o com a morte às 22:30; a proximidade é o elo que explica a camisa molhada.",
           ]}
           onPick={(v) =>
             v === "recibo"
@@ -3446,6 +3558,10 @@ function Puzzle({
             },
             { label: "Descartar todos os documentos e começar o caso de novo", value: "descartar" },
           ]}
+          hints={[
+            "Uma mensagem anônima é um sinal de interferência, não uma prova de identidade. Preserve o que ainda pode ser verificado.",
+            "Registre a reação, mantenha a cadeia documental e só conecte a mensagem às evidências independentes.",
+          ]}
           onPick={(v) =>
             v === "preservar"
               ? solve(
@@ -3477,6 +3593,10 @@ function Puzzle({
           },
           { label: "É de Teresa: ela estava perto da cena", value: "teresa" },
         ]}
+        hints={[
+          "Compare o tamanho da luva com as fichas e confira se o recibo combina com o ponto eletrônico do porto.",
+          "Tellez usa GG e estava no porto. O contraste entre o vestígio e o álibi sugere uma pista plantada, não uma conclusão automática.",
+        ]}
         onPick={(v) =>
           v === "plantada"
             ? solve(
@@ -3507,6 +3627,10 @@ function Accuse({ onPick }: { onPick: (who: string) => void }) {
           { label: "Carlos Ruiz", value: "ruiz" },
           { label: "Marco Tellez", value: "tellez" },
           { label: "Teresa Vidal", value: "teresa" },
+        ]}
+        hints={[
+          "Antes de escolher, revise a cadeia completa: horário, depoimentos, endereços, vestígios e álibis.",
+          "A acusação deve sobreviver às provas independentes e explicar a luva plantada; não troque a cadeia de evidências por uma única pista chamativa.",
         ]}
         onPick={onPick}
       />
