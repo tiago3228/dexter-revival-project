@@ -63,39 +63,28 @@ describe("investigation riddles", () => {
     expect(dossier).toHaveTextContent("Código 0318");
   });
 
-  it("opens the complete dossier with M99 before or after the report is submitted", () => {
+  it("opens the complete dossier with the three-dial M99 combination after the report", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
-
-    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
-      target: { value: "senha-incorreta" },
-    });
-    fireEvent.submit(
-      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
-    );
-    expect(screen.getByRole("alert")).toHaveTextContent("Senha incorreta");
-
-    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
-      target: { value: "M99" },
-    });
-    fireEvent.submit(
-      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
-    );
-    expect(
-      screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Resolva o caso");
 
     cleanup();
     window.localStorage.clear();
     seedCompleteInvestigation(true);
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
-    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
-      target: { value: "m99" },
-    });
-    fireEvent.submit(
-      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("combinação está incorreta");
+
+    for (let index = 0; index < 12; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 1 para cima" }));
+    }
+    for (let index = 0; index < 9; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 2 para cima" }));
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 3 para cima" }));
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
     expect(
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
     ).toBeInTheDocument();

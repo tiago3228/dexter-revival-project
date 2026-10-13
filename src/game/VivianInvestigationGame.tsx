@@ -89,6 +89,29 @@ type SaveData = {
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
 const FINAL_DOSSIER_PASSWORD = "M99";
+const DOSSIER_LETTERS = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
+const DOSSIER_DIGITS = Array.from({ length: 10 }, (_, index) => String(index));
+
+type DossierCombination = [string, string, string];
+
+const playLockSound = (kind: "open" | "fail") => {
+  if (typeof window === "undefined" || !window.AudioContext) return;
+  const context = new window.AudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+  oscillator.type = kind === "open" ? "sine" : "sawtooth";
+  oscillator.frequency.setValueAtTime(kind === "open" ? 520 : 120, now);
+  oscillator.frequency.exponentialRampToValueAtTime(kind === "open" ? 880 : 75, now + 0.24);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.34);
+  window.setTimeout(() => void context.close(), 500);
+};
 
 const RIDDLES: Riddle[] = [
   {
@@ -681,7 +704,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [pendingHint, setPendingHint] = useState<{ clueId: ClueId; level: 1 | 2 | 3 } | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
   const [dossierUnlocked, setDossierUnlocked] = useState(false);
-  const [dossierPassword, setDossierPassword] = useState("");
+  const [dossierCombination, setDossierCombination] = useState<DossierCombination>(["A", "0", "0"]);
   const [dossierNotice, setDossierNotice] = useState("");
   const [notice, setNotice] = useState(
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
@@ -885,12 +908,30 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     );
   };
 
-  const submitDossierPassword = (event: FormEvent<HTMLFormElement>) => {
+  const rotateDossierDial = (position: 0 | 1 | 2, direction: -1 | 1) => {
+    const values = position === 0 ? DOSSIER_LETTERS : DOSSIER_DIGITS;
+    setDossierCombination((current) => {
+      const next = [...current] as DossierCombination;
+      const currentIndex = values.indexOf(current[position]);
+      const nextIndex = (currentIndex + direction + values.length) % values.length;
+      next[position] = values[nextIndex] ?? "";
+      return next;
+    });
+  };
+
+  const submitDossierCombination = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (dossierPassword.trim().toUpperCase() !== FINAL_DOSSIER_PASSWORD) {
-      setDossierNotice("Senha incorreta. Acesso negado.");
+    if (!reportSubmitted) {
+      playLockSound("fail");
+      setDossierNotice("O cadeado não abriu. Resolva o caso para revelar a senha final.");
       return;
     }
+    if (dossierCombination.join("") !== FINAL_DOSSIER_PASSWORD) {
+      playLockSound("fail");
+      setDossierNotice("O cadeado não abriu. A combinação está incorreta.");
+      return;
+    }
+    playLockSound("open");
     setDossierUnlocked(true);
     setDossierNotice("");
   };
@@ -952,7 +993,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               type="button"
               onClick={() => {
                 setDossierOpen(true);
-                setDossierPassword("");
+                setDossierUnlocked(false);
+                setDossierCombination(["A", "0", "0"]);
                 setDossierNotice("");
               }}
               className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs"
@@ -1518,6 +1560,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   O caso continua aberto. A lógica de veredito final será habilitada quando a
                   solução e as fontes estiverem verificadas.
                 </p>
+                <p className="mt-4 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
+                  Senha final revelada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>
+                </p>
               </div>
             )}
             <button
@@ -1606,27 +1651,53 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   </div>
                 </div>
                 <p className="mt-5 text-sm leading-relaxed text-[#d5c9b5]">
-                  Este arquivo só pode ser aberto com a senha final. Resolva o caso para descobrir a
-                  senha ou digite-a diretamente se você já a encontrou.
+                  Gire os três discos até formar a senha final. A primeira posição usa letras; as
+                  duas seguintes usam números.
                 </p>
                 {!reportSubmitted && (
                   <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-amber-100">
-                    O relatório ainda não foi registrado. Ele é o caminho recomendado para descobrir
-                    a senha, mas não é necessário se você já a possui.
+                    O relatório ainda não foi registrado. Resolva o caso para revelar a combinação
+                    final e liberar o mecanismo.
                   </p>
                 )}
-                <form className="mt-5 space-y-3" onSubmit={submitDossierPassword}>
-                  <label className="block font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
-                    Senha final
-                    <input
-                      autoFocus
-                      value={dossierPassword}
-                      onChange={(event) => setDossierPassword(event.target.value)}
-                      placeholder="Digite a senha"
-                      aria-label="Senha final do dossiê"
-                      className="mt-2 min-h-12 w-full border border-[#4b4439] bg-[#11100e] px-3 text-base normal-case tracking-normal text-[#eee9df] outline-none focus:border-[#c4a779]"
-                    />
-                  </label>
+                <form className="mt-5 space-y-4" onSubmit={submitDossierCombination}>
+                  <div className="grid grid-cols-3 gap-3" aria-label="Fechadura de três discos">
+                    {dossierCombination.map((value, position) => (
+                      <div
+                        key={position}
+                        className="border border-[#79664c] bg-[#11100e] p-2 text-center"
+                      >
+                        <button
+                          type="button"
+                          aria-label={`Girar disco ${position + 1} para cima`}
+                          onClick={() => rotateDossierDial(position as 0 | 1 | 2, 1)}
+                          className="min-h-9 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
+                        >
+                          ▲
+                        </button>
+                        <div
+                          aria-label={`Valor do disco ${position + 1}: ${value}`}
+                          className="py-4 font-mono text-4xl text-[#ead8b8]"
+                        >
+                          {value}
+                        </div>
+                        <button
+                          type="button"
+                          aria-label={`Girar disco ${position + 1} para baixo`}
+                          onClick={() => rotateDossierDial(position as 0 | 1 | 2, -1)}
+                          className="min-h-9 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
+                        >
+                          ▼
+                        </button>
+                        <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-[#81796d]">
+                          {position === 0 ? "Letras" : "Números"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-center font-mono text-xs uppercase tracking-[0.25em] text-[#a9a092]">
+                    Combinação selecionada: {dossierCombination.join("")}
+                  </p>
                   {dossierNotice && (
                     <p role="alert" className="text-sm text-amber-100">
                       {dossierNotice}
@@ -1656,7 +1727,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       type="submit"
                       className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
                     >
-                      Desbloquear dossiê
+                      Abrir dossiê
                     </button>
                   </div>
                 </form>
