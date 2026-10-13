@@ -7,8 +7,6 @@ import {
   MapPin,
   Users,
   X,
-  Volume2,
-  VolumeX,
   ClipboardList,
   Network,
   Clock3,
@@ -1067,40 +1065,18 @@ export function VivianRobertsCase({
               evidências. Não confunda suspeita com prova.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {onBack && (
-              <button
-                type="button"
-                onClick={onBack}
-                className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
-              >
-                <ArrowLeft size={16} /> Voltar aos capítulos
-              </button>
-            )}
-            {onToggleSound && (
-              <button
-                type="button"
-                onClick={onToggleSound}
-                aria-pressed={soundOn}
-                className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
-              >
-                {soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />} Música:{" "}
-                {soundOn ? "ligada" : "desligada"}
-              </button>
-            )}
+          {onBack && (
             <button
               type="button"
-              onClick={() => setAmbientOn((value) => !value)}
-              aria-pressed={ambientOn}
-              className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs hover:bg-white/5"
+              onClick={onBack}
+              className="min-h-10 border border-[#79664c] px-3 py-2 font-mono text-xs text-[#d6c9b5] hover:border-[#c4a779]"
             >
-              {ambientOn ? <Volume2 size={16} /> : <VolumeX size={16} />} Ambiente:{" "}
-              {ambientOn ? "ligado" : "desligado"}
+              <ArrowLeft size={16} className="mr-2 inline" /> Menu de casos
             </button>
-          </div>
+          )}
         </header>
         <div
-          className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 px-0"
+          className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 border border-[#4b4439] bg-[#1b1a17] p-3"
           aria-label="Controles de áudio"
         >
           <button

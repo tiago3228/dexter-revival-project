@@ -557,7 +557,7 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
             onClick={onBack}
             className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary hover:bg-primary/10"
           >
-            ← Voltar aos casos
+            ← Menu de casos
           </button>
           <button
             onClick={() => setBriefingOpen(true)}
@@ -571,28 +571,6 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           >
             Quadro de investigação
           </button>
-          <button
-            onClick={() => {
-              setSoundOn((value) => !value);
-              if (!soundOn) startAmbient(true);
-            }}
-            className="min-h-11 border border-primary px-4 py-2 font-mono text-xs text-primary"
-          >
-            Ambiente: {soundOn ? "ligado" : "desligado"}
-          </button>
-          <label className="flex min-h-11 items-center gap-2 border border-border px-3 py-2 font-mono text-xs text-muted-foreground">
-            Volume {Math.round(volume * 100)}%
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={(event) => setVolume(Number(event.target.value))}
-              className="w-24 accent-primary"
-              aria-label="Volume do Caso Monroe"
-            />
-          </label>
           <button
             disabled={completed.length < 4}
             onClick={() => setReportOpen(true)}
@@ -614,6 +592,36 @@ export function MonroeCase({ onBack }: { onBack: () => void }) {
           ))}
         </div>
       </header>
+
+      <div
+        className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
+        aria-label="Controles de áudio"
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setSoundOn((value) => !value);
+            if (!soundOn) startAmbient(true);
+          }}
+          aria-pressed={soundOn}
+          className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary hover:border-primary"
+        >
+          Ambiente: {soundOn ? "ligado" : "desligado"}
+        </button>
+        <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          Ambiente {Math.round(volume * 100)}%
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(event) => setVolume(Number(event.target.value))}
+            className="w-24 accent-primary"
+            aria-label="Volume do ambiente do Caso Monroe"
+          />
+        </label>
+      </div>
 
       <CaseHeroImage
         src="/images/monroe-investigation.webp"

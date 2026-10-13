@@ -429,15 +429,9 @@ export function MentalistCase({
             onClick={onBack}
             className="min-h-11 border border-border px-4 py-2 font-mono text-xs uppercase tracking-wider hover:border-primary"
           >
-            ← Voltar aos capítulos
+            ← Menu de casos
           </button>
         </header>
-
-        <CaseHeroImage
-          src="/images/red-john-investigation.webp"
-          alt="Dexter Morgan e Patrick Jane analisam o sorriso de Red John em um quadro de investigação"
-          caption="Arquivo de cena · Dexter Morgan + Patrick Jane"
-        />
 
         <div className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3">
           <button
@@ -482,6 +476,12 @@ export function MentalistCase({
             O som ambiente e a trilha podem tocar separadamente ou juntos.
           </p>
         </div>
+
+        <CaseHeroImage
+          src="/images/red-john-investigation.webp"
+          alt="Dexter Morgan e Patrick Jane analisam o sorriso de Red John em um quadro de investigação"
+          caption="Arquivo de cena · Dexter Morgan + Patrick Jane"
+        />
 
         <section
           className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-primary/40 bg-primary/5 px-4 py-3"
