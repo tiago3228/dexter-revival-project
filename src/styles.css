@@ -4,6 +4,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes investigation-guidance-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px color-mix(in oklch, var(--primary) 22%, transparent),
+      0 0 22px color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+}
+
+.investigation-guidance-pulse {
+  animation: investigation-guidance-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .investigation-guidance-pulse {
+    animation: none;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
 /*
  * Design system definition.
  *

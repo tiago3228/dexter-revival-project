@@ -1524,9 +1524,10 @@ export function Game() {
                 setModal({ kind: "puzzle", id: !done("caderno") ? "caderno" : "segredo" });
               else setTab("caderno");
             }}
-            className="min-h-11 border border-primary bg-primary/10 px-4 py-2 font-mono text-xs text-primary hover:bg-primary/20"
+            className={`min-h-11 border border-primary bg-primary/10 px-4 py-2 font-mono text-xs text-primary hover:bg-primary/20 ${s.loc === nextObjective.location ? "investigation-guidance-pulse" : ""}`}
+            aria-label={`Passo ${Math.min(s.solved.length + 1, 14)}: ${nextObjective.action}`}
           >
-            {nextObjective.action} →
+            Passo {Math.min(s.solved.length + 1, 14)} · {nextObjective.action} →
           </button>
           <p className="text-xs text-muted-foreground">
             Dica: os textos em vermelho são interativos. Você também pode tocar nas imagens para
@@ -1564,7 +1565,7 @@ export function Game() {
           <button
             key={l}
             onClick={() => go(l)}
-            className={`min-h-11 border px-3 py-2 text-left ${s.loc === l ? "border-primary text-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
+            className={`min-h-11 border px-3 py-2 text-left ${s.loc === l ? "border-primary text-primary" : "border-border text-muted-foreground hover:text-foreground"} ${s.loc !== nextObjective.location && l === nextObjective.location ? "investigation-guidance-pulse" : ""}`}
           >
             {LOCATION_NAMES[l]}
           </button>
@@ -1652,7 +1653,7 @@ export function Game() {
           onClick={() => setModal(null)}
         >
           <div
-            className={`max-h-[90vh] w-full overflow-auto border border-border bg-card p-4 sm:p-6 ${modal.kind === "zoom" ? "max-w-6xl" : modal.kind === "image" ? "max-w-4xl" : "max-w-xl"}`}
+            className={`max-h-[90vh] w-full overflow-auto border border-border bg-card p-4 sm:p-6 ${modal.kind === "zoom" ? "max-w-6xl" : modal.kind === "image" ? "max-w-4xl" : "max-w-xl"} investigation-guidance-pulse`}
             onClick={(e) => e.stopPropagation()}
           >
             {modal.kind === "zoom" && (
