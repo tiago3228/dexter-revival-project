@@ -1056,7 +1056,7 @@ export function VivianRobertsCase({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-[#c4a779]">
               Arquivo confidencial · Capítulo 06
             </p>
-            <h1 className="mt-2 font-display text-3xl sm:text-5xl">O Caso Vivian Roberts</h1>
+            <h1 className="mt-2 font-display text-3xl sm:text-5xl">The Painscreek Case</h1>
             <p className="mt-2 max-w-3xl text-xs uppercase tracking-[0.2em] text-[#bdb5a8]">
               Painscreek, 1995 · O caso que a cidade tentou esquecer
             </p>

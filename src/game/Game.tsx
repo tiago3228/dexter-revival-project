@@ -2102,7 +2102,7 @@ function MainMenu({
     },
     vivian: {
       index: "CAPÍTULO 06 · PAINSCREEK",
-      title: "O Caso Vivian Roberts",
+      title: "The Painscreek Case",
       detail: "Abrindo o arquivo investigativo e o catálogo inicial de evidências.",
     },
   };
@@ -2118,7 +2118,7 @@ function MainMenu({
     painscreek: "O Segredo de Greybridge",
     mentalist: "O Mentalista: O Caso Red John",
     winchester: "O Sangue dos Condenados",
-    vivian: "O Caso Vivian Roberts",
+    vivian: "The Painscreek Case",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2684,7 +2684,7 @@ function MainMenu({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-300">
               Capítulo 06 · Painscreek
             </p>
-            <h2 className="mt-3 font-display text-3xl">O Caso Vivian Roberts</h2>
+            <h2 className="mt-3 font-display text-3xl">The Painscreek Case</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Investigue personagens, locais e documentos de um caso em preparação. Esta versão-base
               ainda não contém a solução nem as rotas investigativas completas.
