@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 import { PainscreekEvidenceExplorer } from "@/game/PainscreekEvidenceExplorer";
+import { PainscreekEvidenceGallery } from "@/game/PainscreekEvidenceGallery";
 import { PAINSCREEK_EVIDENCE_001_116 } from "@/game/painscreekEvidence";
+import {
+  PAINSCREEK_EVIDENCE_IMAGE_COUNT,
+  PAINSCREEK_EVIDENCE_IMAGE_GROUPS,
+} from "@/game/painscreekEvidenceImages";
 
 describe("Painscreek evidence catalog", () => {
   it("contains the 47 stable, unique catalog IDs", () => {
@@ -47,5 +54,23 @@ describe("Painscreek evidence catalog", () => {
     expect(byId.get("P-035")?.pages).toEqual([1, 2]);
     expect(byId.get("P-047")?.pages).toEqual([103]);
     expect(byId.get("P-042")?.pages[0]).toBe(35);
+  });
+
+  it("keeps all 116 supplemental originals and thumbnails available through the gallery", () => {
+    const images = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.flatMap((group) => group.images);
+    const markup = renderToStaticMarkup(createElement(PainscreekEvidenceGallery));
+
+    expect(PAINSCREEK_EVIDENCE_IMAGE_COUNT).toBe(116);
+    expect(images).toHaveLength(116);
+    expect(markup).toContain("Galeria de imagens das fontes");
+    expect(markup).toContain('target="_blank"');
+    expect(markup).toContain("Recortes de jornal — série jornal");
+    expect(markup).toContain("Outros — série de imagens");
+
+    for (const image of images) {
+      expect(existsSync(join(process.cwd(), "public", image.originalUrl.slice(1)))).toBe(true);
+      expect(existsSync(join(process.cwd(), "public", image.thumbnailUrl.slice(1)))).toBe(true);
+      expect(markup).toContain(`href="${image.originalUrl}"`);
+    }
   });
 });

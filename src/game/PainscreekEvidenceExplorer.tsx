@@ -13,6 +13,7 @@ import {
   type PainscreekEvidence,
   type PainscreekEvidenceStatus,
 } from "@/game/painscreekEvidence";
+import { PainscreekEvidenceGallery } from "@/game/PainscreekEvidenceGallery";
 
 const statusLabels: Record<PainscreekEvidenceStatus, string> = {
   unverified: "Não verificada",
@@ -148,6 +149,12 @@ export function PainscreekEvidenceExplorer() {
             páginas 1–116 do PDF. Busque por título, página ou conteúdo e abra cada registro para
             ver suas ressalvas.
           </p>
+          <a
+            href="#galeria-imagens"
+            className="mt-3 inline-flex rounded-md border border-border px-3 py-2 text-sm font-medium text-primary hover:bg-accent"
+          >
+            Abrir galeria complementar de imagens
+          </a>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card p-3">
               <p className="text-xs text-muted-foreground">Registros no catálogo</p>
@@ -234,6 +241,8 @@ export function PainscreekEvidenceExplorer() {
             </div>
           )}
         </section>
+
+        <PainscreekEvidenceGallery />
 
         <footer className="mt-8 border-t border-border py-5 text-sm text-muted-foreground">
           <button
