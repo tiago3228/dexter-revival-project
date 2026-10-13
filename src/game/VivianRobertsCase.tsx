@@ -3,7 +3,9 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   BookOpen,
+  ExternalLink,
   FileSearch,
+  LockKeyhole,
   MapPin,
   Users,
   X,
@@ -14,6 +16,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
+import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -27,145 +30,260 @@ type DocumentItem = {
   body: string;
 };
 
+const VIVIAN_INVESTIGATION_SAVE_KEY = "vivian-playable-investigation-v1";
+
+const DIARY_UNLOCK_CLUES: Record<string, string> = {
+  andrew: "henry-death",
+  bernard: "charles-secret",
+  charles: "charles-secret",
+  derrick: "dorothy-photo",
+  dorothy: "dorothy-photo",
+  james: "police-report",
+  mary: "police-report",
+  matthew: "code-0318",
+  scott: "scott-denial",
+  steven: "police-report",
+  trisha: "charles-secret",
+  vivian: "vivian-medical",
+  wanda: "daniel-letter",
+};
+
+function readFoundVivianClues() {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(VIVIAN_INVESTIGATION_SAVE_KEY) || "null");
+    return Array.isArray(saved?.found)
+      ? saved.found.filter((id: unknown): id is string => typeof id === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function DiaryImages({
+  personId,
+  personName,
+  foundClues,
+}: {
+  personId: string;
+  personName: string;
+  foundClues: string[];
+}) {
+  const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === personId);
+  if (!group) return null;
+
+  const requiredClue = DIARY_UNLOCK_CLUES[personId];
+  const unlocked = requiredClue ? foundClues.includes(requiredClue) : false;
+
+  return (
+    <section
+      className="border border-[#4b4439] bg-[#211f1b] p-4"
+      aria-label={`Imagens do diário de ${personName}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#c4a779]">
+            Arquivo visual
+          </p>
+          <h3 className="mt-1 font-display text-xl">{group.title}</h3>
+          <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
+            {unlocked
+              ? "Páginas liberadas. Clique em uma miniatura para abrir a imagem original."
+              : "Páginas bloqueadas. Avance na investigação para liberar este diário."}
+          </p>
+        </div>
+        {unlocked ? (
+          <ExternalLink size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+        ) : (
+          <LockKeyhole size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+        )}
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {group.images.map((image, index) =>
+          unlocked ? (
+            <a
+              key={image.fileName}
+              href={image.originalUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
+              className="group overflow-hidden border border-[#4b4439] bg-[#171512] transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={`${group.title}, imagem ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+              />
+              <span className="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]">
+                {image.fileName}
+              </span>
+            </a>
+          ) : (
+            <div
+              key={image.fileName}
+              className="relative overflow-hidden border border-[#302b24] bg-[#171512]"
+              aria-label={`Imagem bloqueada ${index + 1} do diário de ${personName}`}
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover opacity-35 grayscale blur-[3px]"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                <LockKeyhole size={19} className="text-[#ead8b8]" aria-hidden="true" />
+              </div>
+            </div>
+          ),
+        )}
+      </div>
+    </section>
+  );
+}
+
 const PEOPLE: Person[] = [
   {
     id: "vivian",
     name: "Vivian Roberts",
     role: "Vítima central do caso",
-    note: "Fontes: pp. 82, 94 e 100. Laudo: esposa de Charles; notícia relata sua morte; carta anônima chama o caso de assassinato.",
+    note: "O laudo a identifica como esposa de Charles; a notícia relata sua morte; a carta anônima chama o caso de assassinato.",
     status: "confirmado",
   },
   {
     id: "charles",
     name: "Charles Roberts",
     role: "Marido de Vivian · ex-prefeito (segundo notícia)",
-    note: "Fontes: pp. 6–7, 18, 82 e 92. Relações familiares e candidatura aparecem em diário/carta; opiniões são atribuídas.",
+    note: "Relações familiares e candidatura aparecem em diário e carta; opiniões são atribuídas.",
     status: "confirmado",
   },
   {
     id: "magdalene",
     name: "Magdalene Roberts",
     role: "Mãe de Charles (cruzamento documental)",
-    note: "Fontes: pp. 74, 78 e 93–94. O parentesco resulta do cruzamento entre carta e laudo; outras afirmações são relatos.",
+    note: "O parentesco resulta do cruzamento entre carta e laudo; outras afirmações são relatos.",
     status: "confirmado",
   },
   {
     id: "trisha",
     name: "Trisha Roberts",
     role: "Filha de Vivian e Charles · diário pessoal",
-    note: "Fontes: pp. 18, 63, 65, 69 e 71. O diário registra a relação com Scott; rumores permanecem atribuídos.",
+    note: "O diário registra a relação com Scott; rumores permanecem atribuídos.",
     status: "confirmado",
   },
   {
     id: "bernard",
     name: "Bernard Hopkins",
     role: "Mordomo (ficha funcional)",
-    note: "Fontes: pp. 3–5 e 95. A ficha funcional o identifica como mordomo; a nota investigativa da p. 61 é outro documento e não prova envolvimento.",
+    note: "A ficha funcional o identifica como mordomo; a nota investigativa da p. 61 é outro documento e não prova envolvimento.",
     status: "confirmado",
   },
   {
     id: "dorothy",
     name: "Dorothy Patterson",
     role: "Funcionária da mansão · cargo exato não confirmado",
-    note: "Fontes: pp. 96 e 113–114. A carta relata mais de vinte anos de serviço; diários documentam tarefas específicas, sem confirmar o cargo de governanta.",
+    note: "A carta relata mais de vinte anos de serviço; diários documentam tarefas específicas, sem confirmar o cargo de governanta.",
     status: "confirmado",
   },
   {
     id: "derrick",
     name: "Derrick Tyler",
     role: "Motorista da família Roberts",
-    note: "Fontes: pp. 8–9 e 18. É identificado como motorista; os relatos de convivência com Scott e Trisha vêm de diários.",
+    note: "É identificado como motorista; os relatos de convivência com Scott e Trisha vêm de diários.",
     status: "confirmado",
   },
   {
     id: "sofia",
     name: "Sofia (sobrenome não confirmado)",
     role: "Pessoa mencionada · destino em disputa",
-    note: "Fontes: pp. 2–3, 51, 54, 75 e 93. Há relatos de que partiu de Painscreek e de que morreu; sobrenome e destino não estão resolvidos.",
+    note: "Há relatos de que partiu de Painscreek e de que morreu; sobrenome e destino não estão resolvidos.",
     status: "contradicao",
   },
   {
     id: "scott",
     name: "Scott Brooks",
     role: "Filho adotivo de Matthew (relato de Rachel)",
-    note: "Fontes: pp. 70–71, 99 e 104. A adoção é relatada por Rachel; a possível identidade com Vincent continua sem prova conclusiva.",
+    note: "A adoção é relatada por Rachel; a possível identidade com Vincent continua sem prova conclusiva.",
     status: "contradicao",
   },
   {
     id: "matthew",
     name: "Padre Matthew Brooks",
     role: "Padre da Igreja da Trindade",
-    note: "Fontes: pp. 83, 99, 101–102 e 112. A adoção de Scott é relatada por Rachel; sobrenome e papel sacerdotal aparecem em fontes distintas.",
+    note: "A adoção de Scott é relatada por Rachel; sobrenome e papel sacerdotal aparecem em fontes distintas.",
     status: "confirmado",
   },
   {
     id: "andrew",
     name: "Andrew Reed",
     role: "Funcionário da família Roberts",
-    note: "Fontes: pp. 1–2 e 87. O jornal o descreve como jardineiro e faz-tudo; a matéria não determina a causa do incêndio.",
+    note: "O jornal o descreve como jardineiro e faz-tudo; a matéria não determina a causa do incêndio.",
     status: "confirmado",
   },
   {
     id: "henry",
     name: "Dr. Henry Johnson",
     role: "Médico do Painscreek Community Hospital",
-    note: "Fontes: pp. 94 e 97. O laudo confirma o vínculo médico; o suposto desvio de fundos é acusação atribuída à firma investigadora.",
+    note: "O laudo confirma o vínculo médico; o suposto desvio de fundos é acusação atribuída à firma investigadora.",
     status: "confirmado",
   },
   {
     id: "moss",
     name: "Steven Moss",
     role: "Detetive particular (carta anônima)",
-    note: "Fontes: pp. 100 e 110–111. Carta anônima é endereçada ao detetive; a avaliação de sua confiabilidade não é confirmação independente.",
+    note: "Carta anônima é endereçada ao detetive; a avaliação de sua confiabilidade não é confirmação independente.",
     status: "confirmado",
   },
   {
     id: "james",
     name: "James Howard",
     role: "Xerife de Painscreek",
-    note: "Fontes: pp. 82 e 89–90. É identificado como xerife; a carta de 1998 registra sua transferência para Grand County.",
+    note: "É identificado como xerife; a carta de 1998 registra sua transferência para Grand County.",
     status: "confirmado",
   },
   {
     id: "wanda",
     name: "Wanda Tyler",
     role: "Autora de diário · vínculo com Derrick relatado",
-    note: "Fontes: pp. 78–80. Há diários sob seu nome; o vínculo com Derrick e as opiniões sobre Sofia são relatos atribuídos.",
+    note: "Há diários sob seu nome; o vínculo com Derrick e as opiniões sobre Sofia são relatos atribuídos.",
     status: "confirmado",
   },
   {
     id: "mary",
     name: "Mary Martinez",
     role: "Funcionária da mansão (segundo notícia)",
-    note: "Fontes: pp. 22–27 e 82. Diário identificado; a notícia a descreve como funcionária e relata que encontrou Vivian; residência não confirmada.",
+    note: "Diário identificado; a notícia a descreve como funcionária e relata que encontrou Vivian; residência não confirmada.",
     status: "confirmado",
   },
   {
     id: "oliver",
     name: "Oliver (sobrenome não confirmado)",
     role: "Fotografia (relatos; nome incompleto)",
-    note: "Fontes: pp. 67, 76 e 102. Há menções a um Oliver como professor/fotógrafo; “Gibson” e uma loja de fotografia não foram confirmados.",
+    note: "Há menções a um Oliver como professor/fotógrafo; “Gibson” e uma loja de fotografia não foram confirmados.",
     status: "confirmado",
   },
   {
     id: "rachel",
     name: "Irmã Rachel Davis",
     role: "Religiosa do Orfanato São Patrício",
-    note: "Fonte: p. 99. A carta a Scott está assinada por Irmã Rachel Davis; as lembranças sobre ele continuam atribuídas à autora.",
+    note: "A carta a Scott está assinada por Irmã Rachel Davis; as lembranças sobre ele continuam atribuídas à autora.",
     status: "confirmado",
   },
   {
     id: "calvin",
     name: "Padre Calvin",
     role: "Padre mencionado nos relatos",
-    note: "Fontes: pp. 14, 28–32, 44, 56 e 93. As fontes o chamam de “padre Calvin”; o sobrenome Bennett não foi confirmado.",
+    note: "As fontes o chamam de “padre Calvin”; o sobrenome Bennett não foi confirmado.",
     status: "confirmado",
   },
   {
     id: "sylvia",
     name: "Sylvia",
     role: "Carta atribuída a Sylvia pela interface",
-    note: "Fonte: p. 93. O título da interface atribui a carta a Sylvia; não há assinatura visível no trecho e o conteúdo é relato.",
+    note: "O título da interface atribui a carta a Sylvia; não há assinatura visível no trecho e o conteúdo é relato.",
     status: "confirmado",
   },
   {
@@ -186,14 +304,14 @@ const PEOPLE: Person[] = [
     id: "katherine",
     name: "Katherine",
     role: "Pessoa citada em registro de enfermagem",
-    note: "Fonte: p. 105. O registro diz que Katherine telefonou relatando doença; profissão de enfermeira e sobrenome não foram confirmados.",
+    note: "O registro diz que Katherine telefonou relatando doença; profissão de enfermeira e sobrenome não foram confirmados.",
     status: "confirmado",
   },
   {
     id: "daniel",
     name: "Daniel",
     role: "Destinatário de carta · mencionado em diário",
-    note: "Fontes: pp. 91 e 116. Remetente não identificado o chama de “meu filho”; Dorothy o viu com Laura, sem provar relação com Andrew.",
+    note: "Remetente não identificado o chama de “meu filho”; Dorothy o viu com Laura, sem provar relação com Andrew.",
     status: "confirmado",
   },
 ];
@@ -945,6 +1063,13 @@ export function VivianRobertsCase({
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
+  const [foundVivianClues, setFoundVivianClues] = useState<string[]>(readFoundVivianClues);
+
+  useEffect(() => {
+    const refreshDiaryUnlocks = () => setFoundVivianClues(readFoundVivianClues());
+    window.addEventListener("vivian-investigation-progress", refreshDiaryUnlocks);
+    return () => window.removeEventListener("vivian-investigation-progress", refreshDiaryUnlocks);
+  }, []);
 
   useEffect(() => {
     if (!ambientOn || typeof window === "undefined") return;
@@ -1046,7 +1171,14 @@ export function VivianRobertsCase({
   };
 
   if (showPlayableGame)
-    return <VivianInvestigationGame onBack={() => setShowPlayableGame(false)} />;
+    return (
+      <VivianInvestigationGame
+        onBack={() => {
+          setFoundVivianClues(readFoundVivianClues());
+          setShowPlayableGame(false);
+        }}
+      />
+    );
 
   if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
@@ -1411,11 +1543,14 @@ export function VivianRobertsCase({
                   <>
                     <p className="text-[#c4a779]">{selectedPerson.role}</p>
                     <p>{selectedPerson.note}</p>
-                    <p>
-                      As informações biográficas e eventuais relações causais serão preenchidas após
-                      conferência das fontes documentais.
-                    </p>
-                    <StatusPill status={selectedPerson.status} />
+                    <DiaryImages
+                      personId={selectedPerson.id}
+                      personName={selectedPerson.name}
+                      foundClues={foundVivianClues}
+                    />
+                    {selectedPerson.status !== "confirmado" && (
+                      <StatusPill status={selectedPerson.status} />
+                    )}
                   </>
                 )}
                 {selectedPlace && (
