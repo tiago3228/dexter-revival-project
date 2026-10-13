@@ -14,6 +14,8 @@
 - [Auditoria de cruzamento das páginas 51–79](./auditoria-cruzamento-paginas-051-079.md) — relações candidatas entre diários, anotações investigativas e catálogo, com separação de códigos, fotografias e relatos indiretos.
 - [Auditoria documental dos personagens](./auditoria-personagens.md) — revisão dos perfis da interface contra as fontes primárias, com estados liberados e incertezas preservadas.
 - [Auditoria preliminar das páginas 1–79](./auditoria-cruzamento-paginas-001-079.md) — OCR preliminar; duplicatas de conteúdo nas páginas 49–51 comparadas visualmente com as páginas 46–48 e confirmadas; auditoria integral do catálogo ainda pendente.
+- [Auditoria de cruzamento das páginas 1–50](./auditoria-cruzamento-paginas-001-050.md) — conferência visual já concluída; registra as duas entradas omitidas da página 43 e as duplicatas das páginas 49–50.
+- [Adendo de transcrição da página 43](./transcricao-pagina-043-adendo.md) — preserva a transcrição mais completa das duas entradas impressas de Scott Brooks.
 
 ## Interface interativa
 - [Catálogo de evidências no jogo](/painscreek-evidence) — componente isolado com busca textual, filtro por estado de revisão e detalhes de fonte/ressalvas. O catálogo documental tem 47 registros estáveis (P-001–P-047) em `src/game/painscreekEvidence.ts`, incluindo referências das páginas 1–116; esse arquivo de dados continua separado da mecânica de solução do caso e não altera o caso Painscreek já presente na tela principal.
