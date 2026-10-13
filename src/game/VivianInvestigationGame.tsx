@@ -80,6 +80,12 @@ type CodeLock = {
   reward: string;
   place: PlaceId;
 };
+type PendingHint = {
+  clueId: ClueId;
+  level: 1 | 2 | 3;
+  key?: string;
+  text?: string;
+};
 
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
@@ -743,10 +749,11 @@ function readSave(): SaveData | null {
         typeof value.mistakes === "number" && Number.isFinite(value.mistakes)
           ? Math.max(0, Math.floor(value.mistakes))
           : 0,
-      usedHints: ids(
-        value.usedHints,
-        Object.keys(CLUE_HINTS).flatMap((id) => [1, 2, 3].map((level) => `${id}:${level}`)),
-      ),
+      usedHints: ids(value.usedHints, [
+        ...Object.keys(CLUE_HINTS).flatMap((id) => [1, 2, 3].map((level) => `${id}:${level}`)),
+        ...RIDDLES.map((riddle) => `riddle:${riddle.id}:1`),
+        ...CODE_LOCKS.map((lock) => `code:${lock.id}:1`),
+      ]),
     };
   } catch {
     return null;
@@ -780,7 +787,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   );
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
-  const [pendingHint, setPendingHint] = useState<{ clueId: ClueId; level: 1 | 2 | 3 } | null>(null);
+  const [pendingHint, setPendingHint] = useState<PendingHint | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
   const [dossierUnlocked, setDossierUnlocked] = useState(false);
   const [dossierCombination, setDossierCombination] = useState<DossierCombination>(["A", "0", "0"]);
@@ -864,6 +871,14 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setPendingHint({ clueId, level });
   };
 
+  const requestCustomHint = (key: string, text: string) => {
+    if (usedHints.includes(key)) {
+      setNotice("Esta dica já foi consultada e a penalidade já foi aplicada.");
+      return;
+    }
+    setPendingHint({ clueId: "police-report", level: 1, key, text });
+  };
+
   const cancelHint = () => {
     setPendingHint(null);
     setNotice("Dica cancelada. Sua pontuação foi mantida.");
@@ -872,16 +887,15 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const confirmHint = () => {
     if (!pendingHint) return;
     const { clueId, level } = pendingHint;
-    const key = `${clueId}:${level}`;
+    const key = pendingHint.key ?? `${clueId}:${level}`;
     if (usedHints.includes(key)) {
       setPendingHint(null);
       setNotice("Esta dica já foi consultada e a penalidade já foi aplicada.");
       return;
     }
     setUsedHints((current) => (current.includes(key) ? current : [...current, key]));
-    setNotice(
-      `Dica ${level}: ${CLUE_HINTS[clueId][level - 1]} Penalidade: -${HINT_COSTS[level - 1]} pontos.`,
-    );
+    const hintText = pendingHint.text ?? CLUE_HINTS[clueId][level - 1];
+    setNotice(`Dica: ${hintText} Penalidade: -${HINT_COSTS[level - 1]} pontos.`);
     setPendingHint(null);
   };
 
@@ -1017,15 +1031,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const submitDossierCombination = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!reportSubmitted || !allCodeLocksSolved) {
-      playLockSound("fail");
-      setDossierNotice(
-        !reportSubmitted
-          ? "O cadeado não abriu. Registre a conclusão do caso no relatório primeiro."
-          : "O cadeado não abriu. Resolva todas as fechaduras de código antes de procurar a senha final.",
-      );
-      return;
-    }
     if (dossierCombination.join("") !== FINAL_DOSSIER_PASSWORD) {
       playLockSound("fail");
       setDossierNotice("O cadeado não abriu. A combinação está incorreta.");
@@ -1280,6 +1285,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     {currentRiddles.map((riddle) => {
                       const solved = solvedRiddles.includes(riddle.id);
                       const answer = riddleAnswers[riddle.id] ?? "";
+                      const hintKey = `riddle:${riddle.id}:1`;
+                      const hintUsed = usedHints.includes(hintKey);
                       return (
                         <article
                           key={riddle.id}
@@ -1324,9 +1331,19 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               </button>
                             </form>
                           )}
-                          <p className="mt-3 text-[11px] leading-relaxed text-[#81796d]">
-                            Dica: {riddle.hint}
-                          </p>
+                          {hintUsed ? (
+                            <p className="mt-3 border-l-2 border-[#c4a779] pl-3 text-xs leading-relaxed text-[#d5c9b5]">
+                              <strong>Dica desbloqueada:</strong> {riddle.hint}
+                            </p>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => requestCustomHint(hintKey, riddle.hint)}
+                              className="mt-3 min-h-9 border border-[#79664c] px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-[#c4a779] hover:border-[#c4a779]"
+                            >
+                              Ver dica (-{HINT_COSTS[0]} pontos)
+                            </button>
+                          )}
                         </article>
                       );
                     })}
@@ -1354,6 +1371,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     {currentCodeLocks.map((lock) => {
                       const solved = solvedCodeLocks.includes(lock.id);
                       const answer = codeLockAnswers[lock.id] ?? "";
+                      const hintKey = `code:${lock.id}:1`;
+                      const hintUsed = usedHints.includes(hintKey);
                       return (
                         <article key={lock.id} className="border border-[#4b4439] bg-[#171512] p-4">
                           <div className="flex items-start justify-between gap-3">
@@ -1399,9 +1418,19 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               </button>
                             </form>
                           )}
-                          <p className="mt-3 text-[11px] leading-relaxed text-[#81796d]">
-                            Pista: {lock.hint}
-                          </p>
+                          {hintUsed ? (
+                            <p className="mt-3 border-l-2 border-[#c4a779] pl-3 text-xs leading-relaxed text-[#d5c9b5]">
+                              <strong>Pista desbloqueada:</strong> {lock.hint}
+                            </p>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => requestCustomHint(hintKey, lock.hint)}
+                              className="mt-3 min-h-9 border border-[#79664c] px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-[#c4a779] hover:border-[#c4a779]"
+                            >
+                              Ver pista (-{HINT_COSTS[0]} pontos)
+                            </button>
+                          )}
                         </article>
                       );
                     })}

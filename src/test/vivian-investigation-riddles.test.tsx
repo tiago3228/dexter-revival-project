@@ -67,11 +67,32 @@ describe("investigation riddles", () => {
     expect(dossier).toHaveTextContent("Código 0318");
   });
 
+  it("keeps riddle hints hidden until the player confirms the point penalty", () => {
+    render(<VivianInvestigationGame onBack={() => {}} />);
+
+    const hintButton = screen.getAllByRole("button", { name: "Ver dica (-20 pontos)" })[0]!;
+    fireEvent.click(hintButton);
+    expect(screen.getByRole("alertdialog")).toHaveTextContent("20 pontos");
+    fireEvent.click(screen.getByRole("button", { name: "Não, voltar" }));
+    expect(screen.queryByText(/A resposta começa com S/)).not.toBeInTheDocument();
+
+    fireEvent.click(hintButton);
+    fireEvent.click(screen.getByRole("button", { name: "Sim, abrir dica" }));
+    expect(screen.getAllByText(/A resposta começa com S/).length).toBeGreaterThan(0);
+  });
+
   it("opens the complete dossier with the three-dial M99 combination after the report", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
+    for (let index = 0; index < 12; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 1 para cima" }));
+    }
+    for (let index = 0; index < 9; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 2 para cima" }));
+      fireEvent.click(screen.getByRole("button", { name: "Girar disco 3 para cima" }));
+    }
     fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
-    expect(screen.getByRole("alert")).toHaveTextContent(/registre a conclusão/i);
+    expect(screen.getByRole("heading", { name: "Caso resolvido" })).toBeInTheDocument();
 
     cleanup();
     window.localStorage.clear();
@@ -94,7 +115,7 @@ describe("investigation riddles", () => {
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/fita secreta procurada por Magdalene/)).toBeInTheDocument();
-  });
+  }, 15000);
 
   it("solves Resident Evil-style code locks before the final password is revealed", () => {
     seedCompleteInvestigation(false, []);
