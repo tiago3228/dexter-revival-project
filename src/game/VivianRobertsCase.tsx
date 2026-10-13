@@ -1295,6 +1295,20 @@ export function VivianRobertsCase({
             >
               <Clock3 size={17} /> Linha do tempo
             </Link>
+            <Link
+              to="/painscreek-evidence"
+              hash="galeria-imagens"
+              onClick={() => {
+                try {
+                  window.sessionStorage.setItem("dexter-return-to-vivian-case", "true");
+                } catch {
+                  // A navegação continua funcional se o armazenamento da sessão estiver bloqueado.
+                }
+              }}
+              className="inline-flex min-h-12 items-center gap-2 border border-[#79664c] bg-[#79664c]/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-[#e2cba4] transition hover:bg-[#79664c]/20"
+            >
+              <BookOpen size={17} /> Galeria de imagens
+            </Link>
           </div>
         </div>
         <section className="mt-5 grid gap-3 sm:grid-cols-3">

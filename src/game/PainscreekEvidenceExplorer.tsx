@@ -13,6 +13,7 @@ import {
   type PainscreekEvidence,
   type PainscreekEvidenceStatus,
 } from "@/game/painscreekEvidence";
+import { PainscreekArchiveVoices } from "@/game/PainscreekArchiveVoices";
 import { PainscreekEvidenceGallery } from "@/game/PainscreekEvidenceGallery";
 
 const statusLabels: Record<PainscreekEvidenceStatus, string> = {
@@ -155,6 +156,12 @@ export function PainscreekEvidenceExplorer() {
           >
             Abrir galeria complementar de imagens
           </a>
+          <a
+            href="#falas-documentadas"
+            className="ml-2 mt-3 inline-flex rounded-md border border-border px-3 py-2 text-sm font-medium text-primary hover:bg-accent"
+          >
+            Ler falas documentadas
+          </a>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card p-3">
               <p className="text-xs text-muted-foreground">Registros no catálogo</p>
@@ -242,6 +249,7 @@ export function PainscreekEvidenceExplorer() {
           )}
         </section>
 
+        <PainscreekArchiveVoices />
         <PainscreekEvidenceGallery />
 
         <footer className="mt-8 border-t border-border py-5 text-sm text-muted-foreground">
