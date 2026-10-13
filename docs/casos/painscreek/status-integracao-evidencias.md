@@ -1,16 +1,16 @@
 # Estado da integração de evidências de Painscreek
 
-Atualizado em 2026-10-12.
+Atualizado em 2026-10-13.
 
 ## Material de origem
 
-O arquivo `IMAGENSDEPAINSCREEK.zip` foi fornecido pelo usuário e contém o PDF `The Painscreek Killing.pdf` (116 páginas) e cinco mapas em PNG. SHA-256 do ZIP: `fbd1804b32542cf0cb63217493ceebaf136cda62b2011b4bf8c891966f975cb5`; SHA-256 do PDF: `54e1cbbd0884793ea921227e118566045d109abec2e9be9250d732ac3e28aa8e`. O PDF é composto por páginas digitalizadas; a extração de texto direta não retorna texto selecionável. A imagem é a fonte de autoridade; OCR serve apenas como apoio.
+O arquivo `IMAGENSDEPAINSCREEK.zip` foi fornecido pelo usuário e contém o PDF `The Painscreek Killing.pdf` (116 páginas) e cinco mapas em PNG. SHA-256 do ZIP: `fbd1804b32542cf0cb63217493ceebaf136cda62b2011b4bf8c891966f975cb5`; SHA-256 do PDF: `54e1cbbd0884793ea921227e118566045d109abec2e9be9250d732ac3e28aa8e`. O PDF é composto por páginas digitalizadas; a extração de texto direta não retorna texto selecionável. A Galeria de imagens das fontes, com 116 originais e miniaturas, é a referência visual acessível no jogo; OCR e transcrição servem apenas como apoio.
 
 ## Estado confirmado no repositório
 
 - A rota `/painscreek-evidence` está definida em `src/routes/painscreek-evidence.tsx` e registrada em `src/routeTree.gen.ts`.
-- `src/game/painscreekEvidence.ts` contém 34 registros estáveis, `P-001` a `P-034`, que referenciam páginas 80–116. O catálogo documental permanece separado do sistema de solução jogável.
-- O explorador de evidências consome esse catálogo; o texto da introdução foi corrigido para informar 34 referências, em vez do número obsoleto 28.
+- `src/game/painscreekEvidence.ts` contém 47 registros estáveis, `P-001` a `P-047`, que referenciam páginas 1–116. O catálogo documental permanece separado do sistema de solução jogável.
+- O explorador de evidências consome esse catálogo e exibe a contagem derivada dos dados; a documentação foi alinhada aos 47 registros atuais, em vez das contagens obsoletas 28 e 34.
 - Os cinco arquivos em `public/maps/` foram validados como PNGs íntegros, comparados por SHA-256 com os originais extraídos do ZIP e encontrados byte a byte idênticos. Seus nomes correspondem às referências em `src/routes/mapas.tsx`; a rota `/mapas` está registrada.
 - `src/game/VivianInvestigationGame.tsx` implementa o ciclo jogável atual do Caso Vivian Roberts: locais desbloqueáveis, coleta de evidências, cruzamento de pares, cronologia, relatório provisório e salvamento local.
 - O Caso Vivian oferece três níveis de dica por evidência, com custos de 20, 50 e 100 pontos; a pontuação começa em 1.000 e é limitada a zero. As dicas consultadas são salvas e uma mesma dica não é penalizada novamente pelo fluxo normal do jogo.
@@ -22,7 +22,7 @@ O arquivo `IMAGENSDEPAINSCREEK.zip` foi fornecido pelo usuário e contém o PDF 
 
 - Teste de roteamento para `/painscreek-evidence`.
 - Teste de navegação que verifica a gravação do marcador de retomada do Caso Vivian ao clicar em “Voltar ao jogo” no catálogo.
-- Testes estruturais do catálogo para IDs `P-001`–`P-034`, unicidade, páginas e campos obrigatórios, além da contagem exibida na introdução.
+- Testes estruturais do catálogo para IDs `P-001`–`P-047`, unicidade, páginas e campos obrigatórios, além da contagem exibida na introdução e da presença da Galeria com 116 imagens originais e miniaturas.
 - Testes das regras do Caso Vivian para custos graduais, deduplicação de dicas em saves, limite mínimo zero, chaves malformadas e deduplicação de IDs restaurados.
 
 Esses testes verificam estrutura e regras de código; não substituem o cotejo documental página a página nem um teste manual do fluxo completo no navegador.
@@ -39,8 +39,8 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 - A auditoria das páginas 1–50 está registrada em `auditoria-cruzamento-paginas-001-050.md`, incluindo as duas entradas legíveis recuperadas da p. 43 e as duplicatas confirmadas das pp. 49–50.
 - A comparação visual página a página das páginas 51–79 foi concluída e registrada em `auditoria-cruzamento-paginas-051-079.md`. A transcrição de trabalho registra a omissão de texto detectada pelo OCR na p. 55, o plural impresso “Sem álibis” na p. 61 e a contradição cronológica interna da p. 56. As páginas 55, 59 e 61 foram cruzadas, respectivamente, com as páginas 116, 86 e 95; a p. 59 também foi conferida diretamente com a imagem.
 - A etapa de revisão dos personagens foi concluída e registrada em `auditoria-personagens.md`: 20 perfis foram liberados com resumos restritos às fontes, Hannah e Nicole permanecem pendentes por lacunas de identificação, Scott e Sofia mantêm contradições abertas, e o placeholder coletivo sem identidade individual foi removido.
-- A etapa de revisão dos personagens foi concluída e registrada em `auditoria-personagens.md`: 20 perfis foram liberados com resumos restritos às fontes, Hannah e Nicole permanecem pendentes por lacunas de identificação, Scott e Sofia mantêm contradições abertas, e o placeholder coletivo sem identidade individual foi removido.
-- A auditoria completa de `P-001` a `P-034` ainda precisa verificar fidelidade a cada fonte, classificação do tipo de documento, grau de confiança, estado de revisão, duplicatas e referências cruzadas.
+- A auditoria completa de `P-001` a `P-047` ainda precisa verificar fidelidade a cada fonte, classificação do tipo de documento, grau de confiança, estado de revisão, duplicatas e referências cruzadas.
+- A duplicata editorial `P-009/P-031` já está explicitamente marcada no catálogo; `P-031` foi preservado apenas para rastreabilidade histórica e não conta como evidência independente.
 - Páginas 55 e 116, ambas datadas de 13/02/1995, provavelmente se referem à mesma fotografia, mas não a identificam visualmente; P-005 continua incompleto quanto à identidade e ao retorno da foto.
 - Páginas 59 e 86 provavelmente se referem ao mesmo acidente de 1973; p. 86 fornece os detalhes das vítimas e indenizações. A nota da p. 61 sobre o pai de Bernard não pode ser ligada a esse acidente sem data ou identificação adicional. Páginas 61 e 95 são documentos distintos associados ao mesmo Bernard; a ficha funcional não corrobora a nota investigativa.
 - A contradição de datas/ações de Scott na p. 56 permanece sem explicação. Preservar os cabeçalhos como impressos; não corrigir por inferência.

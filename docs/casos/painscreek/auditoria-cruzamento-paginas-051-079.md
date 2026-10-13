@@ -68,4 +68,4 @@ A própria p. 56 relata que Andrew informa a Scott o local do corpo em 13/04/199
 - P-021 agora distingue a nota de caderno da p. 61 da ficha administrativa da p. 95 e registra a grafia impressa “Sem álibis”; o item continua incompleto e a nota não é apresentada como prova.
 - P-014 permanece com confiança média/incompleto: a correspondência entre pp. 59 e 86 é forte, mas só a notícia memorial informa detalhes de vítimas e indenizações.
 - Nenhum novo ID P-xxx foi criado. Não houve alteração de puzzles, lógica de investigação, salvamento ou publicação.
-- A cobertura visual página a página de 51–79 está concluída. A auditoria integral do catálogo P-001–P-034 e o teste manual das rotas permanecem tarefas separadas.
+- A cobertura visual página a página de 51–79 está concluída. O catálogo atual contém P-001–P-047; a auditoria individual de todos os registros e o teste manual das rotas permanecem tarefas separadas.

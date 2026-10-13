@@ -1,6 +1,6 @@
 # Auditoria de cruzamento — páginas 100–116
 
-**Objetivo:** relacionar os documentos das páginas 100–116 às entradas P-001–P-034, reduzir duplicatas conceituais e registrar o que cada fonte realmente sustenta. Esta auditoria é editorial: não altera a solução do caso nem declara culpados.
+**Objetivo:** relacionar os documentos das páginas 100–116 às entradas P-001–P-047, reduzir duplicatas conceituais e registrar o que cada fonte realmente sustenta. Esta auditoria é editorial: não altera a solução do caso nem declara culpados.
 
 ## Cruzamento por página
 
@@ -35,4 +35,4 @@
 
 ## Resultado
 
-O cruzamento preserva os grupos temáticos sem converter rumores ou inferências em fatos confirmados. As entradas do catálogo que compartilham uma página devem ser revisadas por identidade de fonte, não apenas por semelhança de assunto. A próxima ação recomendada é corrigir a possível duplicidade P-009/P-031 no catálogo, verificar as entradas P-029–P-034 contra os metadados e, separadamente, validar build e testes do projeto. Nenhuma publicação do jogo decorre desta auditoria.
+O cruzamento preserva os grupos temáticos sem converter rumores ou inferências em fatos confirmados. A duplicidade editorial P-009/P-031 já foi marcada no catálogo: P-031 permanece apenas para rastreabilidade histórica e não conta como evidência independente. As entradas P-029–P-034 foram conferidas contra as imagens disponíveis na Galeria; a auditoria individual de P-001–P-047 e o teste manual das rotas permanecem separados. Nenhuma publicação do jogo decorre desta auditoria.
