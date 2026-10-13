@@ -18,6 +18,11 @@ import {
   MAX_SCORE,
   normalizeSavedIds,
 } from "@/game/vivianInvestigationRules";
+import {
+  PAINSCREEK_EVIDENCE_001_116,
+  type PainscreekEvidence,
+  type PainscreekEvidenceStatus,
+} from "@/game/painscreekEvidence";
 
 type PlaceId = "archive" | "mansion" | "hospital" | "church" | "lake";
 type ClueId =
@@ -121,9 +126,9 @@ const CLUES: Clue[] = [
     title: "Fechamento do Hospital Comunitário",
     source: "Notícia de jornal · PDF p. 84",
     summary:
-      "Uma notícia relata o fechamento do hospital em 1956, após décadas de funcionamento, e cita dificuldades financeiras e suspeitas sobre fundos.",
+      "Uma notícia de 21 de fevereiro de 1996 relata o fechamento do hospital após cerca de 60 anos de funcionamento; o texto diz que a instituição foi inaugurada em 1936.",
     caution:
-      "A OCR precisa de conferência visual; a notícia não prova que as suspeitas eram verdadeiras.",
+      "A página foi conferida visualmente. A notícia não comprova desvio de fundos nem relação direta com a morte de Vivian.",
     place: "archive",
   },
   {
@@ -204,6 +209,43 @@ const CLUES: Clue[] = [
     place: "mansion",
   },
 ];
+
+type CatalogEvidenceLink = { evidenceId: string; sourcePage: number };
+
+const GAME_CATALOG_LINKS: Partial<Record<ClueId, CatalogEvidenceLink>> = {
+  "police-report": { evidenceId: "P-010", sourcePage: 90 },
+  "scott-denial": { evidenceId: "P-016", sourcePage: 88 },
+  "hospital-closure": { evidenceId: "P-013", sourcePage: 84 },
+  "henry-death": { evidenceId: "P-008", sourcePage: 85 },
+  "funds-investigation": { evidenceId: "P-007", sourcePage: 97 },
+  "vivian-medical": { evidenceId: "P-020", sourcePage: 94 },
+  "code-0318": { evidenceId: "P-003", sourcePage: 102 },
+};
+
+const CATALOG_EVIDENCE_BY_ID = new Map<string, PainscreekEvidence>(
+  PAINSCREEK_EVIDENCE_001_116.map((evidence) => [evidence.id, evidence] as const),
+);
+
+const REVIEW_STATUS_LABELS: Record<PainscreekEvidenceStatus, string> = {
+  unverified: "Não conferida",
+  "visually-checked": "Conferida visualmente",
+  incomplete: "Incompleta",
+  contradictory: "Contraditória",
+};
+
+function getCatalogEvidenceForClue(clueId: ClueId) {
+  const link = GAME_CATALOG_LINKS[clueId];
+  if (!link) return undefined;
+  const evidence = CATALOG_EVIDENCE_BY_ID.get(link.evidenceId);
+  if (
+    !evidence ||
+    evidence.status !== "visually-checked" ||
+    !evidence.pages.includes(link.sourcePage)
+  ) {
+    return undefined;
+  }
+  return { evidence, sourcePage: link.sourcePage };
+}
 
 const LINKS: { id: LinkId; title: string; clues: [ClueId, ClueId]; insight: string }[] = [
   {
@@ -302,10 +344,10 @@ const CLUE_HINTS: Record<ClueId, [string, string, string]> = {
 };
 
 const TIMELINE = [
-  { id: "hospital-1956", label: "Fechamento do Hospital Comunitário (1956)", year: 1956 },
   { id: "letter-1973", label: "Carta sobre fornecimento ao hospital (1973)", year: 1973 },
   { id: "funds-1993", label: "Relatório sobre fundos da Roberts Relief (1993)", year: 1993 },
   { id: "vivian-1995", label: "Morte de Vivian e investigação policial (1995)", year: 1995 },
+  { id: "hospital-1996", label: "Fechamento do Hospital Comunitário (1996)", year: 1996 },
 ];
 
 function readSave(): SaveData | null {
@@ -318,6 +360,9 @@ function readSave(): SaveData | null {
     };
     if (value.version !== 1 && value.version !== 2) return null;
     const ids = normalizeSavedIds;
+    const timelineCandidates = Array.isArray(value.timelineOrder)
+      ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
+      : value.timelineOrder;
     return {
       version: 2,
       found: ids(
@@ -339,7 +384,7 @@ function readSave(): SaveData | null {
         ? (value.phase as Phase)
         : "explore",
       timelineOrder: ids(
-        value.timelineOrder,
+        timelineCandidates,
         TIMELINE.map((item) => item.id),
       ),
       reportSubmitted: value.reportSubmitted === true,
@@ -604,6 +649,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               Explore locais, recolha documentos, cruze evidências e construa uma cronologia. As
               fontes incompletas continuam marcadas como incertas.
             </p>
+            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-[#a9a092]">
+              Fichas do catálogo aparecem apenas para páginas já cotejadas visualmente; outras
+              pistas permanecem sem vínculo até a fonte ser validada.
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
@@ -745,6 +794,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <div className="mt-5 grid gap-3 md:grid-cols-2">
                 {currentClues.map((clue) => {
                   const collected = found.includes(clue.id);
+                  const catalogLink = collected ? getCatalogEvidenceForClue(clue.id) : undefined;
                   return (
                     <article key={clue.id} className="border border-[#4b4439] bg-[#211f1b] p-4">
                       <div className="flex items-start justify-between gap-3">
@@ -763,6 +813,43 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                         <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-[#bdb5a8]">
                           <strong>Ressalva:</strong> {clue.caution}
                         </p>
+                      )}
+                      {catalogLink && (
+                        <details className="mt-3 border border-[#79664c]/70 bg-[#171510] p-3">
+                          <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c4a779]">
+                            Ficha documental do catálogo · {catalogLink.evidence.id} ·{" "}
+                            {REVIEW_STATUS_LABELS[catalogLink.evidence.status]}
+                          </summary>
+                          <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#c9c1b5]">
+                            <p>
+                              <strong>Origem desta pista:</strong> PDF p. {catalogLink.sourcePage}.
+                              <span className="block text-[#a9a092]">
+                                O registro {catalogLink.evidence.id} agrupa as páginas{" "}
+                                {catalogLink.evidence.pages.join(", ")}; abrir a ficha é opcional e
+                                pode revelar contexto de outras páginas.
+                              </span>
+                            </p>
+                            <p>
+                              <strong>Tipo de fonte:</strong> {catalogLink.evidence.sourceType}
+                            </p>
+                            <p>
+                              <strong>O catálogo registra:</strong>{" "}
+                              {catalogLink.evidence.documented}
+                            </p>
+                            <p>
+                              <strong>Pendência ou limite:</strong>{" "}
+                              {catalogLink.evidence.pendingVerification}
+                            </p>
+                            <p>
+                              <strong>Inferência permitida:</strong>{" "}
+                              {catalogLink.evidence.playerInference}
+                            </p>
+                            <p className="border-t border-[#4b4439] pt-2 text-[#a9a092]">
+                              “Conferida visualmente” descreve o cotejo da fonte; não confirma
+                              automaticamente todas as alegações nem prova causalidade.
+                            </p>
+                          </div>
+                        </details>
                       )}
                       <button
                         type="button"
