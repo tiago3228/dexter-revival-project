@@ -48,6 +48,21 @@ describe("investigation riddles", () => {
     window.localStorage.clear();
   });
 
+  it("offers a collapsed dossier with relationships, dates and codes for consultation", () => {
+    render(<VivianInvestigationGame onBack={() => {}} />);
+
+    const summary = screen.getByText("Dossiê de apoio · relações, cronologia e códigos");
+    const dossier = summary.closest("details");
+    expect(dossier).not.toBeNull();
+    expect(dossier).not.toHaveAttribute("open");
+
+    fireEvent.click(summary);
+
+    expect(dossier).toHaveTextContent("Sofia Miller");
+    expect(dossier).toHaveTextContent("19–20/07/1995");
+    expect(dossier).toHaveTextContent("Código 0318");
+  });
+
   it("rejects a wrong answer and unlocks all nine riddle clues with correct answers", () => {
     seedCompleteInvestigation();
     render(<VivianInvestigationGame onBack={() => {}} />);

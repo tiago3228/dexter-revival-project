@@ -176,6 +176,44 @@ const RIDDLES: Riddle[] = [
   },
 ];
 
+const CASE_DOSSIER = [
+  {
+    title: "Relações essenciais",
+    items: [
+      "Vivian Roberts era casada com Charles e é a vítima central do caso.",
+      "Scott Brooks foi adotado pelo Padre Matthew e namorava Trisha Roberts.",
+      "Derrick Tyler era motorista de Vivian, filho de Wanda e amigo de infância de Trisha e Scott.",
+      "Sofia Miller foi empregada da mansão e é ligada ao passado de Matthew e ao nascimento de Vincent.",
+      "Dr. Henry Johnson era o médico ligado ao hospital, a Andrew Reed e ao relatório clínico de Vivian.",
+      "Steven Moss investigava o caso; James Howard era o xerife original da investigação.",
+    ],
+  },
+  {
+    title: "Cronologia de referência",
+    items: [
+      "30/06/1971 — casamento de Vivian e Charles Roberts.",
+      "Nov/1972 — Sofia Miller é contratada para a mansão.",
+      "26/06/1975 — provável morte de Sofia; em julho ela já aparece como desaparecida.",
+      "06/04/1985 — Padre Matthew adota Scott Brooks oficialmente.",
+      "19/05/1993 — Dr. Johnson começa a ficar inacessível e estranho.",
+      "28/06/1995 — última vez em que Henry Johnson é visto vivo; 12/07/1995 — corpo achado no lago.",
+      "19–20/07/1995 — assassinato de Vivian Roberts; 20/02/1996 — hospital fechado.",
+      "21/03/1997 — Steven Moss chega à cidade; 04/04/1997 — desaparece.",
+    ],
+  },
+  {
+    title: "Códigos e itens de campo",
+    items: [
+      "Código 0318 — associado por Matthew à chegada de Sofia ao orfanato.",
+      "Portão do cemitério — código 1131.",
+      "Sala de segurança da mansão — código 025241.",
+      "Cofre da galeria — código 611975, ligado ao aniversário de Vincent.",
+      "Armário da enfermeira Katherine — código 1964, visto no verso de um alfinete.",
+      "Cartão de acesso de Henry Johnson — encontrado no hospital; o escritório também depende da energia restaurada.",
+    ],
+  },
+];
+
 const PLACES: Place[] = [
   {
     id: "archive",
@@ -888,6 +926,28 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
         >
           {notice}
         </div>
+
+        {phase === "explore" && (
+          <details className="mt-4 border border-[#4b4439] bg-[#191714]">
+            <summary className="cursor-pointer list-none px-4 py-3 font-mono text-xs uppercase tracking-wider text-[#e1c18d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c4a779]">
+              Dossiê de apoio · relações, cronologia e códigos
+            </summary>
+            <div className="grid gap-4 border-t border-[#4b4439] p-4 lg:grid-cols-3">
+              {CASE_DOSSIER.map((section) => (
+                <section key={section.title} aria-label={section.title}>
+                  <h2 className="font-display text-xl text-[#ead8b8]">{section.title}</h2>
+                  <ul className="mt-3 space-y-2 text-xs leading-relaxed text-[#bdb5a8]">
+                    {section.items.map((item) => (
+                      <li key={item} className="border-l border-[#79664c] pl-3">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </details>
+        )}
 
         {phase === "explore" && (
           <div className="mt-5 grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
