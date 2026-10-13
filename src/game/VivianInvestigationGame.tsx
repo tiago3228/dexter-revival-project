@@ -887,12 +887,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const submitDossierPassword = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!reportSubmitted) {
-      setDossierNotice(
-        "Resolva o caso e registre a conclusão no relatório para obter a senha final.",
-      );
-      return;
-    }
     if (dossierPassword.trim().toUpperCase() !== FINAL_DOSSIER_PASSWORD) {
       setDossierNotice("Senha incorreta. Acesso negado.");
       return;
@@ -1612,13 +1606,13 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   </div>
                 </div>
                 <p className="mt-5 text-sm leading-relaxed text-[#d5c9b5]">
-                  Este arquivo só pode ser aberto com a senha final. Resolva o caso, registre sua
-                  conclusão no relatório e descubra a senha.
+                  Este arquivo só pode ser aberto com a senha final. Resolva o caso para descobrir a
+                  senha ou digite-a diretamente se você já a encontrou.
                 </p>
                 {!reportSubmitted && (
                   <p className="mt-3 border-l-2 border-amber-500/70 pl-3 text-xs leading-relaxed text-amber-100">
-                    O relatório ainda não foi registrado. O acesso permanecerá bloqueado mesmo com
-                    uma senha correta.
+                    O relatório ainda não foi registrado. Ele é o caminho recomendado para descobrir
+                    a senha, mas não é necessário se você já a possui.
                   </p>
                 )}
                 <form className="mt-5 space-y-3" onSubmit={submitDossierPassword}>
@@ -1639,6 +1633,18 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     </p>
                   )}
                   <div className="flex flex-wrap justify-end gap-3 pt-2">
+                    {!reportSubmitted && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDossierOpen(false);
+                          submitReport();
+                        }}
+                        className="min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
+                      >
+                        Ir para relatório
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => setDossierOpen(false)}

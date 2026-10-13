@@ -63,27 +63,10 @@ describe("investigation riddles", () => {
     expect(dossier).toHaveTextContent("Código 0318");
   });
 
-  it("keeps the complete dossier locked until the case is submitted and M99 is entered", () => {
+  it("opens the complete dossier with M99 before or after the report is submitted", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
 
-    const gate = screen.getByRole("dialog", { name: "Dossiê completo" });
-    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
-      target: { value: "M99" },
-    });
-    fireEvent.submit(
-      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
-    );
-    expect(gate).toHaveTextContent("Resolva o caso");
-    expect(
-      screen.queryByRole("heading", { name: "Dossiê completo de Painscreek" }),
-    ).not.toBeInTheDocument();
-
-    cleanup();
-    window.localStorage.clear();
-    seedCompleteInvestigation(true);
-    render(<VivianInvestigationGame onBack={() => {}} />);
-    fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
       target: { value: "senha-incorreta" },
     });
@@ -92,6 +75,21 @@ describe("investigation riddles", () => {
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Senha incorreta");
 
+    fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
+      target: { value: "M99" },
+    });
+    fireEvent.submit(
+      screen.getByRole("textbox", { name: "Senha final do dossiê" }).closest("form")!,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
+    ).toBeInTheDocument();
+
+    cleanup();
+    window.localStorage.clear();
+    seedCompleteInvestigation(true);
+    render(<VivianInvestigationGame onBack={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Senha final do dossiê" }), {
       target: { value: "m99" },
     });
