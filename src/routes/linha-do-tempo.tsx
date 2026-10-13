@@ -658,7 +658,7 @@ function TimelinePage() {
           </Link>
           <Link
             to="/"
-            search={{ resumeVivian: true }}
+            search={{ resumePainscreek: true }}
             className="inline-flex min-h-10 items-center gap-2 border border-[#5c5143] px-3 py-2 text-xs uppercase tracking-wider hover:border-[#c4a779]"
           >
             <ArrowLeft size={15} /> Voltar ao caso

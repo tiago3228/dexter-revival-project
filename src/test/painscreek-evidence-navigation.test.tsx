@@ -17,13 +17,13 @@ describe("Painscreek evidence catalog navigation", () => {
 
     const returnLink = screen.getByRole("link", { name: /voltar ao jogo/i });
 
-    expect(returnLink).toHaveAttribute("href", "/?resumeVivian=1");
+    expect(returnLink).toHaveAttribute("href", "/?resumePainscreek=1");
   });
 
-  it("recognizes only the explicit Vivian resume parameter", () => {
-    expect(validateHomeSearch({ resumeVivian: "1" })).toEqual({ resumeVivian: true });
-    expect(validateHomeSearch({ resumeVivian: "true" })).toEqual({ resumeVivian: true });
-    expect(validateHomeSearch({ resumeVivian: true })).toEqual({ resumeVivian: true });
-    expect(validateHomeSearch({ resumeVivian: "0" })).toEqual({});
+  it("recognizes only the explicit Painscreek resume parameter", () => {
+    expect(validateHomeSearch({ resumePainscreek: "1" })).toEqual({ resumePainscreek: true });
+    expect(validateHomeSearch({ resumePainscreek: "true" })).toEqual({ resumePainscreek: true });
+    expect(validateHomeSearch({ resumePainscreek: true })).toEqual({ resumePainscreek: true });
+    expect(validateHomeSearch({ resumePainscreek: "0" })).toEqual({});
   });
 });
