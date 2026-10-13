@@ -49,6 +49,7 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 - O catálogo não deve ser descrito como plenamente integrado ao jogo: a interface de consulta documental não está conectada ao ciclo jogável de Vivian.
 - Em 2026-10-13, um teste manual do modo jogável no navegador Sandbox verificou bloqueio e desbloqueio dos locais usados no fluxo, coleta sem duplicação, rejeição de uma combinação não prevista, registro de duas conexões previstas, cronologia incorreta e correta, persistência após recarga, bloqueio inicial do relatório e abertura após cumprir os requisitos. Nenhuma conclusão foi registrada.
 - A confirmação das dicas como último recurso — aviso dinâmico das penalidades de 20/50/100 pontos, cancelamento sem desconto e aplicação somente após “Sim” — foi testada na branch `feat/vivian-hint-confirmation`, PR #16, ainda aberta e não mesclada. No teste manual, “Não” manteve 980 pontos e “Sim” para a dica de nível 2 descontou 50, revelando-a.
+- Em 2026-10-13, o QA responsivo em Chromium com perfil fictício conferiu `/painscreek-evidence`, `/mapas`, `/linha-do-tempo` e o dossiê Vivian em 320×700 e 390×844, sem overflow horizontal; o modo jogável e o diálogo de confirmação da dica também foram verificados em 390×844, com o diálogo contido no viewport (358×269). Foi uma validação de layout e interação, não cotejo documental; a auditoria `P-001`–`P-047` continua aguardando autorização explícita.
 
 ## Limites de interpretação
 
