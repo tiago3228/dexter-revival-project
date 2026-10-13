@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
+  BadgeCheck,
   BookOpen,
   Check,
   ClipboardList,
@@ -137,20 +138,51 @@ type DossierCombination = [string, string, string];
 const playLockSound = (kind: "open" | "fail") => {
   if (typeof window === "undefined" || !window.AudioContext) return;
   const context = new window.AudioContext();
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
   const now = context.currentTime;
-  oscillator.type = kind === "open" ? "sine" : "sawtooth";
-  oscillator.frequency.setValueAtTime(kind === "open" ? 520 : 120, now);
-  oscillator.frequency.exponentialRampToValueAtTime(kind === "open" ? 880 : 75, now + 0.24);
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-  oscillator.start(now);
-  oscillator.stop(now + 0.34);
-  window.setTimeout(() => void context.close(), 500);
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.0001, now);
+  master.gain.exponentialRampToValueAtTime(kind === "open" ? 0.24 : 0.2, now + 0.015);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + (kind === "open" ? 0.7 : 0.42));
+  master.connect(context.destination);
+  void context.resume();
+
+  const addTone = (frequency: number, start: number, duration: number, type: OscillatorType) => {
+    const oscillator = context.createOscillator();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, now + start);
+    oscillator.frequency.exponentialRampToValueAtTime(
+      kind === "open" ? frequency * 1.08 : frequency * 0.65,
+      now + start + duration,
+    );
+    oscillator.connect(master);
+    oscillator.start(now + start);
+    oscillator.stop(now + start + duration);
+  };
+
+  if (kind === "open") {
+    addTone(145, 0, 0.12, "square");
+    addTone(215, 0.09, 0.13, "square");
+    addTone(330, 0.18, 0.18, "triangle");
+    addTone(660, 0.34, 0.28, "sine");
+  } else {
+    addTone(110, 0, 0.18, "sawtooth");
+    addTone(78, 0.12, 0.24, "square");
+    const buffer = context.createBuffer(1, context.sampleRate * 0.28, context.sampleRate);
+    const channel = buffer.getChannelData(0);
+    for (let index = 0; index < channel.length; index += 1) {
+      channel[index] = (Math.random() * 2 - 1) * (1 - index / channel.length);
+    }
+    const noise = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(420, now);
+    noise.buffer = buffer;
+    noise.connect(filter);
+    filter.connect(master);
+    noise.start(now + 0.04);
+    noise.stop(now + 0.32);
+  }
+  window.setTimeout(() => void context.close(), 900);
 };
 
 const RIDDLES: Riddle[] = [
@@ -1762,6 +1794,58 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     <ArrowLeft size={15} /> Voltar
                   </button>
                 </div>
+                <section
+                  aria-label="Vitória da investigação"
+                  className="mt-6 overflow-hidden border border-emerald-400/70 bg-[radial-gradient(circle_at_top,#315442_0%,#18241d_45%,#111613_100%)] p-6 shadow-[0_0_45px_rgba(74,222,128,0.12)] sm:p-8"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-6">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-emerald-300">
+                        Caso encerrado · vitória
+                      </p>
+                      <h3 className="mt-3 font-display text-4xl text-emerald-50 sm:text-5xl">
+                        Caso resolvido
+                      </h3>
+                      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-100/80">
+                        Você reuniu as pistas, abriu as fechaduras e confirmou a combinação final. O
+                        dossiê completo de Painscreek agora está disponível para consulta.
+                      </p>
+                    </div>
+                    <BadgeCheck size={64} strokeWidth={1.2} className="text-emerald-300" />
+                  </div>
+                  <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                    <div className="border border-emerald-300/20 bg-black/20 p-3">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-200/60">
+                        Fechaduras
+                      </p>
+                      <p className="mt-1 font-display text-2xl text-emerald-50">
+                        {CODE_LOCKS.length}/{CODE_LOCKS.length}
+                      </p>
+                    </div>
+                    <div className="border border-emerald-300/20 bg-black/20 p-3">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-200/60">
+                        Arquivo
+                      </p>
+                      <p className="mt-1 font-display text-2xl text-emerald-50">M99</p>
+                    </div>
+                    <div className="border border-emerald-300/20 bg-black/20 p-3">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-200/60">
+                        Status
+                      </p>
+                      <p className="mt-1 font-display text-2xl text-emerald-50">Confirmado</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDossierOpen(false);
+                      setDossierUnlocked(false);
+                    }}
+                    className="mt-6 min-h-11 border border-emerald-300/70 bg-emerald-300/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-emerald-50 hover:bg-emerald-300/20"
+                  >
+                    Continuar investigando
+                  </button>
+                </section>
                 <div className="mt-6 grid gap-5 lg:grid-cols-2">
                   {COMPLETE_CASE_DOSSIER.map((section) => (
                     <details

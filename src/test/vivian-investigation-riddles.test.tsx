@@ -89,6 +89,7 @@ describe("investigation riddles", () => {
       fireEvent.click(screen.getByRole("button", { name: "Girar disco 3 para cima" }));
     }
     fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
+    expect(screen.getByRole("heading", { name: "Caso resolvido" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
     ).toBeInTheDocument();
