@@ -25,6 +25,12 @@ import {
   type PainscreekEvidence,
   type PainscreekEvidenceStatus,
 } from "@/game/painscreekEvidence";
+import {
+  loadCurrentPlayerName,
+  loadPlayerRanking,
+  recordPlayerPerformance,
+  type PlayerRankingEntry,
+} from "@/game/playerRanking";
 
 type PlaceId = "archive" | "mansion" | "hospital" | "church" | "lake";
 type ClueId =
@@ -92,7 +98,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 3;
+  version: 4;
   found: ClueId[];
   solvedRiddles: RiddleId[];
   solvedCodeLocks: CodeLockId[];
@@ -105,6 +111,7 @@ type SaveData = {
   chosenConclusion: string;
   mistakes: number;
   usedHints: string[];
+  rankingRecorded: boolean;
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
@@ -192,6 +199,76 @@ const playLockSound = (kind: "open" | "fail") => {
     noise.stop(now + 0.32);
   }
   window.setTimeout(() => void context.close(), 900);
+};
+
+type InvestigationSound =
+  | "collect"
+  | "navigate"
+  | "select"
+  | "success"
+  | "fail"
+  | "connection"
+  | "timeline"
+  | "report"
+  | "hint";
+
+const playInvestigationSound = (kind: InvestigationSound) => {
+  if (typeof window === "undefined" || !window.AudioContext) return;
+  const context = new window.AudioContext();
+  const now = context.currentTime;
+  const profiles: Record<InvestigationSound, Array<[number, number, number, OscillatorType]>> = {
+    collect: [
+      [440, 0, 0.08, "sine"],
+      [660, 0.08, 0.16, "triangle"],
+    ],
+    navigate: [
+      [180, 0, 0.08, "triangle"],
+      [260, 0.08, 0.1, "sine"],
+    ],
+    select: [[320, 0, 0.05, "square"]],
+    success: [
+      [392, 0, 0.1, "triangle"],
+      [523, 0.08, 0.12, "triangle"],
+      [784, 0.18, 0.2, "sine"],
+    ],
+    fail: [
+      [180, 0, 0.12, "sawtooth"],
+      [120, 0.1, 0.18, "square"],
+    ],
+    connection: [
+      [294, 0, 0.08, "sine"],
+      [440, 0.08, 0.14, "triangle"],
+    ],
+    timeline: [
+      [260, 0, 0.07, "sine"],
+      [330, 0.08, 0.07, "sine"],
+      [494, 0.16, 0.16, "triangle"],
+    ],
+    report: [
+      [330, 0, 0.1, "triangle"],
+      [494, 0.1, 0.12, "triangle"],
+      [659, 0.22, 0.25, "sine"],
+    ],
+    hint: [
+      [220, 0, 0.1, "sine"],
+      [277, 0.1, 0.16, "triangle"],
+    ],
+  };
+  const master = context.createGain();
+  master.gain.setValueAtTime(0.0001, now);
+  master.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+  master.connect(context.destination);
+  for (const [frequency, start, duration, type] of profiles[kind]) {
+    const oscillator = context.createOscillator();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, now + start);
+    oscillator.connect(master);
+    oscillator.start(now + start);
+    oscillator.stop(now + start + duration);
+  }
+  void context.resume();
+  window.setTimeout(() => void context.close(), 800);
 };
 
 const RIDDLES: Riddle[] = [
@@ -713,15 +790,16 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3;
+      version?: 1 | 2 | 3 | 4;
     };
-    if (value.version !== 1 && value.version !== 2 && value.version !== 3) return null;
+    if (value.version !== 1 && value.version !== 2 && value.version !== 3 && value.version !== 4)
+      return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 3,
+      version: 4,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -763,6 +841,7 @@ function readSave(): SaveData | null {
         ...RIDDLES.map((riddle) => `riddle:${riddle.id}:1`),
         ...CODE_LOCKS.map((lock) => `code:${lock.id}:1`),
       ]),
+      rankingRecorded: value.rankingRecorded === true,
     };
   } catch {
     return null;
@@ -805,6 +884,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
   const [mistakes, setMistakes] = useState(saved?.mistakes ?? 0);
+  const [rankingRecorded, setRankingRecorded] = useState(saved?.rankingRecorded ?? false);
+  const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName() || "Investigador");
+  const [playerRanking, setPlayerRanking] = useState<PlayerRankingEntry[]>(() =>
+    loadPlayerRanking(),
+  );
   const [pendingHint, setPendingHint] = useState<PendingHint | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
   const [dossierUnlocked, setDossierUnlocked] = useState(false);
@@ -833,7 +917,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 3,
+      version: 4,
       found,
       solvedRiddles,
       solvedCodeLocks,
@@ -846,6 +930,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       chosenConclusion,
       mistakes,
       usedHints,
+      rankingRecorded,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
     window.dispatchEvent(new Event("vivian-investigation-progress"));
@@ -862,6 +947,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     chosenConclusion,
     mistakes,
     usedHints,
+    rankingRecorded,
   ]);
 
   const currentPlace = PLACES.find((place) => place.id === activePlace)!;
@@ -882,6 +968,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           : score > 0
             ? "Precisou de bastante ajuda"
             : "Assistência máxima";
+  const playerRank = playerRanking.findIndex(
+    (entry) => entry.name.toLocaleLowerCase("pt-BR") === playerName.toLocaleLowerCase("pt-BR"),
+  );
   const requestHint = (clueId: ClueId, level: 1 | 2 | 3) => {
     const key = `${clueId}:${level}`;
     if (usedHints.includes(key)) {
@@ -914,6 +1003,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       return;
     }
     setUsedHints((current) => (current.includes(key) ? current : [...current, key]));
+    playInvestigationSound("hint");
     const hintText = pendingHint.text ?? CLUE_HINTS[clueId][level - 1];
     setNotice(`Dica: ${hintText} Penalidade: -${HINT_COSTS[level - 1]} pontos.`);
     setPendingHint(null);
@@ -921,9 +1011,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const enterPlace = (place: Place) => {
     if (!isUnlocked(place.id, found)) {
+      playInvestigationSound("fail");
       setNotice("Local ainda bloqueado. " + place.unlockHint);
       return;
     }
+    playInvestigationSound("navigate");
     setActivePlace(place.id);
     setVisited((items) => (items.includes(place.id) ? items : [...items, place.id]));
     setPhase("explore");
@@ -941,6 +1033,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       return;
     }
     setFound((items) => [...items, clue.id]);
+    playInvestigationSound("collect");
     setNotice("Evidência adicionada ao caderno: " + clue.title);
   };
 
@@ -964,6 +1057,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
         .replace(/\s+/g, ""),
     );
     if (!acceptedAnswers.some((item) => item === normalized)) {
+      playInvestigationSound("fail");
       registerMistake("Resposta incorreta. Releia os documentos e tente novamente.");
       return;
     }
@@ -971,6 +1065,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       setSolvedRiddles((items) => [...items, riddle.id]);
     }
     if (!found.includes(riddle.clueId)) {
+      playInvestigationSound("success");
       setFound((items) => [...items, riddle.clueId]);
       setNotice(`Enigma resolvido: ${riddle.title}. Nova pista adicionada ao caderno.`);
     } else {
@@ -981,11 +1076,13 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const solveCodeLock = (lock: CodeLock, answer: string) => {
     const normalized = answer.replace(/\D/g, "");
     if (normalized !== lock.code) {
+      playInvestigationSound("fail");
       registerMistake(
         `Código incorreto na fechadura: ${lock.title}. Releia a pista e tente novamente.`,
       );
       return;
     }
+    playInvestigationSound("success");
     if (!solvedCodeLocks.includes(lock.id)) {
       setSolvedCodeLocks((items) => [...items, lock.id]);
     }
@@ -993,6 +1090,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   };
 
   const toggleSelectedClue = (id: ClueId) => {
+    playInvestigationSound("select");
     setSelectedClues((current) =>
       current.includes(id)
         ? current.filter((item) => item !== id)
@@ -1004,11 +1102,13 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const makeConnection = () => {
     if (selectedClues.length !== 2) {
+      playInvestigationSound("fail");
       setNotice("Selecione exatamente duas evidências para cruzar.");
       return;
     }
     const match = LINKS.find((link) => link.clues.every((id) => selectedClues.includes(id)));
     if (!match) {
+      playInvestigationSound("fail");
       registerMistake(
         "Ainda não há uma conexão documentada entre essas duas fontes. Registre a hipótese no caderno, mas não a trate como fato.",
       );
@@ -1019,6 +1119,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       return;
     }
     setLinks((items) => [...items, match.id]);
+    playInvestigationSound("connection");
     setNotice("Conexão registrada: " + match.title + ". Leia o limite da inferência no quadro.");
     setSelectedClues([]);
   };
@@ -1030,10 +1131,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       timelineOrder.length === expected.length &&
       timelineOrder.every((id, index) => id === expected[index])
     ) {
+      playInvestigationSound("timeline");
       setNotice(
         "Cronologia coerente. Você organizou os quatro marcos por data; isso não prova uma ligação causal entre eles.",
       );
     } else {
+      playInvestigationSound("fail");
       registerMistake(
         "A ordem ainda não está correta. Confira os anos nos próprios documentos; a data de publicação nem sempre é a data do acontecimento.",
       );
@@ -1042,15 +1145,32 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const submitReport = () => {
     if (found.length < 6 || links.length < 2 || !timelineChecked) {
+      playInvestigationSound("fail");
       setNotice(
         "Relatório bloqueado: colete ao menos 6 evidências, registre 2 conexões e verifique a cronologia.",
       );
       return;
     }
+    playInvestigationSound("report");
     setPhase("report");
     setNotice(
       "Requisitos cumpridos. Escolha qual linha de investigação merece prioridade no relatório provisório.",
     );
+  };
+
+  const registerFinalRanking = () => {
+    if (rankingRecorded) return;
+    const normalizedName = playerName.trim() || "Investigador";
+    const nextRanking = recordPlayerPerformance(normalizedName, {
+      score,
+      mistakes,
+      hints: usedHints.length,
+    });
+    setPlayerName(normalizedName);
+    setPlayerRanking(nextRanking);
+    setRankingRecorded(true);
+    playInvestigationSound("report");
+    setNotice("Resultado registrado no quadro de honra deste navegador.");
   };
 
   const rotateDossierDial = (position: 0 | 1 | 2, direction: -1 | 1) => {
@@ -1113,6 +1233,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setReportSubmitted(false);
     setChosenConclusion("");
     setMistakes(0);
+    setRankingRecorded(false);
+    setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
     setTimelineChecked(false);
     setNotice("Investigação reiniciada. Nenhuma evidência foi mantida.");
@@ -1865,6 +1987,62 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   O caso continua aberto. A lógica de veredito final será habilitada quando a
                   solução e as fontes estiverem verificadas.
                 </p>
+                <div className="mt-5 border border-[#79664c] bg-[#171512] p-4">
+                  <p className="font-mono text-xs uppercase tracking-wider text-[#c4a779]">
+                    Quadro de honra · resultado desta investigação
+                  </p>
+                  {!rankingRecorded ? (
+                    <div className="mt-3 flex flex-wrap items-end gap-3">
+                      <label className="min-w-56 flex-1 text-xs text-[#bdb5a8]">
+                        Nome ou codinome do investigador
+                        <input
+                          value={playerName}
+                          onChange={(event) => setPlayerName(event.target.value)}
+                          maxLength={24}
+                          aria-label="Nome do investigador"
+                          className="mt-1 min-h-10 w-full border border-[#4b4439] bg-[#11100e] px-3 text-sm text-[#eee9df] outline-none focus:border-[#c4a779]"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={registerFinalRanking}
+                        className="min-h-10 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
+                      >
+                        Registrar pontuação
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      <div>
+                        <p className="text-xs text-[#a9a092]">Investigador</p>
+                        <p className="mt-1 text-xl text-[#ead8b8]">{playerName}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#a9a092]">Posição neste navegador</p>
+                        <p className="mt-1 text-xl text-[#ead8b8]">
+                          {playerRank >= 0 ? `#${playerRank + 1}` : "—"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#a9a092]">Pontuação registrada</p>
+                        <p className="mt-1 text-xl text-[#ead8b8]">{score} pontos</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="mt-4 grid gap-2 text-xs text-[#bdb5a8] sm:grid-cols-3">
+                    <p>Base: {MAX_SCORE} pontos</p>
+                    <p>
+                      Dicas: -
+                      {usedHints.reduce(
+                        (total, key) =>
+                          total + (key.endsWith(":1") ? 20 : key.endsWith(":2") ? 50 : 100),
+                        0,
+                      )}{" "}
+                      pontos
+                    </p>
+                    <p>Erros: -{mistakes * MISTAKE_PENALTY} pontos</p>
+                  </div>
+                </div>
                 {allCodeLocksSolved ? (
                   <p className="mt-4 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
                     Senha final revelada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>

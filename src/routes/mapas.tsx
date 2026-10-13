@@ -46,6 +46,14 @@ const investigationPlaces = [
   { id: "lake", label: "Lago Cherry Creek", detail: "O carro submerso e a pista do médico." },
 ];
 
+const cityMapHotspots = [
+  { id: "hospital", label: "Hospital comunitário", left: "18%", top: "29%" },
+  { id: "mansion", label: "Mansão Roberts", left: "43%", top: "17%" },
+  { id: "church", label: "Igreja da Trindade", left: "78%", top: "31%" },
+  { id: "archive", label: "Posto do xerife", left: "59%", top: "77%" },
+  { id: "lake", label: "Lago Cherry Creek", left: "39%", top: "78%" },
+];
+
 export const Route = createFileRoute("/mapas")({
   component: MapasPage,
 });
@@ -400,6 +408,35 @@ function MapasPage() {
                 transformOrigin: "center center",
               }}
             />
+            {active === 0 && (
+              <div
+                className="pointer-events-none absolute left-1/2 top-1/2 max-w-none"
+                style={{
+                  width: "min(100%, 1200px)",
+                  aspectRatio: "5559 / 4128",
+                  transform: `translate(calc(-50% + ${pan.x}px), calc(-50% + ${pan.y}px)) scale(${zoom})`,
+                  transformOrigin: "center center",
+                }}
+              >
+                {cityMapHotspots.map((spot) => (
+                  <Link
+                    key={spot.id}
+                    to="/"
+                    search={{ resumePainscreek: true }}
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onClick={() => {
+                      window.localStorage.setItem("vivian-map-target", spot.id);
+                    }}
+                    aria-label={`Investigar ${spot.label}`}
+                    className="pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#e8c76a] bg-[#211f1b]/90 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-[#f7e6b1] shadow-[0_0_0_3px_rgba(20,18,14,0.55)] transition hover:scale-110 hover:bg-[#66552e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#fff1b5]"
+                    style={{ left: spot.left, top: spot.top }}
+                  >
+                    <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-[#e8c76a] align-middle" />
+                    {spot.label}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
           {active === 0 && (
             <section

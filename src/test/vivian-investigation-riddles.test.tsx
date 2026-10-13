@@ -247,7 +247,7 @@ describe("investigation riddles", () => {
     }
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) || "null");
-    expect(saved.version).toBe(3);
+    expect(saved.version).toBe(4);
     expect(saved.solvedRiddles).toEqual([
       "archive-identity",
       "archive-police",
