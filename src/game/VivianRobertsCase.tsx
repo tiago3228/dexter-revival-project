@@ -250,176 +250,201 @@ const PLACES: Place[] = [
     id: "mansion",
     name: "Roberts Mansion",
     group: "Residência",
-    description: "Local principal a ser mapeado por cômodos e acessos.",
-    status: "pendente",
+    description:
+      "Mansão da família Roberts, na Rua Maple, nº 1; confirmada no mapa da cidade e nas notícias das páginas 82 e 87.",
+    status: "confirmado",
   },
   {
     id: "charles-study",
-    name: "Escritório de Charles",
+    name: "Sala de estudo",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; documentos e mecanismo de acesso aguardam validação.",
-    status: "pendente",
+    description:
+      "Sala de estudo da mansão, com código 44871 registrado no diário de Trisha (p. 64); o mapa a nomeia como sala de estudo.",
+    status: "confirmado",
   },
   {
     id: "tea-room",
     name: "Sala de chá",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; registrar cada documento e objeto encontrado.",
-    status: "pendente",
+    description:
+      "Cômodo identificado na planta do segundo andar da mansão; a transcrição não atribui documentos específicos a ele.",
+    status: "confirmado",
   },
   {
     id: "gallery",
     name: "Galeria",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; eventuais cofres e pistas serão ligados às fontes.",
-    status: "pendente",
+    description:
+      "Galeria da mansão, confirmada na planta e no diário de Mary (p. 26), que menciona a pintura e o clique na porta.",
+    status: "confirmado",
   },
   {
     id: "vivian-room",
     name: "Quarto de Vivian",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; diários e objetos aguardam transcrição verificada.",
-    status: "pendente",
+    description:
+      "O nome não aparece nas plantas fornecidas nem há fonte primária que identifique este quarto como local separado; não atribuir documentos a ele.",
+    status: "contradicao",
   },
   {
     id: "trisha-room",
     name: "Quarto de Trisha",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; registrar acessos e documentos.",
-    status: "pendente",
+    description:
+      "Quarto identificado na planta do segundo andar; o diário de Trisha também registra que ela se trancou no quarto (p. 16).",
+    status: "confirmado",
   },
   {
     id: "security-room",
     name: "Sala de segurança",
     group: "Roberts Mansion",
-    description: "Sub-local da mansão; registros e chaves precisam de conferência.",
-    status: "pendente",
+    description:
+      "Sala de segurança identificada na planta do segundo andar; o livro de segurança da mansão aparece nas páginas 106–109.",
+    status: "confirmado",
   },
   {
     id: "attic",
     name: "Sótão",
     group: "Roberts Mansion / Igreja",
-    description: "A localização exata e os acessos devem ser validados na fonte.",
-    status: "pendente",
+    description:
+      "Sótão identificado nas plantas da mansão e da igreja; Mary relata a limpeza do sótão da mansão (p. 24) e Scott menciona o sótão da igreja (p. 113).",
+    status: "confirmado",
   },
   {
     id: "well",
     name: "Poço do jardim",
     group: "Roberts Mansion",
-    description: "Local provisório; confirmar objetos, acesso e contexto.",
-    status: "pendente",
+    description:
+      "A existência de um poço é relatada no testemunho transcrito (p. 54); Scott depois diz que o poço secou e foi coberto de lodo (p. 56). O vínculo exato com o jardim não é especificado.",
+    status: "confirmado",
   },
   {
     id: "hospital",
     name: "Painscreek Community Hospital",
     group: "Hospital",
-    description: "Mapear arquivos, salas, escritório médico e áreas de serviço.",
-    status: "pendente",
+    description:
+      "Hospital confirmado pelo mapa interno e pelas notícias das páginas 84–85, além dos laudos e registros de enfermagem.",
+    status: "confirmado",
   },
   {
     id: "morgue",
     name: "Porão / necrotério",
     group: "Hospital",
-    description: "Sub-local provisório; confirmar os objetos e documentos encontrados.",
-    status: "pendente",
+    description:
+      "Necrotério identificado no nível B1 da planta do hospital; o mapa não confirma a denominação ‘porão’ como descrição arquitetônica geral.",
+    status: "confirmado",
   },
   {
     id: "church",
     name: "Trinity Church",
     group: "Religioso",
-    description: "Mapear quartos, depósito, confessionário e áreas superiores.",
-    status: "pendente",
+    description:
+      "Igreja da Trindade de Painscreek, confirmada no mapa da cidade e nos diários de Matthew, Scott e outros documentos.",
+    status: "confirmado",
   },
   {
     id: "scott-cabin",
     name: "Cabana de Scott",
     group: "Residência",
-    description: "Mapear cômodos e passagens somente após conferir a fonte.",
-    status: "pendente",
+    description:
+      "Cabana de caça dos Roberts no início da trilha, usada por Scott; confirmada nas notícias das páginas 83 e 88 e nos diários.",
+    status: "confirmado",
   },
   {
     id: "inn",
     name: "Anne’s Courtyard Inn & Suites",
     group: "Hospedagem",
-    description: "Mapear recepção, quartos e registros associados.",
-    status: "pendente",
+    description:
+      "Hospedagem identificada no mapa da cidade e na notícia da morte de Andrew (p. 87), que o situa saindo do estabelecimento.",
+    status: "confirmado",
   },
   {
     id: "dorothy-house",
     name: "Casa de Dorothy",
     group: "Residência",
-    description: "Local e documentos pendentes de conferência.",
-    status: "pendente",
+    description:
+      "Casa própria de Dorothy, na Rua Blackpine, 40, Painscreek; endereço registrado no diário de Mary (p. 25).",
+    status: "confirmado",
   },
   {
     id: "bernard-house",
     name: "Casa de Bernard",
     group: "Residência",
-    description: "Local e objetos pendentes de conferência.",
-    status: "pendente",
+    description:
+      "Não foi localizada fonte que identifique uma casa própria de Bernard ou seu endereço; manter a entrada sem associar documentos a este local.",
+    status: "contradicao",
   },
   {
     id: "andrew-house",
     name: "Casa de Andrew",
     group: "Residência",
-    description: "Local e documentos pendentes de conferência.",
-    status: "pendente",
+    description:
+      "Casa de Andrew na Rua Blackpine, nº 7; confirmada pela notícia da morte e do incêndio (p. 87).",
+    status: "confirmado",
   },
   {
     id: "cemetery",
     name: "Cemitério",
     group: "Público",
-    description: "Conferir inscrições, túmulos e pistas de acesso.",
-    status: "pendente",
+    description:
+      "Cemitério de Painscreek confirmado pelos diários e pelo túmulo de Sofia, marcado por uma cruz de madeira (p. 33 e p. 56).",
+    status: "confirmado",
   },
   {
     id: "sheriff",
     name: "Escritório do xerife",
     group: "Institucional",
-    description: "Conferir arquivos, livros de registro e cadeia de custódia.",
-    status: "pendente",
+    description:
+      "Posto/departamento do xerife identificado no mapa da cidade; James Howard aparece como xerife nos documentos das páginas 82 e 89–90.",
+    status: "confirmado",
   },
   {
     id: "wanda-house",
     name: "Casa de Wanda e Derrick",
     group: "Residência",
-    description: "Local e diários pendentes de conferência.",
-    status: "pendente",
+    description:
+      "A transcrição confirma Wanda e Derrick como mãe e filho e menciona residência na infância, mas não identifica uma casa separada nem seu endereço.",
+    status: "contradicao",
   },
   {
     id: "photo-shop",
     name: "Loja de fotografia de Oliver",
     group: "Comércio",
-    description: "Conferir fotos, registros e ferramentas citadas.",
-    status: "pendente",
+    description:
+      "O mapa da cidade identifica ‘Oliver Fotografias’; Oliver é mencionado como fotógrafo/professor, mas a transcrição não detalha o inventário da loja.",
+    status: "confirmado",
   },
   {
     id: "lake",
     name: "Lago",
     group: "Exterior",
-    description: "Vínculo com a cronologia e a descoberta de um corpo precisa de fonte.",
-    status: "pendente",
+    description:
+      "Lago Cherry Creek confirmado pela notícia da morte do Dr. Johnson (p. 85); não confundir com o Rio Painscreek do mapa da cidade.",
+    status: "confirmado",
   },
   {
     id: "river",
     name: "Área do rio",
     group: "Exterior",
-    description: "Relação com Sofia a confirmar documentalmente.",
-    status: "pendente",
+    description:
+      "Rio Painscreek identificado no mapa da cidade; o registro de enfermagem situa ali a descoberta do corpo de Timothy, perto da cabana de caça (p. 105).",
+    status: "confirmado",
   },
   {
     id: "drain",
     name: "Dreno junto à igreja",
     group: "Exterior",
-    description: "Acesso e objetos associados pendentes de verificação.",
-    status: "pendente",
+    description:
+      "Um ralo de drenagem é mencionado no relato da caçada perto do rio (p. 11); o mapa subterrâneo mostra acessos próximos à igreja, mas não nomeia este ponto como dreno da igreja.",
+    status: "confirmado",
   },
   {
     id: "sewers",
     name: "Esgotos e acessos subterrâneos",
     group: "Infraestrutura",
-    description: "Mapear entradas, conexões e mecanismos após validar os documentos.",
-    status: "pendente",
+    description:
+      "Rede de esgotos confirmada pelo mapa subterrâneo, com acesso antigo, conexões para hospital, mansão, igreja, mercado e áreas residenciais.",
+    status: "confirmado",
   },
 ];
 
@@ -1203,7 +1228,7 @@ export function VivianRobertsCase({
           <div className="border border-[#4b4439] bg-[#1b1a17] p-4">
             <MapPin className="mb-3 text-[#c4a779]" />
             <p className="font-mono text-xs uppercase tracking-widest text-[#bdb5a8]">
-              Locais para revisar
+              Locais catalogados
             </p>
             <p className="mt-1 text-3xl">{PLACES.length}</p>
           </div>
