@@ -2087,7 +2087,7 @@ function MainMenu({
     },
     painscreek: {
       index: "CAPÍTULO 03 · GREYBRIDGE",
-      title: "Painscreek Case",
+      title: "O Segredo de Greybridge",
       detail: "Abrindo os arquivos forenses de Greybridge.",
     },
     mentalist: {
@@ -2115,7 +2115,7 @@ function MainMenu({
   const chapterTitles: Record<CaseId, string> = {
     ortega: "Turno da Noite · Caso Ortega",
     monroe: "O Caso Monroe",
-    painscreek: "Painscreek Case",
+    painscreek: "O Segredo de Greybridge",
     mentalist: "O Mentalista: O Caso Red John",
     winchester: "O Sangue dos Condenados",
     vivian: "O Caso Vivian Roberts",
@@ -2621,7 +2621,7 @@ function MainMenu({
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
               Capítulo 03 · Greybridge
             </p>
-            <h2 className="mt-3 font-display text-3xl">Painscreek Case</h2>
+            <h2 className="mt-3 font-display text-3xl">O Segredo de Greybridge</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Explore locais, examine documentos, destranque mecanismos e conecte evidências
               forenses para reconstruir um caso arquivado.
