@@ -42,10 +42,14 @@ const DIARY_UNLOCK_CLUES: Record<string, string> = {
   mary: "police-report",
   matthew: "code-0318",
   scott: "scott-denial",
-  steven: "police-report",
+  moss: "police-report",
   trisha: "charles-secret",
   vivian: "vivian-medical",
   wanda: "daniel-letter",
+};
+
+const DIARY_IMAGE_GROUP_IDS: Record<string, string> = {
+  moss: "steven",
 };
 
 function readFoundVivianClues() {
@@ -69,7 +73,8 @@ function DiaryImages({
   personName: string;
   foundClues: string[];
 }) {
-  const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === personId);
+  const groupId = DIARY_IMAGE_GROUP_IDS[personId] ?? personId;
+  const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === groupId);
   if (!group) return null;
 
   const requiredClue = DIARY_UNLOCK_CLUES[personId];
