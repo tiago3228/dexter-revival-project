@@ -3,7 +3,9 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   BookOpen,
+  ExternalLink,
   FileSearch,
+  LockKeyhole,
   MapPin,
   Users,
   X,
@@ -14,6 +16,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
+import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -26,6 +29,121 @@ type DocumentItem = {
   status: ReviewStatus;
   body: string;
 };
+
+const VIVIAN_INVESTIGATION_SAVE_KEY = "vivian-playable-investigation-v1";
+
+const DIARY_UNLOCK_CLUES: Record<string, string> = {
+  andrew: "henry-death",
+  bernard: "charles-secret",
+  charles: "charles-secret",
+  derrick: "dorothy-photo",
+  dorothy: "dorothy-photo",
+  james: "police-report",
+  mary: "police-report",
+  matthew: "code-0318",
+  scott: "scott-denial",
+  steven: "police-report",
+  trisha: "charles-secret",
+  vivian: "vivian-medical",
+  wanda: "daniel-letter",
+};
+
+function readFoundVivianClues() {
+  if (typeof window === "undefined") return [];
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(VIVIAN_INVESTIGATION_SAVE_KEY) || "null");
+    return Array.isArray(saved?.found)
+      ? saved.found.filter((id: unknown): id is string => typeof id === "string")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function DiaryImages({
+  personId,
+  personName,
+  foundClues,
+}: {
+  personId: string;
+  personName: string;
+  foundClues: string[];
+}) {
+  const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === personId);
+  if (!group) return null;
+
+  const requiredClue = DIARY_UNLOCK_CLUES[personId];
+  const unlocked = requiredClue ? foundClues.includes(requiredClue) : false;
+
+  return (
+    <section
+      className="border border-[#4b4439] bg-[#211f1b] p-4"
+      aria-label={`Imagens do diário de ${personName}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#c4a779]">
+            Arquivo visual
+          </p>
+          <h3 className="mt-1 font-display text-xl">{group.title}</h3>
+          <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
+            {unlocked
+              ? "Páginas liberadas. Clique em uma miniatura para abrir a imagem original."
+              : "Páginas bloqueadas. Avance na investigação para liberar este diário."}
+          </p>
+        </div>
+        {unlocked ? (
+          <ExternalLink size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+        ) : (
+          <LockKeyhole size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+        )}
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {group.images.map((image, index) =>
+          unlocked ? (
+            <a
+              key={image.fileName}
+              href={image.originalUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
+              className="group overflow-hidden border border-[#4b4439] bg-[#171512] transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={`${group.title}, imagem ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+              />
+              <span className="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]">
+                {image.fileName}
+              </span>
+            </a>
+          ) : (
+            <div
+              key={image.fileName}
+              className="relative overflow-hidden border border-[#302b24] bg-[#171512]"
+              aria-label={`Imagem bloqueada ${index + 1} do diário de ${personName}`}
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover opacity-35 grayscale blur-[3px]"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                <LockKeyhole size={19} className="text-[#ead8b8]" aria-hidden="true" />
+              </div>
+            </div>
+          ),
+        )}
+      </div>
+    </section>
+  );
+}
 
 const PEOPLE: Person[] = [
   {
@@ -945,6 +1063,13 @@ export function VivianRobertsCase({
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
+  const [foundVivianClues, setFoundVivianClues] = useState<string[]>(readFoundVivianClues);
+
+  useEffect(() => {
+    const refreshDiaryUnlocks = () => setFoundVivianClues(readFoundVivianClues());
+    window.addEventListener("vivian-investigation-progress", refreshDiaryUnlocks);
+    return () => window.removeEventListener("vivian-investigation-progress", refreshDiaryUnlocks);
+  }, []);
 
   useEffect(() => {
     if (!ambientOn || typeof window === "undefined") return;
@@ -1046,7 +1171,14 @@ export function VivianRobertsCase({
   };
 
   if (showPlayableGame)
-    return <VivianInvestigationGame onBack={() => setShowPlayableGame(false)} />;
+    return (
+      <VivianInvestigationGame
+        onBack={() => {
+          setFoundVivianClues(readFoundVivianClues());
+          setShowPlayableGame(false);
+        }}
+      />
+    );
 
   if (showBoard) return <InvestigationBoard onClose={() => setShowBoard(false)} />;
 
@@ -1411,6 +1543,11 @@ export function VivianRobertsCase({
                   <>
                     <p className="text-[#c4a779]">{selectedPerson.role}</p>
                     <p>{selectedPerson.note}</p>
+                    <DiaryImages
+                      personId={selectedPerson.id}
+                      personName={selectedPerson.name}
+                      foundClues={foundVivianClues}
+                    />
                     {selectedPerson.status !== "confirmado" && (
                       <StatusPill status={selectedPerson.status} />
                     )}

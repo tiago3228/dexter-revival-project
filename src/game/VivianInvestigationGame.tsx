@@ -460,6 +460,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       usedHints,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+    window.dispatchEvent(new Event("vivian-investigation-progress"));
   }, [
     found,
     visited,
