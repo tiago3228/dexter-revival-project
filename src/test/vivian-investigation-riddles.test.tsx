@@ -18,13 +18,17 @@ const ALL_CLUES = [
   "code-0318",
 ];
 
-function seedCompleteInvestigation(reportSubmitted = false) {
+function seedCompleteInvestigation(
+  reportSubmitted = false,
+  solvedCodeLocks = ["katherine-cabinet", "study-drawer", "gallery-safe"],
+) {
   window.localStorage.setItem(
     SAVE_KEY,
     JSON.stringify({
       version: 3,
       found: ALL_CLUES,
       solvedRiddles: [],
+      solvedCodeLocks,
       visited: ["archive", "mansion", "hospital", "church", "lake"],
       links: [],
       activePlace: "archive",
@@ -67,7 +71,7 @@ describe("investigation riddles", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
     fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("Resolva o caso");
+    expect(screen.getByRole("alert")).toHaveTextContent(/registre a conclusão/i);
 
     cleanup();
     window.localStorage.clear();
@@ -89,6 +93,32 @@ describe("investigation riddles", () => {
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/fita secreta procurada por Magdalene/)).toBeInTheDocument();
+  });
+
+  it("solves Resident Evil-style code locks before the final password is revealed", () => {
+    seedCompleteInvestigation(false, []);
+    render(<VivianInvestigationGame onBack={() => {}} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Hospital Comunitário/ }));
+    const katherineCode = screen.getByRole("textbox", {
+      name: "Código para Armário de Katherine",
+    });
+    fireEvent.change(katherineCode, { target: { value: "0000" } });
+    fireEvent.submit(katherineCode.closest("form")!);
+    expect(screen.getByRole("status")).toHaveTextContent("Código incorreto");
+    fireEvent.change(katherineCode, { target: { value: "1964" } });
+    fireEvent.submit(katherineCode.closest("form")!);
+
+    fireEvent.click(screen.getByRole("button", { name: /Mansão Roberts/ }));
+    const studyCode = screen.getByRole("textbox", { name: "Código para Gaveta do estudo" });
+    fireEvent.change(studyCode, { target: { value: "5194" } });
+    fireEvent.submit(studyCode.closest("form")!);
+    const galleryCode = screen.getByRole("textbox", { name: "Código para Cofre da galeria" });
+    fireEvent.change(galleryCode, { target: { value: "611975" } });
+    fireEvent.submit(galleryCode.closest("form")!);
+
+    const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) || "null");
+    expect(saved.solvedCodeLocks).toEqual(["katherine-cabinet", "study-drawer", "gallery-safe"]);
   });
 
   it("rejects a wrong answer and unlocks all nine riddle clues with correct answers", () => {

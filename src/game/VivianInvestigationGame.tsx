@@ -47,6 +47,7 @@ type RiddleId =
   | "mansion-photo"
   | "church-recipient"
   | "lake-doctor";
+type CodeLockId = "katherine-cabinet" | "study-drawer" | "gallery-safe";
 type LinkId =
   "scott-versions" | "hospital-money" | "henry-money" | "vivian-charles" | "photo-scott";
 type Phase = "explore" | "board" | "timeline" | "report";
@@ -69,6 +70,15 @@ type Riddle = {
   clueId: ClueId;
   place: PlaceId;
 };
+type CodeLock = {
+  id: CodeLockId;
+  title: string;
+  prompt: string;
+  hint: string;
+  code: string;
+  reward: string;
+  place: PlaceId;
+};
 
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
@@ -76,6 +86,7 @@ type SaveData = {
   version: 3;
   found: ClueId[];
   solvedRiddles: RiddleId[];
+  solvedCodeLocks: CodeLockId[];
   visited: PlaceId[];
   links: LinkId[];
   activePlace: PlaceId;
@@ -91,6 +102,35 @@ const SAVE_KEY = "vivian-playable-investigation-v1";
 const FINAL_DOSSIER_PASSWORD = "M99";
 const DOSSIER_LETTERS = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 const DOSSIER_DIGITS = Array.from({ length: 10 }, (_, index) => String(index));
+const CODE_LOCKS: CodeLock[] = [
+  {
+    id: "katherine-cabinet",
+    title: "Armário de Katherine",
+    prompt: "O armário da enfermeira aceita um código de quatro dígitos.",
+    hint: "Procure o número estampado no verso do alfinete devolvido à recepção.",
+    code: "1964",
+    reward: "Diário de enfermagem e acesso a uma nova anotação do hospital.",
+    place: "hospital",
+  },
+  {
+    id: "study-drawer",
+    title: "Gaveta do estudo",
+    prompt: "Uma gaveta trancada esconde documentos sobre a família Roberts.",
+    hint: "A resposta vem do enigma das peças de xadrez e deve ter quatro dígitos.",
+    code: "5194",
+    reward: "Correspondência de Charles e uma pista para a investigação financeira.",
+    place: "mansion",
+  },
+  {
+    id: "gallery-safe",
+    title: "Cofre da galeria",
+    prompt: "O cofre usa uma combinação de seis dígitos ligada à identidade de Vincent.",
+    hint: "Cruze o aniversário de Vincent com as informações dos retratos da galeria.",
+    code: "611975",
+    reward: "Fotografia de Sofia com o bebê e uma conexão importante do caso.",
+    place: "mansion",
+  },
+];
 
 type DossierCombination = [string, string, string];
 
@@ -643,6 +683,10 @@ function readSave(): SaveData | null {
         value.solvedRiddles,
         RIDDLES.map((item) => item.id),
       ),
+      solvedCodeLocks: ids(
+        value.solvedCodeLocks,
+        CODE_LOCKS.map((item) => item.id),
+      ),
       visited: ids(
         value.visited,
         PLACES.map((item) => item.id),
@@ -691,6 +735,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [saved] = useState(readSave);
   const [found, setFound] = useState<ClueId[]>(saved?.found ?? []);
   const [solvedRiddles, setSolvedRiddles] = useState<RiddleId[]>(saved?.solvedRiddles ?? []);
+  const [solvedCodeLocks, setSolvedCodeLocks] = useState<CodeLockId[]>(
+    saved?.solvedCodeLocks ?? [],
+  );
   const [usedHints, setUsedHints] = useState<string[]>(saved?.usedHints ?? []);
   const [visited, setVisited] = useState<PlaceId[]>(saved?.visited ?? ["archive"]);
   const [links, setLinks] = useState<LinkId[]>(saved?.links ?? []);
@@ -710,6 +757,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
   );
   const [riddleAnswers, setRiddleAnswers] = useState<Partial<Record<RiddleId, string>>>({});
+  const [codeLockAnswers, setCodeLockAnswers] = useState<Partial<Record<CodeLockId, string>>>({});
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
 
@@ -730,6 +778,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       version: 3,
       found,
       solvedRiddles,
+      solvedCodeLocks,
       visited,
       links,
       activePlace,
@@ -745,6 +794,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   }, [
     found,
     solvedRiddles,
+    solvedCodeLocks,
     visited,
     links,
     activePlace,
@@ -758,6 +808,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const currentPlace = PLACES.find((place) => place.id === activePlace)!;
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
   const currentRiddles = RIDDLES.filter((riddle) => riddle.place === activePlace);
+  const currentCodeLocks = CODE_LOCKS.filter((lock) => lock.place === activePlace);
+  const allCodeLocksSolved = solvedCodeLocks.length === CODE_LOCKS.length;
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
   const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints);
@@ -847,6 +899,18 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     }
   };
 
+  const solveCodeLock = (lock: CodeLock, answer: string) => {
+    const normalized = answer.replace(/\D/g, "");
+    if (normalized !== lock.code) {
+      setNotice(`Código incorreto na fechadura: ${lock.title}. Releia a pista e tente novamente.`);
+      return;
+    }
+    if (!solvedCodeLocks.includes(lock.id)) {
+      setSolvedCodeLocks((items) => [...items, lock.id]);
+    }
+    setNotice(`Fechadura aberta: ${lock.title}. ${lock.reward}`);
+  };
+
   const toggleSelectedClue = (id: ClueId) => {
     setSelectedClues((current) =>
       current.includes(id)
@@ -921,9 +985,13 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const submitDossierCombination = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!reportSubmitted) {
+    if (!reportSubmitted || !allCodeLocksSolved) {
       playLockSound("fail");
-      setDossierNotice("O cadeado não abriu. Resolva o caso para revelar a senha final.");
+      setDossierNotice(
+        !reportSubmitted
+          ? "O cadeado não abriu. Registre a conclusão do caso no relatório primeiro."
+          : "O cadeado não abriu. Resolva todas as fechaduras de código antes de procurar a senha final.",
+      );
       return;
     }
     if (dossierCombination.join("") !== FINAL_DOSSIER_PASSWORD) {
@@ -941,6 +1009,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     window.localStorage.removeItem(SAVE_KEY);
     setFound([]);
     setSolvedRiddles([]);
+    setSolvedCodeLocks([]);
     setUsedHints([]);
     setVisited(["archive"]);
     setLinks([]);
@@ -1225,6 +1294,81 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                           )}
                           <p className="mt-3 text-[11px] leading-relaxed text-[#81796d]">
                             Dica: {riddle.hint}
+                          </p>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
+              {currentCodeLocks.length > 0 && (
+                <section
+                  className="mt-5 border border-[#79664c] bg-[#211f1b] p-4"
+                  aria-label="Fechaduras de código"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                        Fechaduras de código
+                      </p>
+                      <p className="mt-2 text-xs leading-relaxed text-[#bdb5a8]">
+                        Encontre a combinação nas fontes e digite os algarismos como em um painel de
+                        segurança.
+                      </p>
+                    </div>
+                    <LockKeyhole size={18} className="shrink-0 text-[#c4a779]" />
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {currentCodeLocks.map((lock) => {
+                      const solved = solvedCodeLocks.includes(lock.id);
+                      const answer = codeLockAnswers[lock.id] ?? "";
+                      return (
+                        <article key={lock.id} className="border border-[#4b4439] bg-[#171512] p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="font-display text-xl">{lock.title}</h3>
+                            {solved && <Check size={17} className="shrink-0 text-emerald-300" />}
+                          </div>
+                          <p className="mt-3 text-sm leading-relaxed text-[#c9c1b5]">
+                            {lock.prompt}
+                          </p>
+                          {solved ? (
+                            <p className="mt-3 border-l-2 border-emerald-400/70 pl-3 text-xs leading-relaxed text-emerald-100">
+                              Fechadura aberta. {lock.reward}
+                            </p>
+                          ) : (
+                            <form
+                              className="mt-4 flex flex-wrap gap-2"
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                solveCodeLock(lock, answer);
+                              }}
+                            >
+                              <input
+                                value={answer}
+                                onChange={(event) =>
+                                  setCodeLockAnswers((items) => ({
+                                    ...items,
+                                    [lock.id]: event.target.value
+                                      .replace(/\D/g, "")
+                                      .slice(0, lock.code.length),
+                                  }))
+                                }
+                                inputMode="numeric"
+                                maxLength={lock.code.length}
+                                aria-label={`Código para ${lock.title}`}
+                                placeholder={`${lock.code.length} dígitos`}
+                                className="min-h-10 min-w-0 flex-1 border border-[#4b4439] bg-[#11100e] px-3 font-mono text-sm tracking-[0.35em] outline-none focus:border-[#c4a779]"
+                              />
+                              <button
+                                type="submit"
+                                className="min-h-10 border border-[#c4a779] px-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/10"
+                              >
+                                Abrir código
+                              </button>
+                            </form>
+                          )}
+                          <p className="mt-3 text-[11px] leading-relaxed text-[#81796d]">
+                            Pista: {lock.hint}
                           </p>
                         </article>
                       );
@@ -1560,9 +1704,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   O caso continua aberto. A lógica de veredito final será habilitada quando a
                   solução e as fontes estiverem verificadas.
                 </p>
-                <p className="mt-4 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
-                  Senha final revelada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>
-                </p>
+                {allCodeLocksSolved ? (
+                  <p className="mt-4 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
+                    Senha final revelada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>
+                  </p>
+                ) : (
+                  <p className="mt-4 border border-amber-700/70 bg-amber-950/20 p-3 text-xs leading-relaxed text-amber-100">
+                    Resolva as {CODE_LOCKS.length} fechaduras de código na fase Explorar para
+                    revelar a senha final do dossiê.
+                  </p>
+                )}
               </div>
             )}
             <button
