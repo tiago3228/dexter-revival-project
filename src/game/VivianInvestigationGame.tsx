@@ -381,11 +381,24 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   );
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
+  const [pendingHint, setPendingHint] = useState<{ clueId: ClueId; level: 1 | 2 | 3 } | null>(null);
   const [notice, setNotice] = useState(
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
   );
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
+
+  useEffect(() => {
+    if (!pendingHint) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPendingHint(null);
+        setNotice("Dica cancelada. Sua pontuação foi mantida.");
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [pendingHint]);
 
   useEffect(() => {
     const save: SaveData = {
@@ -429,16 +442,34 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           : score > 0
             ? "Precisou de bastante ajuda"
             : "Assistência máxima";
-  const handleHint = (clueId: ClueId, level: 1 | 2 | 3) => {
+  const requestHint = (clueId: ClueId, level: 1 | 2 | 3) => {
     const key = `${clueId}:${level}`;
     if (usedHints.includes(key)) {
       setNotice("Esta dica já foi consultada e a penalidade já foi aplicada.");
       return;
     }
-    setUsedHints((current) => [...current, key]);
+    setPendingHint({ clueId, level });
+  };
+
+  const cancelHint = () => {
+    setPendingHint(null);
+    setNotice("Dica cancelada. Sua pontuação foi mantida.");
+  };
+
+  const confirmHint = () => {
+    if (!pendingHint) return;
+    const { clueId, level } = pendingHint;
+    const key = `${clueId}:${level}`;
+    if (usedHints.includes(key)) {
+      setPendingHint(null);
+      setNotice("Esta dica já foi consultada e a penalidade já foi aplicada.");
+      return;
+    }
+    setUsedHints((current) => (current.includes(key) ? current : [...current, key]));
     setNotice(
       `Dica ${level}: ${CLUE_HINTS[clueId][level - 1]} Penalidade: -${HINT_COSTS[level - 1]} pontos.`,
     );
+    setPendingHint(null);
   };
 
   const enterPlace = (place: Place) => {
@@ -743,7 +774,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       </button>
                       <div className="mt-4 border-t border-[#4b4439] pt-3">
                         <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
-                          Pedir dica · perde pontos
+                          Dicas graduais · último recurso · perde pontos
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-[#a9a092]">
+                          Use somente se não conseguir avançar pelas evidências. A penalidade só é
+                          aplicada após confirmação.
                         </p>
                         <div className="mt-2 flex flex-wrap gap-2">
                           {([1, 2, 3] as const).map((level) => {
@@ -753,7 +788,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               <button
                                 key={key}
                                 type="button"
-                                onClick={() => handleHint(clue.id, level)}
+                                onClick={() => requestHint(clue.id, level)}
                                 disabled={used}
                                 className="min-h-9 border border-[#79664c] px-2 py-1 text-[10px] disabled:opacity-40"
                               >
@@ -1007,6 +1042,53 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <ArrowLeft size={15} /> Voltar à exploração
             </button>
           </section>
+        )}
+
+        {pendingHint && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4">
+            <section
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="vivian-hint-dialog-title"
+              aria-describedby="vivian-hint-dialog-description"
+              className="w-full max-w-lg border border-[#c4a779] bg-[#1b1a17] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.7)] sm:p-7"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                Ajuda de último recurso
+              </p>
+              <h2 id="vivian-hint-dialog-title" className="mt-2 font-display text-2xl">
+                Deseja continuar?
+              </h2>
+              <p
+                id="vivian-hint-dialog-description"
+                className="mt-3 text-sm leading-relaxed text-[#d5c9b5]"
+              >
+                Esta dica será aberta e reduzirá sua pontuação em{" "}
+                <strong>{HINT_COSTS[pendingHint.level - 1]} pontos</strong>. Use-a somente como
+                último recurso. Se escolher “Não”, nenhum ponto será perdido.
+              </p>
+              <p className="mt-3 border-l-2 border-amber-500/70 pl-3 font-mono text-xs uppercase tracking-wider text-amber-100">
+                Penalidade: -{HINT_COSTS[pendingHint.level - 1]} pontos
+              </p>
+              <div className="mt-5 flex flex-wrap justify-end gap-3">
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={cancelHint}
+                  className="min-h-11 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider hover:border-[#c4a779]"
+                >
+                  Não, voltar
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmHint}
+                  className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/20"
+                >
+                  Sim, abrir dica
+                </button>
+              </div>
+            </section>
+          </div>
         )}
 
         <footer className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#4b4439] pt-4 text-xs leading-relaxed text-[#81796d]">
