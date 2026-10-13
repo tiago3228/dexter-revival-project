@@ -32,7 +32,7 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 - O workflow está em `.github/workflows/ci.yml`. A execução [38315052983](https://github.com/tiago3228/dexter-revival-project/actions/runs/38315052983) terminou com sucesso no commit `194b65e6c449cae625950ad929a5d21cf2a3ba7a`, dentro do PR #10. A execução anterior [38314003065](https://github.com/tiago3228/dexter-revival-project/actions/runs/38314003065) também passou no commit `27d434f5440632d1cd7fc6a46e25393c02b08309`.
 - Este registro documental foi atualizado depois do commit validado `194b65e`; o commit que registrar esta própria atualização ainda precisa passar pelo CI antes de qualquer merge.
 - Na validação local desta correção: `pnpm test` passou em 8 arquivos e 26 testes; `pnpm exec tsc --noEmit` e `pnpm run build` passaram; `pnpm run lint` terminou com 0 erros e 7 avisos preexistentes; `git diff --check` passou.
-- O teste automatizado cobre o marcador de retorno do catálogo; ainda falta conferir a rota e o ciclo de investigação completo no navegador.
+- O teste automatizado cobre o marcador de retorno do catálogo; a rota e o ciclo jogável também foram conferidos manualmente no navegador em 2026-10-13 (detalhes na seção de pendências).
 
 ## Pendências documentais e de integração
 
@@ -47,7 +47,8 @@ Esses testes verificam estrutura e regras de código; não substituem o cotejo d
 - Páginas 59 e 86 provavelmente se referem ao mesmo acidente de 1973; p. 86 fornece os detalhes das vítimas e indenizações. A nota da p. 61 sobre o pai de Bernard não pode ser ligada a esse acidente sem data ou identificação adicional. Páginas 61 e 95 são documentos distintos associados ao mesmo Bernard; a ficha funcional não corrobora a nota investigativa.
 - A contradição de datas/ações de Scott na p. 56 permanece sem explicação. Preservar os cabeçalhos como impressos; não corrigir por inferência.
 - O catálogo não deve ser descrito como plenamente integrado ao jogo: a interface de consulta documental não está conectada ao ciclo jogável de Vivian.
-- Ainda falta teste manual no navegador de desbloqueios, coleta duplicada, conexões válidas e inválidas, cronologia, bloqueio do relatório e persistência após recarga.
+- Em 2026-10-13, um teste manual do modo jogável no navegador Sandbox verificou bloqueio e desbloqueio dos locais usados no fluxo, coleta sem duplicação, rejeição de uma combinação não prevista, registro de duas conexões previstas, cronologia incorreta e correta, persistência após recarga, bloqueio inicial do relatório e abertura após cumprir os requisitos. Nenhuma conclusão foi registrada.
+- A confirmação das dicas como último recurso — aviso dinâmico das penalidades de 20/50/100 pontos, cancelamento sem desconto e aplicação somente após “Sim” — foi testada na branch `feat/vivian-hint-confirmation`, PR #16, ainda aberta e não mesclada. No teste manual, “Não” manteve 980 pontos e “Sim” para a dica de nível 2 descontou 50, revelando-a.
 
 ## Limites de interpretação
 
