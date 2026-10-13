@@ -56,6 +56,17 @@ describe("Painscreek evidence catalog", () => {
     expect(byId.get("P-042")?.pages[0]).toBe(35);
   });
 
+  it("keeps the Stephanie reference marked as an editorial duplicate", () => {
+    const byId = new Map(PAINSCREEK_EVIDENCE_001_116.map((item) => [item.id, item]));
+    const duplicate = byId.get("P-031");
+
+    expect(duplicate?.title).toMatch(/duplicada.*P-009/i);
+    expect(duplicate?.pages).toEqual([109]);
+    expect(duplicate?.status).toBe("incomplete");
+    expect(duplicate?.confidence).toBe("low");
+    expect(duplicate?.playerInference).toMatch(/duplicata editorial/i);
+  });
+
   it("keeps all 116 supplemental originals and thumbnails available through the gallery", () => {
     const images = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.flatMap((group) => group.images);
     const markup = renderToStaticMarkup(createElement(PainscreekEvidenceGallery));

@@ -1,6 +1,6 @@
 # Auditoria de cruzamento — páginas 100–116
 
-**Objetivo:** relacionar os documentos das páginas 100–116 às entradas P-001–P-034, reduzir duplicatas conceituais e registrar o que cada fonte realmente sustenta. Esta auditoria é editorial: não altera a solução do caso nem declara culpados.
+**Objetivo:** relacionar os documentos das páginas 100–116 às entradas P-001–P-047, reduzir duplicatas conceituais e registrar o que cada fonte realmente sustenta. Esta auditoria é editorial: não altera a solução do caso nem declara culpados.
 
 ## Cruzamento por página
 
@@ -15,7 +15,7 @@
 | 106 | Intrusão de homem encapuzado no jardim em março de 1994; novas fitas VHS | P-029; contexto de P-004 | São duas notas distintas. Não atribuir a intrusão à fita ausente nem inferir que alguma fita foi destruída. |
 | 107 | Bilhete de Magdalene pedindo busca por fita de 28/06/1975; chegada de Samuel Green | P-004; contexto de P-029 | Sustenta o registro de que a fita foi procurada e não encontrada. Não identifica quem a removeu nem o motivo. |
 | 108 | Andrew chega embriagado à mansão e Scott é chamado; saída planejada de Tom Parker | P-030; contexto de P-011 | Registra um episódio de julho de 1994, distinto da crise hospitalar de setembro/outubro relatada na p. 115. |
-| 109 | Stephanie se perde na floresta e relata ter sido conduzida para casa por mulher não identificada | P-009; P-031 | Manter uma única linha de evidência para o relato, sem inferir a identidade da mulher. Confirmar se P-031 duplica ou detalha P-009 antes de criar ou conservar duas entradas jogáveis. |
+| 109 | Stephanie se perde na floresta e relata ter sido conduzida para casa por mulher não identificada | P-009; P-031 (duplicata editorial) | Manter uma única linha de evidência independente, sem inferir a identidade da mulher. P-031 permanece apenas para rastreabilidade histórica, com status incompleto e confiança baixa; não deve ser tratado como segunda pista. |
 | 110 | Livro da pousada: comentários sobre a investigação de Moss e sobre Scott/Matthew | P-032; contexto de P-002 | São observações do narrador e rumores locais, não depoimento formal nem confirmação de quem contratou Moss. |
 | 111 | Moss menciona um incidente de 1975; narrador considera possível relação com empregada que deixou Painscreek | P-002; contexto de P-032 | A conexão é hipótese do narrador. Não identificar automaticamente a empregada como Sofia. |
 | 112 | Diário de Dorothy sobre Matthew, Sofia e a ausência de pais de Sofia | P-033; contexto de P-006 | Documenta conversas e cuidado; não estabelece, isoladamente, parentesco ou destino posterior. |
@@ -35,4 +35,4 @@
 
 ## Resultado
 
-O cruzamento preserva os grupos temáticos sem converter rumores ou inferências em fatos confirmados. As entradas do catálogo que compartilham uma página devem ser revisadas por identidade de fonte, não apenas por semelhança de assunto. A próxima ação recomendada é corrigir a possível duplicidade P-009/P-031 no catálogo, verificar as entradas P-029–P-034 contra os metadados e, separadamente, validar build e testes do projeto. Nenhuma publicação do jogo decorre desta auditoria.
+O cruzamento preserva os grupos temáticos sem converter rumores ou inferências em fatos confirmados. A duplicidade editorial P-009/P-031 já foi marcada no catálogo: P-031 permanece apenas para rastreabilidade histórica e não conta como evidência independente. As entradas P-029–P-034 foram conferidas contra as imagens disponíveis na Galeria; a auditoria individual de P-001–P-047 e o teste manual das rotas permanecem separados. Nenhuma publicação do jogo decorre desta auditoria.

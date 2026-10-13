@@ -25,10 +25,10 @@
 
 1. O OCR foi executado em resolução reduzida e produziu erros de nomes, datas e frases. Nenhum trecho incerto foi corrigido por inferência.
 2. As páginas 51–79 foram comparadas visualmente com o PDF e as transcrições; correções e limites estão detalhados no relatório do lote. A cobertura integral das páginas 1–50 permanece conforme os registros anteriores, sem nova inspeção de cada página neste ciclo.
-3. Prosseguir com a auditoria individual do catálogo P-001–P-034 e conferir as fontes fora do intervalo apenas nos cruzamentos documentados.
+3. Prosseguir com a auditoria individual do catálogo P-001–P-047 e conferir as fontes fora do intervalo apenas nos cruzamentos documentados.
 4. Manter separadas a existência de uma anotação, a alegação feita por uma personagem e qualquer conclusão investigativa.
 5. Não alterar a lógica do jogo ou ampliar a integração de pistas com base apenas em uma relação provável ou em uma alegação sem corroboração.
 
 ## Resultado desta etapa
 
-A conferência visual confirmou três repetições de conteúdo no lote 46–51: páginas 49–51 repetem, respectivamente, as entradas das páginas 46–48. A revisão visual das páginas 51–79 também está concluída; os cruzamentos e a classificação de todos os registros do catálogo P-001–P-034 continuam sendo uma tarefa separada.
+A conferência visual confirmou três repetições de conteúdo no lote 46–51: páginas 49–51 repetem, respectivamente, as entradas das páginas 46–48. A revisão visual das páginas 51–79 também está concluída; os cruzamentos e a classificação de todos os registros do catálogo P-001–P-047 continuam sendo uma tarefa separada.
