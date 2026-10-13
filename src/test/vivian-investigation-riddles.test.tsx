@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { VivianInvestigationGame } from "@/game/VivianInvestigationGame";
@@ -147,25 +147,26 @@ describe("investigation riddles", () => {
     seedCompleteInvestigation();
     render(<VivianInvestigationGame onBack={() => {}} />);
 
-    const archiveAnswer = screen.getByRole("textbox", {
-      name: "Resposta para A voz por trás da negativa",
-    });
-    fireEvent.change(archiveAnswer, { target: { value: "Vivian" } });
-    fireEvent.submit(archiveAnswer.closest("form")!);
+    const archiveCard = screen
+      .getByRole("heading", { name: "A voz por trás da negativa" })
+      .closest("article")!;
+    fireEvent.submit(archiveCard.querySelector("form")!);
     expect(screen.getByRole("status")).toHaveTextContent("Resposta incorreta");
 
     const riddles = [
       {
         place: null,
         title: "A voz por trás da negativa",
-        answer: "SCOTT BROOKS",
+        answer: "SCOTT",
         clue: "scott-denial",
+        isName: true,
       },
       {
         place: "Arquivo do xerife",
         title: "O nome no relatório",
         answer: "Scott",
         clue: "police-report",
+        isName: true,
       },
       {
         place: "Hospital Comunitário",
@@ -178,6 +179,7 @@ describe("investigation riddles", () => {
         title: "A assinatura clínica",
         answer: "Henry Johnson",
         clue: "vivian-medical",
+        isName: true,
       },
       {
         place: "Mansão Roberts",
@@ -190,6 +192,7 @@ describe("investigation riddles", () => {
         title: "O nome que desapareceu",
         answer: "Sofia",
         clue: "charles-secret",
+        isName: true,
       },
       {
         place: "Mansão Roberts",
@@ -202,12 +205,14 @@ describe("investigation riddles", () => {
         title: "O nome no envelope",
         answer: "Daniel",
         clue: "daniel-letter",
+        isName: true,
       },
       {
         place: "Lago Cherry Creek",
         title: "Quem repousava no carro?",
         answer: "Henry Johnson",
         clue: "henry-death",
+        isName: true,
       },
     ];
 
@@ -215,11 +220,29 @@ describe("investigation riddles", () => {
       if (riddle.place) {
         fireEvent.click(screen.getByRole("button", { name: new RegExp(riddle.place) }));
       }
-      const answer = screen.getByRole("textbox", {
-        name: `Resposta para ${riddle.title}`,
-      });
-      fireEvent.change(answer, { target: { value: riddle.answer } });
-      fireEvent.submit(answer.closest("form")!);
+      const article = screen.getByRole("heading", { name: riddle.title }).closest("article")!;
+      if (riddle.isName) {
+        const letters = riddle.answer.replace(/\s+/g, "").toUpperCase();
+        letters.split("").forEach((letter, index) => {
+          const upwardTurns = letter.charCodeAt(0) - "A".charCodeAt(0);
+          const direction = upwardTurns <= 13 ? "cima" : "baixo";
+          const turns = Math.min(upwardTurns, 26 - upwardTurns);
+          for (let turn = 0; turn < turns; turn += 1) {
+            fireEvent.click(
+              within(article).getByRole("button", {
+                name: `Girar letra ${index + 1} para ${direction}`,
+              }),
+            );
+          }
+        });
+        fireEvent.submit(article.querySelector("form")!);
+      } else {
+        const answer = within(article).getByRole("textbox", {
+          name: `Resposta para ${riddle.title}`,
+        });
+        fireEvent.change(answer, { target: { value: riddle.answer } });
+        fireEvent.submit(answer.closest("form")!);
+      }
       expect(screen.getByRole("status"), riddle.title).toHaveTextContent("Enigma resolvido");
     }
 
@@ -237,5 +260,5 @@ describe("investigation riddles", () => {
       "lake-doctor",
     ]);
     expect(saved.found).toEqual(expect.arrayContaining(ALL_CLUES));
-  });
+  }, 30000);
 });

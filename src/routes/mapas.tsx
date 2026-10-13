@@ -30,6 +30,22 @@ const maps = [
   },
 ];
 
+const investigationPlaces = [
+  {
+    id: "archive",
+    label: "Arquivo do xerife",
+    detail: "Relatórios, cartas e documentos policiais.",
+  },
+  { id: "mansion", label: "Mansão Roberts", detail: "Diários da família e fechaduras de código." },
+  {
+    id: "hospital",
+    label: "Hospital comunitário",
+    detail: "Laudos, registros clínicos e transferências.",
+  },
+  { id: "church", label: "Igreja da Trindade", detail: "Cartas, doações e registros do orfanato." },
+  { id: "lake", label: "Lago Cherry Creek", detail: "O carro submerso e a pista do médico." },
+];
+
 export const Route = createFileRoute("/mapas")({
   component: MapasPage,
 });
@@ -385,6 +401,44 @@ function MapasPage() {
               }}
             />
           </div>
+          {active === 0 && (
+            <section
+              className="mt-4 border border-[#56594c] bg-[#191b17] p-4"
+              aria-label="Locais investigáveis"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#b6a36a]">
+                    Pontos de investigação
+                  </p>
+                  <p className="mt-1 text-sm text-[#bcbcaf]">
+                    Clique em um local para voltar ao jogo já posicionado nele e procurar pistas ou
+                    resolver enigmas.
+                  </p>
+                </div>
+                <Map size={18} className="text-[#b6a36a]" aria-hidden="true" />
+              </div>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {investigationPlaces.map((place) => (
+                  <Link
+                    key={place.id}
+                    to="/"
+                    search={{ resumePainscreek: true }}
+                    onClick={() => window.localStorage.setItem("vivian-map-target", place.id)}
+                    className="border border-[#383b32] bg-[#111310] p-3 text-left transition hover:border-[#b6a36a] hover:bg-[#292c24]"
+                  >
+                    <span className="block font-medium text-[#e8e4d9]">{place.label}</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-[#a5a78d]">
+                      {place.detail}
+                    </span>
+                    <span className="mt-2 block font-mono text-[10px] uppercase tracking-wider text-[#b6a36a]">
+                      Ir para o local →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
           <p className="mt-3 font-mono text-xs text-[#858875]">
             ARQUIVO {String(active + 1).padStart(2, "0")} · Material de referência para a
             investigação

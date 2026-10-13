@@ -20,6 +20,14 @@ describe("Vivian investigation rules", () => {
     ).toEqual({ penalty: 50, score: 950 });
   });
 
+  it("charges 25 points for each incorrect investigation attempt", () => {
+    expect(calculateInvestigationScore([], 1)).toEqual({ penalty: 25, score: 975 });
+    expect(calculateInvestigationScore(["police-report:1"], 3)).toEqual({
+      penalty: 95,
+      score: 905,
+    });
+  });
+
   it("does not let the score fall below zero", () => {
     const allHintLevels = Array.from({ length: 11 }, (_, index) => [
       `clue-${index}:1`,

@@ -17,6 +17,7 @@ import {
   calculateInvestigationScore,
   HINT_COSTS,
   MAX_SCORE,
+  MISTAKE_PENALTY,
   normalizeSavedIds,
 } from "@/game/vivianInvestigationRules";
 import {
@@ -70,6 +71,7 @@ type Riddle = {
   answers: string[];
   clueId: ClueId;
   place: PlaceId;
+  nameLength?: number;
 };
 type CodeLock = {
   id: CodeLockId;
@@ -106,6 +108,7 @@ type SaveData = {
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
+const MAP_TARGET_KEY = "vivian-map-target";
 const FINAL_DOSSIER_PASSWORD = "M99";
 const DOSSIER_LETTERS = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 const DOSSIER_DIGITS = Array.from({ length: 10 }, (_, index) => String(index));
@@ -201,6 +204,7 @@ const RIDDLES: Riddle[] = [
     answers: ["scott", "scott brooks"],
     clueId: "scott-denial",
     place: "archive",
+    nameLength: 5,
   },
   {
     id: "archive-police",
@@ -210,6 +214,7 @@ const RIDDLES: Riddle[] = [
     answers: ["scott", "scott brooks"],
     clueId: "police-report",
     place: "archive",
+    nameLength: 5,
   },
   {
     id: "hospital-amount",
@@ -229,6 +234,7 @@ const RIDDLES: Riddle[] = [
     answers: ["henry", "henry johnson"],
     clueId: "vivian-medical",
     place: "hospital",
+    nameLength: 12,
   },
   {
     id: "mansion-code",
@@ -247,6 +253,7 @@ const RIDDLES: Riddle[] = [
     answers: ["sofia"],
     clueId: "charles-secret",
     place: "mansion",
+    nameLength: 5,
   },
   {
     id: "mansion-photo",
@@ -266,6 +273,7 @@ const RIDDLES: Riddle[] = [
     answers: ["daniel"],
     clueId: "daniel-letter",
     place: "church",
+    nameLength: 6,
   },
   {
     id: "lake-doctor",
@@ -275,6 +283,7 @@ const RIDDLES: Riddle[] = [
     answers: ["henry", "henry johnson"],
     clueId: "henry-death",
     place: "lake",
+    nameLength: 12,
   },
 ];
 
@@ -780,13 +789,22 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [usedHints, setUsedHints] = useState<string[]>(saved?.usedHints ?? []);
   const [visited, setVisited] = useState<PlaceId[]>(saved?.visited ?? ["archive"]);
   const [links, setLinks] = useState<LinkId[]>(saved?.links ?? []);
-  const [activePlace, setActivePlace] = useState<PlaceId>(saved?.activePlace ?? "archive");
+  const [activePlace, setActivePlace] = useState<PlaceId>(() => {
+    const mapTarget =
+      typeof window !== "undefined" ? window.localStorage.getItem(MAP_TARGET_KEY) : null;
+    if (typeof window !== "undefined") window.localStorage.removeItem(MAP_TARGET_KEY);
+    const target = PLACES.some((place) => place.id === mapTarget) ? (mapTarget as PlaceId) : null;
+    return target && isUnlocked(target, saved?.found ?? [])
+      ? target
+      : (saved?.activePlace ?? "archive");
+  });
   const [phase, setPhase] = useState<Phase>(saved?.phase ?? "explore");
   const [timelineOrder, setTimelineOrder] = useState<string[]>(
     saved?.timelineOrder.length ? saved.timelineOrder : TIMELINE.map((item) => item.id),
   );
   const [reportSubmitted, setReportSubmitted] = useState(saved?.reportSubmitted ?? false);
   const [chosenConclusion, setChosenConclusion] = useState(saved?.chosenConclusion ?? "");
+  const [mistakes, setMistakes] = useState(saved?.mistakes ?? 0);
   const [pendingHint, setPendingHint] = useState<PendingHint | null>(null);
   const [dossierOpen, setDossierOpen] = useState(false);
   const [dossierUnlocked, setDossierUnlocked] = useState(false);
@@ -796,6 +814,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
   );
   const [riddleAnswers, setRiddleAnswers] = useState<Partial<Record<RiddleId, string>>>({});
+  const [nameDialAnswers, setNameDialAnswers] = useState<Partial<Record<RiddleId, string>>>({});
   const [codeLockAnswers, setCodeLockAnswers] = useState<Partial<Record<CodeLockId, string>>>({});
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
@@ -825,7 +844,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       timelineOrder,
       reportSubmitted,
       chosenConclusion,
-      mistakes: 0,
+      mistakes,
       usedHints,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
@@ -841,6 +860,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     timelineOrder,
     reportSubmitted,
     chosenConclusion,
+    mistakes,
     usedHints,
   ]);
 
@@ -851,7 +871,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const allCodeLocksSolved = solvedCodeLocks.length === CODE_LOCKS.length;
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
-  const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints);
+  const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints, mistakes);
   const scoreRank =
     score >= 900
       ? "Detetive excepcional"
@@ -924,14 +944,27 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setNotice("Evidência adicionada ao caderno: " + clue.title);
   };
 
+  const registerMistake = (message: string) => {
+    setMistakes((count) => count + 1);
+    setNotice(`${message} Penalidade: -${MISTAKE_PENALTY} pontos.`);
+  };
+
   const solveRiddle = (riddle: Riddle, answer: string) => {
     const normalized = answer
       .trim()
       .toLocaleLowerCase("pt-BR")
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    if (!riddle.answers.some((item) => item === normalized)) {
-      setNotice("Resposta incorreta. Releia os documentos e tente novamente.");
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "");
+    const acceptedAnswers = riddle.answers.map((item) =>
+      item
+        .toLocaleLowerCase("pt-BR")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, ""),
+    );
+    if (!acceptedAnswers.some((item) => item === normalized)) {
+      registerMistake("Resposta incorreta. Releia os documentos e tente novamente.");
       return;
     }
     if (!solvedRiddles.includes(riddle.id)) {
@@ -948,7 +981,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const solveCodeLock = (lock: CodeLock, answer: string) => {
     const normalized = answer.replace(/\D/g, "");
     if (normalized !== lock.code) {
-      setNotice(`Código incorreto na fechadura: ${lock.title}. Releia a pista e tente novamente.`);
+      registerMistake(
+        `Código incorreto na fechadura: ${lock.title}. Releia a pista e tente novamente.`,
+      );
       return;
     }
     if (!solvedCodeLocks.includes(lock.id)) {
@@ -974,7 +1009,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     }
     const match = LINKS.find((link) => link.clues.every((id) => selectedClues.includes(id)));
     if (!match) {
-      setNotice(
+      registerMistake(
         "Ainda não há uma conexão documentada entre essas duas fontes. Registre a hipótese no caderno, mas não a trate como fato.",
       );
       return;
@@ -999,7 +1034,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
         "Cronologia coerente. Você organizou os quatro marcos por data; isso não prova uma ligação causal entre eles.",
       );
     } else {
-      setNotice(
+      registerMistake(
         "A ordem ainda não está correta. Confira os anos nos próprios documentos; a data de publicação nem sempre é a data do acontecimento.",
       );
     }
@@ -1029,11 +1064,33 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     });
   };
 
+  const rotateNameDial = (
+    riddleId: RiddleId,
+    position: number,
+    direction: -1 | 1,
+    length: number,
+  ) => {
+    setNameDialAnswers((current) => {
+      const next = (current[riddleId] ?? "A".repeat(length))
+        .padEnd(length, "A")
+        .slice(0, length)
+        .split("");
+      const currentIndex = DOSSIER_LETTERS.indexOf(next[position] ?? "A");
+      const nextIndex =
+        (currentIndex + direction + DOSSIER_LETTERS.length) % DOSSIER_LETTERS.length;
+      next[position] = DOSSIER_LETTERS[nextIndex] ?? "A";
+      return { ...current, [riddleId]: next.join("") };
+    });
+  };
+
   const submitDossierCombination = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (dossierCombination.join("") !== FINAL_DOSSIER_PASSWORD) {
       playLockSound("fail");
-      setDossierNotice("O cadeado não abriu. A combinação está incorreta.");
+      setMistakes((count) => count + 1);
+      setDossierNotice(
+        `O cadeado não abriu. A combinação está incorreta. Penalidade: -${MISTAKE_PENALTY} pontos.`,
+      );
       return;
     }
     playLockSound("open");
@@ -1055,6 +1112,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setTimelineOrder(TIMELINE.map((item) => item.id));
     setReportSubmitted(false);
     setChosenConclusion("");
+    setMistakes(0);
     setSelectedClues([]);
     setTimelineChecked(false);
     setNotice("Investigação reiniciada. Nenhuma evidência foi mantida.");
@@ -1287,6 +1345,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       const answer = riddleAnswers[riddle.id] ?? "";
                       const hintKey = `riddle:${riddle.id}:1`;
                       const hintUsed = usedHints.includes(hintKey);
+                      const nameAnswer = riddle.nameLength
+                        ? (nameDialAnswers[riddle.id] ?? "A".repeat(riddle.nameLength))
+                        : "";
                       return (
                         <article
                           key={riddle.id}
@@ -1308,21 +1369,58 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               className="mt-4 flex flex-wrap gap-2"
                               onSubmit={(event) => {
                                 event.preventDefault();
-                                solveRiddle(riddle, answer);
+                                solveRiddle(riddle, riddle.nameLength ? nameAnswer : answer);
                               }}
                             >
-                              <input
-                                value={answer}
-                                onChange={(event) =>
-                                  setRiddleAnswers((items) => ({
-                                    ...items,
-                                    [riddle.id]: event.target.value,
-                                  }))
-                                }
-                                aria-label={`Resposta para ${riddle.title}`}
-                                placeholder="Digite sua resposta"
-                                className="min-h-10 min-w-0 flex-1 border border-[#4b4439] bg-[#11100e] px-3 text-sm outline-none focus:border-[#c4a779]"
-                              />
+                              {riddle.nameLength ? (
+                                <div className="w-full">
+                                  <div className="grid grid-cols-5 gap-1 sm:grid-cols-6">
+                                    {nameAnswer.split("").map((letter, index) => (
+                                      <div key={`${riddle.id}-${index}`} className="text-center">
+                                        <button
+                                          type="button"
+                                          aria-label={`Girar letra ${index + 1} para cima`}
+                                          onClick={() =>
+                                            rotateNameDial(riddle.id, index, 1, riddle.nameLength!)
+                                          }
+                                          className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
+                                        >
+                                          ▲
+                                        </button>
+                                        <div className="py-2 font-mono text-xl text-[#ead8b8]">
+                                          {letter}
+                                        </div>
+                                        <button
+                                          type="button"
+                                          aria-label={`Girar letra ${index + 1} para baixo`}
+                                          onClick={() =>
+                                            rotateNameDial(riddle.id, index, -1, riddle.nameLength!)
+                                          }
+                                          className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
+                                        >
+                                          ▼
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-wider text-[#81796d]">
+                                    Nome selecionado: {nameAnswer}
+                                  </p>
+                                </div>
+                              ) : (
+                                <input
+                                  value={answer}
+                                  onChange={(event) =>
+                                    setRiddleAnswers((items) => ({
+                                      ...items,
+                                      [riddle.id]: event.target.value,
+                                    }))
+                                  }
+                                  aria-label={`Resposta para ${riddle.title}`}
+                                  placeholder="Digite sua resposta"
+                                  className="min-h-10 min-w-0 flex-1 border border-[#4b4439] bg-[#11100e] px-3 text-sm outline-none focus:border-[#c4a779]"
+                                />
+                              )}
                               <button
                                 type="submit"
                                 className="min-h-10 border border-[#c4a779] px-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/10"
@@ -1689,10 +1787,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               </div>
               <div className="border border-[#4b4439] bg-[#211f1b] p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
-                  Penalidade por dicas
+                  Penalidade total
                 </p>
                 <p className="mt-1 text-3xl">-{scorePenalty}</p>
-                <p className="mt-1 text-xs text-[#bdb5a8]">{usedHints.length} dicas consultadas</p>
+                <p className="mt-1 text-xs text-[#bdb5a8]">
+                  {usedHints.length} dicas · {mistakes} erros (-{mistakes * MISTAKE_PENALTY} pontos)
+                </p>
               </div>
               <div className="border border-[#4b4439] bg-[#211f1b] p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">

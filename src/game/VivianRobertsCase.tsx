@@ -1049,7 +1049,10 @@ export function VivianRobertsCase({
   onMusicVolumeChange?: (value: number) => void;
 }) {
   const [showBoard, setShowBoard] = useState(false);
-  const [showPlayableGame, setShowPlayableGame] = useState(false);
+  const [showPlayableGame, setShowPlayableGame] = useState(
+    () =>
+      typeof window !== "undefined" && window.localStorage.getItem("vivian-map-target") !== null,
+  );
   const [ambientOn, setAmbientOn] = useState(true);
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.22;

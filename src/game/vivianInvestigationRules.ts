@@ -1,4 +1,5 @@
 export const HINT_COSTS = [20, 50, 100] as const;
+export const MISTAKE_PENALTY = 25;
 export const MAX_SCORE = 1000;
 
 export function normalizeSavedIds<T extends string>(
@@ -17,9 +18,9 @@ export function normalizeSavedIds<T extends string>(
   return [...normalized];
 }
 
-export function calculateInvestigationScore(usedHints: readonly string[]) {
+export function calculateInvestigationScore(usedHints: readonly string[], mistakes = 0) {
   const uniqueHints = new Set(usedHints);
-  const penalty = [...uniqueHints].reduce((total, key) => {
+  const hintPenalty = [...uniqueHints].reduce((total, key) => {
     const match = /:(1|2|3)$/.exec(key);
     if (!match) return total;
 
@@ -27,5 +28,7 @@ export function calculateInvestigationScore(usedHints: readonly string[]) {
     return total + (HINT_COSTS[level - 1] ?? 0);
   }, 0);
 
+  const mistakePenalty = Math.max(0, Math.floor(mistakes)) * MISTAKE_PENALTY;
+  const penalty = hintPenalty + mistakePenalty;
   return { penalty, score: Math.max(0, MAX_SCORE - penalty) };
 }
