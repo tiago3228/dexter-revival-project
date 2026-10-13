@@ -1,7 +1,7 @@
 export function validateHomeSearch(search: Record<string, unknown>) {
-  return search.resumeVivian === "1" ||
-    search.resumeVivian === "true" ||
-    search.resumeVivian === true
-    ? { resumeVivian: true as const }
+  return search["resumePainscreek"] === "1" ||
+    search["resumePainscreek"] === "true" ||
+    search["resumePainscreek"] === true
+    ? { resumePainscreek: true as const }
     : {};
 }

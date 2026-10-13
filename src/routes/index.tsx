@@ -43,17 +43,17 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
-  const { resumeVivian } = Route.useSearch();
+  const { resumePainscreek } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   useEffect(() => {
-    if (resumeVivian) {
+    if (resumePainscreek) {
       void navigate({
-        search: (previous) => ({ ...previous, resumeVivian: undefined }),
+        search: {},
         replace: true,
       });
     }
-  }, [navigate, resumeVivian]);
+  }, [navigate, resumePainscreek]);
 
-  return <Game resumeVivianCase={Boolean(resumeVivian)} />;
+  return <Game resumePainscreekCase={Boolean(resumePainscreek)} />;
 }

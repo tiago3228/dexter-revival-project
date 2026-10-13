@@ -174,7 +174,7 @@ function getInvestigatorScore(state: ReturnType<typeof initial>): InvestigatorSc
   return { points, rank, solvedPoints, timePoints, disciplinePoints };
 }
 
-export function Game({ resumeVivianCase = false }: { resumeVivianCase?: boolean } = {}) {
+export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: boolean } = {}) {
   const [s, setS] = useState(initial);
   const [modal, setModal] = useState<Modal>(null);
   const [activeStoryDialogue, setActiveStoryDialogue] = useState<StoryDialogueScene | null>(null);
@@ -206,9 +206,9 @@ export function Game({ resumeVivianCase = false }: { resumeVivianCase?: boolean 
   });
   const [caseMode, setCaseMode] = useState<
     "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
-  >(() => (resumeVivianCase ? "vivian" : "ortega"));
-  const [showMenu, setShowMenu] = useState(() => !resumeVivianCase);
-  const [showIntro, setShowIntro] = useState(() => !resumeVivianCase);
+  >(() => (resumePainscreekCase ? "vivian" : "ortega"));
+  const [showMenu, setShowMenu] = useState(() => !resumePainscreekCase);
+  const [showIntro, setShowIntro] = useState(() => !resumePainscreekCase);
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
   const [introMusicActive, setIntroMusicActive] = useState(true);
   const [playerName, setPlayerName] = useState(() => loadCurrentPlayerName());

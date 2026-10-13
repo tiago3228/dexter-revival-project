@@ -283,7 +283,7 @@ function MapasPage() {
             </Link>
             <Link
               to="/"
-              search={{ resumeVivian: true }}
+              search={{ resumePainscreek: true }}
               className="inline-flex items-center gap-2 border border-[#56594c] px-3 py-2 text-sm hover:bg-[#292c24]"
             >
               <ArrowLeft size={16} /> Voltar ao jogo

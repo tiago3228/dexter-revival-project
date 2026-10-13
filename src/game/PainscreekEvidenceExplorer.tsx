@@ -93,7 +93,7 @@ export function PainscreekEvidenceExplorer() {
   const filtered = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("pt-BR");
     return [...PAINSCREEK_EVIDENCE_001_116]
-      .sort((a, b) => a.pages[0] - b.pages[0] || a.id.localeCompare(b.id))
+      .sort((a, b) => (a.pages[0] ?? 0) - (b.pages[0] ?? 0) || a.id.localeCompare(b.id))
       .filter((item) => {
         const matchesStatus = status === "all" || item.status === status;
         const searchable = [
@@ -127,7 +127,7 @@ export function PainscreekEvidenceExplorer() {
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <header className="border-b border-border pb-6">
           <a
-            href="/?resumeVivian=1"
+            href="/?resumePainscreek=1"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             ← Voltar ao jogo
