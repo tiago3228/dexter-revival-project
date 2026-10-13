@@ -2847,11 +2847,18 @@ function Puzzle({
   fail: FailFn;
 }) {
   const [order, setOrder] = useState<string[]>([]);
+  const [bloodHintReady, setBloodHintReady] = useState(false);
   const [pins, setPins] = useState<number[]>([]);
   const [noise, setNoise] = useState(0);
   const [key, setKey] = useState("");
   const [decoded, setDecoded] = useState<string | null>(null);
   const [liar, setLiar] = useState<string | null>(null);
+  useEffect(() => {
+    if (id !== "sangue") return;
+    setBloodHintReady(false);
+    const timer = window.setTimeout(() => setBloodHintReady(true), 8000);
+    return () => window.clearTimeout(timer);
+  }, [id, order.length]);
 
   if (id === "lamina") {
     return (
@@ -2927,6 +2934,8 @@ function Puzzle({
       { id: "cozinha", label: "Cozinha — gotas levemente alongadas" },
     ];
     const correct = ["porta", "cozinha", "corredor", "banheiro"];
+    const correctSoFar = order.every((item, index) => item === correct[index]);
+    const suggestedId = correctSoFar ? correct[order.length] : null;
     return (
       <>
         <h2 className="font-display text-2xl">Fotos da cena — reconstrução</h2>
@@ -2934,13 +2943,21 @@ function Puzzle({
           Sangue em movimento deixa gotas alongadas. Quanto mais devagar a vítima anda, mais
           redondas elas ficam. Quando ela para, sobra uma poça. Ordene o caminho da vítima.
         </p>
+        <p
+          className="mt-2 border-l-2 border-primary/60 pl-3 text-xs text-muted-foreground"
+          aria-live="polite"
+        >
+          Precisa de uma ajuda? Se você ficar 8 segundos sem escolher, o próximo item sugerido vai
+          piscar. A sugestão avança depois de cada escolha.
+        </p>
         <div className="mt-4 grid gap-2">
           {stains.map((st) => (
             <button
               key={st.id}
+              type="button"
               disabled={order.includes(st.id)}
               onClick={() => setOrder([...order, st.id])}
-              className="border border-border px-4 py-2 text-left hover:border-primary disabled:opacity-40"
+              className={`border border-border px-4 py-2 text-left hover:border-primary disabled:opacity-40 ${bloodHintReady && st.id === suggestedId ? "investigation-guidance-pulse border-primary text-primary" : ""}`}
             >
               {order.includes(st.id) && (
                 <span className="mr-2 font-mono text-primary">{order.indexOf(st.id) + 1}.</span>
@@ -2949,13 +2966,23 @@ function Puzzle({
             </button>
           ))}
         </div>
+        {!correctSoFar && bloodHintReady && (
+          <p className="mt-3 text-xs text-muted-foreground" aria-live="polite">
+            A sequência pode ser reorganizada. Use “limpar” para tentar novamente.
+          </p>
+        )}
         <div className="mt-4 flex gap-3 font-mono text-sm">
-          <button onClick={() => setOrder([])} className="text-muted-foreground">
+          <button
+            type="button"
+            onClick={() => setOrder([])}
+            className={`text-muted-foreground ${bloodHintReady && !correctSoFar ? "investigation-guidance-pulse rounded-sm px-2 text-primary" : ""}`}
+          >
             limpar
           </button>
           {order.length === 4 && (
             <button
-              className="text-primary"
+              type="button"
+              className={`text-primary ${bloodHintReady && correctSoFar ? "investigation-guidance-pulse rounded-sm px-2" : ""}`}
               onClick={() => {
                 if (order.join() === correct.join())
                   solve(
