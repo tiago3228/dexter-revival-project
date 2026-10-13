@@ -9,7 +9,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import {
-  PAINSCREEK_EVIDENCE_080_116,
+  PAINSCREEK_EVIDENCE_001_116,
   type PainscreekEvidence,
   type PainscreekEvidenceStatus,
 } from "@/game/painscreekEvidence";
@@ -90,29 +90,31 @@ export function PainscreekEvidenceExplorer() {
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("pt-BR");
-    return PAINSCREEK_EVIDENCE_080_116.filter((item) => {
-      const matchesStatus = status === "all" || item.status === status;
-      const searchable = [
-        item.id,
-        item.title,
-        item.documented,
-        item.sourceType,
-        item.pendingVerification,
-        item.playerInference,
-        ...item.pages.map(String),
-      ]
-        .join(" ")
-        .toLocaleLowerCase("pt-BR");
-      return matchesStatus && (!normalized || searchable.includes(normalized));
-    });
+    return [...PAINSCREEK_EVIDENCE_001_116]
+      .sort((a, b) => a.pages[0] - b.pages[0] || a.id.localeCompare(b.id))
+      .filter((item) => {
+        const matchesStatus = status === "all" || item.status === status;
+        const searchable = [
+          item.id,
+          item.title,
+          item.documented,
+          item.sourceType,
+          item.pendingVerification,
+          item.playerInference,
+          ...item.pages.map(String),
+        ]
+          .join(" ")
+          .toLocaleLowerCase("pt-BR");
+        return matchesStatus && (!normalized || searchable.includes(normalized));
+      });
   }, [query, status]);
 
   const counts = useMemo(
     () => ({
-      all: PAINSCREEK_EVIDENCE_080_116.length,
-      pending: PAINSCREEK_EVIDENCE_080_116.filter((item) => item.status !== "visually-checked")
+      all: PAINSCREEK_EVIDENCE_001_116.length,
+      pending: PAINSCREEK_EVIDENCE_001_116.filter((item) => item.status !== "visually-checked")
         .length,
-      checked: PAINSCREEK_EVIDENCE_080_116.filter((item) => item.status === "visually-checked")
+      checked: PAINSCREEK_EVIDENCE_001_116.filter((item) => item.status === "visually-checked")
         .length,
     }),
     [],
@@ -142,8 +144,9 @@ export function PainscreekEvidenceExplorer() {
             Catálogo de evidências
           </h1>
           <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
-            Consulte as 34 referências catalogadas a partir das páginas 80–116 do PDF. Busque por
-            título, página ou conteúdo e abra cada registro para ver suas ressalvas.
+            Consulte as {PAINSCREEK_EVIDENCE_001_116.length} referências catalogadas a partir das
+            páginas 1–116 do PDF. Busque por título, página ou conteúdo e abra cada registro para
+            ver suas ressalvas.
           </p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-card p-3">
@@ -245,9 +248,9 @@ export function PainscreekEvidenceExplorer() {
             <p className="mt-3 max-w-3xl leading-6">
               Este é um catálogo documental preliminar, não um sistema de solução do caso. A
               paginação segue o PDF de origem. Relatos, notícias, acusações e inferências permanecem
-              diferenciados; duplicatas não são contadas como confirmações independentes. O catálogo
-              cobre somente páginas 80–116 e não afirma ter concluído o cruzamento com as páginas
-              1–79.
+              diferenciados; relatos temáticos podem remeter a documentos já catalogados e não são
+              confirmações independentes. O catálogo percorre as páginas 1–116; entradas baseadas em
+              OCR continuam sinalizadas para revisão visual.
             </p>
           )}
         </footer>

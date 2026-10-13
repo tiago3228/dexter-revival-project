@@ -1,8 +1,7 @@
 /**
- * Catálogo documental de Painscreek (PDF, páginas 80–116); o status indica revisão da fonte, não confirmação de todas as alegações.
+ * Catálogo documental de Painscreek (PDF, páginas 1–116); o status indica revisão da fonte, não confirmação de todas as alegações.
  *
- * Este arquivo normaliza referências para implementação futura; não está conectado
- * à interface do jogo. "documented" descreve o que a fonte relata, não prova
+ * Este arquivo alimenta o explorador de evidências. "documented" descreve o que a fonte relata, não prova
  * independente de que a alegação seja verdadeira.
  */
 export type PainscreekEvidenceStatus =
@@ -20,7 +19,7 @@ export type PainscreekEvidence = {
   playerInference: string;
 };
 
-export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
+export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
   {
     id: "P-001",
     title: "Carta de ameaça a Vivian",
@@ -93,12 +92,12 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   {
     id: "P-006",
     title: "Gravidez de Sofia e segredo de Charles",
-    pages: [93, 98, 102, 103, 112, 113, 114],
+    pages: [93, 98, 102, 112, 113, 114],
     sourceType: "Diário e cartas",
     documented:
       "A carta de Sylvia ao padre Calvin (página 93) relata que, ao chegar a Painscreek em 4 de julho de 1975, soube do colapso de Vivian após o parto de Trisha e da relação de Charles com a criada Sofia, que teve um menino. Sylvia diz que Sofia e o filho haviam desaparecido e que Magdalene organizou uma busca com ela e Patrick; a carta também menciona a morte de Magdalene após menos de dois meses de busca. Outras páginas registram o segredo e a gravidez.",
     pendingVerification:
-      "A página 93 foi cotejada visualmente; as demais referências agrupadas (98, 102, 103, 112–114) ainda precisam de conferência individual para consolidar a cronologia sem duplicar fatos.",
+      "A página 93 foi cotejada visualmente; as demais referências agrupadas (98, 102, 112–114) ainda precisam de conferência individual para consolidar a cronologia sem duplicar fatos. O cartão independente da p. 103 está em P-047.",
     confidence: "high",
     status: "incomplete",
     playerInference:
@@ -149,12 +148,12 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   {
     id: "P-010",
     title: "Scott como suspeito da morte de Vivian",
-    pages: [82, 83, 90, 104],
+    pages: [83, 90, 104],
     sourceType: "Notícia, relatório policial e carta pessoal",
     documented:
       "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que tenha matado Vivian. Na carta a Trisha (p. 104), Scott também afirma que não matou Vivian e associa sua descoberta sobre os pais biológicos à oposição do padre Matthew ao relacionamento entre eles.",
     pendingVerification:
-      "As páginas 82–83, 90 e 104 foram cotejadas visualmente; separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico, e não tratar a negação de Scott como prova independente.",
+      "As páginas 83, 90 e 104 foram cotejadas visualmente; separar cronologicamente suspeita, depoimentos, investigação e eventual resultado jurídico, e não tratar a negação de Scott como prova independente. O recorte da p. 82 tem registro próprio em P-046.",
     confidence: "high",
     status: "visually-checked",
     playerInference:
@@ -176,12 +175,12 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
   {
     id: "P-012",
     title: "Wanda Tyler e Derrick",
-    pages: [80, 81],
+    pages: [78, 79, 80, 81],
     sourceType: "Diário pessoal",
     documented:
-      "Wanda descreve o apoio de Derrick durante seu tratamento e sua preocupação com a saúde e o futuro.",
+      "As entradas de 1974 nas páginas 78–79 registram a perspectiva de Wanda sobre Derrick, Vivian e Sofia; as páginas 80–81, de 1995, descrevem o apoio de Derrick durante o tratamento de Wanda.",
     pendingVerification:
-      "Cruzar com fontes independentes caso essa relação se mostre relevante para a cronologia principal.",
+      "As páginas 78–81 foram transcritas principalmente por OCR e ainda precisam de cotejo visual. Os juízos de Wanda sobre Sofia são opiniões da autora, não confirmação independente.",
     confidence: "high",
     status: "unverified",
     playerInference:
@@ -499,5 +498,189 @@ export const PAINSCREEK_EVIDENCE_080_116: PainscreekEvidence[] = [
     status: "visually-checked",
     playerInference:
       "As anotações estabelecem uma sequência relatada sobre Andrew e o empréstimo de uma foto; a identidade da foto e sua relevância para a investigação permanecem em aberto.",
+  },
+  {
+    id: "P-035",
+    title: "Caderno de Andrew Reed",
+    pages: [1, 2],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 1–2, associadas a Andrew Reed, registram sua avaliação de Scott, referências a Sofia, medicação e culpa compartilhada. O caderno não identifica com segurança todos os referentes dos pronomes usados pelo narrador.",
+    pendingVerification:
+      "A transcrição das páginas 1–2 informa texto impresso legível, mas não houve cotejo visual nesta revisão. Confirmar os trechos exatos e manter indeterminados os referentes de ‘ela’, ‘ele’ e ‘eles’.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "O caderno documenta a perspectiva de Andrew; percepções, suspeitas e pedidos de perdão não comprovam por si sós eventos externos nem participação criminal.",
+  },
+  {
+    id: "P-036",
+    title: "Caderno de Bernard Hopkins",
+    pages: [3, 4, 5],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "Nas páginas 3–5, Bernard relata conversas sobre Sofia, observações sobre Vivian, Scott e Derrick e reflexões pessoais. Na página 5, ‘Vivian’ aparece riscado antes de uma frase interrompida.",
+    pendingVerification:
+      "A transcrição das páginas 3–5 informa texto impresso legível, mas não houve cotejo visual nesta revisão. A palavra riscada e a frase incompleta não permitem concluir confissão, intenção ou envolvimento em crime.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "As entradas são relatos e interpretações de Bernard; a linha riscada não é prova independente contra ele ou outra pessoa.",
+  },
+  {
+    id: "P-037",
+    title: "Caderno de Charles Roberts",
+    pages: [6, 7],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "Nas páginas 6–7, Charles registra sua relação com Vivian, Trisha e Scott, além de lembranças familiares e opiniões próprias sobre essas relações.",
+    pendingVerification:
+      "A transcrição das páginas 6–7 informa texto impresso legível, mas não houve cotejo visual nesta revisão. Separar as afirmações de Charles de confirmação documental independente.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "O caderno apresenta a versão e as percepções de Charles; as interpretações do autor não comprovam, isoladamente, motivos ou atos de terceiros.",
+  },
+  {
+    id: "P-038",
+    title: "Caderno de Derrick Tyler",
+    pages: [8, 9, 10, 11, 12],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "Nas páginas 8–12, Derrick relata episódios de sua convivência com Scott e Trisha e sua entrada no trabalho de motorista da família Roberts. A página 11 descreve uma saída de caça perto do rio e um ralo de drenagem, sem localizar precisamente o ponto.",
+    pendingVerification:
+      "A transcrição das páginas 8–12 informa texto impresso legível, mas não houve cotejo visual nesta revisão. Não atribuir intenção à falha dos freios ou ao episódio do ralo sem outra fonte.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "As entradas documentam lembranças de Derrick; não estabelecem, por si sós, relação com a morte de Vivian.",
+  },
+  {
+    id: "P-039",
+    title: "Caderno de Mary Martinez",
+    pages: [13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 13–17 e 21–27 registram a rotina de Mary na mansão, seus relatos sobre Sofia, Scott, Trisha, Vivian e o Dr. Johnson, além de referências ao sótão, à casa de Dorothy e a eventos de 1995.",
+    pendingVerification:
+      "A transcrição das páginas 13–17 e 21–27 informa texto impresso legível, mas não houve cotejo visual nesta revisão. Endereço, relações e acontecimentos devem permanecer atribuídos ao registro de Mary quando não houver fonte independente.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "O diário fornece observações pessoais de Mary, não confirmação independente de rumores ou acusações que ela relata.",
+  },
+  {
+    id: "P-040",
+    title: "Caderno do xerife James Howard",
+    pages: [18, 19, 20],
+    sourceType: "Diário/anotações pessoais de autoridade policial",
+    documented:
+      "Nas páginas 18–20, anotações atribuídas a James Howard registram o funeral de Vivian e referências ao andamento do caso e ao hospital. O material contém relatos e impressões do autor, não uma decisão judicial.",
+    pendingVerification:
+      "A transcrição das páginas 18–20 informa texto impresso legível, mas não houve cotejo visual nesta revisão. Distinguir as anotações pessoais de relatórios oficiais e confirmar qualquer leitura ambígua no PDF.",
+    confidence: "high",
+    status: "unverified",
+    playerInference:
+      "As anotações registram o ponto de vista de James; suspeitas ou comentários não equivalem a conclusão oficial sobre culpa.",
+  },
+  {
+    id: "P-041",
+    title: "Caderno de Matthew Brooks",
+    pages: [28, 29, 30, 31, 32, 33, 34],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 28–34, associadas a Matthew Brooks, registram sua relação com Sofia, sua permanência na Igreja da Trindade e lembranças posteriores sobre o que ouviu a respeito dela. As entradas de 1995 expressam suspeitas e sofrimento do autor.",
+    pendingVerification:
+      "As páginas 31–34 foram extraídas principalmente por OCR e precisam de cotejo visual para palavras e ordem de colunas. Relatos sobre Sofia e possíveis crimes permanecem atribuídos a Matthew e a terceiros citados por ele.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "O diário documenta o que Matthew acreditava ou lhe contaram; não confirma independentemente o destino de Sofia nem a responsabilidade de qualquer pessoa.",
+  },
+  {
+    id: "P-042",
+    title: "Caderno de Scott Brooks",
+    pages: [
+      35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+    ],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 35–57, associadas a Scott Brooks, registram sua infância, a adoção, sua busca por informações sobre Sofia e a relação com Trisha. Nas páginas 43 e 55, conferidas no PDF, há entradas sobre a investigação de Scott, uma fotografia e a descoberta de sua identidade; outros trechos permanecem dependentes de OCR.",
+    pendingVerification:
+      "As páginas 43 e 55 foram conferidas visualmente; as demais páginas 35–57 foram transcritas principalmente por OCR e ainda exigem cotejo. O relato de Andrew sobre a morte de Sofia deve continuar identificado como relato indireto, não prova independente. As páginas 31–34 pertencem ao caderno de Matthew catalogado em P-041.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "O caderno registra a versão e as emoções de Scott; não confirma sozinho sua identidade biológica, o destino de Sofia ou a culpa/inocência de qualquer pessoa.",
+  },
+  {
+    id: "P-043",
+    title: "Caderno de investigação de Steven Moss",
+    pages: [58, 59, 60, 62],
+    sourceType: "Anotações de investigação particular",
+    documented:
+      "As páginas 58–60 e 62 registram o progresso da investigação de Steven Moss em 1997, a intenção de visitar o Orfanato São Patrício, notas biográficas sobre Vivian, a anotação ‘Sala de segurança: 025241 (Mansão?)’ e tarefas de entrevista. A ficha/notação sobre Bernard na página 61 é catalogada separadamente em P-021.",
+    pendingVerification:
+      "As páginas 58–62 foram conferidas visualmente. A anotação da página 60 termina com ‘(Mansão?)’, e a função do código 025241 não foi confirmada. Na página 62, a data do encontro com o xerife não informa o ano.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "As notas documentam linhas de investigação e hipóteses de Moss; não comprovam que as pistas sejam verdadeiras ou que tenham sido verificadas.",
+  },
+  {
+    id: "P-044",
+    title: "Diário de Trisha Roberts",
+    pages: [63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 63–72, identificadas como diário de Trisha, registram sua infância, a relação com Scott, o código 44871 da sala de estudo e conflitos familiares sobre o casal.",
+    pendingVerification:
+      "As páginas 63–72 foram extraídas principalmente por OCR e precisam de cotejo visual, especialmente para datas e palavras afetadas por ordem de colunas. Rumores e percepções permanecem atribuídos a Trisha.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "O diário documenta a perspectiva de Trisha e a existência de uma anotação de código; não prova por si só o significado do código ou as motivações de outros personagens.",
+  },
+  {
+    id: "P-045",
+    title: "Diários de Vivian Roberts",
+    pages: [73, 74, 75, 76, 77],
+    sourceType: "Diário/caderno pessoal",
+    documented:
+      "As páginas 73–77 são identificadas como entradas de Vivian, com registros de 1972 e 1994 sobre sua vida pública, relações familiares, decisões de negócios e opiniões sobre Scott e Trisha.",
+    pendingVerification:
+      "As páginas 73–77 foram extraídas principalmente por OCR e precisam de cotejo visual para datas e ordem de colunas. As opiniões e interpretações de Vivian não devem ser apresentadas como confirmação independente de alegações sobre outras pessoas.",
+    confidence: "medium",
+    status: "incomplete",
+    playerInference:
+      "O diário registra a perspectiva de Vivian, não uma narrativa neutra nem prova autônoma de intenção ou culpa.",
+  },
+  {
+    id: "P-046",
+    title: "Notícia sobre a morte de Vivian Roberts",
+    pages: [82],
+    sourceType: "Notícia de jornal",
+    documented:
+      "A notícia relata que Vivian foi encontrada morta diante da casa na Rua Maple, n.º 1, às 7h15, por Mary Martinez. O texto estima a morte entre 23h e 1h e informa que o corpo aguardava autópsia.",
+    pendingVerification:
+      "A página 82 foi conferida visualmente no PDF. A notícia registra informações publicadas à época; o horário da morte é uma estimativa jornalística, não uma conclusão pericial.",
+    confidence: "medium",
+    status: "visually-checked",
+    playerInference:
+      "A notícia documenta o relato jornalístico inicial sobre a descoberta do corpo; não identifica o responsável nem substitui o laudo/autópsia.",
+  },
+  {
+    id: "P-047",
+    title: "Cartão de aniversário de Matthew para Sofia",
+    pages: [103],
+    sourceType: "Cartão pessoal",
+    documented:
+      "O cartão, datado de 18 de março de 1975 e assinado por Matthew, pede que Sofia espere seu retorno e deseja feliz aniversário. O texto também expressa afeto e recorda os momentos que passaram juntos.",
+    pendingVerification:
+      "A página 103 foi conferida visualmente. A peça não identifica onde estava ou se foi entregue; sua relação com a carta de Matthew da página 102 deve ser entendida sem presumir que fossem o mesmo documento.",
+    confidence: "high",
+    status: "visually-checked",
+    playerInference:
+      "O cartão documenta a mensagem escrita por Matthew e sua autoria indicada na peça; não confirma o destino posterior de Sofia nem que ela tenha recebido o cartão.",
   },
 ];
