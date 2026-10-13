@@ -37,6 +37,16 @@ type ClueId =
   | "dorothy-photo"
   | "daniel-letter"
   | "code-0318";
+type RiddleId =
+  | "archive-identity"
+  | "archive-police"
+  | "hospital-amount"
+  | "hospital-vivian"
+  | "mansion-code"
+  | "mansion-secret"
+  | "mansion-photo"
+  | "church-recipient"
+  | "lake-doctor";
 type LinkId =
   "scott-versions" | "hospital-money" | "henry-money" | "vivian-charles" | "photo-scott";
 type Phase = "explore" | "board" | "timeline" | "report";
@@ -50,11 +60,22 @@ type Clue = {
   place: PlaceId;
 };
 
+type Riddle = {
+  id: RiddleId;
+  title: string;
+  prompt: string;
+  hint: string;
+  answers: string[];
+  clueId: ClueId;
+  place: PlaceId;
+};
+
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 2;
+  version: 3;
   found: ClueId[];
+  solvedRiddles: RiddleId[];
   visited: PlaceId[];
   links: LinkId[];
   activePlace: PlaceId;
@@ -67,6 +88,93 @@ type SaveData = {
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
+
+const RIDDLES: Riddle[] = [
+  {
+    id: "archive-identity",
+    title: "A voz por trás da negativa",
+    prompt:
+      "O relatório chama alguém de principal suspeito. No recorte seguinte, essa mesma pessoa diz que foi embora. Qual é o primeiro nome?",
+    hint: "A resposta começa com S e aparece na declaração sobre a floresta.",
+    answers: ["scott", "scott brooks"],
+    clueId: "scott-denial",
+    place: "archive",
+  },
+  {
+    id: "archive-police",
+    title: "O nome no relatório",
+    prompt: "Quem o relatório policial registra como principal suspeito pela morte de Vivian?",
+    hint: "O sobrenome é Brooks e a pessoa também aparece negando a autoria.",
+    answers: ["scott", "scott brooks"],
+    clueId: "police-report",
+    place: "archive",
+  },
+  {
+    id: "hospital-amount",
+    title: "O valor fora do balanço",
+    prompt:
+      "A carta dos investigadores fala em uma transferência offshore. Digite o valor aproximado, sem símbolo de moeda.",
+    hint: "O número tem seis algarismos: 160 mil dólares.",
+    answers: ["160000", "160 mil", "160 mil dolares", "160000 dolares"],
+    clueId: "funds-investigation",
+    place: "hospital",
+  },
+  {
+    id: "hospital-vivian",
+    title: "A assinatura clínica",
+    prompt: "Qual médico assina o relatório sobre o estado clínico de Vivian?",
+    hint: "É o mesmo médico citado na notícia do Lago Cherry Creek.",
+    answers: ["henry", "henry johnson"],
+    clueId: "vivian-medical",
+    place: "hospital",
+  },
+  {
+    id: "mansion-code",
+    title: "Quatro algarismos para Sofia",
+    prompt: "Matthew associa uma sequência à chegada de Sofia ao orfanato. Qual é o código?",
+    hint: "São quatro algarismos e começam por zero.",
+    answers: ["0318", "03/18", "3 18"],
+    clueId: "code-0318",
+    place: "mansion",
+  },
+  {
+    id: "mansion-secret",
+    title: "O nome que desapareceu",
+    prompt: "A carta sobre os segredos da família menciona qual pessoa desaparecida?",
+    hint: "O nome começa com S e está ligado à chegada ao orfanato.",
+    answers: ["sofia"],
+    clueId: "charles-secret",
+    place: "mansion",
+  },
+  {
+    id: "mansion-photo",
+    title: "O objeto emprestado",
+    prompt: "O que Scott pediu emprestado a Dorothy depois da conversa sobre Charles e Vivian?",
+    hint: "É uma imagem guardada no álbum de Dorothy.",
+    answers: ["foto", "fotografia"],
+    clueId: "dorothy-photo",
+    place: "mansion",
+  },
+  {
+    id: "church-recipient",
+    title: "O nome no envelope",
+    prompt:
+      "A correspondência fala em recuperação, no Dr. Johnson e em trabalho na mansão. Para quem ela foi endereçada?",
+    hint: "O nome começa com D e também aparece em outra carta do caso.",
+    answers: ["daniel"],
+    clueId: "daniel-letter",
+    place: "church",
+  },
+  {
+    id: "lake-doctor",
+    title: "Quem repousava no carro?",
+    prompt: "O carro submerso no lago escondia o corpo de qual médico?",
+    hint: "O sobrenome Johnson aparece na notícia.",
+    answers: ["henry", "henry johnson"],
+    clueId: "henry-death",
+    place: "lake",
+  },
+];
 
 const PLACES: Place[] = [
   {
@@ -356,18 +464,22 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2;
+      version?: 1 | 2 | 3;
     };
-    if (value.version !== 1 && value.version !== 2) return null;
+    if (value.version !== 1 && value.version !== 2 && value.version !== 3) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 2,
+      version: 3,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
+      ),
+      solvedRiddles: ids(
+        value.solvedRiddles,
+        RIDDLES.map((item) => item.id),
       ),
       visited: ids(
         value.visited,
@@ -416,6 +528,7 @@ function isUnlocked(placeId: PlaceId, found: ClueId[]) {
 export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [saved] = useState(readSave);
   const [found, setFound] = useState<ClueId[]>(saved?.found ?? []);
+  const [solvedRiddles, setSolvedRiddles] = useState<RiddleId[]>(saved?.solvedRiddles ?? []);
   const [usedHints, setUsedHints] = useState<string[]>(saved?.usedHints ?? []);
   const [visited, setVisited] = useState<PlaceId[]>(saved?.visited ?? ["archive"]);
   const [links, setLinks] = useState<LinkId[]>(saved?.links ?? []);
@@ -430,6 +543,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [notice, setNotice] = useState(
     "Comece pelo arquivo do xerife. Leia os registros, colete evidências e cruze fontes antes de concluir.",
   );
+  const [riddleAnswers, setRiddleAnswers] = useState<Partial<Record<RiddleId, string>>>({});
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
 
@@ -447,8 +561,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 2,
+      version: 3,
       found,
+      solvedRiddles,
       visited,
       links,
       activePlace,
@@ -463,6 +578,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     window.dispatchEvent(new Event("vivian-investigation-progress"));
   }, [
     found,
+    solvedRiddles,
     visited,
     links,
     activePlace,
@@ -475,6 +591,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const currentPlace = PLACES.find((place) => place.id === activePlace)!;
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
+  const currentRiddles = RIDDLES.filter((riddle) => riddle.place === activePlace);
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
   const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints);
@@ -543,6 +660,27 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setNotice("Evidência adicionada ao caderno: " + clue.title);
   };
 
+  const solveRiddle = (riddle: Riddle, answer: string) => {
+    const normalized = answer
+      .trim()
+      .toLocaleLowerCase("pt-BR")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    if (!riddle.answers.some((item) => item === normalized)) {
+      setNotice("Resposta incorreta. Releia os documentos e tente novamente.");
+      return;
+    }
+    if (!solvedRiddles.includes(riddle.id)) {
+      setSolvedRiddles((items) => [...items, riddle.id]);
+    }
+    if (!found.includes(riddle.clueId)) {
+      setFound((items) => [...items, riddle.clueId]);
+      setNotice(`Enigma resolvido: ${riddle.title}. Nova pista adicionada ao caderno.`);
+    } else {
+      setNotice(`Enigma resolvido: ${riddle.title}. A pista já estava catalogada.`);
+    }
+  };
+
   const toggleSelectedClue = (id: ClueId) => {
     setSelectedClues((current) =>
       current.includes(id)
@@ -608,6 +746,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     if (!window.confirm("Apagar o progresso desta investigação neste navegador?")) return;
     window.localStorage.removeItem(SAVE_KEY);
     setFound([]);
+    setSolvedRiddles([]);
     setUsedHints([]);
     setVisited(["archive"]);
     setLinks([]);
@@ -792,6 +931,79 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
                 {currentPlace.description}
               </p>
+              {currentRiddles.length > 0 && (
+                <section
+                  className="mt-5 border border-[#79664c] bg-[#211f1b] p-4"
+                  aria-label="Enigmas de arquivo"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                        Enigmas de arquivo
+                      </p>
+                      <p className="mt-2 text-xs leading-relaxed text-[#bdb5a8]">
+                        Resolva o desafio para revelar uma pista e avançar até os próximos diários.
+                      </p>
+                    </div>
+                    <FileSearch size={18} className="shrink-0 text-[#c4a779]" />
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {currentRiddles.map((riddle) => {
+                      const solved = solvedRiddles.includes(riddle.id);
+                      const answer = riddleAnswers[riddle.id] ?? "";
+                      return (
+                        <article
+                          key={riddle.id}
+                          className="border border-[#4b4439] bg-[#171512] p-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="font-display text-xl">{riddle.title}</h3>
+                            {solved && <Check size={17} className="shrink-0 text-emerald-300" />}
+                          </div>
+                          <p className="mt-3 text-sm leading-relaxed text-[#c9c1b5]">
+                            {riddle.prompt}
+                          </p>
+                          {solved ? (
+                            <p className="mt-3 border-l-2 border-emerald-400/70 pl-3 text-xs text-emerald-100">
+                              Enigma resolvido. A pista foi adicionada ao caderno.
+                            </p>
+                          ) : (
+                            <form
+                              className="mt-4 flex flex-wrap gap-2"
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                solveRiddle(riddle, answer);
+                              }}
+                            >
+                              <input
+                                value={answer}
+                                onChange={(event) =>
+                                  setRiddleAnswers((items) => ({
+                                    ...items,
+                                    [riddle.id]: event.target.value,
+                                  }))
+                                }
+                                aria-label={`Resposta para ${riddle.title}`}
+                                placeholder="Digite sua resposta"
+                                className="min-h-10 min-w-0 flex-1 border border-[#4b4439] bg-[#11100e] px-3 text-sm outline-none focus:border-[#c4a779]"
+                              />
+                              <button
+                                type="submit"
+                                className="min-h-10 border border-[#c4a779] px-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/10"
+                              >
+                                Verificar
+                              </button>
+                            </form>
+                          )}
+                          <p className="mt-3 text-[11px] leading-relaxed text-[#81796d]">
+                            Dica: {riddle.hint}
+                          </p>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
               <div className="mt-5 grid gap-3 md:grid-cols-2">
                 {currentClues.map((clue) => {
                   const collected = found.includes(clue.id);
