@@ -353,13 +353,12 @@ export function Game() {
     if (fadingRef.current) return;
     fadingRef.current = true;
     const startVolume = audio.volume;
-    const steps = 60;
-    let step = 0;
+    const duration = 3000;
+    const startedAt = Date.now();
     const interval = window.setInterval(() => {
-      step += 1;
-      const ratio = Math.max(0, 1 - step / steps);
-      if (audioRef.current === audio) audio.volume = startVolume * ratio;
-      if (step >= steps) {
+      const progress = Math.min(1, (Date.now() - startedAt) / duration);
+      if (audioRef.current === audio) audio.volume = startVolume * (1 - progress);
+      if (progress >= 1) {
         window.clearInterval(interval);
         fadingRef.current = false;
         audio.pause();
