@@ -207,6 +207,7 @@ type InvestigationSound =
   | "navigate"
   | "select"
   | "success"
+  | "roomComplete"
   | "fail"
   | "connection"
   | "timeline"
@@ -231,6 +232,12 @@ const playInvestigationSound = (kind: InvestigationSound) => {
       [392, 0, 0.1, "triangle"],
       [523, 0.08, 0.12, "triangle"],
       [784, 0.18, 0.2, "sine"],
+    ],
+    roomComplete: [
+      [392, 0, 0.12, "triangle"],
+      [523, 0.1, 0.12, "triangle"],
+      [659, 0.2, 0.14, "triangle"],
+      [1047, 0.34, 0.3, "sine"],
     ],
     fail: [
       [180, 0, 0.12, "sawtooth"],
@@ -906,6 +913,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [timelineChecked, setTimelineChecked] = useState(false);
   const [openClueId, setOpenClueId] = useState<ClueId | null>(null);
   const [placeIntroOpen, setPlaceIntroOpen] = useState<PlaceId | null>(null);
+  const [roomCompletion, setRoomCompletion] = useState<PlaceId | null>(null);
 
   useEffect(() => {
     if (!pendingHint) return;
@@ -1052,7 +1060,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const closeDocument = (reopenRoom = true) => {
     if (openClueId) {
-      setReadClues((items) => (items.includes(openClueId) ? items : [...items, openClueId]));
+      const alreadyRead = readClues.includes(openClueId);
+      const nextRead = alreadyRead ? readClues : [...readClues, openClueId];
+      const roomClueIds = CLUES.filter((clue) => clue.place === activePlace).map((clue) => clue.id);
+      const completedRoom = !alreadyRead && roomClueIds.every((id) => nextRead.includes(id));
+      setReadClues(nextRead);
+      if (completedRoom) {
+        playInvestigationSound("roomComplete");
+        setRoomCompletion(activePlace);
+        setNotice(`Sala concluída: todos os arquivos de ${currentPlace.name} foram lidos.`);
+      }
     }
     setOpenClueId(null);
     if (reopenRoom) setPlaceIntroOpen(activePlace);
@@ -1283,6 +1300,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setTimelineChecked(false);
     setPlaceIntroOpen(null);
     setOpenClueId(null);
+    setRoomCompletion(null);
     setNotice("Investigação reiniciada. Nenhuma evidência foi mantida.");
   };
 
@@ -2138,6 +2156,21 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <p className="mt-3 text-sm leading-relaxed text-[#d5c9b5]">
                 {PLACES.find((place) => place.id === placeIntroOpen)?.description}
               </p>
+              {roomCompletion === placeIntroOpen && (
+                <div
+                  role="status"
+                  className="mt-4 animate-pulse border border-emerald-400/70 bg-emerald-950/35 p-4 text-emerald-100 shadow-[0_0_28px_rgba(74,222,128,0.18)]"
+                >
+                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-300">
+                    Conquista desbloqueada
+                  </p>
+                  <p className="mt-2 font-display text-2xl">Sala documentada</p>
+                  <p className="mt-1 text-sm leading-relaxed text-emerald-100/80">
+                    Todos os arquivos deste local foram lidos. O som de confirmação marca a conclusão
+                    desta etapa.
+                  </p>
+                </div>
+              )}
               <div className="mt-5 border border-[#4b4439] bg-[#211f1b] p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
                   Arquivos disponíveis nesta sala
