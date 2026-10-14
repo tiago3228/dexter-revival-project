@@ -104,6 +104,11 @@ describe("investigation riddles", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("Arquivos disponíveis nesta sala");
     fireEvent.click(screen.getByRole("button", { name: "Começar leitura" }));
     expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
+    fireEvent.click(screen.getByRole("button", { name: "Fechar arquivo" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
+    expect(screen.getByRole("button", { name: /Relatório policial sobre Vivian.*Lido/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Scott nega ter matado Vivian.*Abrir/i }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Scott nega ter matado Vivian");
   });
 
   it("opens the complete dossier with the three-dial M99 combination after the report", () => {
@@ -242,7 +247,10 @@ describe("investigation riddles", () => {
 
     for (const riddle of riddles) {
       if (riddle.place) {
-        fireEvent.click(screen.getByRole("button", { name: new RegExp(riddle.place) }));
+        fireEvent.click(screen.getAllByRole("button", { name: new RegExp(riddle.place) })[0]!);
+        if (screen.queryByRole("dialog")?.textContent?.includes("Entrada de investigação")) {
+          fireEvent.click(screen.getByRole("button", { name: "Ver sala primeiro" }));
+        }
       }
       const article = screen.getByRole("heading", { name: riddle.title }).closest("article")!;
       if (riddle.isName) {
@@ -271,7 +279,7 @@ describe("investigation riddles", () => {
     }
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) || "null");
-    expect(saved.version).toBe(4);
+    expect(saved.version).toBe(5);
     expect(saved.solvedRiddles).toEqual([
       "archive-identity",
       "archive-police",

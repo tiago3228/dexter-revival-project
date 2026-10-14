@@ -262,6 +262,7 @@ Uma afirmação só pode sair de `[PENDENTE]`/`[HIPÓTESE]` para `[CONFIRMADO]` 
 - `[NOVO]` 9 enigmas interativos distribuídos entre arquivo, hospital, mansão, igreja e lago.
 - `[NOVO]` 3 fechaduras numéricas inspiradas na linguagem visual de Resident Evil.
 - `[NOVO]` leitor modal de arquivos para as 11 evidências da campanha jogável, com ação explícita de coleta.
+- `[NOVO]` fila interativa de leitura por local: cada arquivo da sala é clicável, abre sua própria ficha e fica marcado em verde como `Lido` ao ser fechado; o progresso é persistido no save.
 - `[NOVO]` navegação direta pelo mapa da cidade, preservando o bloqueio por progressão quando o destino ainda não foi liberado.
 - `[NOVO]` progresso persistido em `localStorage` pela chave `vivian-playable-investigation-v1`.
 

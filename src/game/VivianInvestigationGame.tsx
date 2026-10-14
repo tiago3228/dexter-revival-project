@@ -98,8 +98,9 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 4;
+  version: 5;
   found: ClueId[];
+  readClues: ClueId[];
   solvedRiddles: RiddleId[];
   solvedCodeLocks: CodeLockId[];
   visited: PlaceId[];
@@ -789,20 +790,21 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4;
+      version?: 1 | 2 | 3 | 4 | 5;
     };
-    if (value.version !== 1 && value.version !== 2 && value.version !== 3 && value.version !== 4)
+    if (![1, 2, 3, 4, 5].includes(value.version ?? 0))
       return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 4,
+      version: 5,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
       ),
+      readClues: ids(value.readClues, CLUES.map((item) => item.id)),
       solvedRiddles: ids(
         value.solvedRiddles,
         RIDDLES.map((item) => item.id),
@@ -860,6 +862,7 @@ function isUnlocked(placeId: PlaceId, found: ClueId[]) {
 export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [saved] = useState(readSave);
   const [found, setFound] = useState<ClueId[]>(saved?.found ?? []);
+  const [readClues, setReadClues] = useState<ClueId[]>(saved?.readClues ?? []);
   const [solvedRiddles, setSolvedRiddles] = useState<RiddleId[]>(saved?.solvedRiddles ?? []);
   const [solvedCodeLocks, setSolvedCodeLocks] = useState<CodeLockId[]>(
     saved?.solvedCodeLocks ?? [],
@@ -918,8 +921,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 4,
+      version: 5,
       found,
+      readClues,
       solvedRiddles,
       solvedCodeLocks,
       visited,
@@ -937,6 +941,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     window.dispatchEvent(new Event("vivian-investigation-progress"));
   }, [
     found,
+    readClues,
     solvedRiddles,
     solvedCodeLocks,
     visited,
@@ -1045,8 +1050,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setOpenClueId(clue.id);
   };
 
+  const closeDocument = (reopenRoom = true) => {
+    if (openClueId) {
+      setReadClues((items) => (items.includes(openClueId) ? items : [...items, openClueId]));
+    }
+    setOpenClueId(null);
+    if (reopenRoom) setPlaceIntroOpen(activePlace);
+  };
+
   const beginPlaceReading = (placeId: PlaceId) => {
-    const firstClue = CLUES.find((clue) => clue.place === placeId && !found.includes(clue.id));
+    const firstClue = CLUES.find((clue) => clue.place === placeId && !readClues.includes(clue.id));
     setPlaceIntroOpen(null);
     if (firstClue) {
       openDocument(firstClue);
@@ -1252,6 +1265,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     if (!window.confirm("Apagar o progresso desta investigação neste navegador?")) return;
     window.localStorage.removeItem(SAVE_KEY);
     setFound([]);
+    setReadClues([]);
     setSolvedRiddles([]);
     setSolvedCodeLocks([]);
     setUsedHints([]);
@@ -2129,12 +2143,31 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   Arquivos disponíveis nesta sala
                 </p>
                 <ul className="mt-3 space-y-2 text-sm text-[#c9c1b5]">
-                  {CLUES.filter((clue) => clue.place === placeIntroOpen).map((clue) => (
-                    <li key={clue.id} className="flex items-center gap-2">
-                      <FileSearch size={14} className="shrink-0 text-[#c4a779]" />
-                      {clue.title}
-                    </li>
-                  ))}
+                  {CLUES.filter((clue) => clue.place === placeIntroOpen).map((clue) => {
+                    const completed = readClues.includes(clue.id);
+                    return (
+                      <li key={clue.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPlaceIntroOpen(null);
+                            openDocument(clue);
+                          }}
+                          className={`flex min-h-11 w-full items-center gap-2 border px-3 py-2 text-left text-sm transition ${completed ? "border-emerald-500/60 bg-emerald-950/20 text-emerald-100" : "border-[#4b4439] text-[#c9c1b5] hover:border-[#c4a779]"}`}
+                        >
+                          {completed ? (
+                            <Check size={15} className="shrink-0 text-emerald-300" aria-hidden="true" />
+                          ) : (
+                            <FileSearch size={14} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+                          )}
+                          <span className="flex-1">{clue.title}</span>
+                          <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">
+                            {completed ? "Lido" : "Abrir"}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
               <p className="mt-4 text-xs leading-relaxed text-[#a9a092]">
@@ -2184,7 +2217,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                 <button
                   type="button"
                   aria-label="Fechar arquivo"
-                  onClick={() => setOpenClueId(null)}
+                  onClick={() => closeDocument(true)}
                   className="min-h-10 border border-[#79664c] px-3 font-mono text-xs text-[#ead8b8]"
                 >
                   Voltar
@@ -2212,7 +2245,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     type="button"
                     onClick={() => {
                       collectClue(openClue);
-                      setOpenClueId(null);
+                      closeDocument(false);
                     }}
                     className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
                   >
@@ -2221,7 +2254,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                 )}
                 <button
                   type="button"
-                  onClick={() => setOpenClueId(null)}
+                  onClick={() => closeDocument(true)}
                   className="min-h-11 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider"
                 >
                   Voltar ao local
