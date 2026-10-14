@@ -242,7 +242,7 @@ Uma afirmação só pode sair de `[PENDENTE]`/`[HIPÓTESE]` para `[CONFIRMADO]` 
 - Fatos documentados, relatos de personagens, alegações de investigadores e hipóteses do jogador permanecem categorias distintas.
 - Não preencher lacunas documentais com conteúdo inventado.
 - O primeiro enigma do Arquivo do xerife pede apenas o primeiro nome: `SCOTT`.
-- O segundo enigma pede o nome completo registrado no relatório: `SCOTT BROOKS`. As respostas não podem voltar a ser equivalentes.
+- O segundo enigma pergunta a natureza da fonte e aceita `RELATÓRIO POLICIAL`, `RELATÓRIO` ou `POLICE REPORT`; ele não pode voltar a pedir outra variação do nome Scott.
 - A senha final do dossiê é `M99`, revelada somente após a conclusão provisória e as três fechaduras de código.
 - Erros em enigmas, fechaduras, conexões ou cronologia aplicam penalidade de `-25` pontos; dicas exigem confirmação antes da perda de pontos.
 - A PR #19 de auditoria permanece separada da branch `main` até autorização explícita de merge.

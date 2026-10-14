@@ -285,13 +285,12 @@ const RIDDLES: Riddle[] = [
   },
   {
     id: "archive-police",
-    title: "O nome no relatório",
-    prompt: "Qual é o nome completo que o relatório policial registra como principal suspeito pela morte de Vivian?",
-    hint: "Aqui não basta o primeiro nome: use o sobrenome Brooks, como aparece no relatório.",
-    answers: ["scott brooks"],
+    title: "A natureza do documento",
+    prompt: "Qual tipo de documento registra Scott como principal suspeito pela morte de Vivian?",
+    hint: "A resposta não é uma pessoa. É o documento oficial arquivado pelo xerife.",
+    answers: ["relatorio policial", "relatório policial", "relatorio", "police report"],
     clueId: "police-report",
     place: "archive",
-    nameLength: 11,
   },
   {
     id: "hospital-amount",
@@ -903,6 +902,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
   const [openClueId, setOpenClueId] = useState<ClueId | null>(null);
+  const [placeIntroOpen, setPlaceIntroOpen] = useState<PlaceId | null>(null);
 
   useEffect(() => {
     if (!pendingHint) return;
@@ -1034,14 +1034,25 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setVisited((items) => (items.includes(place.id) ? items : [...items, place.id]));
     setPhase("explore");
     setSelectedClues([]);
+    setPlaceIntroOpen(place.id);
     setNotice(
-      "Local acessado. Examine os documentos disponíveis e registre o que cada fonte realmente afirma.",
+      "Local acessado. Abra a sala de leitura para começar pelos arquivos deste local.",
     );
   };
 
   const openDocument = (clue: Clue) => {
     playInvestigationSound("select");
     setOpenClueId(clue.id);
+  };
+
+  const beginPlaceReading = (placeId: PlaceId) => {
+    const firstClue = CLUES.find((clue) => clue.place === placeId && !found.includes(clue.id));
+    setPlaceIntroOpen(null);
+    if (firstClue) {
+      openDocument(firstClue);
+      return;
+    }
+    setNotice("Todos os arquivos deste local já foram registrados. Revise os enigmas ou avance.");
   };
 
   const collectClue = (clue: Clue) => {
@@ -1256,6 +1267,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
     setTimelineChecked(false);
+    setPlaceIntroOpen(null);
+    setOpenClueId(null);
     setNotice("Investigação reiniciada. Nenhuma evidência foi mantida.");
   };
 
@@ -2092,6 +2105,60 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <ArrowLeft size={15} /> Voltar à exploração
             </button>
           </section>
+        )}
+
+        {placeIntroOpen && (
+          <div className="fixed inset-0 z-[50] flex items-center justify-center bg-black/85 p-4">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="vivian-place-entry-title"
+              className="w-full max-w-2xl border border-[#c4a779] bg-[#1b1a17] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.8)] sm:p-7"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                Entrada de investigação
+              </p>
+              <h2 id="vivian-place-entry-title" className="mt-2 font-display text-3xl">
+                {PLACES.find((place) => place.id === placeIntroOpen)?.name}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-[#d5c9b5]">
+                {PLACES.find((place) => place.id === placeIntroOpen)?.description}
+              </p>
+              <div className="mt-5 border border-[#4b4439] bg-[#211f1b] p-4">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                  Arquivos disponíveis nesta sala
+                </p>
+                <ul className="mt-3 space-y-2 text-sm text-[#c9c1b5]">
+                  {CLUES.filter((clue) => clue.place === placeIntroOpen).map((clue) => (
+                    <li key={clue.id} className="flex items-center gap-2">
+                      <FileSearch size={14} className="shrink-0 text-[#c4a779]" />
+                      {clue.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p className="mt-4 text-xs leading-relaxed text-[#a9a092]">
+                Comece pela leitura do primeiro arquivo. Depois de fechar a ficha, você poderá
+                resolver os enigmas e registrar as evidências sem sair deste local.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPlaceIntroOpen(null)}
+                  className="min-h-11 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider"
+                >
+                  Ver sala primeiro
+                </button>
+                <button
+                  type="button"
+                  onClick={() => beginPlaceReading(placeIntroOpen)}
+                  className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
+                >
+                  Começar leitura
+                </button>
+              </div>
+            </section>
+          </div>
         )}
 
         {openClue && (

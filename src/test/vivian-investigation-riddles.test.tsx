@@ -96,6 +96,16 @@ describe("investigation riddles", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Evidência adicionada ao caderno");
   });
 
+  it("opens a place entry screen and starts with the first local file", () => {
+    render(<VivianInvestigationGame onBack={() => {}} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Arquivo do xerife/ }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Entrada de investigação");
+    expect(screen.getByRole("dialog")).toHaveTextContent("Arquivos disponíveis nesta sala");
+    fireEvent.click(screen.getByRole("button", { name: "Começar leitura" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
+  });
+
   it("opens the complete dossier with the three-dial M99 combination after the report", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
@@ -178,10 +188,9 @@ describe("investigation riddles", () => {
       },
       {
         place: "Arquivo do xerife",
-        title: "O nome no relatório",
-        answer: "Scott Brooks",
+        title: "A natureza do documento",
+        answer: "relatório policial",
         clue: "police-report",
-        isName: true,
       },
       {
         place: "Hospital Comunitário",
