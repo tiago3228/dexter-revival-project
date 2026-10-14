@@ -278,7 +278,7 @@ const RIDDLES: Riddle[] = [
     prompt:
       "O relatório chama alguém de principal suspeito. No recorte seguinte, essa mesma pessoa diz que foi embora. Qual é o primeiro nome?",
     hint: "A resposta começa com S e aparece na declaração sobre a floresta.",
-    answers: ["scott", "scott brooks"],
+    answers: ["scott"],
     clueId: "scott-denial",
     place: "archive",
     nameLength: 5,
@@ -286,12 +286,12 @@ const RIDDLES: Riddle[] = [
   {
     id: "archive-police",
     title: "O nome no relatório",
-    prompt: "Quem o relatório policial registra como principal suspeito pela morte de Vivian?",
-    hint: "O sobrenome é Brooks e a pessoa também aparece negando a autoria.",
-    answers: ["scott", "scott brooks"],
+    prompt: "Qual é o nome completo que o relatório policial registra como principal suspeito pela morte de Vivian?",
+    hint: "Aqui não basta o primeiro nome: use o sobrenome Brooks, como aparece no relatório.",
+    answers: ["scott brooks"],
     clueId: "police-report",
     place: "archive",
-    nameLength: 5,
+    nameLength: 11,
   },
   {
     id: "hospital-amount",
@@ -902,6 +902,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [codeLockAnswers, setCodeLockAnswers] = useState<Partial<Record<CodeLockId, string>>>({});
   const [selectedClues, setSelectedClues] = useState<ClueId[]>([]);
   const [timelineChecked, setTimelineChecked] = useState(false);
+  const [openClueId, setOpenClueId] = useState<ClueId | null>(null);
 
   useEffect(() => {
     if (!pendingHint) return;
@@ -954,6 +955,19 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
   const currentRiddles = RIDDLES.filter((riddle) => riddle.place === activePlace);
   const currentCodeLocks = CODE_LOCKS.filter((lock) => lock.place === activePlace);
+  const openClue = openClueId ? CLUES.find((clue) => clue.id === openClueId) : undefined;
+  const nextRiddle = currentRiddles.find((riddle) => !solvedRiddles.includes(riddle.id));
+  const nextCodeLock = currentCodeLocks.find((lock) => !solvedCodeLocks.includes(lock.id));
+  const nextClue = currentClues.find((clue) => !found.includes(clue.id));
+  const nextStep = nextRiddle
+    ? `Leia os arquivos do local e resolva: ${nextRiddle.title}.`
+    : nextCodeLock
+      ? `Investigue as fontes e abra: ${nextCodeLock.title}.`
+      : nextClue
+        ? `Abra e registre o próximo arquivo: ${nextClue.title}.`
+        : activePlace === "archive"
+          ? "Arquivo concluído. Volte à lista de locais para seguir a pista liberada."
+          : "Local concluído. Escolha outro local liberado ou avance para o quadro de evidências.";
   const allCodeLocksSolved = solvedCodeLocks.length === CODE_LOCKS.length;
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
@@ -1023,6 +1037,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setNotice(
       "Local acessado. Examine os documentos disponíveis e registre o que cada fonte realmente afirma.",
     );
+  };
+
+  const openDocument = (clue: Clue) => {
+    playInvestigationSound("select");
+    setOpenClueId(clue.id);
   };
 
   const collectClue = (clue: Clue) => {
@@ -1445,6 +1464,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
                 {currentPlace.description}
               </p>
+              <div className="mt-4 border border-[#c4a779]/60 bg-[#c4a779]/10 p-4" aria-label="Próximo passo">
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                  Próximo passo recomendado
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-[#ead8b8]">{nextStep}</p>
+                <p className="mt-2 text-[10px] leading-relaxed text-[#a9a092]">
+                  Abra cada arquivo antes de registrar a evidência. O botão de voltar mantém você no
+                  local atual para não perder o contexto.
+                </p>
+              </div>
               {currentRiddles.length > 0 && (
                 <section
                   className="mt-5 border border-[#79664c] bg-[#211f1b] p-4"
@@ -1719,11 +1748,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       )}
                       <button
                         type="button"
-                        onClick={() => collectClue(clue)}
+                        onClick={() => openDocument(clue)}
                         className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#79664c] px-3 py-2 font-mono text-[10px] uppercase tracking-wider hover:border-[#c4a779]"
                       >
                         <FileSearch size={14} />
-                        {collected ? "Rever evidência" : "Examinar e coletar"}
+                        {collected ? "Abrir arquivo novamente" : "Abrir arquivo para leitura"}
                       </button>
                       <div className="mt-4 border-t border-[#4b4439] pt-3">
                         <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
@@ -2063,6 +2092,76 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <ArrowLeft size={15} /> Voltar à exploração
             </button>
           </section>
+        )}
+
+        {openClue && (
+          <div className="fixed inset-0 z-[55] flex items-center justify-center bg-black/85 p-4">
+            <section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="vivian-document-title"
+              className="max-h-[90vh] w-full max-w-2xl overflow-auto border border-[#c4a779] bg-[#1b1a17] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.8)] sm:p-7"
+            >
+              <div className="flex items-start justify-between gap-4 border-b border-[#5c5143] pb-4">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
+                    Arquivo aberto · {currentPlace.name}
+                  </p>
+                  <h2 id="vivian-document-title" className="mt-2 font-display text-3xl">
+                    {openClue.title}
+                  </h2>
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
+                    {openClue.source}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Fechar arquivo"
+                  onClick={() => setOpenClueId(null)}
+                  className="min-h-10 border border-[#79664c] px-3 font-mono text-xs text-[#ead8b8]"
+                >
+                  Voltar
+                </button>
+              </div>
+              <div className="mt-5 border-l-2 border-[#c4a779] bg-[#211f1b] p-4">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                  Leitura registrada na ficha
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-[#eee9df]">{openClue.summary}</p>
+              </div>
+              <div className="mt-4 border border-amber-500/50 bg-amber-950/20 p-4">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-amber-200">
+                  Limite documental
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-amber-100/90">{openClue.caution}</p>
+              </div>
+              <p className="mt-4 text-xs leading-relaxed text-[#a9a092]">
+                Separe fato documentado, relato e alegação. Registrar esta ficha não transforma uma
+                acusação ou inferência em fato.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-end gap-3">
+                {!found.includes(openClue.id) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      collectClue(openClue);
+                      setOpenClueId(null);
+                    }}
+                    className="min-h-11 border border-[#c4a779] bg-[#c4a779]/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8]"
+                  >
+                    Registrar evidência no caderno
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setOpenClueId(null)}
+                  className="min-h-11 border border-[#79664c] px-4 py-2 font-mono text-xs uppercase tracking-wider"
+                >
+                  Voltar ao local
+                </button>
+              </div>
+            </section>
+          </div>
         )}
 
         {dossierOpen && (

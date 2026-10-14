@@ -81,6 +81,21 @@ describe("investigation riddles", () => {
     expect(screen.getAllByText(/A resposta começa com S/).length).toBeGreaterThan(0);
   });
 
+  it("opens a readable source file before registering the evidence", () => {
+    render(<VivianInvestigationGame onBack={() => {}} />);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Abrir arquivo para leitura" })[0]!);
+    expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
+    expect(screen.getByRole("dialog")).toHaveTextContent("principal suspeito");
+    expect(
+      screen.getByRole("button", { name: "Registrar evidência no caderno" }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Registrar evidência no caderno" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Evidência adicionada ao caderno");
+  });
+
   it("opens the complete dossier with the three-dial M99 combination after the report", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
@@ -164,7 +179,7 @@ describe("investigation riddles", () => {
       {
         place: "Arquivo do xerife",
         title: "O nome no relatório",
-        answer: "Scott",
+        answer: "Scott Brooks",
         clue: "police-report",
         isName: true,
       },

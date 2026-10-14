@@ -230,3 +230,41 @@ Uma afirmação só pode sair de `[PENDENTE]`/`[HIPÓTESE]` para `[CONFIRMADO]` 
 - `readme.md`
 - `Prompt_Mestre_Dexter_Remaster.md` fornecido pelo usuário
 - Repositório de pesquisa relacionado: `tiago3228/dexter`
+
+
+## 11. Continuidade operacional — Capítulo 06 · Caso Vivian Roberts
+
+**Estado em 2026-10-14:** `[CONFIRMADO]` protótipo web jogável implementado em `src/game/VivianInvestigationGame.tsx`, integrado ao dossiê em `src/game/VivianRobertsCase.tsx` e ao atlas em `src/routes/mapas.tsx`.
+
+### Regras que não podem ser alteradas sem autorização
+
+- O caso deve ser apresentado como **modo jogável novo**, sem afirmar que os enigmas pertencem ao jogo original.
+- Fatos documentados, relatos de personagens, alegações de investigadores e hipóteses do jogador permanecem categorias distintas.
+- Não preencher lacunas documentais com conteúdo inventado.
+- O primeiro enigma do Arquivo do xerife pede apenas o primeiro nome: `SCOTT`.
+- O segundo enigma pede o nome completo registrado no relatório: `SCOTT BROOKS`. As respostas não podem voltar a ser equivalentes.
+- A senha final do dossiê é `M99`, revelada somente após a conclusão provisória e as três fechaduras de código.
+- Erros em enigmas, fechaduras, conexões ou cronologia aplicam penalidade de `-25` pontos; dicas exigem confirmação antes da perda de pontos.
+- A PR #19 de auditoria permanece separada da branch `main` até autorização explícita de merge.
+
+### Fluxo jogável atual
+
+1. O jogador inicia no **Arquivo do xerife**.
+2. Cada local liberado apresenta documentos, enigmas e fechaduras pertinentes.
+3. O botão **Abrir arquivo para leitura** abre uma ficha modal com fonte, conteúdo documentado e limite documental.
+4. Só depois da leitura o jogador escolhe **Registrar evidência no caderno**.
+5. O painel **Próximo passo recomendado** indica o próximo enigma, fechadura ou arquivo do local.
+6. O jogador cruza duas evidências no quadro, reorganiza a cronologia e registra uma conclusão responsável.
+7. Com o relatório registrado e as fechaduras resolvidas, a combinação `M99` libera o dossiê completo.
+
+### Cobertura atualmente implementada
+
+- `[NOVO]` 9 enigmas interativos distribuídos entre arquivo, hospital, mansão, igreja e lago.
+- `[NOVO]` 3 fechaduras numéricas inspiradas na linguagem visual de Resident Evil.
+- `[NOVO]` leitor modal de arquivos para as 11 evidências da campanha jogável, com ação explícita de coleta.
+- `[NOVO]` navegação direta pelo mapa da cidade, preservando o bloqueio por progressão quando o destino ainda não foi liberado.
+- `[NOVO]` progresso persistido em `localStorage` pela chave `vivian-playable-investigation-v1`.
+
+### Próxima continuidade segura
+
+Antes de criar novas pistas, verificar se a fonte correspondente está auditada no catálogo P-001–P-116. Novos enigmas devem usar apenas relações e datas já documentadas, declarar sua solução na implementação e ter teste de integração. Não promover teorias sobre Scott, Sofia, Henry, Charles ou qualquer outra pessoa a fatos sem nova evidência independente.
