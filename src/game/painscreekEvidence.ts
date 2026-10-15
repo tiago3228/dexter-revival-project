@@ -26,6 +26,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de ameaça a Vivian",
     pages: [100],
     sourceType: "Referência indireta a documento",
+    audioSrc: "/audio/painscreek/archive/p001-threat-letter.wav",
     documented:
       "O remetente anônimo afirma ter incluído uma cópia de uma carta de ameaça recebida por Vivian no dia de sua morte.",
     pendingVerification:
@@ -40,6 +41,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Incidente de 1975",
     pages: [93, 98, 99, 102, 103, 111],
     sourceType: "Relato indireto e conexão a verificar",
+    audioSrc: "/audio/painscreek/archive/p002-1975-incident.wav",
     documented:
       "Steven Moss teria mencionado um incidente de 1975 como possível avanço. O autor do livro de registro pergunta se ele se relaciona à empregada que deixou Painscreek.",
     pendingVerification:
@@ -54,6 +56,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Código 0318",
     pages: [102],
     sourceType: "Código mencionado em carta",
+    audioSrc: "/audio/painscreek/archive/p003-code-0318.wav",
     documented: "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
     pendingVerification:
       "Verificar eventual correspondência com objeto ou mecanismo do jogo; a carta foi conferida visualmente, mas a função de puzzle não foi validada.",
@@ -67,6 +70,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fita de vigilância ausente",
     pages: [106, 107],
     sourceType: "Livro de segurança",
+    audioSrc: "/audio/painscreek/archive/p004-missing-surveillance-tape.wav",
     documented:
       "Uma nota atribuída a Magdalene pede a localização de uma fita de vigilância de 28 de junho de 1975; o registro informa que ela não foi encontrada.",
     pendingVerification:
@@ -81,6 +85,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fotografia emprestada por Scott",
     pages: [55, 104, 116],
     sourceType: "Entrada de diário",
+    audioSrc: "/audio/painscreek/archive/p005-scott-borrowed-photo.wav",
     documented:
       "Em 13 de fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy após uma conversa sobre Charles e Vivian. Uma entrada de Scott na página 55, também datada desse dia, relata que uma fotografia lhe permitiu reconhecer o mesmo cobertor e concluir que sabia quem era seu pai.",
     pendingVerification:
@@ -110,6 +115,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Alegação sobre fundos da Roberts Relief",
     pages: [84, 92, 97],
     sourceType: "Relatório de investigação privada",
+    audioSrc: "/audio/painscreek/archive/p007-roberts-relief-funds.wav",
     documented:
       "A carta de Nelson & Brown, datada de 17 de fevereiro de 1993, acusa Henry Johnson de enviar transferências mensais de US$ 9.990 para uma conta offshore em nome de Jefferson Investments, Ltd. O remetente estima o total em cerca de US$ 160.000 ao longo de dezesseis meses.",
     pendingVerification:
@@ -124,6 +130,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Morte de Henry Johnson",
     pages: [85],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p008-henry-johnson-death.wav",
     documented:
       "A notícia de 13 de julho de 1995 relata que Henry Johnson foi encontrado no carro submerso no Lago Cherry Creek; o texto diz que o corpo permaneceu na água entre dez e quinze dias e que o hospital o viu pela última vez em 28 de junho.",
     pendingVerification:
@@ -138,6 +145,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Mulher vista na floresta",
     pages: [109],
     sourceType: "Relato indireto em livro de segurança",
+    audioSrc: "/audio/painscreek/archive/p009-woman-in-forest.wav",
     documented:
       "Uma entrada relata que Stephanie, de seis anos, se perdeu na floresta no Dia das Bruxas de 1994 e disse que uma mulher bonita, de cabelos pretos compridos e vestido preto semelhante ao das empregadas da mansão, a encontrou e a levou para casa; as empregadas disseram estar trabalhando naquela noite.",
     pendingVerification:
@@ -453,6 +461,8 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Referência duplicada ao desaparecimento de Stephanie — ver P-009",
     pages: [109],
     sourceType: "Referência editorial duplicada; mesma fonte de P-009",
+    // P-031 é duplicata editorial de P-009 e reutiliza a mesma narração.
+    audioSrc: "/audio/painscreek/archive/p009-woman-in-forest.wav",
     documented:
       "Esta entrada repete o episódio já catalogado em P-009: a anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. Não é uma segunda fonte nem uma confirmação independente.",
     pendingVerification:
