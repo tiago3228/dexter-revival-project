@@ -12,6 +12,7 @@ export type PainscreekEvidence = {
   title: string;
   pages: number[];
   sourceType: string;
+  audioSrc?: string;
   documented: string;
   pendingVerification: string;
   confidence: "low" | "medium" | "high";
@@ -94,6 +95,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Gravidez de Sofia e segredo de Charles",
     pages: [93, 98, 102, 112, 113, 114],
     sourceType: "Diário e cartas",
+    audioSrc: "/audio/painscreek/archive/p006-sofia-charles-secret.wav",
     documented:
       "A carta de Sylvia ao padre Calvin (página 93) relata que, ao chegar a Painscreek em 4 de julho de 1975, soube do colapso de Vivian após o parto de Trisha e da relação de Charles com a criada Sofia, que teve um menino. Sylvia diz que Sofia e o filho haviam desaparecido e que Magdalene organizou uma busca com ela e Patrick; a carta também menciona a morte de Magdalene após menos de dois meses de busca. Outras páginas registram o segredo e a gravidez.",
     pendingVerification:
@@ -206,6 +208,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Tragédia na mina de carvão",
     pages: [59, 86],
     sourceType: "Notícia comemorativa e nota biográfica",
+    audioSrc: "/audio/painscreek/archive/p014-coal-mine-tragedy.wav",
     documented:
       "A matéria de 3 de março de 1993 na página 86 relembra um acidente de demolição na mina de carvão ocorrido vinte anos antes: seis moradores de Painscreek e outros treze de Hillsdale e Old Creek morreram. A Companhia de Mineração Roberts era dona da mina; Vivian organizou uma ação que arrecadou US$ 96.000 e, com US$ 24.000 da própria empresa, resultou em US$ 120.000 de compensação às seis famílias. A nota biográfica da página 59 também associa um acidente de mineração de 1973 à crise da companhia, mas serve como contexto e não confirma independentemente todos os detalhes da notícia.",
     pendingVerification:
@@ -291,6 +294,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Laudo médico de Vivian Roberts",
     pages: [94],
     sourceType: "Relatório médico do Hospital Comunitário",
+    audioSrc: "/audio/painscreek/archive/p020-vivian-medical-report.wav",
     documented:
       "O relatório assinado pelo Dr. Henry Johnson informa Charles Roberts de que Vivian estava estabilizando, não poderia mais dar à luz e precisava de seis meses de reabilitação. O médico observa que a presença de Charles a estressava e que a expectativa da mãe dele por um herdeiro homem aumentava a tensão.",
     pendingVerification:
@@ -362,6 +366,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Contratação de Steven Moss",
     pages: [100],
     sourceType: "Carta de contratação de investigador particular",
+    audioSrc: "/audio/painscreek/archive/p025-steven-moss-hired.wav",
     documented:
       "Em 13 de março de 1997, uma pessoa anônima contrata Steven Moss para investigar o assassinato de Vivian Roberts. O remetente diz que Scott foi detido como suspeito e depois solto por falta de evidências, que o caso foi arquivado como não solucionado e que incluiu uma cópia da carta de ameaça recebida por Vivian no dia de sua morte.",
     pendingVerification:
@@ -462,6 +467,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Livro da pousada: Steven Moss e o caso Vivian",
     pages: [110, 111],
     sourceType: "Livro de registro da pousada",
+    audioSrc: "/audio/painscreek/archive/p032-inn-log-moss.wav",
     documented:
       "Em 20 de março de 1997, o autor do registro anota rumores de que Steven Moss foi contratado para investigar a morte de Vivian depois que a polícia encerrou as buscas. Em 9 de abril, Matthew diz que pretende deixar Painscreek e que os serviços dele não serão mais necessários; o autor questiona se Scott matou Vivian ou foi acusado injustamente. Em 14 de abril, Moss pergunta ao autor sobre o que sabe e menciona um incidente de 1975 como possível avanço; o autor pergunta se isso tem relação com a empregada que deixou a cidade.",
     pendingVerification:
@@ -660,6 +666,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Notícia sobre a morte de Vivian Roberts",
     pages: [82],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p046-vivian-death-news.wav",
     documented:
       "A notícia relata que Vivian foi encontrada morta diante da casa na Rua Maple, n.º 1, às 7h15, por Mary Martinez. O texto estima a morte entre 23h e 1h e informa que o corpo aguardava autópsia.",
     pendingVerification:

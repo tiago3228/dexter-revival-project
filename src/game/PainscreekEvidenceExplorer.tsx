@@ -50,6 +50,23 @@ function EvidenceCard({ evidence }: { evidence: PainscreekEvidence }) {
         </span>
       </div>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">{evidence.documented}</p>
+      {evidence.audioSrc && (
+        <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-primary">
+            Narração documental · leitura opcional
+          </p>
+          <audio
+            className="h-9 w-full"
+            controls
+            preload="none"
+            src={evidence.audioSrc}
+            aria-label={`Ouvir narração: ${evidence.id} — ${evidence.title}`}
+          />
+          <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+            Reconstituição sonora do texto catalogado; não é uma gravação original da fonte.
+          </p>
+        </div>
+      )}
       <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <span className="rounded-md bg-muted px-2 py-1">
           Confiança: {confidenceLabels[evidence.confidence]}
