@@ -12,6 +12,8 @@ export type PainscreekEvidence = {
   title: string;
   pages: number[];
   sourceType: string;
+  audioSrc?: string;
+  audioDescription?: string;
   documented: string;
   pendingVerification: string;
   confidence: "low" | "medium" | "high";
@@ -25,6 +27,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de ameaça a Vivian",
     pages: [100],
     sourceType: "Referência indireta a documento",
+    audioSrc: "/audio/painscreek/archive/p001-threat-letter.wav",
     documented:
       "O remetente anônimo afirma ter incluído uma cópia de uma carta de ameaça recebida por Vivian no dia de sua morte.",
     pendingVerification:
@@ -39,6 +42,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Incidente de 1975",
     pages: [93, 98, 99, 102, 103, 111],
     sourceType: "Relato indireto e conexão a verificar",
+    audioSrc: "/audio/painscreek/archive/p002-1975-incident.wav",
     documented:
       "Steven Moss teria mencionado um incidente de 1975 como possível avanço. O autor do livro de registro pergunta se ele se relaciona à empregada que deixou Painscreek.",
     pendingVerification:
@@ -53,6 +57,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Código 0318",
     pages: [102],
     sourceType: "Código mencionado em carta",
+    audioSrc: "/audio/painscreek/archive/p003-code-0318.wav",
     documented: "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
     pendingVerification:
       "Verificar eventual correspondência com objeto ou mecanismo do jogo; a carta foi conferida visualmente, mas a função de puzzle não foi validada.",
@@ -66,6 +71,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fita de vigilância ausente",
     pages: [106, 107],
     sourceType: "Livro de segurança",
+    audioSrc: "/audio/painscreek/archive/p004-missing-surveillance-tape.wav",
     documented:
       "Uma nota atribuída a Magdalene pede a localização de uma fita de vigilância de 28 de junho de 1975; o registro informa que ela não foi encontrada.",
     pendingVerification:
@@ -80,6 +86,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fotografia emprestada por Scott",
     pages: [55, 104, 116],
     sourceType: "Entrada de diário",
+    audioSrc: "/audio/painscreek/archive/p005-scott-borrowed-photo.wav",
     documented:
       "Em 13 de fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy após uma conversa sobre Charles e Vivian. Uma entrada de Scott na página 55, também datada desse dia, relata que uma fotografia lhe permitiu reconhecer o mesmo cobertor e concluir que sabia quem era seu pai.",
     pendingVerification:
@@ -94,6 +101,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Gravidez de Sofia e segredo de Charles",
     pages: [93, 98, 102, 112, 113, 114],
     sourceType: "Diário e cartas",
+    audioSrc: "/audio/painscreek/archive/p006-sofia-charles-secret.wav",
     documented:
       "A carta de Sylvia ao padre Calvin (página 93) relata que, ao chegar a Painscreek em 4 de julho de 1975, soube do colapso de Vivian após o parto de Trisha e da relação de Charles com a criada Sofia, que teve um menino. Sylvia diz que Sofia e o filho haviam desaparecido e que Magdalene organizou uma busca com ela e Patrick; a carta também menciona a morte de Magdalene após menos de dois meses de busca. Outras páginas registram o segredo e a gravidez.",
     pendingVerification:
@@ -108,6 +116,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Alegação sobre fundos da Roberts Relief",
     pages: [84, 92, 97],
     sourceType: "Relatório de investigação privada",
+    audioSrc: "/audio/painscreek/archive/p007-roberts-relief-funds.wav",
     documented:
       "A carta de Nelson & Brown, datada de 17 de fevereiro de 1993, acusa Henry Johnson de enviar transferências mensais de US$ 9.990 para uma conta offshore em nome de Jefferson Investments, Ltd. O remetente estima o total em cerca de US$ 160.000 ao longo de dezesseis meses.",
     pendingVerification:
@@ -122,6 +131,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Morte de Henry Johnson",
     pages: [85],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p008-henry-johnson-death.wav",
     documented:
       "A notícia de 13 de julho de 1995 relata que Henry Johnson foi encontrado no carro submerso no Lago Cherry Creek; o texto diz que o corpo permaneceu na água entre dez e quinze dias e que o hospital o viu pela última vez em 28 de junho.",
     pendingVerification:
@@ -136,6 +146,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Mulher vista na floresta",
     pages: [109],
     sourceType: "Relato indireto em livro de segurança",
+    audioSrc: "/audio/painscreek/archive/p009-woman-in-forest.wav",
     documented:
       "Uma entrada relata que Stephanie, de seis anos, se perdeu na floresta no Dia das Bruxas de 1994 e disse que uma mulher bonita, de cabelos pretos compridos e vestido preto semelhante ao das empregadas da mansão, a encontrou e a levou para casa; as empregadas disseram estar trabalhando naquela noite.",
     pendingVerification:
@@ -150,6 +161,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott como suspeito da morte de Vivian",
     pages: [83, 90, 104],
     sourceType: "Notícia, relatório policial e carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p010-scott-vivian-suspect.wav",
     documented:
       "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que tenha matado Vivian. Na carta a Trisha (p. 104), Scott também afirma que não matou Vivian e associa sua descoberta sobre os pais biológicos à oposição do padre Matthew ao relacionamento entre eles.",
     pendingVerification:
@@ -164,6 +176,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott ajuda Andrew e pega uma fotografia",
     pages: [108, 115, 116],
     sourceType: "Livro de segurança e diário",
+    audioSrc: "/audio/painscreek/archive/p011-scott-andrew-photo.wav",
     documented:
       "Registros atribuem a Scott ajuda a Andrew durante uma crise em 1994; em fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy.",
     pendingVerification:
@@ -177,6 +190,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Wanda Tyler e Derrick",
     pages: [78, 79, 80, 81],
     sourceType: "Diário pessoal",
+    audioSrc: "/audio/painscreek/archive/p012-wanda-derrick.wav",
     documented:
       "As entradas de 1974 nas páginas 78–79 registram a perspectiva de Wanda sobre Derrick, Vivian e Sofia; as páginas 80–81, de 1995, descrevem o apoio de Derrick durante o tratamento de Wanda.",
     pendingVerification:
@@ -192,6 +206,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fechamento do Hospital Comunitário",
     pages: [84],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p013-hospital-closure.wav",
     documented:
       "Uma notícia de 21 de fevereiro de 1996 relata que o Hospital Comunitário de Painscreek fechou após cerca de 60 anos. O hospital teria sido inaugurado em 1936; a matéria também descreve a iniciativa de Vivian Roberts de apoiar sua renovação no início dos anos 1970 e o declínio populacional posterior.",
     pendingVerification:
@@ -206,6 +221,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Tragédia na mina de carvão",
     pages: [59, 86],
     sourceType: "Notícia comemorativa e nota biográfica",
+    audioSrc: "/audio/painscreek/archive/p014-coal-mine-tragedy.wav",
     documented:
       "A matéria de 3 de março de 1993 na página 86 relembra um acidente de demolição na mina de carvão ocorrido vinte anos antes: seis moradores de Painscreek e outros treze de Hillsdale e Old Creek morreram. A Companhia de Mineração Roberts era dona da mina; Vivian organizou uma ação que arrecadou US$ 96.000 e, com US$ 24.000 da própria empresa, resultou em US$ 120.000 de compensação às seis famílias. A nota biográfica da página 59 também associa um acidente de mineração de 1973 à crise da companhia, mas serve como contexto e não confirma independentemente todos os detalhes da notícia.",
     pendingVerification:
@@ -220,6 +236,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Morte de Andrew Reed em incêndio",
     pages: [87],
     sourceType: "Notícia de jornal e relato de investigação",
+    audioSrc: "/audio/painscreek/archive/p015-andrew-reed-fire.wav",
     documented:
       "Uma notícia de 7 de junho de 1995 relata que Andrew Reed, funcionário da mansão, foi encontrado morto após um incêndio em sua casa na rua Blackpine, nº 7. A causa não havia sido determinada; garrafas de bebida no local sugeriam uma hipótese acidental, e a matéria afirma que assassinato não havia sido identificado até então.",
     pendingVerification:
@@ -234,6 +251,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott declara-se inocente",
     pages: [88],
     sourceType: "Notícia de jornal sobre declaração em tribunal",
+    audioSrc: "/audio/painscreek/archive/p016-scott-pleads-innocent.wav",
     documented:
       "A notícia relata que Scott Brooks se declarou inocente no tribunal. Ele afirmou que encontrou Vivian na floresta, deixou-a viva e voltou para sua cabana, onde diz ter permanecido por dias sem saber do assassinato; estava detido e ainda não tinha fiança definida.",
     pendingVerification:
@@ -248,6 +266,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Realocação do xerife James Howard",
     pages: [89],
     sourceType: "Carta administrativa",
+    audioSrc: "/audio/painscreek/archive/p017-sheriff-reassignment.wav",
     documented:
       "Uma carta administrativa do Departamento do Xerife do distrito de NL informa James Howard de que foi realocado para Grand County a partir de 14 de maio de 1998 e pede que se apresente ao escritório antes de 12 de maio.",
     pendingVerification:
@@ -262,6 +281,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de recuperação endereçada a Daniel",
     pages: [91],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p018-letter-to-daniel.wav",
     documented:
       "A carta manuscrita começa com “Querido Daniel” e relata melhora durante a recuperação, acompanhamento do Dr. Johnson, trabalho em tempo integral na mansão e o fim das alucinações. O texto termina incompleto no trecho visível da página.",
     pendingVerification:
@@ -276,6 +296,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Contrato de fornecimento do hospital",
     pages: [92],
     sourceType: "Carta comercial",
+    audioSrc: "/audio/painscreek/archive/p019-hospital-supply-contract.wav",
     documented:
       "Uma carta de 16 de outubro de 1973, assinada por Eric W. Campbell em nome de Jackson & Lewis, agradece à Sra. Roberts por designar a empresa como fornecedora do Hospital Comunitário. Menciona a candidatura de Charles a prefeito, benefícios para a empresa e fundos de apoio usados em pesquisa e assistência a pacientes idosos; informa que os documentos contratuais seriam enviados em seguida.",
     pendingVerification:
@@ -291,6 +312,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Laudo médico de Vivian Roberts",
     pages: [94],
     sourceType: "Relatório médico do Hospital Comunitário",
+    audioSrc: "/audio/painscreek/archive/p020-vivian-medical-report.wav",
     documented:
       "O relatório assinado pelo Dr. Henry Johnson informa Charles Roberts de que Vivian estava estabilizando, não poderia mais dar à luz e precisava de seis meses de reabilitação. O médico observa que a presença de Charles a estressava e que a expectativa da mãe dele por um herdeiro homem aumentava a tensão.",
     pendingVerification:
@@ -305,6 +327,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro investigativo e ficha de Bernard Hopkins",
     pages: [61, 95],
     sourceType: "Nota em caderno investigativo (p. 61) e ficha administrativa (p. 95)",
+    audioSrc: "/audio/painscreek/archive/p021-bernard-hopkins-record.wav",
     documented:
       "A ficha administrativa da página 95 identifica Bernard Hopkins como mordomo, registra seu nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973, jornada de trabalho e endereço na Avenida Silverlake, n.º 31, código postal NL 28115. Separadamente, a página 61 exibe uma nota de caderno com o mesmo nome e endereço e o texto impresso: 'Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibis.'",
     pendingVerification:
@@ -319,6 +342,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de despedida de Dorothy",
     pages: [96],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p022-dorothy-farewell-letter.wav",
     documented:
       "Em carta datada de 31 de janeiro de 1996 e dirigida a Charles, Dorothy diz ter trabalhado na casa por mais de vinte anos, recorda com afeto Trisha e lamenta deixar o serviço após os acontecimentos em Painscreek, sem detalhá-los.",
     pendingVerification:
@@ -334,6 +358,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Conselho de Henry sobre Sofia e o bebê",
     pages: [98],
     sourceType: "Carta pessoal com conteúdo médico e familiar",
+    audioSrc: "/audio/painscreek/archive/p023-henry-advice-sofia-baby.wav",
     documented:
       "Em carta datada de 18 de junho de 1975, Henry Johnson escreve a Vivian como amigo e a aconselha a fazer Sofia e o bebê deixarem Charles e Painscreek, oferecendo compensação. Ele alerta que a divulgação do caso poderia prejudicar a carreira política de Charles e menciona a possibilidade de Charles registrar o menino.",
     pendingVerification:
@@ -348,6 +373,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de Rachel Davis sobre a origem de Scott",
     pages: [99],
     sourceType: "Carta do orfanato São Patrício",
+    audioSrc: "/audio/painscreek/archive/p024-rachel-scott-origins.wav",
     documented:
       "Em carta datada de 2 de fevereiro de 1994, Rachel Davis escreve a Scott que ele foi levado ao orfanato pelo padre Calvin em 4 de julho de 1975, ainda bebê, e que lhe disseram que perdera os pais. Ela também relata que o padre Matthew o visitava depois de assumir a Igreja da Trindade de Painscreek e deixava dinheiro para ele e para o orfanato.",
     pendingVerification:
@@ -362,6 +388,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Contratação de Steven Moss",
     pages: [100],
     sourceType: "Carta de contratação de investigador particular",
+    audioSrc: "/audio/painscreek/archive/p025-steven-moss-hired.wav",
     documented:
       "Em 13 de março de 1997, uma pessoa anônima contrata Steven Moss para investigar o assassinato de Vivian Roberts. O remetente diz que Scott foi detido como suspeito e depois solto por falta de evidências, que o caso foi arquivado como não solucionado e que incluiu uma cópia da carta de ameaça recebida por Vivian no dia de sua morte.",
     pendingVerification:
@@ -376,6 +403,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Advogado aceita representar Scott",
     pages: [101],
     sourceType: "Carta jurídica",
+    audioSrc: "/audio/painscreek/archive/p026-scott-attorney.wav",
     documented:
       "Brendan O’Mally informa ao Sr. Brooks que seu escritório aceitou representar Scott no tribunal e está preparando um recurso para sua libertação. Pede que o pai não faça declarações públicas antes de consultar os advogados e solicita cópias de documentos governamentais relacionados ao filho.",
     pendingVerification:
@@ -391,6 +419,9 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de Scott para Trisha",
     pages: [104],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/scott-letter-trisha.wav",
+    audioDescription:
+      "Trecho da carta já narrado em Falas e trechos do arquivo; não cobre todo o resumo desta ficha e não é uma gravação original.",
     documented:
       "Scott escreve a Trisha que saber sobre seus pais biológicos mudou sua compreensão da oposição do padre Matthew ao relacionamento deles. Ele nega ter matado Vivian, diz não saber quem a matou e pede perdão pela dor que causou.",
     pendingVerification:
@@ -405,6 +436,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro de enfermagem com ocorrências de 1993–1994",
     pages: [105],
     sourceType: "Registro interno de enfermagem",
+    audioSrc: "/audio/painscreek/archive/p028-nursing-record-1993-1994.wav",
     documented:
       "O registro reúne anotações datadas de 19 de maio de 1993, 4 e 20 de junho de 1993 e 26 de junho de 1994. Inclui uma tentativa frustrada de contatar o Dr. Johnson após Nora Jefferson ser levada ao hospital, uma ausência por doença e falta de pessoal, a morte por afogamento de Timothy Scott, de seis anos, e a observação de uma jovem perto do consultório do Dr. Johnson após o horário de visitas.",
     pendingVerification:
@@ -420,6 +452,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro de segurança: intruso no jardim",
     pages: [106],
     sourceType: "Livro de segurança da mansão",
+    audioSrc: "/audio/painscreek/archive/p029-garden-intruder.wav",
     documented:
       "Uma anotação datada de 18 de março de 1994 relata que um homem de cerca de 1,70 m, usando moletom com capuz, escalou a cerca, atravessou o jardim e pulou o muro. A câmera não registrou seu rosto; o Sr. Roberts pediu a instalação de mais câmeras.",
     pendingVerification:
@@ -434,6 +467,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Mudanças na equipe e ocorrência com Andrew",
     pages: [107, 108],
     sourceType: "Livro de segurança da mansão",
+    audioSrc: "/audio/painscreek/archive/p030-staff-changes-andrew.wav",
     documented:
       "O registro informa a chegada de novas fitas VHS em 25 de março de 1994 e a contratação de Samuel Green como novo segurança em 28 de maio. Em 4 de julho, Andrew teria chegado muito embriagado à mansão por volta das 23h, e Scott foi chamado para levá-lo para casa. Uma anotação de 12 de agosto registra vinte anos de serviço de Tom Parker e sua saída prevista para cuidar da esposa doente.",
     pendingVerification:
@@ -448,6 +482,10 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Referência duplicada ao desaparecimento de Stephanie — ver P-009",
     pages: [109],
     sourceType: "Referência editorial duplicada; mesma fonte de P-009",
+    // P-031 é duplicata editorial de P-009 e reutiliza a mesma narração.
+    audioSrc: "/audio/painscreek/archive/p009-woman-in-forest.wav",
+    audioDescription:
+      "Faixa reutilizada de P-009: este registro é uma duplicata editorial da mesma fonte, não uma segunda evidência.",
     documented:
       "Esta entrada repete o episódio já catalogado em P-009: a anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. Não é uma segunda fonte nem uma confirmação independente.",
     pendingVerification:
@@ -462,6 +500,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Livro da pousada: Steven Moss e o caso Vivian",
     pages: [110, 111],
     sourceType: "Livro de registro da pousada",
+    audioSrc: "/audio/painscreek/archive/p032-inn-log-moss.wav",
     documented:
       "Em 20 de março de 1997, o autor do registro anota rumores de que Steven Moss foi contratado para investigar a morte de Vivian depois que a polícia encerrou as buscas. Em 9 de abril, Matthew diz que pretende deixar Painscreek e que os serviços dele não serão mais necessários; o autor questiona se Scott matou Vivian ou foi acusado injustamente. Em 14 de abril, Moss pergunta ao autor sobre o que sabe e menciona um incidente de 1975 como possível avanço; o autor pergunta se isso tem relação com a empregada que deixou a cidade.",
     pendingVerification:
@@ -476,6 +515,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Anotações de Dorothy sobre Sofia e a gravidez",
     pages: [112, 113, 114],
     sourceType: "Diário ou anotações pessoais de Dorothy Patterson",
+    audioSrc: "/audio/painscreek/archive/p033-dorothy-sofia-pregnancy.wav",
     documented:
       "As anotações datadas de 20 de junho e 24 de setembro de 1973 descrevem visitas de Matthew a Sofia e uma conversa em que Sofia diz não saber como é ser amada por pais. Em 2 e 6 de fevereiro de 1975, Dorothy registra que Charles pediu que cuidasse de Sofia em uma casa afastada da mansão e que os dois combinaram manter a gravidez em segredo. Em 6 de abril de 1975, Dorothy escreve que Sofia estava no oitavo mês, esperançosa com o futuro e pensando que seria melhor se o bebê fosse menino.",
     pendingVerification:
@@ -490,6 +530,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Anotações sobre Andrew, Scott e a fotografia emprestada",
     pages: [115, 116],
     sourceType: "Diário ou livro de memórias",
+    audioSrc: "/audio/painscreek/archive/p034-andrew-scott-photo-record.wav",
     documented:
       "Uma anotação de 23 de setembro de 1994 relata outra tentativa de suicídio de Andrew e atribui a Scott o ato de salvá-lo; a de 10 de outubro descreve melhora de Andrew e visitas frequentes de Scott. Em 13 de fevereiro de 1995, Scott visita o autor para consertar uma pia, conversa sobre Charles e Vivian e pede emprestada uma fotografia de um álbum. Em 19 de junho de 1995, o autor registra a morte de Andrew e o reencontro de Laura e Daniel no funeral, lamentando não ter ligado para Laura antes.",
     pendingVerification:
@@ -504,6 +545,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Andrew Reed",
     pages: [1, 2],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p035-andrew-reed-notebook.wav",
     documented:
       "As páginas 1–2, associadas a Andrew Reed, registram sua avaliação de Scott, referências a Sofia, medicação e culpa compartilhada. O caderno não identifica com segurança todos os referentes dos pronomes usados pelo narrador.",
     pendingVerification:
@@ -518,6 +560,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Bernard Hopkins",
     pages: [3, 4, 5],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p036-bernard-hopkins-notebook.wav",
     documented:
       "Nas páginas 3–5, Bernard relata conversas sobre Sofia, observações sobre Vivian, Scott e Derrick e reflexões pessoais. Na página 5, ‘Vivian’ aparece riscado antes de uma frase interrompida.",
     pendingVerification:
@@ -532,6 +575,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Charles Roberts",
     pages: [6, 7],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p037-charles-roberts-notebook.wav",
     documented:
       "Nas páginas 6–7, Charles registra sua relação com Vivian, Trisha e Scott, além de lembranças familiares e opiniões próprias sobre essas relações.",
     pendingVerification:
@@ -546,6 +590,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Derrick Tyler",
     pages: [8, 9, 10, 11, 12],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p038-derrick-tyler-notebook.wav",
     documented:
       "Nas páginas 8–12, Derrick relata episódios de sua convivência com Scott e Trisha e sua entrada no trabalho de motorista da família Roberts. A página 11 descreve uma saída de caça perto do rio e um ralo de drenagem, sem localizar precisamente o ponto.",
     pendingVerification:
@@ -560,6 +605,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Mary Martinez",
     pages: [13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p039-mary-martinez-notebook.wav",
     documented:
       "As páginas 13–17 e 21–27 registram a rotina de Mary na mansão, seus relatos sobre Sofia, Scott, Trisha, Vivian e o Dr. Johnson, além de referências ao sótão, à casa de Dorothy e a eventos de 1995.",
     pendingVerification:
@@ -574,6 +620,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno do xerife James Howard",
     pages: [18, 19, 20],
     sourceType: "Diário/anotações pessoais de autoridade policial",
+    audioSrc: "/audio/painscreek/archive/p040-james-howard-notebook.wav",
     documented:
       "Nas páginas 18–20, anotações atribuídas a James Howard registram o funeral de Vivian e referências ao andamento do caso e ao hospital. O material contém relatos e impressões do autor, não uma decisão judicial.",
     pendingVerification:
@@ -588,6 +635,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Matthew Brooks",
     pages: [28, 29, 30, 31, 32, 33, 34],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p041-matthew-brooks-notebook.wav",
     documented:
       "As páginas 28–34, associadas a Matthew Brooks, registram sua relação com Sofia, sua permanência na Igreja da Trindade e lembranças posteriores sobre o que ouviu a respeito dela. As entradas de 1995 expressam suspeitas e sofrimento do autor.",
     pendingVerification:
@@ -604,6 +652,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
       35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
     ],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p042-scott-brooks-notebook.wav",
     documented:
       "As páginas 35–57, associadas a Scott Brooks, registram sua infância, a adoção, sua busca por informações sobre Sofia e a relação com Trisha. Nas páginas 43 e 55, conferidas no PDF, há entradas sobre a investigação de Scott, uma fotografia e a descoberta de sua identidade; outros trechos permanecem dependentes de OCR.",
     pendingVerification:
@@ -618,6 +667,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de investigação de Steven Moss",
     pages: [58, 59, 60, 62],
     sourceType: "Anotações de investigação particular",
+    audioSrc: "/audio/painscreek/archive/p043-steven-moss-notebook.wav",
     documented:
       "As páginas 58–60 e 62 registram o progresso da investigação de Steven Moss em 1997, a intenção de visitar o Orfanato São Patrício, notas biográficas sobre Vivian, a anotação ‘Sala de segurança: 025241 (Mansão?)’ e tarefas de entrevista. A ficha/notação sobre Bernard na página 61 é catalogada separadamente em P-021.",
     pendingVerification:
@@ -632,6 +682,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Diário de Trisha Roberts",
     pages: [63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p044-trisha-roberts-diary.wav",
     documented:
       "As páginas 63–72, identificadas como diário de Trisha, registram sua infância, a relação com Scott, o código 44871 da sala de estudo e conflitos familiares sobre o casal.",
     pendingVerification:
@@ -646,6 +697,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Diários de Vivian Roberts",
     pages: [73, 74, 75, 76, 77],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p045-vivian-roberts-diaries.wav",
     documented:
       "As páginas 73–77 são identificadas como entradas de Vivian, com registros de 1972 e 1994 sobre sua vida pública, relações familiares, decisões de negócios e opiniões sobre Scott e Trisha.",
     pendingVerification:
@@ -660,6 +712,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Notícia sobre a morte de Vivian Roberts",
     pages: [82],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p046-vivian-death-news.wav",
     documented:
       "A notícia relata que Vivian foi encontrada morta diante da casa na Rua Maple, n.º 1, às 7h15, por Mary Martinez. O texto estima a morte entre 23h e 1h e informa que o corpo aguardava autópsia.",
     pendingVerification:
@@ -674,6 +727,9 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Cartão de aniversário de Matthew para Sofia",
     pages: [103],
     sourceType: "Cartão pessoal",
+    audioSrc: "/audio/painscreek/archive/matthew-birthday-card.wav",
+    audioDescription:
+      "Trecho do mesmo cartão já narrado em Falas e trechos do arquivo; não cobre todo o resumo desta ficha e não é uma gravação original.",
     documented:
       "O cartão, datado de 18 de março de 1975 e assinado por Matthew, pede que Sofia espere seu retorno e deseja feliz aniversário. O texto também expressa afeto e recorda os momentos que passaram juntos.",
     pendingVerification:
