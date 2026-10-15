@@ -160,6 +160,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott como suspeito da morte de Vivian",
     pages: [83, 90, 104],
     sourceType: "Notícia, relatório policial e carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p010-scott-vivian-suspect.wav",
     documented:
       "Notícias e relatório policial registram Scott como suspeito; uma carta atribuída a Scott nega que tenha matado Vivian. Na carta a Trisha (p. 104), Scott também afirma que não matou Vivian e associa sua descoberta sobre os pais biológicos à oposição do padre Matthew ao relacionamento entre eles.",
     pendingVerification:
@@ -174,6 +175,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott ajuda Andrew e pega uma fotografia",
     pages: [108, 115, 116],
     sourceType: "Livro de segurança e diário",
+    audioSrc: "/audio/painscreek/archive/p011-scott-andrew-photo.wav",
     documented:
       "Registros atribuem a Scott ajuda a Andrew durante uma crise em 1994; em fevereiro de 1995, Scott pede emprestada uma fotografia do álbum de Dorothy.",
     pendingVerification:
@@ -187,6 +189,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Wanda Tyler e Derrick",
     pages: [78, 79, 80, 81],
     sourceType: "Diário pessoal",
+    audioSrc: "/audio/painscreek/archive/p012-wanda-derrick.wav",
     documented:
       "As entradas de 1974 nas páginas 78–79 registram a perspectiva de Wanda sobre Derrick, Vivian e Sofia; as páginas 80–81, de 1995, descrevem o apoio de Derrick durante o tratamento de Wanda.",
     pendingVerification:
@@ -202,6 +205,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Fechamento do Hospital Comunitário",
     pages: [84],
     sourceType: "Notícia de jornal",
+    audioSrc: "/audio/painscreek/archive/p013-hospital-closure.wav",
     documented:
       "Uma notícia de 21 de fevereiro de 1996 relata que o Hospital Comunitário de Painscreek fechou após cerca de 60 anos. O hospital teria sido inaugurado em 1936; a matéria também descreve a iniciativa de Vivian Roberts de apoiar sua renovação no início dos anos 1970 e o declínio populacional posterior.",
     pendingVerification:
@@ -231,6 +235,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Morte de Andrew Reed em incêndio",
     pages: [87],
     sourceType: "Notícia de jornal e relato de investigação",
+    audioSrc: "/audio/painscreek/archive/p015-andrew-reed-fire.wav",
     documented:
       "Uma notícia de 7 de junho de 1995 relata que Andrew Reed, funcionário da mansão, foi encontrado morto após um incêndio em sua casa na rua Blackpine, nº 7. A causa não havia sido determinada; garrafas de bebida no local sugeriam uma hipótese acidental, e a matéria afirma que assassinato não havia sido identificado até então.",
     pendingVerification:
@@ -245,6 +250,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Scott declara-se inocente",
     pages: [88],
     sourceType: "Notícia de jornal sobre declaração em tribunal",
+    audioSrc: "/audio/painscreek/archive/p016-scott-pleads-innocent.wav",
     documented:
       "A notícia relata que Scott Brooks se declarou inocente no tribunal. Ele afirmou que encontrou Vivian na floresta, deixou-a viva e voltou para sua cabana, onde diz ter permanecido por dias sem saber do assassinato; estava detido e ainda não tinha fiança definida.",
     pendingVerification:
@@ -259,6 +265,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Realocação do xerife James Howard",
     pages: [89],
     sourceType: "Carta administrativa",
+    audioSrc: "/audio/painscreek/archive/p017-sheriff-reassignment.wav",
     documented:
       "Uma carta administrativa do Departamento do Xerife do distrito de NL informa James Howard de que foi realocado para Grand County a partir de 14 de maio de 1998 e pede que se apresente ao escritório antes de 12 de maio.",
     pendingVerification:
@@ -273,6 +280,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de recuperação endereçada a Daniel",
     pages: [91],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p018-letter-to-daniel.wav",
     documented:
       "A carta manuscrita começa com “Querido Daniel” e relata melhora durante a recuperação, acompanhamento do Dr. Johnson, trabalho em tempo integral na mansão e o fim das alucinações. O texto termina incompleto no trecho visível da página.",
     pendingVerification:
