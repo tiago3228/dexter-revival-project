@@ -16,6 +16,8 @@ describe("Painscreek archive voices", () => {
     expect(markup).toContain("PDF p. 88");
     expect(markup).toContain("Relato jornalístico — não literal");
     expect(markup).toContain("não transcrição literal");
-    expect(markup).toContain("O material fornecido não contém gravações originais");
+    expect(markup).toContain(
+      "A narração é uma reconstituição em áudio do texto documentado, não uma gravação original da fonte.",
+    );
   });
 });
