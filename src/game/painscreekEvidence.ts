@@ -605,6 +605,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Mary Martinez",
     pages: [13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p039-mary-martinez-notebook.wav",
     documented:
       "As páginas 13–17 e 21–27 registram a rotina de Mary na mansão, seus relatos sobre Sofia, Scott, Trisha, Vivian e o Dr. Johnson, além de referências ao sótão, à casa de Dorothy e a eventos de 1995.",
     pendingVerification:
@@ -619,6 +620,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno do xerife James Howard",
     pages: [18, 19, 20],
     sourceType: "Diário/anotações pessoais de autoridade policial",
+    audioSrc: "/audio/painscreek/archive/p040-james-howard-notebook.wav",
     documented:
       "Nas páginas 18–20, anotações atribuídas a James Howard registram o funeral de Vivian e referências ao andamento do caso e ao hospital. O material contém relatos e impressões do autor, não uma decisão judicial.",
     pendingVerification:
@@ -633,6 +635,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Matthew Brooks",
     pages: [28, 29, 30, 31, 32, 33, 34],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p041-matthew-brooks-notebook.wav",
     documented:
       "As páginas 28–34, associadas a Matthew Brooks, registram sua relação com Sofia, sua permanência na Igreja da Trindade e lembranças posteriores sobre o que ouviu a respeito dela. As entradas de 1995 expressam suspeitas e sofrimento do autor.",
     pendingVerification:
@@ -649,6 +652,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
       35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
     ],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p042-scott-brooks-notebook.wav",
     documented:
       "As páginas 35–57, associadas a Scott Brooks, registram sua infância, a adoção, sua busca por informações sobre Sofia e a relação com Trisha. Nas páginas 43 e 55, conferidas no PDF, há entradas sobre a investigação de Scott, uma fotografia e a descoberta de sua identidade; outros trechos permanecem dependentes de OCR.",
     pendingVerification:
@@ -663,6 +667,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de investigação de Steven Moss",
     pages: [58, 59, 60, 62],
     sourceType: "Anotações de investigação particular",
+    audioSrc: "/audio/painscreek/archive/p043-steven-moss-notebook.wav",
     documented:
       "As páginas 58–60 e 62 registram o progresso da investigação de Steven Moss em 1997, a intenção de visitar o Orfanato São Patrício, notas biográficas sobre Vivian, a anotação ‘Sala de segurança: 025241 (Mansão?)’ e tarefas de entrevista. A ficha/notação sobre Bernard na página 61 é catalogada separadamente em P-021.",
     pendingVerification:
@@ -677,6 +682,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Diário de Trisha Roberts",
     pages: [63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p044-trisha-roberts-diary.wav",
     documented:
       "As páginas 63–72, identificadas como diário de Trisha, registram sua infância, a relação com Scott, o código 44871 da sala de estudo e conflitos familiares sobre o casal.",
     pendingVerification:
@@ -691,6 +697,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Diários de Vivian Roberts",
     pages: [73, 74, 75, 76, 77],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p045-vivian-roberts-diaries.wav",
     documented:
       "As páginas 73–77 são identificadas como entradas de Vivian, com registros de 1972 e 1994 sobre sua vida pública, relações familiares, decisões de negócios e opiniões sobre Scott e Trisha.",
     pendingVerification:
@@ -720,6 +727,9 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Cartão de aniversário de Matthew para Sofia",
     pages: [103],
     sourceType: "Cartão pessoal",
+    audioSrc: "/audio/painscreek/archive/matthew-birthday-card.wav",
+    audioDescription:
+      "Trecho do mesmo cartão já narrado em Falas e trechos do arquivo; não cobre todo o resumo desta ficha e não é uma gravação original.",
     documented:
       "O cartão, datado de 18 de março de 1975 e assinado por Matthew, pede que Sofia espere seu retorno e deseja feliz aniversário. O texto também expressa afeto e recorda os momentos que passaram juntos.",
     pendingVerification:

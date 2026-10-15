@@ -73,16 +73,19 @@ describe("Painscreek evidence catalog", () => {
     expect(byId.get("P-031")?.audioSrc).toBe(byId.get("P-009")?.audioSrc);
     expect(byId.get("P-027")?.audioSrc).toBe("/audio/painscreek/archive/scott-letter-trisha.wav");
     expect(byId.get("P-027")?.audioDescription).toMatch(/não cobre todo o resumo/i);
+    expect(byId.get("P-047")?.audioSrc).toBe("/audio/painscreek/archive/matthew-birthday-card.wav");
+    expect(byId.get("P-047")?.audioDescription).toMatch(/não cobre todo o resumo/i);
   });
 
-  it("keeps every linked audio file available in public assets", () => {
+  it("provides an available audio file for all 47 catalog records", () => {
+    expect(PAINSCREEK_EVIDENCE_001_116.filter((evidence) => evidence.audioSrc)).toHaveLength(47);
+
     for (const evidence of PAINSCREEK_EVIDENCE_001_116) {
-      if (evidence.audioSrc) {
-        expect(
-          existsSync(join(process.cwd(), "public", evidence.audioSrc.slice(1))),
-          evidence.id,
-        ).toBe(true);
-      }
+      expect(evidence.audioSrc, evidence.id).toBeTruthy();
+      expect(
+        existsSync(join(process.cwd(), "public", evidence.audioSrc!.slice(1))),
+        evidence.id,
+      ).toBe(true);
     }
   });
 
