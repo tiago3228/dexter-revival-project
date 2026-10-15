@@ -99,7 +99,10 @@ describe("Vivian catalog integration", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
 
     const hospitalCard = getClueCard("Fechamento do Hospital Comunitário");
-    fireEvent.click(within(hospitalCard).getByRole("button", { name: "Examinar e coletar" }));
+    fireEvent.click(
+      within(hospitalCard).getByRole("button", { name: "Abrir arquivo para leitura" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Registrar evidência no caderno" }));
     expect(hospitalCard).toHaveTextContent("1996");
     expect(hospitalCard).not.toHaveTextContent("1956");
 

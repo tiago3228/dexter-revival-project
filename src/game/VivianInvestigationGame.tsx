@@ -799,8 +799,7 @@ function readSave(): SaveData | null {
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
       version?: 1 | 2 | 3 | 4 | 5;
     };
-    if (![1, 2, 3, 4, 5].includes(value.version ?? 0))
-      return null;
+    if (![1, 2, 3, 4, 5].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
@@ -811,7 +810,10 @@ function readSave(): SaveData | null {
         value.found,
         CLUES.map((item) => item.id),
       ),
-      readClues: ids(value.readClues, CLUES.map((item) => item.id)),
+      readClues: ids(
+        value.readClues,
+        CLUES.map((item) => item.id),
+      ),
       solvedRiddles: ids(
         value.solvedRiddles,
         RIDDLES.map((item) => item.id),
@@ -1048,9 +1050,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setPhase("explore");
     setSelectedClues([]);
     setPlaceIntroOpen(place.id);
-    setNotice(
-      "Local acessado. Abra a sala de leitura para começar pelos arquivos deste local.",
-    );
+    setNotice("Local acessado. Abra a sala de leitura para começar pelos arquivos deste local.");
   };
 
   const openDocument = (clue: Clue) => {
@@ -1509,7 +1509,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
                 {currentPlace.description}
               </p>
-              <div className="mt-4 border border-[#c4a779]/60 bg-[#c4a779]/10 p-4" aria-label="Próximo passo">
+              <div
+                className="mt-4 border border-[#c4a779]/60 bg-[#c4a779]/10 p-4"
+                aria-label="Próximo passo"
+              >
                 <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4a779]">
                   Próximo passo recomendado
                 </p>
@@ -2166,8 +2169,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   </p>
                   <p className="mt-2 font-display text-2xl">Sala documentada</p>
                   <p className="mt-1 text-sm leading-relaxed text-emerald-100/80">
-                    Todos os arquivos deste local foram lidos. O som de confirmação marca a conclusão
-                    desta etapa.
+                    Todos os arquivos deste local foram lidos. O som de confirmação marca a
+                    conclusão desta etapa.
                   </p>
                 </div>
               )}
@@ -2189,9 +2192,17 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                           className={`flex min-h-11 w-full items-center gap-2 border px-3 py-2 text-left text-sm transition ${completed ? "border-emerald-500/60 bg-emerald-950/20 text-emerald-100" : "border-[#4b4439] text-[#c9c1b5] hover:border-[#c4a779]"}`}
                         >
                           {completed ? (
-                            <Check size={15} className="shrink-0 text-emerald-300" aria-hidden="true" />
+                            <Check
+                              size={15}
+                              className="shrink-0 text-emerald-300"
+                              aria-hidden="true"
+                            />
                           ) : (
-                            <FileSearch size={14} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+                            <FileSearch
+                              size={14}
+                              className="shrink-0 text-[#c4a779]"
+                              aria-hidden="true"
+                            />
                           )}
                           <span className="flex-1">{clue.title}</span>
                           <span className="font-mono text-[10px] uppercase tracking-wider opacity-70">

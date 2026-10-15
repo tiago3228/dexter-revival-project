@@ -106,7 +106,9 @@ describe("investigation riddles", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
     fireEvent.click(screen.getByRole("button", { name: "Fechar arquivo" }));
     expect(screen.getByRole("dialog")).toHaveTextContent("Relatório policial sobre Vivian");
-    expect(screen.getByRole("button", { name: /Relatório policial sobre Vivian.*Lido/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Relatório policial sobre Vivian.*Lido/i }),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Scott nega ter matado Vivian.*Abrir/i }));
     expect(screen.getByRole("dialog")).toHaveTextContent("Scott nega ter matado Vivian");
   });
