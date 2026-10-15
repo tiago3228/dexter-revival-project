@@ -6,6 +6,7 @@ export type StoryDialogueScene = {
   id: string;
   title: string;
   subtitle: string;
+  audioSrc?: string;
   opening: StoryLine[];
   choices: StoryChoice[];
 };
@@ -51,6 +52,20 @@ export function StoryDialogue({
               {scene.title}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">{scene.subtitle}</p>
+            {scene.audioSrc && (
+              <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-3">
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-primary">
+                  Áudio opcional · diálogo completo
+                </p>
+                <audio
+                  className="h-9 w-full"
+                  controls
+                  preload="none"
+                  src={scene.audioSrc}
+                  aria-label={`Ouvir diálogo completo: ${scene.title}`}
+                />
+              </div>
+            )}
           </div>
           <button
             type="button"

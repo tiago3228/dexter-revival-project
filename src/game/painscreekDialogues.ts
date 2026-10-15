@@ -5,6 +5,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
     id: "renner-follow-up",
     title: "Segunda rodada com Paul Renner",
     subtitle: "Posto do xerife · livro de entrada e caixa 19",
+    audioSrc: "/audio/painscreek/archive/paul-renner-follow-up.wav",
     opening: [
       {
         speaker: "Dexter Morgan",
@@ -55,6 +56,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
     id: "vale-follow-up",
     title: "Revisão do laudo com Dr. Vale",
     subtitle: "Necrotério · tinta azul e relatório preliminar",
+    audioSrc: "/audio/painscreek/archive/henry-vale-follow-up.wav",
     opening: [
       {
         speaker: "Dexter Morgan",
@@ -108,6 +110,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
     id: "cole-follow-up",
     title: "Uma conversa na capela",
     subtitle: "Fita de áudio · sino quebrado e localização falsa",
+    audioSrc: "/audio/painscreek/archive/matthew-cole-follow-up.wav",
     opening: [
       {
         speaker: "Dexter Morgan",

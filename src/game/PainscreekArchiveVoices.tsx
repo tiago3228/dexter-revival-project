@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import { PAINSCREEK_ARCHIVE_VOICES } from "@/game/painscreekArchiveVoices";
 
 const kindLabels = {
@@ -9,6 +11,16 @@ const kindLabels = {
 } as const;
 
 export function PainscreekArchiveVoices() {
+  const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
+
+  function pauseOtherNarrations(activeId: string) {
+    Object.entries(audioRefs.current).forEach(([id, audio]) => {
+      if (id !== activeId && audio) {
+        audio.pause();
+      }
+    });
+  }
+
   return (
     <section
       id="falas-documentadas"
@@ -24,7 +36,8 @@ export function PainscreekArchiveVoices() {
       <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
         No estilo dos depoimentos do Caso Monroe, estes trechos dão voz às fontes sem reescrever o
         catálogo. Cada item indica se é diálogo anotado, citação publicada, relato indireto ou texto
-        de carta/cartão. O material fornecido não contém gravações originais de depoimentos.
+        de carta/cartão. A narração é uma reconstituição em áudio do texto documentado, não uma
+        gravação original da fonte.
       </p>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-2">
@@ -64,6 +77,25 @@ export function PainscreekArchiveVoices() {
                 {voice.kind === "press-report" ? voice.text : `“${voice.text}”`}
               </blockquote>
             )}
+
+            <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-primary">
+                Narração documental
+              </p>
+              <audio
+                ref={(audio) => {
+                  audioRefs.current[voice.id] = audio;
+                }}
+                className="h-9 w-full"
+                controls
+                preload="none"
+                onPlay={() => pauseOtherNarrations(voice.id)}
+                aria-label={`Ouvir narração: ${voice.title}`}
+              >
+                <source src={voice.audioSrc} type="audio/wav" />
+                Seu navegador não suporta a reprodução de áudio.
+              </audio>
+            </div>
 
             <p className="mt-3 text-xs leading-5 text-muted-foreground">{voice.note}</p>
           </article>
