@@ -67,6 +67,25 @@ describe("Painscreek evidence catalog", () => {
     expect(duplicate?.playerInference).toMatch(/duplicata editorial/i);
   });
 
+  it("reuses existing source audio for duplicate records and excerpts", () => {
+    const byId = new Map(PAINSCREEK_EVIDENCE_001_116.map((item) => [item.id, item]));
+
+    expect(byId.get("P-031")?.audioSrc).toBe(byId.get("P-009")?.audioSrc);
+    expect(byId.get("P-027")?.audioSrc).toBe("/audio/painscreek/archive/scott-letter-trisha.wav");
+    expect(byId.get("P-027")?.audioDescription).toMatch(/não cobre todo o resumo/i);
+  });
+
+  it("keeps every linked audio file available in public assets", () => {
+    for (const evidence of PAINSCREEK_EVIDENCE_001_116) {
+      if (evidence.audioSrc) {
+        expect(
+          existsSync(join(process.cwd(), "public", evidence.audioSrc.slice(1))),
+          evidence.id,
+        ).toBe(true);
+      }
+    }
+  });
+
   it("keeps all 116 supplemental originals and thumbnails available through the gallery", () => {
     const images = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.flatMap((group) => group.images);
     const markup = renderToStaticMarkup(createElement(PainscreekEvidenceGallery));

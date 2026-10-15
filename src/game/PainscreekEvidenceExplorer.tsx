@@ -53,7 +53,9 @@ function EvidenceCard({ evidence }: { evidence: PainscreekEvidence }) {
       {evidence.audioSrc && (
         <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
           <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-primary">
-            Narração documental · leitura opcional
+            {evidence.audioDescription
+              ? "Áudio relacionado à fonte · leitura opcional"
+              : "Narração documental · leitura opcional"}
           </p>
           <audio
             className="h-9 w-full"
@@ -63,7 +65,8 @@ function EvidenceCard({ evidence }: { evidence: PainscreekEvidence }) {
             aria-label={`Ouvir narração: ${evidence.id} — ${evidence.title}`}
           />
           <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-            Reconstituição sonora do texto catalogado; não é uma gravação original da fonte.
+            {evidence.audioDescription ??
+              "Reconstituição sonora do texto catalogado; não é uma gravação original da fonte."}
           </p>
         </div>
       )}

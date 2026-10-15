@@ -13,6 +13,7 @@ export type PainscreekEvidence = {
   pages: number[];
   sourceType: string;
   audioSrc?: string;
+  audioDescription?: string;
   documented: string;
   pendingVerification: string;
   confidence: "low" | "medium" | "high";
@@ -295,6 +296,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Contrato de fornecimento do hospital",
     pages: [92],
     sourceType: "Carta comercial",
+    audioSrc: "/audio/painscreek/archive/p019-hospital-supply-contract.wav",
     documented:
       "Uma carta de 16 de outubro de 1973, assinada por Eric W. Campbell em nome de Jackson & Lewis, agradece à Sra. Roberts por designar a empresa como fornecedora do Hospital Comunitário. Menciona a candidatura de Charles a prefeito, benefícios para a empresa e fundos de apoio usados em pesquisa e assistência a pacientes idosos; informa que os documentos contratuais seriam enviados em seguida.",
     pendingVerification:
@@ -325,6 +327,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro investigativo e ficha de Bernard Hopkins",
     pages: [61, 95],
     sourceType: "Nota em caderno investigativo (p. 61) e ficha administrativa (p. 95)",
+    audioSrc: "/audio/painscreek/archive/p021-bernard-hopkins-record.wav",
     documented:
       "A ficha administrativa da página 95 identifica Bernard Hopkins como mordomo, registra seu nascimento em 15 de novembro de 1944, contratação em 8 de maio de 1973, jornada de trabalho e endereço na Avenida Silverlake, n.º 31, código postal NL 28115. Separadamente, a página 61 exibe uma nota de caderno com o mesmo nome e endereço e o texto impresso: 'Pai morreu em acidente na mina. Ele estava em casa no dia em que Vivian foi morta. Sem álibis.'",
     pendingVerification:
@@ -339,6 +342,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de despedida de Dorothy",
     pages: [96],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/p022-dorothy-farewell-letter.wav",
     documented:
       "Em carta datada de 31 de janeiro de 1996 e dirigida a Charles, Dorothy diz ter trabalhado na casa por mais de vinte anos, recorda com afeto Trisha e lamenta deixar o serviço após os acontecimentos em Painscreek, sem detalhá-los.",
     pendingVerification:
@@ -354,6 +358,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Conselho de Henry sobre Sofia e o bebê",
     pages: [98],
     sourceType: "Carta pessoal com conteúdo médico e familiar",
+    audioSrc: "/audio/painscreek/archive/p023-henry-advice-sofia-baby.wav",
     documented:
       "Em carta datada de 18 de junho de 1975, Henry Johnson escreve a Vivian como amigo e a aconselha a fazer Sofia e o bebê deixarem Charles e Painscreek, oferecendo compensação. Ele alerta que a divulgação do caso poderia prejudicar a carreira política de Charles e menciona a possibilidade de Charles registrar o menino.",
     pendingVerification:
@@ -368,6 +373,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de Rachel Davis sobre a origem de Scott",
     pages: [99],
     sourceType: "Carta do orfanato São Patrício",
+    audioSrc: "/audio/painscreek/archive/p024-rachel-scott-origins.wav",
     documented:
       "Em carta datada de 2 de fevereiro de 1994, Rachel Davis escreve a Scott que ele foi levado ao orfanato pelo padre Calvin em 4 de julho de 1975, ainda bebê, e que lhe disseram que perdera os pais. Ela também relata que o padre Matthew o visitava depois de assumir a Igreja da Trindade de Painscreek e deixava dinheiro para ele e para o orfanato.",
     pendingVerification:
@@ -397,6 +403,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Advogado aceita representar Scott",
     pages: [101],
     sourceType: "Carta jurídica",
+    audioSrc: "/audio/painscreek/archive/p026-scott-attorney.wav",
     documented:
       "Brendan O’Mally informa ao Sr. Brooks que seu escritório aceitou representar Scott no tribunal e está preparando um recurso para sua libertação. Pede que o pai não faça declarações públicas antes de consultar os advogados e solicita cópias de documentos governamentais relacionados ao filho.",
     pendingVerification:
@@ -412,6 +419,9 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Carta de Scott para Trisha",
     pages: [104],
     sourceType: "Carta pessoal",
+    audioSrc: "/audio/painscreek/archive/scott-letter-trisha.wav",
+    audioDescription:
+      "Trecho da carta já narrado em Falas e trechos do arquivo; não cobre todo o resumo desta ficha e não é uma gravação original.",
     documented:
       "Scott escreve a Trisha que saber sobre seus pais biológicos mudou sua compreensão da oposição do padre Matthew ao relacionamento deles. Ele nega ter matado Vivian, diz não saber quem a matou e pede perdão pela dor que causou.",
     pendingVerification:
@@ -426,6 +436,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro de enfermagem com ocorrências de 1993–1994",
     pages: [105],
     sourceType: "Registro interno de enfermagem",
+    audioSrc: "/audio/painscreek/archive/p028-nursing-record-1993-1994.wav",
     documented:
       "O registro reúne anotações datadas de 19 de maio de 1993, 4 e 20 de junho de 1993 e 26 de junho de 1994. Inclui uma tentativa frustrada de contatar o Dr. Johnson após Nora Jefferson ser levada ao hospital, uma ausência por doença e falta de pessoal, a morte por afogamento de Timothy Scott, de seis anos, e a observação de uma jovem perto do consultório do Dr. Johnson após o horário de visitas.",
     pendingVerification:
@@ -471,6 +482,8 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     sourceType: "Referência editorial duplicada; mesma fonte de P-009",
     // P-031 é duplicata editorial de P-009 e reutiliza a mesma narração.
     audioSrc: "/audio/painscreek/archive/p009-woman-in-forest.wav",
+    audioDescription:
+      "Faixa reutilizada de P-009: este registro é uma duplicata editorial da mesma fonte, não uma segunda evidência.",
     documented:
       "Esta entrada repete o episódio já catalogado em P-009: a anotação de 2 de novembro de 1994 relata que Stephanie, de seis anos, se perdeu na floresta na noite de Halloween e disse que uma mulher de cabelos pretos compridos, vestida como uma empregada da mansão, a ajudou. Não é uma segunda fonte nem uma confirmação independente.",
     pendingVerification:
