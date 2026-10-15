@@ -452,6 +452,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Registro de segurança: intruso no jardim",
     pages: [106],
     sourceType: "Livro de segurança da mansão",
+    audioSrc: "/audio/painscreek/archive/p029-garden-intruder.wav",
     documented:
       "Uma anotação datada de 18 de março de 1994 relata que um homem de cerca de 1,70 m, usando moletom com capuz, escalou a cerca, atravessou o jardim e pulou o muro. A câmera não registrou seu rosto; o Sr. Roberts pediu a instalação de mais câmeras.",
     pendingVerification:
@@ -466,6 +467,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Mudanças na equipe e ocorrência com Andrew",
     pages: [107, 108],
     sourceType: "Livro de segurança da mansão",
+    audioSrc: "/audio/painscreek/archive/p030-staff-changes-andrew.wav",
     documented:
       "O registro informa a chegada de novas fitas VHS em 25 de março de 1994 e a contratação de Samuel Green como novo segurança em 28 de maio. Em 4 de julho, Andrew teria chegado muito embriagado à mansão por volta das 23h, e Scott foi chamado para levá-lo para casa. Uma anotação de 12 de agosto registra vinte anos de serviço de Tom Parker e sua saída prevista para cuidar da esposa doente.",
     pendingVerification:
@@ -513,6 +515,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Anotações de Dorothy sobre Sofia e a gravidez",
     pages: [112, 113, 114],
     sourceType: "Diário ou anotações pessoais de Dorothy Patterson",
+    audioSrc: "/audio/painscreek/archive/p033-dorothy-sofia-pregnancy.wav",
     documented:
       "As anotações datadas de 20 de junho e 24 de setembro de 1973 descrevem visitas de Matthew a Sofia e uma conversa em que Sofia diz não saber como é ser amada por pais. Em 2 e 6 de fevereiro de 1975, Dorothy registra que Charles pediu que cuidasse de Sofia em uma casa afastada da mansão e que os dois combinaram manter a gravidez em segredo. Em 6 de abril de 1975, Dorothy escreve que Sofia estava no oitavo mês, esperançosa com o futuro e pensando que seria melhor se o bebê fosse menino.",
     pendingVerification:
@@ -527,6 +530,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Anotações sobre Andrew, Scott e a fotografia emprestada",
     pages: [115, 116],
     sourceType: "Diário ou livro de memórias",
+    audioSrc: "/audio/painscreek/archive/p034-andrew-scott-photo-record.wav",
     documented:
       "Uma anotação de 23 de setembro de 1994 relata outra tentativa de suicídio de Andrew e atribui a Scott o ato de salvá-lo; a de 10 de outubro descreve melhora de Andrew e visitas frequentes de Scott. Em 13 de fevereiro de 1995, Scott visita o autor para consertar uma pia, conversa sobre Charles e Vivian e pede emprestada uma fotografia de um álbum. Em 19 de junho de 1995, o autor registra a morte de Andrew e o reencontro de Laura e Daniel no funeral, lamentando não ter ligado para Laura antes.",
     pendingVerification:
@@ -541,6 +545,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Andrew Reed",
     pages: [1, 2],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p035-andrew-reed-notebook.wav",
     documented:
       "As páginas 1–2, associadas a Andrew Reed, registram sua avaliação de Scott, referências a Sofia, medicação e culpa compartilhada. O caderno não identifica com segurança todos os referentes dos pronomes usados pelo narrador.",
     pendingVerification:
@@ -555,6 +560,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Bernard Hopkins",
     pages: [3, 4, 5],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p036-bernard-hopkins-notebook.wav",
     documented:
       "Nas páginas 3–5, Bernard relata conversas sobre Sofia, observações sobre Vivian, Scott e Derrick e reflexões pessoais. Na página 5, ‘Vivian’ aparece riscado antes de uma frase interrompida.",
     pendingVerification:
@@ -569,6 +575,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Charles Roberts",
     pages: [6, 7],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p037-charles-roberts-notebook.wav",
     documented:
       "Nas páginas 6–7, Charles registra sua relação com Vivian, Trisha e Scott, além de lembranças familiares e opiniões próprias sobre essas relações.",
     pendingVerification:
@@ -583,6 +590,7 @@ export const PAINSCREEK_EVIDENCE_001_116: PainscreekEvidence[] = [
     title: "Caderno de Derrick Tyler",
     pages: [8, 9, 10, 11, 12],
     sourceType: "Diário/caderno pessoal",
+    audioSrc: "/audio/painscreek/archive/p038-derrick-tyler-notebook.wav",
     documented:
       "Nas páginas 8–12, Derrick relata episódios de sua convivência com Scott e Trisha e sua entrada no trabalho de motorista da família Roberts. A página 11 descreve uma saída de caça perto do rio e um ralo de drenagem, sem localizar precisamente o ponto.",
     pendingVerification:
