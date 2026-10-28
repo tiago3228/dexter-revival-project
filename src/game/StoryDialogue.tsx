@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export type StoryLine = { speaker: string; text: string };
-export type StoryChoice = { id: string; label: string; lines: StoryLine[] };
+export type StoryChoice = { id: string; label: string; lines: StoryLine[]; audioSrc?: string };
 export type StoryDialogueScene = {
   id: string;
   title: string;
@@ -20,10 +20,12 @@ export function StoryDialogue({
 }) {
   const [lines, setLines] = useState(scene.opening);
   const [choices, setChoices] = useState(scene.choices);
+  const [choiceAudioSrc, setChoiceAudioSrc] = useState<string | null>(null);
 
   const ask = (choice: StoryChoice) => {
     setLines((current) => [...current, ...choice.lines]);
     setChoices((current) => current.filter((item) => item.id !== choice.id));
+    setChoiceAudioSrc(choice.audioSrc ?? null);
   };
 
   return (
@@ -88,6 +90,23 @@ export function StoryDialogue({
             </div>
           ))}
         </div>
+        {choiceAudioSrc && (
+          <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-3">
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-primary">
+              Áudio opcional · resposta selecionada
+            </p>
+            <audio
+              className="h-9 w-full"
+              controls
+              preload="none"
+              src={choiceAudioSrc}
+              aria-label="Ouvir a resposta da pergunta selecionada"
+            />
+            <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
+              A reprodução não altera as escolhas nem a progressão da investigação.
+            </p>
+          </div>
+        )}
         {choices.length > 0 ? (
           <div className="mt-5 border-t border-border pt-4">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
