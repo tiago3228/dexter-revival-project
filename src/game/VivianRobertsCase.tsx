@@ -1206,6 +1206,21 @@ export function VivianRobertsCase({
               Reconstrua as relações, compare os registros e descubra quais conexões resistem às
               evidências. Não confunda suspeita com prova.
             </p>
+            <div className="mt-4 max-w-xl border border-[#4b4439] bg-[#1b1a17] p-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                Narração de abertura · opcional
+              </p>
+              <audio
+                className="mt-2 h-9 w-full"
+                controls
+                preload="none"
+                src="/audio/painscreek/case-opening.wav"
+                aria-label="Ouvir narração de abertura do Caso Vivian Roberts"
+              />
+              <p className="mt-2 text-[11px] leading-5 text-[#81796d]">
+                A reprodução não altera o progresso da investigação.
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             {onBack && (
