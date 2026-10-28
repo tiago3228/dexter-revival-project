@@ -66,6 +66,7 @@ type Clue = {
   source: string;
   summary: string;
   caution: string;
+  audioSrc: string;
   place: PlaceId;
 };
 
@@ -551,6 +552,7 @@ const CLUES: Clue[] = [
     summary:
       "O relatório registra Scott Brooks como principal suspeito e menciona testemunhas que ouviram uma discussão, sem conseguir identificar as palavras ditas.",
     caution: "Ser suspeito e ter sido visto em uma discussão não prova autoria do homicídio.",
+    audioSrc: "/audio/painscreek/clues/police-report.wav",
     place: "archive",
   },
   {
@@ -560,6 +562,7 @@ const CLUES: Clue[] = [
     summary:
       "Scott afirma que encontrou Vivian na floresta e foi embora. A declaração é a versão dele, não uma confirmação independente.",
     caution: "Compare a declaração com o relatório policial e procure corroboração independente.",
+    audioSrc: "/audio/painscreek/clues/scott-denial.wav",
     place: "archive",
   },
   {
@@ -570,6 +573,7 @@ const CLUES: Clue[] = [
       "Uma notícia de 21 de fevereiro de 1996 relata o fechamento do hospital após cerca de 60 anos de funcionamento; o texto diz que a instituição foi inaugurada em 1936.",
     caution:
       "A página foi conferida visualmente. A notícia não comprova desvio de fundos nem relação direta com a morte de Vivian.",
+    audioSrc: "/audio/painscreek/clues/hospital-closure.wav",
     place: "archive",
   },
   {
@@ -580,6 +584,7 @@ const CLUES: Clue[] = [
       "Uma carta datada de 16 de outubro de 1973 agradece a Vivian por escolher a empresa como fornecedora do Hospital Comunitário e menciona a candidatura de Charles a prefeito e o uso de fundos para pesquisa e atendimento a idosos.",
     caution:
       "A carta demonstra uma relação comercial e filantrópica descrita pelo remetente; não prova desvio de fundos nem relação com a morte de Vivian.",
+    audioSrc: "/audio/painscreek/clues/hospital-contract.wav",
     place: "hospital",
   },
   {
@@ -590,6 +595,7 @@ const CLUES: Clue[] = [
       "A notícia relata que Henry Johnson foi encontrado morto em um veículo submerso no Lago Cherry Creek em 1995.",
     caution:
       "A notícia registra a descoberta do corpo; causa, circunstâncias e conexões ainda precisam ser confirmadas.",
+    audioSrc: "/audio/painscreek/clues/henry-death.wav",
     place: "lake",
   },
   {
@@ -600,6 +606,7 @@ const CLUES: Clue[] = [
       "Um relatório acusa Henry Johnson de transferir dinheiro para uma conta offshore e estima o total em aproximadamente US$ 160 mil.",
     caution:
       "É uma acusação de investigadores privados, não uma conclusão judicial nem prova de motivo para outro crime.",
+    audioSrc: "/audio/painscreek/clues/funds-investigation.wav",
     place: "hospital",
   },
   {
@@ -609,6 +616,7 @@ const CLUES: Clue[] = [
     summary:
       "O documento atribuído ao Dr. Henry Johnson descreve o estado clínico de Vivian, a necessidade de reabilitação e o efeito estressante da presença de Charles.",
     caution: "O contexto médico não estabelece, por si só, culpa ou motivo criminal.",
+    audioSrc: "/audio/painscreek/clues/vivian-medical.wav",
     place: "hospital",
   },
   {
@@ -619,6 +627,7 @@ const CLUES: Clue[] = [
       "A carta menciona problemas de saúde de Vivian, um relacionamento extraconjugal de Charles e o desaparecimento de Sofia e do filho.",
     caution:
       "O trecho disponível é incompleto e exige comparação com a imagem original e outras cartas.",
+    audioSrc: "/audio/painscreek/clues/charles-secret.wav",
     place: "mansion",
   },
   {
@@ -628,6 +637,7 @@ const CLUES: Clue[] = [
     summary:
       "O diário registra que Scott pediu emprestada uma fotografia do álbum de Dorothy após uma conversa sobre Charles e Vivian.",
     caution: "A identidade da fotografia e sua relevância ainda não estão estabelecidas.",
+    audioSrc: "/audio/painscreek/clues/dorothy-photo.wav",
     place: "mansion",
   },
   {
@@ -638,6 +648,7 @@ const CLUES: Clue[] = [
       "A carta menciona recuperação, o Dr. Johnson, o fim de alucinações e trabalho na mansão; o autor e o contexto não estão totalmente identificados.",
     caution:
       "O documento está incompleto na transcrição; não atribua autoria ou diagnóstico sem conferir a fonte.",
+    audioSrc: "/audio/painscreek/clues/daniel-letter.wav",
     place: "church",
   },
   {
@@ -647,6 +658,7 @@ const CLUES: Clue[] = [
     summary: "Matthew associa o código 0318 à data da chegada de Sofia ao orfanato.",
     caution:
       "A referência foi conferida visualmente, mas sua função como senha de um objeto do jogo ainda não foi validada. Neste protótipo, ela funciona como exercício de cruzamento, não como chave de cofre.",
+    audioSrc: "/audio/painscreek/clues/code-0318.wav",
     place: "mansion",
   },
 ];
@@ -1757,6 +1769,20 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                           <strong>Ressalva:</strong> {clue.caution}
                         </p>
                       )}
+                      {collected && (
+                        <div className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
+                          <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                            Ouvir resumo da pista · opcional
+                          </p>
+                          <audio
+                            className="mt-2 h-9 w-full"
+                            controls
+                            preload="none"
+                            src={clue.audioSrc}
+                            aria-label={`Ouvir resumo da pista: ${clue.title}`}
+                          />
+                        </div>
+                      )}
                       {catalogLink && (
                         <details className="mt-3 border border-[#79664c]/70 bg-[#171510] p-3">
                           <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c4a779]">
@@ -2287,6 +2313,21 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   Leitura registrada na ficha
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-[#eee9df]">{openClue.summary}</p>
+                <div className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                    Narração do resumo · opcional
+                  </p>
+                  <audio
+                    className="mt-2 h-9 w-full"
+                    controls
+                    preload="none"
+                    src={openClue.audioSrc}
+                    aria-label={`Ouvir resumo da pista: ${openClue.title}`}
+                  />
+                  <p className="mt-2 text-[11px] leading-5 text-[#81796d]">
+                    A faixa lê o resumo registrado e não inclui dicas ou soluções ocultas.
+                  </p>
+                </div>
               </div>
               <div className="mt-4 border border-amber-500/50 bg-amber-950/20 p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-amber-200">
