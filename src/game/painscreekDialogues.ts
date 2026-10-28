@@ -20,6 +20,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "renner-signature",
         label: "Pressionar sobre a segunda assinatura",
+        audioSrc: "/audio/painscreek/interrogations/renner-signature.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
@@ -38,6 +39,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "renner-box",
         label: "Perguntar sobre a caixa 19",
+        audioSrc: "/audio/painscreek/interrogations/renner-box.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
@@ -71,6 +73,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "vale-blue",
         label: "Perguntar se a tinta veio do recibo do cais",
+        audioSrc: "/audio/painscreek/interrogations/vale-blue.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
@@ -89,6 +92,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "vale-report",
         label: "Perguntar quem alterou o relatório",
+        audioSrc: "/audio/painscreek/interrogations/vale-report.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
@@ -125,6 +129,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "cole-recording",
         label: "Perguntar como o sino entrou na gravação",
+        audioSrc: "/audio/painscreek/interrogations/cole-recording.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
@@ -143,6 +148,7 @@ export const PAINSCREEK_DIALOGUES: Record<string, StoryDialogueScene> = {
       {
         id: "cole-log",
         label: "Confrontá-lo com o horário do livro de entrada",
+        audioSrc: "/audio/painscreek/interrogations/cole-log.wav",
         lines: [
           {
             speaker: "Dexter Morgan",
