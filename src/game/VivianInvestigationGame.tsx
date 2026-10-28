@@ -1974,6 +1974,21 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               O objetivo desta etapa é registrar uma hipótese responsável, não adivinhar um culpado.
               As evidências atuais ainda têm ressalvas de OCR e de verificação documental.
             </p>
+            <div className="mt-4 max-w-xl border border-[#4b4439] bg-[#211f1b] p-3">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                Orientação do relatório · opcional
+              </p>
+              <audio
+                className="mt-2 h-9 w-full"
+                controls
+                preload="none"
+                src="/audio/painscreek/provisional-report.wav"
+                aria-label="Ouvir orientação do relatório provisório"
+              />
+              <p className="mt-2 text-[11px] leading-5 text-[#81796d]">
+                A faixa não declara culpados nem substitui a leitura das ressalvas.
+              </p>
+            </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               <div className="border border-[#4b4439] bg-[#211f1b] p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
