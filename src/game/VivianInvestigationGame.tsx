@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { Button } from "@/components/ui/button";
+import { VivianDeductionDesk } from "./VivianDeductionDesk";
+import { VIVIAN_DEDUCTIONS } from "./vivianDeductions";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -114,6 +117,8 @@ type SaveData = {
   mistakes: number;
   usedHints: string[];
   rankingRecorded: boolean;
+  deductions: string[];
+  investigationNotes: string;
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
@@ -864,6 +869,8 @@ function readSave(): SaveData | null {
         ...CODE_LOCKS.map((lock) => `code:${lock.id}:1`),
       ]),
       rankingRecorded: value.rankingRecorded === true,
+      deductions: ids(value.deductions, VIVIAN_DEDUCTIONS.map((item) => item.id)),
+      investigationNotes: typeof value.investigationNotes === "string" ? value.investigationNotes.slice(0, 4000) : "",
     };
   } catch {
     return null;
@@ -928,6 +935,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [openClueId, setOpenClueId] = useState<ClueId | null>(null);
   const [placeIntroOpen, setPlaceIntroOpen] = useState<PlaceId | null>(null);
   const [roomCompletion, setRoomCompletion] = useState<PlaceId | null>(null);
+  const [deductions, setDeductions] = useState<string[]>(saved?.deductions ?? []);
+  const [investigationNotes, setInvestigationNotes] = useState(saved?.investigationNotes ?? "");
+  const [nameEntryModes, setNameEntryModes] = useState<Record<string, "discs" | "text">>({});
 
   useEffect(() => {
     if (!pendingHint) return;
@@ -958,6 +968,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       mistakes,
       usedHints,
       rankingRecorded,
+      deductions,
+      investigationNotes,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
     window.dispatchEvent(new Event("vivian-investigation-progress"));
@@ -976,9 +988,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     mistakes,
     usedHints,
     rankingRecorded,
+    deductions,
+    investigationNotes,
   ]);
 
-  const currentPlace = PLACES.find((place) => place.id === activePlace)!;
+  const currentPlace = PLACES.find((place) => place.id === activePlace) ?? PLACES[0];
+  if (!currentPlace) throw new Error("Investigation places are unavailable");
   const currentClues = CLUES.filter((clue) => clue.place === activePlace);
   const currentRiddles = RIDDLES.filter((riddle) => riddle.place === activePlace);
   const currentCodeLocks = CODE_LOCKS.filter((lock) => lock.place === activePlace);
@@ -1307,6 +1322,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setChosenConclusion("");
     setMistakes(0);
     setRankingRecorded(false);
+    setDeductions([]);
+    setInvestigationNotes("");
+    setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
     setTimelineChecked(false);
@@ -1580,10 +1598,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               className="mt-4 flex flex-wrap gap-2"
                               onSubmit={(event) => {
                                 event.preventDefault();
-                                solveRiddle(riddle, riddle.nameLength ? nameAnswer : answer);
+                                solveRiddle(riddle, riddle.nameLength && nameEntryModes[riddle.id] !== "text" ? nameAnswer : answer);
                               }}
                             >
-                              {riddle.nameLength ? (
+                              {riddle.nameLength && (
+                                <div className="flex w-full gap-1" role="group" aria-label={`Modo de resposta para ${riddle.title}`}>
+                                  <Button type="button" size="sm" variant={nameEntryModes[riddle.id] !== "text" ? "secondary" : "ghost"} aria-pressed={nameEntryModes[riddle.id] !== "text"} onClick={() => setNameEntryModes((current) => ({ ...current, [riddle.id]: "discs" }))}>Discos</Button>
+                                  <Button type="button" size="sm" variant={nameEntryModes[riddle.id] === "text" ? "secondary" : "ghost"} aria-pressed={nameEntryModes[riddle.id] === "text"} onClick={() => setNameEntryModes((current) => ({ ...current, [riddle.id]: "text" }))}>Digitar</Button>
+                                </div>
+                              )}
+                              {riddle.nameLength && nameEntryModes[riddle.id] !== "text" ? (
                                 <div className="w-full">
                                   <div className="grid grid-cols-5 gap-1 sm:grid-cols-6">
                                     {nameAnswer.split("").map((letter, index) => (
@@ -1592,7 +1616,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                                           type="button"
                                           aria-label={`Girar letra ${index + 1} para cima`}
                                           onClick={() =>
-                                            rotateNameDial(riddle.id, index, 1, riddle.nameLength!)
+                                            rotateNameDial(riddle.id, index, 1, riddle.nameLength ?? 0)
                                           }
                                           className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
                                         >
@@ -1605,7 +1629,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                                           type="button"
                                           aria-label={`Girar letra ${index + 1} para baixo`}
                                           onClick={() =>
-                                            rotateNameDial(riddle.id, index, -1, riddle.nameLength!)
+                                            rotateNameDial(riddle.id, index, -1, riddle.nameLength ?? 0)
                                           }
                                           className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
                                         >
@@ -1874,6 +1898,21 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           </div>
         )}
 
+        {(phase === "explore" || phase === "board") && (
+          <VivianDeductionDesk
+            sources={CLUES.filter((clue) => found.includes(clue.id))}
+            selected={selectedClues}
+            solved={deductions}
+            notes={investigationNotes}
+            onNotes={setInvestigationNotes}
+            onSolve={(id) => {
+              setDeductions((current) => current.includes(id) ? current : [...current, id]);
+              playInvestigationSound("connection");
+              setNotice("Dedução sustentada pelas fontes. Nenhum veredito de culpa foi estabelecido.");
+            }}
+          />
+        )}
+
         {phase === "board" && (
           <section className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <div className="border border-[#4b4439] bg-[#191714] p-4 sm:p-6">
@@ -1939,7 +1978,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
             <div className="mt-5 space-y-2">
               {(sortedTimeline.length ? sortedTimeline : TIMELINE.map((item) => item.id)).map(
                 (id) => {
-                  const item = TIMELINE.find((entry) => entry.id === id)!;
+                  const item = TIMELINE.find((entry) => entry.id === id);
+                  if (!item) return null;
                   const index = (
                     sortedTimeline.length ? sortedTimeline : TIMELINE.map((entry) => entry.id)
                   ).indexOf(id);
