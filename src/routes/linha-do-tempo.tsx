@@ -586,7 +586,17 @@ const ENTRIES: TimelineEntry[] = [
   },
 ];
 
-export const Route = createFileRoute("/linha-do-tempo")({ component: TimelinePage });
+export const Route = createFileRoute("/linha-do-tempo")({
+  head: () => ({ meta: [
+    { title: "Cronologia de Painscreek | Dexter — The Game" },
+    { name: "description", content: "Reconstrua os acontecimentos do caso Vivian Roberts a partir de diários e registros de Painscreek." },
+    { property: "og:title", content: "Cronologia de Painscreek | Dexter — The Game" },
+    { property: "og:description", content: "Compare datas, relatos e fontes da investigação de Vivian Roberts." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
+  component: TimelinePage,
+});
 
 function TimelinePage() {
   const [unlocked, setUnlocked] = useState<string[]>([]);
