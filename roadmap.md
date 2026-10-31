@@ -17,8 +17,11 @@
 - [x] Registro investigativo de trabalho para Painscreek, páginas 51–60, adicionado em `docs/casos/painscreek/paginas-51-60-notas-investigativas.md`
 - [x] Incertezas, cronologia a conferir e comparação de duplicatas pendente explicitamente documentadas
 
+## Concluído (31/10/2026)
+- [x] Mesa de dedução com quatro desafios opcionais, comparação de fontes e hipóteses pessoais salvas; respostas digitadas opcionais mantendo os discos, diálogos, áudios e progresso anterior.
+- [x] Validado o fluxo de coleta, conexão, dedução, resposta digitada e retomada; testes dos nove enigmas passaram isoladamente e layout móvel sem transbordamento.
+
 ## Pendente
-- [ ] Tornar a investigação de Vivian mais envolvente com comparação de fontes e deduções, preservando diálogos, áudios e progresso anterior.
 - [ ] Conferir visualmente as páginas 51–60 e comparar com o inventário das páginas 1–50
 - [ ] Integrar as entradas confirmadas à interface investigativa sem converter relatos em fatos comprovados
 - [ ] O usuário decide quando publicar — não publicar sem pedido explícito
