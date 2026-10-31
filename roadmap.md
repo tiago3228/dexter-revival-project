@@ -18,6 +18,7 @@
 - [x] Incertezas, cronologia a conferir e comparação de duplicatas pendente explicitamente documentadas
 
 ## Pendente
+- [ ] Tornar a investigação de Vivian mais envolvente com comparação de fontes e deduções, preservando diálogos, áudios e progresso anterior.
 - [ ] Conferir visualmente as páginas 51–60 e comparar com o inventário das páginas 1–50
 - [ ] Integrar as entradas confirmadas à interface investigativa sem converter relatos em fatos comprovados
 - [ ] O usuário decide quando publicar — não publicar sem pedido explícito
