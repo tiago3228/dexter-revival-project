@@ -30,6 +30,7 @@ import {
 } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
+import { FlagMinigame } from "./FlagMinigame";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import {
   loadCurrentPlayerName,
@@ -2339,6 +2340,7 @@ function MainMenu({
             </label>
           </div>
         </section>
+        <FlagMinigame />
         <button
           type="button"
           onClick={() => setShowRanking((visible) => !visible)}
