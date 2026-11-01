@@ -78,10 +78,28 @@ const DIARY_REFERENCE_TERMS: Record<string, string[]> = {
   wanda: ["Wanda Tyler"],
 };
 
-function getDiaryReferences(personId: string) {
+const DIARY_CATALOG_PAGES: Record<string, number[]> = {
+  andrew: [1, 2],
+  bernard: [3, 4, 5],
+  charles: [6, 7],
+  derrick: [8, 9, 10, 11, 12, 8, 9, 10, 11, 12],
+  dorothy: [78, 78, 79, 79, 80, 81],
+  james: [18, 19, 20],
+  mary: [13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27],
+  matthew: [28, 29, 30, 31, 32, 33, 34],
+  scott: Array.from({ length: 23 }, (_, index) => index + 35),
+  moss: [58, 59, 60, 62, 62],
+  trisha: [63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
+  vivian: [73, 74, 75, 76, 77],
+  wanda: [78, 79, 80, 81],
+};
+
+function getDiaryReferences(personId: string, catalogPage: number | undefined) {
   const terms = DIARY_REFERENCE_TERMS[personId] ?? [];
-  return PAINSCREEK_EVIDENCE_001_116.filter((evidence) =>
-    terms.some((term) => evidence.title.includes(term)),
+  return PAINSCREEK_EVIDENCE_001_116.filter(
+    (evidence) =>
+      terms.some((term) => evidence.title.includes(term)) &&
+      (catalogPage === undefined || evidence.pages.includes(catalogPage)),
   ).slice(0, 4);
 }
 
@@ -131,6 +149,8 @@ function DiaryImages({
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [readerTheme, setReaderTheme] = useState<"dark" | "light" | "sepia">("dark");
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const pinchDistanceRef = useRef<number | null>(null);
@@ -138,6 +158,13 @@ function DiaryImages({
     startX: number;
     startY: number;
     hadMultiTouch: boolean;
+  } | null>(null);
+  const panDragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
   } | null>(null);
 
   useEffect(() => {
@@ -171,7 +198,8 @@ function DiaryImages({
   const currentImage = group.images[currentIndex];
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < group.images.length - 1;
-  const diaryReferences = getDiaryReferences(personId);
+  const currentCatalogPage = DIARY_CATALOG_PAGES[groupId]?.[currentIndex];
+  const diaryReferences = getDiaryReferences(personId, currentCatalogPage);
 
   const saveProgress = (index: number) => {
     setCurrentIndex(index);
@@ -181,6 +209,7 @@ function DiaryImages({
   const openViewer = (index: number) => {
     saveProgress(index);
     setZoom(1);
+    setPan({ x: 0, y: 0 });
     setViewerOpen(true);
   };
 
@@ -188,6 +217,7 @@ function DiaryImages({
     if (document.fullscreenElement) void document.exitFullscreen();
     setViewerOpen(false);
     setZoom(1);
+    setPan({ x: 0, y: 0 });
   };
 
   const changePage = (direction: -1 | 1) => {
@@ -195,10 +225,15 @@ function DiaryImages({
     if (nextIndex < 0 || nextIndex >= group.images.length) return;
     saveProgress(nextIndex);
     setZoom(1);
+    setPan({ x: 0, y: 0 });
   };
 
   const adjustZoom = (amount: number) =>
     setZoom((value) => Math.min(3, Math.max(1, Number((value + amount).toFixed(2)))));
+
+  useEffect(() => {
+    if (zoom <= 1.05) setPan({ x: 0, y: 0 });
+  }, [zoom]);
 
   const toggleFullscreen = async () => {
     if (!viewerRef.current) return;
@@ -236,8 +271,20 @@ function DiaryImages({
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointersRef.current.size === 1) {
       swipeRef.current = { startX: event.clientX, startY: event.clientY, hadMultiTouch: false };
+      if (zoom > 1.05) {
+        panDragRef.current = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          originX: pan.x,
+          originY: pan.y,
+        };
+        setIsPanning(true);
+      }
     } else if (swipeRef.current) {
       swipeRef.current.hadMultiTouch = true;
+      panDragRef.current = null;
+      setIsPanning(false);
     }
     if (pointersRef.current.size === 2) {
       const points = [...pointersRef.current.values()] as [
@@ -251,6 +298,13 @@ function DiaryImages({
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!pointersRef.current.has(event.pointerId)) return;
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 1 && panDragRef.current?.pointerId === event.pointerId) {
+      setPan({
+        x: panDragRef.current.originX + event.clientX - panDragRef.current.startX,
+        y: panDragRef.current.originY + event.clientY - panDragRef.current.startY,
+      });
+      return;
+    }
     if (pointersRef.current.size !== 2 || pinchDistanceRef.current === null) return;
     const points = [...pointersRef.current.values()] as [
       { x: number; y: number },
@@ -263,6 +317,8 @@ function DiaryImages({
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
+    panDragRef.current = null;
+    setIsPanning(false);
     if (pointersRef.current.size < 2) pinchDistanceRef.current = null;
     if (pointersRef.current.size > 0) return;
 
@@ -278,6 +334,8 @@ function DiaryImages({
 
   const handlePointerCancel = (event: React.PointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
+    panDragRef.current = null;
+    setIsPanning(false);
     pinchDistanceRef.current = null;
     swipeRef.current = null;
   };
@@ -386,13 +444,16 @@ function DiaryImages({
           </button>
         </div>
       )}
-      {diaryReferences.length > 0 && (
-        <details className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
-          <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
-            Referências relacionadas no catálogo · {diaryReferences.length}
-          </summary>
-          <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#c9c1b5]">
-            {diaryReferences.map((reference) => (
+      <details className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
+        <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+          Referências da página atual
+        </summary>
+        <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#c9c1b5]">
+          <p className="text-[#a9a092]">
+            Imagem {currentIndex + 1} · PDF p. {currentCatalogPage ?? "não mapeada"}
+          </p>
+          {diaryReferences.length > 0 ? (
+            diaryReferences.map((reference) => (
               <div key={reference.id} className="border-l-2 border-[#79664c] pl-3">
                 <p className="text-[#ead8b8]">
                   {reference.id} · {reference.title}
@@ -402,14 +463,18 @@ function DiaryImages({
                 </p>
                 <p className="mt-1 text-[#bdb5a8]">{reference.documented}</p>
               </div>
-            ))}
-            <p className="border-t border-[#4b4439] pt-2 text-[#81796d]">
-              Relação por nome e referência de catálogo; o vínculo não é uma interpretação nem prova
-              independente.
+            ))
+          ) : (
+            <p className="text-[#81796d]">
+              Nenhuma referência específica foi catalogada para esta página.
             </p>
-          </div>
-        </details>
-      )}
+          )}
+          <p className="border-t border-[#4b4439] pt-2 text-[#81796d]">
+            Relação por nome e referência de catálogo; o vínculo não é uma interpretação nem prova
+            independente.
+          </p>
+        </div>
+      </details>
       {viewerOpen && currentImage && (
         <div
           ref={viewerRef}
@@ -538,7 +603,7 @@ function DiaryImages({
               <ChevronLeft size={22} />
             </button>
             <div
-              className="flex h-full min-w-0 flex-1 touch-none items-center justify-center overflow-auto overscroll-contain"
+              className={`flex h-full min-w-0 flex-1 touch-none items-center justify-center overflow-hidden overscroll-contain ${zoom > 1.05 ? (isPanning ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}`}
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
@@ -550,7 +615,7 @@ function DiaryImages({
                 alt={`${group.title}: ${currentImage.fileName}`}
                 className="max-h-full max-w-full select-none object-contain transition-transform duration-100"
                 style={{
-                  transform: `scale(${zoom})`,
+                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
                   transformOrigin: "center center",
                   filter: `brightness(${brightness}%) contrast(${contrast}%)`,
                 }}
@@ -576,6 +641,7 @@ function DiaryImages({
                   onClick={() => {
                     saveProgress(index);
                     setZoom(1);
+                    setPan({ x: 0, y: 0 });
                   }}
                   aria-label={`Ir para página ${index + 1}`}
                   className={`w-16 shrink-0 border p-1 sm:w-20 ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
@@ -592,7 +658,8 @@ function DiaryImages({
               ))}
             </div>
             <p className="text-center font-mono text-[10px] text-[#81796d]">
-              Setas ou deslize: navegar · +/-: zoom · pinça: ampliar · Esc: fechar
+              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · pinça: ampliar ·
+              Esc: fechar
             </p>
           </div>
         </div>
