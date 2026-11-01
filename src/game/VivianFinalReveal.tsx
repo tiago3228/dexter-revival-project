@@ -5,24 +5,24 @@ const REVELATION_SECTIONS = [
   {
     title: "O segredo que antecedeu a morte",
     paragraphs: [
-      "A reconstrução do caso liga a morte de Vivian Roberts a um segredo guardado desde 1975: Sofia Miller morreu depois de um confronto relacionado à gravidez e ao bebê que teve com Charles Roberts. Andrew Reed participou do encobrimento; a criança foi levada para fora da cidade e registrada como Scott Brooks.",
-      "Décadas depois, Scott começou a investigar quem era Sofia. A carta do orfanato, o cobertor de bebê e a fotografia de Sofia com Vincent formam a cadeia que o leva a reconhecer a própria origem. Ao descobrir que Scott era Vincent, filho de Sofia e Charles, a história da família deixou de ser rumor e se tornou uma verdade capaz de expor os envolvidos.",
+      "A reconstrução usada neste capítulo liga a morte de Vivian Roberts a um segredo atribuído a 1975: Sofia teria morrido depois de um confronto relacionado à gravidez e ao bebê que teve com Charles Roberts. Andrew Reed é associado ao encobrimento em relatos de pesquisa; a criança teria sido levada para fora da cidade e registrada como Scott Brooks. A sequência exata e o destino de Sofia continuam sujeitos às fontes primárias.",
+      "Décadas depois, Scott começou a investigar quem era Sofia. A carta do orfanato, o cobertor de bebê e a fotografia associada a Sofia e ao bebê formam a cadeia que, na reconstrução narrativa, o leva a reconhecer a própria origem. A identificação de Scott com Vincent é tratada como revelação do arco do caso, mas permanece uma questão documental aberta no registro central.",
     ],
   },
   {
     title: "A vingança de Matthew",
     paragraphs: [
-      "Matthew Brooks era o pai adotivo de Scott e tinha uma ligação afetiva muito forte com Sofia Miller, a mulher que amava. Quando Scott contou o que descobrira, Matthew soube que Vivian estava envolvida no assassinato de Sofia. Em vez de recorrer às autoridades, decidiu fazer justiça com as próprias mãos e passou a eliminar os responsáveis.",
+      "Matthew Brooks é apresentado no arco do caso como pai adotivo de Scott e como alguém com forte ligação afetiva com Sofia, identificada nas fontes de pesquisa como a mulher que amava. Quando Scott contou o que descobrira, Matthew passou a acreditar que Vivian estava envolvida na morte de Sofia. Em vez de recorrer às autoridades, decidiu fazer justiça com as próprias mãos e passou a eliminar os responsáveis, conforme a reconstrução usada pelo capítulo.",
       "A reconstrução atribui a Matthew a morte de Andrew Reed e do Dr. Henry Johnson, além da de Vivian. A prova mais importante é uma gravação de 19 de julho de 1995: Matthew relata que Vivian foi encontrá-lo, não demonstrou arrependimento pela morte de Sofia e ainda a insultou. Ele afirma que, depois de ouvi-la, matou Vivian com um machado e levou o corpo para a frente da mansão Roberts. O questionário final do jogo confirma o machado como arma; a faca ensanguentada encontrada na casa de Bernard pertence a outra linha de investigação e não deve ser confundida com a arma do crime de Vivian.",
-      "Assim, Scott tornou-se um suspeito plausível aos olhos da comunidade por ter discutido com Vivian e sido visto na região. A suspeita, porém, não era prova. A informação omitida por Derrick e a falta de evidência suficiente contribuíram para que a acusação contra Scott não se sustentasse. A autoria verdadeira da morte de Vivian era Matthew.",
+      "Assim, Scott tornou-se um suspeito plausível aos olhos da comunidade por ter discutido com Vivian e sido visto na região. A suspeita, porém, não era prova. A informação atribuída a Derrick e a falta de evidência suficiente contribuíram para que a acusação contra Scott não se sustentasse. Dentro do gabarito final do capítulo, a autoria da morte de Vivian é Matthew.",
     ],
   },
   {
     title: "O que a investigação permite afirmar",
     paragraphs: [
-      "As três respostas do encerramento são: Matthew Brooks; machado; vingança pelo assassinato de Sofia Miller, mulher que Matthew amava. A gravação aponta que a falta de arrependimento de Vivian e o insulto a Sofia foram o estopim imediato, dentro dessa motivação de vingança. A investigação não transforma automaticamente cada suspeita sobre 1975 em fato: a intenção exata de cada pessoa no confronto e a participação individual de Vivian e Henry devem ser lidas à luz das fontes originais.",
+      "As três respostas do encerramento são: Matthew Brooks; machado; vingança pela morte de Sofia, mulher que Matthew amava. A gravação aponta que a falta de arrependimento de Vivian e o insulto a Sofia foram o estopim imediato, dentro dessa motivação de vingança. A investigação não transforma automaticamente cada suspeita sobre 1975 em fato: a intenção exata de cada pessoa no confronto e a participação individual de Vivian e Henry devem ser lidas à luz das fontes originais.",
       "Há divergência de um dia entre os registros comunitários sobre a morte de Vivian: uma cronologia indica 18 de julho de 1995, enquanto a gravação de Matthew está datada de 19 de julho. A gravação é a prova central da autoria e do motivo; o questionário final confirma o machado. As fontes consultadas não detalham aqui a hora exata nem a natureza precisa dos ferimentos.",
-      "A morte de Vivian não encerrou o ciclo. Matthew matou outras pessoas e tentou impedir que Steven Moss e, depois, Janet Kelly expusessem o passado. A cadeia de violência nasceu do encobrimento, mas a decisão de Matthew de retaliar criou novas vítimas e não reparou o crime original.",
+      "A morte de Vivian não encerrou o ciclo. A reconstrução de pesquisa atribui a Matthew outras mortes e tentativas de impedir que Steven Moss e, depois, Janet Kelly expusessem o passado. A cadeia de violência nasceu do encobrimento, mas a decisão de Matthew de retaliar criou novas vítimas e não reparou o crime original.",
     ],
   },
 ];
@@ -98,8 +98,8 @@ export function VivianFinalReveal({ unlocked }: { unlocked: boolean }) {
               </button>
             </header>
             <p className="mt-5 border-l-2 border-[#c4a779] pl-4 text-sm leading-relaxed text-[#d5c9b5]">
-              Conclusão: Matthew Brooks matou Vivian Roberts com um machado, por vingança pelo
-              assassinato de Sofia Miller, mulher que amava. Na gravação de 19 de julho de 1995,
+              Conclusão do gabarito: Matthew Brooks matou Vivian Roberts com um machado, por
+              vingança pela morte de Sofia, mulher que amava. Na gravação de 19 de julho de 1995,
               Matthew relata que Vivian não demonstrou arrependimento e insultou Sofia antes de ele
               matá-la. Os registros consultados divergem em detalhes de data; onde não há
               confirmação suficiente, esta narrativa preserva a incerteza em vez de completar as

@@ -96,7 +96,7 @@
 
 - [x] Confirmar que a alteração se limita ao fluxo do Capítulo 06, sem editar o explorador/catálogo Painscreek existente.
 
-- [ ] Fazer revisão editorial e de consistência antes de publicar.
+- [x] Fazer revisão editorial e de consistência antes de publicar: relatos, suspeitas e hipóteses foram reatribuídos ou marcados como não confirmados; condição de vitória e bloqueio da revelação final preservados.
 
 ## Escopo desta preparação
 
