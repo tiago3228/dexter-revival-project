@@ -408,3 +408,6 @@
     transform: none;
   }
 }
+
+@keyframes vivian-pulse { 0%,100% { box-shadow: 0 0 0 0 rgb(196 167 121 / 0); } 50% { box-shadow: 0 0 0 6px rgb(196 167 121 / 0.55); } }
+.vivian-pulse { animation: vivian-pulse 0.8s ease-in-out 3; }
