@@ -20,6 +20,47 @@
   animation: investigation-guidance-pulse 1.6s ease-in-out infinite;
 }
 
+@keyframes dot-connection-victory-board {
+  0% {
+    box-shadow: 0 0 0 rgb(255 196 201 / 0%);
+  }
+  35% {
+    box-shadow:
+      0 0 34px rgb(255 196 201 / 65%),
+      inset 0 0 24px rgb(255 196 201 / 18%);
+  }
+  100% {
+    box-shadow: 0 0 12px rgb(255 196 201 / 28%);
+  }
+}
+
+@keyframes dot-connection-victory-notice {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  35% {
+    filter: brightness(1.35);
+    transform: scale(1.015);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+.dot-connection-victory-board {
+  animation: dot-connection-victory-board 850ms ease-out both;
+}
+
+.dot-connection-victory-notice {
+  animation: dot-connection-victory-notice 850ms ease-out both;
+}
+
+.seal-code-victory-notice {
+  animation: dot-connection-victory-notice 850ms ease-out both;
+}
+
 .viewer-control,
 .viewer-nav {
   display: inline-flex;
@@ -65,6 +106,14 @@
   .investigation-guidance-pulse {
     animation: none;
     outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .dot-connection-victory-board,
+  .dot-connection-victory-notice,
+  .seal-code-victory-notice {
+    animation: none;
+    outline: 2px solid #ffc4c9;
     outline-offset: 2px;
   }
 }

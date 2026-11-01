@@ -47,6 +47,9 @@ describe("minigame Conexão de Pontos", () => {
     }
 
     expect(screen.getByRole("status")).toHaveTextContent("16 bolinhas foram conectadas uma vez");
+    expect(screen.getByRole("group", { name: "Grade de 4 por 4 bolinhas" })).toHaveClass(
+      "dot-connection-victory-board",
+    );
     expect(screen.getByRole("button", { name: /Continuar para Médio/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Continuar para Médio/ }));
     expect(screen.getByText("Nível 2/3 · Pontos: 0/25")).toBeInTheDocument();

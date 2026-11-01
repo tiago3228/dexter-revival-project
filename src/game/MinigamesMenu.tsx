@@ -1,7 +1,8 @@
-import { CircuitBoard, Flag, Gamepad2, Route } from "lucide-react";
+import { CircuitBoard, Flag, Gamepad2, LockKeyhole, Route } from "lucide-react";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { DotConnectionMinigame } from "./DotConnectionMinigame";
 import { FlagMinigame } from "./FlagMinigame";
+import { SealCodeMinigame } from "./SealCodeMinigame";
 
 export function MinigamesMenu() {
   return (
@@ -21,10 +22,10 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          03 disponíveis
+          04 disponíveis
         </span>
       </div>
-      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         <article className="border border-cyan-300/30 bg-[#11182a]/70 p-4 sm:p-5">
           <div className="flex items-start gap-3">
             <div className="border border-cyan-300/50 bg-cyan-300/10 p-2 text-cyan-200">
@@ -76,6 +77,23 @@ export function MinigamesMenu() {
             </div>
           </div>
           <DotConnectionMinigame />
+        </article>
+        <article className="border border-violet-300/30 bg-[#1d1824]/80 p-4 sm:p-5">
+          <div className="flex items-start gap-3">
+            <div className="border border-violet-300/50 bg-violet-300/10 p-2 text-violet-200">
+              <LockKeyhole size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-violet-200">
+                Dedução · até 8 palpites
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-violet-50">Código do Lacre</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#b8aebe]">
+                Descubra a sequência de símbolos cruzando acertos de posição e combinações.
+              </p>
+            </div>
+          </div>
+          <SealCodeMinigame />
         </article>
       </div>
     </section>

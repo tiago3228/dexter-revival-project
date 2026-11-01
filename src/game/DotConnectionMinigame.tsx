@@ -7,6 +7,7 @@ import {
   DOT_UNLOCK_KEY,
   isSolvedDotPath,
 } from "./dotConnectionPuzzle";
+import { playMinigameVictorySound } from "./minigameVictoryEffects";
 
 function readUnlockedLevel(): number {
   if (typeof window === "undefined") return 0;
@@ -63,6 +64,7 @@ export function DotConnectionMinigame() {
   };
 
   const finishLevel = () => {
+    playMinigameVictorySound();
     setSolved(true);
     setFeedback(
       `Caminho válido: as ${pointCount} bolinhas foram conectadas uma vez, sem cruzamentos.`,
@@ -259,7 +261,7 @@ export function DotConnectionMinigame() {
                   </div>
                   <div className="mt-4 border border-[#5d3d42] bg-[#2a1e20] p-3 shadow-inner sm:p-5">
                     <div
-                      className="relative aspect-square border-2 border-[#554044] bg-[#191516]"
+                      className={`relative aspect-square border-2 border-[#554044] bg-[#191516] ${solved ? "dot-connection-victory-board" : ""}`}
                       role="group"
                       aria-label={`Grade de ${level.size} por ${level.size} bolinhas`}
                     >
@@ -328,7 +330,7 @@ export function DotConnectionMinigame() {
                     </p>
                   )}
                   {solved ? (
-                    <div className="mt-4 border border-[#d8bd6e] bg-[#d8bd6e]/10 p-4 text-[#f2d991]">
+                    <div className="dot-connection-victory-notice mt-4 border border-[#d8bd6e] bg-[#d8bd6e]/10 p-4 text-[#f2d991]">
                       <strong className="font-display text-xl">
                         {levelIndex === DOT_LEVELS.length - 1
                           ? "Desafio completo"

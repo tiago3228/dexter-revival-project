@@ -16,16 +16,18 @@ describe("menu de minigames", () => {
     window.localStorage.clear();
   });
 
-  it("apresenta os três minigames no mesmo menu", () => {
+  it("apresenta os quatro minigames no mesmo menu", () => {
     render(<MinigamesMenu />);
 
     expect(screen.getByRole("region", { name: "Menu de minigames" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Mini Game de Bandeiras" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Painel Elétrico" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Conexão de Pontos" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Código do Lacre" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Mini Game de Bandeiras/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Painel Elétrico/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Conexão de Pontos/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Código do Lacre/ })).toBeInTheDocument();
   });
 
   it("mantém um caminho-base válido e reversível para qualquer embaralhamento", () => {
