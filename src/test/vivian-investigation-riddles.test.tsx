@@ -21,11 +21,12 @@ const ALL_CLUES = [
 function seedCompleteInvestigation(
   reportSubmitted = false,
   solvedCodeLocks = ["katherine-cabinet", "study-drawer", "gallery-safe"],
+  caseCompleted = false,
 ) {
   window.localStorage.setItem(
     SAVE_KEY,
     JSON.stringify({
-      version: 3,
+      version: 7,
       found: ALL_CLUES,
       solvedRiddles: [],
       solvedCodeLocks,
@@ -38,6 +39,14 @@ function seedCompleteInvestigation(
       chosenConclusion: "",
       mistakes: 0,
       usedHints: [],
+      caseCompleted,
+      accusation: caseCompleted
+        ? {
+            suspect: "matthew-brooks",
+            weapon: "axe",
+            motive: "revenge-for-sofia",
+          }
+        : { suspect: "", weapon: "", motive: "" },
     }),
   );
 }
@@ -113,22 +122,16 @@ describe("investigation riddles", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("Scott nega ter matado Vivian");
   });
 
-  it("opens the complete dossier with the three-dial M99 combination after the report", () => {
+  it("keeps M99 sealed before victory and opens the post-game dossier only after the accusation", () => {
     render(<VivianInvestigationGame onBack={() => {}} />);
-    fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
-    for (let index = 0; index < 12; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "Girar disco 1 para cima" }));
-    }
-    for (let index = 0; index < 9; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "Girar disco 2 para cima" }));
-      fireEvent.click(screen.getByRole("button", { name: "Girar disco 3 para cima" }));
-    }
-    fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
-    expect(screen.getByRole("heading", { name: "Caso resolvido" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Dossiê completo bloqueado até concluir o caso" }),
+    ).toBeDisabled();
+    expect(screen.queryByRole("heading", { name: "Dossiê completo de Painscreek" })).toBeNull();
 
     cleanup();
     window.localStorage.clear();
-    seedCompleteInvestigation(true);
+    seedCompleteInvestigation(true, ["katherine-cabinet", "study-drawer", "gallery-safe"], true);
     render(<VivianInvestigationGame onBack={() => {}} />);
     fireEvent.click(screen.getByRole("button", { name: "Dossiê completo" }));
     fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
@@ -142,6 +145,7 @@ describe("investigation riddles", () => {
       fireEvent.click(screen.getByRole("button", { name: "Girar disco 3 para cima" }));
     }
     fireEvent.click(screen.getByRole("button", { name: "Abrir dossiê" }));
+    expect(screen.getByRole("heading", { name: "Caso resolvido" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Caso resolvido" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
@@ -281,7 +285,7 @@ describe("investigation riddles", () => {
     }
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) || "null");
-    expect(saved.version).toBe(6);
+    expect(saved.version).toBe(7);
     expect(saved.solvedRiddles).toEqual([
       "archive-identity",
       "archive-police",

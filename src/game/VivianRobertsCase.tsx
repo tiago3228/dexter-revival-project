@@ -27,10 +27,12 @@ import {
   Clock3,
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
+import { VivianFinalReveal } from "./VivianFinalReveal";
+import { readVivianCaseCompleted } from "./vivianFinalCase";
 import { PAINSCREEK_EVIDENCE_001_116 } from "./painscreekEvidence";
 import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
 
-type ReviewStatus = "pendente" | "confirmado" | "contradicao";
+type ReviewStatus = "pendente" | "parcial" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
 type Place = { id: string; name: string; group: string; description: string; status: ReviewStatus };
 type DocumentItem = {
@@ -1177,46 +1179,47 @@ const DOCUMENTS: DocumentItem[] = [
     id: "diary-vivian",
     title: "Diários de Vivian Roberts",
     type: "Diário",
-    location: "Local a confirmar",
-    status: "pendente",
-    body: "Transcrição integral ainda não incorporada. Este registro é um marcador de planejamento, não o conteúdo do diário.",
+    location: "PDF · páginas 73–77; local físico não indicado",
+    status: "parcial",
+    body: "O histórico do projeto confirma diários identificados como de Vivian nas páginas 73–77; há resumo das entradas de 1972 e 1994 na transcrição de trabalho e cinco imagens no grupo Vivian da galeria. Ainda falta cotejo literal ampliado de cada entrada; datas e passagens incertas devem permanecer assinaladas.",
   },
   {
     id: "letters",
     title: "Cartas e bilhetes",
     type: "Correspondência",
     location: "Múltiplos locais",
-    status: "pendente",
-    body: "Adicionar cada documento como item separado depois de registrar a página de origem e transcrever o texto.",
+    status: "parcial",
+    body: "Correspondências são registradas nas páginas 89–94, 99–104 e 110–111, incluindo a carta endereçada a Daniel e cartas relacionadas a James, Rachel e Moss. Os documentos não formam uma única fonte: manter cada página, remetente, destinatário e assinatura separados. As transcrições completas e a conferência de todos os campos continuam pendentes.",
   },
   {
     id: "medical-records",
     title: "Registros médicos e laudos",
     type: "Documento oficial",
-    location: "Hospital — local exato a confirmar",
-    status: "pendente",
-    body: "Adicionar apenas após conferir texto, autoria, data, rasuras e página de origem.",
+    location: "Painscreek Community Hospital · páginas 84–85, 94 e 105",
+    status: "parcial",
+    body: "O material registra referências ao hospital nas páginas 84–85, um laudo médico de Vivian na página 94 e registros de enfermagem na página 105. São fontes distintas e não devem ser tratadas como um laudo único ou como autópsia. Campos, autoria, data e texto integral ainda precisam de conferência individual.",
   },
   {
     id: "photos",
     title: "Fotografias e versos",
     type: "Fotografia",
-    location: "Local a confirmar",
-    status: "pendente",
-    body: "Cada fotografia deve ter sua própria ficha, com descrição visual e transcrição do verso quando legível.",
+    location: "Referências nas páginas 55, 67, 102 e 116; local físico não confirmado",
+    status: "parcial",
+    body: "As fontes mencionam fotografias, mas as páginas disponíveis não permitem identificar com segurança cada imagem citada nem transcrever todos os versos. As páginas 55 e 116 podem referir-se à mesma fotografia, sem confirmação visual conclusiva; não contar como duas provas independentes nem atribuir identidade ou conteúdo por inferência.",
   },
   {
     id: "recordings",
     title: "Gravações e mensagens",
     type: "Áudio",
-    location: "Local a confirmar",
-    status: "pendente",
-    body: "Transcrever sem completar trechos incertos. Guardar a referência à fonte e distinguir gravação original de interpretação.",
+    location: "Registros da sala de segurança · páginas 106–107",
+    status: "parcial",
+    body: "O livro de segurança registra fitas VHS novas e uma fita de vigilância desaparecida (páginas 106–107). Isso confirma o registro de fitas, não o conteúdo da gravação ausente. O arquivo original e uma transcrição verificável do áudio não estão entre os PNGs recebidos; não reconstruir o que a fita mostraria.",
   },
 ];
 
 const statusLabel: Record<ReviewStatus, string> = {
   pendente: "Revisão pendente",
+  parcial: "Revisão parcial · lacunas abertas",
   confirmado: "Confirmado na fonte",
   contradicao: "Contradição em aberto",
 };
@@ -1656,8 +1659,8 @@ function InvestigationBoard({ onClose }: { onClose: () => void }) {
 }
 
 /**
- * Base isolada do Capítulo 6. Ainda não está ligada ao menu principal:
- * integrar somente após revisar as transcrições e as dependências do caso.
+ * Entrada do Capítulo 6, integrada ao menu principal e à investigação jogável.
+ * A narrativa final permanece bloqueada até a acusação correta.
  */
 export function VivianRobertsCase({
   onBack,
@@ -1673,6 +1676,7 @@ export function VivianRobertsCase({
   onMusicVolumeChange?: (value: number) => void;
 }) {
   const [showBoard, setShowBoard] = useState(false);
+  const [caseCompleted, setCaseCompleted] = useState(readVivianCaseCompleted);
   const [showPlayableGame, setShowPlayableGame] = useState(
     () =>
       typeof window !== "undefined" && window.localStorage.getItem("vivian-map-target") !== null,
@@ -1820,6 +1824,7 @@ export function VivianRobertsCase({
       <VivianInvestigationGame
         onBack={() => {
           setFoundVivianClues(readFoundVivianClues());
+          setCaseCompleted(readVivianCaseCompleted());
           setShowPlayableGame(false);
         }}
       />
@@ -1891,6 +1896,9 @@ export function VivianRobertsCase({
             </button>
           </div>
         </header>
+        <div className="mx-auto mt-5 max-w-7xl">
+          <VivianFinalReveal unlocked={caseCompleted} />
+        </div>
         <div
           className="mx-auto mt-4 flex max-w-7xl flex-wrap items-center gap-3 px-0"
           aria-label="Controles de áudio"

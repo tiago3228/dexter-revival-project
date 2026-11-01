@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { VivianDeductionDesk } from "./VivianDeductionDesk";
+import { VivianFinalReveal } from "./VivianFinalReveal";
+import {
+  getVivianVerdictReadiness,
+  isCorrectVivianAccusation,
+  VIVIAN_CASE_SAVE_KEY,
+} from "./vivianFinalCase";
 import { VIVIAN_DEDUCTIONS } from "./vivianDeductions";
 import { GRID_LEVEL_IDS } from "./vivianLogicGrid";
 import { QUICK_CASE_IDS } from "./vivianQuickCases";
@@ -104,7 +110,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 6;
+  version: 7;
   found: ClueId[];
   readClues: ClueId[];
   solvedRiddles: RiddleId[];
@@ -123,9 +129,11 @@ type SaveData = {
   investigationNotes: string;
   logicGrids: string[];
   completedQuickCases: string[];
+  caseCompleted: boolean;
+  accusation: { suspect: string; weapon: string; motive: string };
 };
 
-const SAVE_KEY = "vivian-playable-investigation-v1";
+const SAVE_KEY = VIVIAN_CASE_SAVE_KEY;
 const MAP_TARGET_KEY = "vivian-map-target";
 const FINAL_DOSSIER_PASSWORD = "M99";
 const DOSSIER_LETTERS = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
@@ -818,15 +826,15 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4 | 5 | 6;
+      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
     };
-    if (![1, 2, 3, 4, 5, 6].includes(value.version ?? 0)) return null;
+    if (![1, 2, 3, 4, 5, 6, 7].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 6,
+      version: 7,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -881,6 +889,12 @@ function readSave(): SaveData | null {
         typeof value.investigationNotes === "string" ? value.investigationNotes.slice(0, 4000) : "",
       logicGrids: ids(value.logicGrids, GRID_LEVEL_IDS.slice(1)),
       completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
+      caseCompleted: value.caseCompleted === true,
+      accusation: {
+        suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
+        motive: typeof value.accusation?.motive === "string" ? value.accusation.motive : "",
+        weapon: typeof value.accusation?.weapon === "string" ? value.accusation.weapon : "",
+      },
     };
   } catch {
     return null;
@@ -951,6 +965,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [completedQuickCases, setCompletedQuickCases] = useState<string[]>(
     saved?.completedQuickCases ?? [],
   );
+  const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
+  const [accusation, setAccusation] = useState(
+    saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
+  );
   const [nameEntryModes, setNameEntryModes] = useState<Record<string, "discs" | "text">>({});
 
   useEffect(() => {
@@ -967,7 +985,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 6,
+      version: 7,
       found,
       readClues,
       solvedRiddles,
@@ -986,6 +1004,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       investigationNotes,
       logicGrids,
       completedQuickCases,
+      caseCompleted,
+      accusation,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
     window.dispatchEvent(new Event("vivian-investigation-progress"));
@@ -1008,6 +1028,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     investigationNotes,
     logicGrids,
     completedQuickCases,
+    caseCompleted,
+    accusation,
   ]);
 
   const currentPlace = PLACES.find((place) => place.id === activePlace) ?? PLACES[0];
@@ -1049,6 +1071,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     window.setTimeout(() => target.classList.remove("vivian-pulse"), 2400);
   };
   const allCodeLocksSolved = solvedCodeLocks.length === CODE_LOCKS.length;
+  const verdictReadiness = getVivianVerdictReadiness({
+    found,
+    links,
+    solvedCodeLocks,
+    timelineOrder,
+  });
   const sortedTimeline = useMemo(() => [...timelineOrder], [timelineOrder]);
   const progress = Math.round((found.length / CLUES.length) * 100);
   const { penalty: scorePenalty, score } = calculateInvestigationScore(usedHints, mistakes);
@@ -1279,10 +1307,27 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     playInvestigationSound("report");
     setPhase("report");
     setNotice(
-      "Requisitos cumpridos. Escolha qual linha de investigação merece prioridade no relatório provisório.",
+      "Requisitos investigativos cumpridos. Responda às três perguntas finais para concluir o caso.",
     );
   };
 
+  const submitAccusation = () => {
+    if (!verdictReadiness.ready) {
+      setNotice(
+        "Acusação bloqueada: conclua os requisitos de prova exibidos no relatório antes de apresentar o veredito.",
+      );
+      return;
+    }
+    if (isCorrectVivianAccusation(accusation)) {
+      setCaseCompleted(true);
+      playInvestigationSound("success");
+      setNotice("Acusação sustentada pelas evidências. O arquivo confidencial final foi liberado.");
+      return;
+    }
+    registerMistake(
+      "A acusação não é sustentada pelo conjunto de evidências. Reavalie autoria, motivo e reconstrução dos fatos sem tratar suspeita como prova.",
+    );
+  };
   const registerFinalRanking = () => {
     if (rankingRecorded) return;
     const normalizedName = playerName.trim() || "Investigador";
@@ -1330,6 +1375,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   const submitDossierCombination = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!caseCompleted) {
+      setDossierNotice("Arquivo lacrado. Conclua a acusação final antes de abrir o dossiê.");
+      return;
+    }
     if (dossierCombination.join("") !== FINAL_DOSSIER_PASSWORD) {
       playLockSound("fail");
       setMistakes((count) => count + 1);
@@ -1409,15 +1458,20 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
+              disabled={!caseCompleted}
               onClick={() => {
                 setDossierOpen(true);
                 setDossierUnlocked(false);
                 setDossierCombination(["A", "0", "0"]);
                 setDossierNotice("");
               }}
-              className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs"
+              aria-label={
+                caseCompleted ? "Dossiê completo" : "Dossiê completo bloqueado até concluir o caso"
+              }
+              className="inline-flex min-h-11 items-center gap-2 border border-[#79664c] px-4 py-2 font-mono text-xs disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <LockKeyhole size={15} /> Dossiê completo
+              <LockKeyhole size={15} />{" "}
+              {caseCompleted ? "Dossiê completo" : "Arquivo final lacrado"}
             </button>
             <button
               type="button"
@@ -2212,26 +2266,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
         {phase === "report" && (
           <section className="mt-5 border border-[#4b4439] bg-[#191714] p-4 sm:p-6">
-            <h2 className="font-display text-3xl">Relatório provisório</h2>
+            <h2 className="font-display text-3xl">Acusação final · Capítulo 06</h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
-              O objetivo desta etapa é registrar uma hipótese responsável, não adivinhar um culpado.
-              As evidências atuais ainda têm ressalvas de OCR e de verificação documental.
+              Responda às três perguntas abaixo. O capítulo é concluído e o arquivo confidencial é
+              liberado somente quando personagem, arma e motivação estiverem corretos.
             </p>
-            <div className="mt-4 max-w-xl border border-[#4b4439] bg-[#211f1b] p-3">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
-                Orientação do relatório · opcional
-              </p>
-              <audio
-                className="mt-2 h-9 w-full"
-                controls
-                preload="none"
-                src="/audio/painscreek/provisional-report.wav"
-                aria-label="Ouvir orientação do relatório provisório"
-              />
-              <p className="mt-2 text-[11px] leading-5 text-[#81796d]">
-                A faixa não declara culpados nem substitui a leitura das ressalvas.
-              </p>
-            </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               <div className="border border-[#4b4439] bg-[#211f1b] p-4">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
@@ -2259,48 +2298,160 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                 <p className="mt-1 text-xs text-[#bdb5a8]">Sem usar dicas</p>
               </div>
             </div>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {[
-                {
-                  id: "scott",
-                  label: "Priorizar a contradição entre suspeita e negativa de Scott",
-                },
-                {
-                  id: "finances",
-                  label: "Priorizar a linha financeira envolvendo hospital e Roberts Relief",
-                },
-                {
-                  id: "family",
-                  label: "Priorizar as relações e correspondências da família Roberts",
-                },
-                {
-                  id: "insufficient",
-                  label: "Conclusão insuficiente: solicitar mais verificação documental",
-                },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setChosenConclusion(item.id)}
-                  className={`min-h-20 border p-4 text-left text-sm leading-relaxed ${chosenConclusion === item.id ? "border-[#c4a779] bg-[#c4a779]/10" : "border-[#4b4439] bg-[#211f1b]"}`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              disabled={!chosenConclusion}
-              onClick={() => {
-                setReportSubmitted(true);
-                setNotice(
-                  "Conclusão provisória registrada. Nenhuma pessoa foi declarada culpada; a investigação permanece aberta até a revisão das fontes.",
-                );
-              }}
-              className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider disabled:opacity-40"
+            <section
+              className="mt-5 border border-[#79664c] bg-[#171512] p-4"
+              aria-label="Acusação final"
             >
-              Registrar conclusão provisória
-            </button>
+              <h3 className="font-display text-2xl text-[#ead8b8]">As três perguntas finais</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#bdb5a8]">
+                Escolha uma opção em cada lista. Para encerrar o capítulo e abrir o arquivo
+                confidencial, as três respostas precisam estar corretas.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <label className="text-xs text-[#bdb5a8]">
+                  Quem matou Vivian Roberts?
+                  <select
+                    aria-label="Quem matou Vivian Roberts?"
+                    value={accusation.suspect}
+                    onChange={(event) =>
+                      setAccusation((current) => ({ ...current, suspect: event.target.value }))
+                    }
+                    className="mt-1 min-h-11 w-full border border-[#4b4439] bg-[#11100e] px-3 text-sm text-[#eee9df]"
+                  >
+                    <option value="">Selecione um personagem</option>
+                    <option value="vivian-roberts">Vivian Roberts</option>
+                    <option value="charles-roberts">Charles Roberts</option>
+                    <option value="magdalene-roberts">Magdalene Roberts</option>
+                    <option value="trisha-roberts">Trisha Roberts</option>
+                    <option value="bernard-hopkins">Bernard Hopkins</option>
+                    <option value="dorothy-patterson">Dorothy Patterson</option>
+                    <option value="derrick-tyler">Derrick Tyler</option>
+                    <option value="sofia-miller">Sofia Miller</option>
+                    <option value="scott-brooks">Scott Brooks</option>
+                    <option value="matthew-brooks">Matthew Brooks</option>
+                    <option value="andrew-reed">Andrew Reed</option>
+                    <option value="henry-johnson">Dr. Henry Johnson</option>
+                    <option value="steven-moss">Steven Moss</option>
+                    <option value="james-howard">James Howard</option>
+                    <option value="wanda-tyler">Wanda Tyler</option>
+                    <option value="mary-martinez">Mary Martinez</option>
+                    <option value="oliver">Oliver</option>
+                    <option value="rachel-davis">Irmã Rachel Davis</option>
+                    <option value="calvin">Padre Calvin</option>
+                    <option value="sylvia">Sylvia</option>
+                    <option value="hannah">Hannah</option>
+                    <option value="nicole">Nicole</option>
+                    <option value="katherine">Katherine</option>
+                    <option value="daniel">Daniel</option>
+                  </select>
+                </label>
+                <label className="text-xs text-[#bdb5a8]">
+                  Qual arma foi usada para matar Vivian?
+                  <select
+                    aria-label="Qual arma foi usada para matar Vivian?"
+                    value={accusation.weapon}
+                    onChange={(event) =>
+                      setAccusation((current) => ({ ...current, weapon: event.target.value }))
+                    }
+                    className="mt-1 min-h-11 w-full border border-[#4b4439] bg-[#11100e] px-3 text-sm text-[#eee9df]"
+                  >
+                    <option value="">Selecione uma arma</option>
+                    <option value="axe">Machado</option>
+                    <option value="knife">Faca ensanguentada</option>
+                    <option value="poison">Veneno</option>
+                    <option value="gun">Pistola</option>
+                    <option value="strangulation">Estrangulamento, sem arma</option>
+                    <option value="fall">Queda acidental</option>
+                  </select>
+                </label>
+                <label className="text-xs text-[#bdb5a8]">
+                  Qual a motivação do crime?
+                  <select
+                    aria-label="Qual a motivação do crime?"
+                    value={accusation.motive}
+                    onChange={(event) =>
+                      setAccusation((current) => ({ ...current, motive: event.target.value }))
+                    }
+                    className="mt-1 min-h-11 w-full border border-[#4b4439] bg-[#11100e] px-3 text-sm text-[#eee9df]"
+                  >
+                    <option value="">Selecione a motivação</option>
+                    <option value="revenge-for-sofia">
+                      Vingança pela morte de Sofia, a mulher que Matthew amava
+                    </option>
+                    <option value="hide-finances">
+                      Ocultar irregularidades financeiras do hospital
+                    </option>
+                    <option value="jealousy">Ciúme e disputa afetiva</option>
+                    <option value="inheritance">Disputa pela herança da família Roberts</option>
+                    <option value="self-defense">Autodefesa durante uma discussão</option>
+                  </select>
+                </label>
+              </div>
+              <div className="mt-4 border border-[#4b4439] bg-[#211f1b] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                  Requisitos para acessar a acusação
+                </p>
+                <ul className="mt-2 grid gap-1 text-xs text-[#c9c1b5] sm:grid-cols-2">
+                  <li>
+                    {verdictReadiness.missingClues.length === 0 ? "✓" : "○"} Registrar as seis
+                    evidências essenciais
+                  </li>
+                  <li>
+                    {verdictReadiness.missingLinks.length === 0 ? "✓" : "○"} Confirmar as duas
+                    conexões-chave
+                  </li>
+                  <li>
+                    {verdictReadiness.missingLocks.length === 0 ? "✓" : "○"} Abrir os três
+                    mecanismos de código
+                  </li>
+                  <li>
+                    {verdictReadiness.timelineVerified ? "✓" : "○"} Organizar a cronologia
+                    corretamente
+                  </li>
+                </ul>
+              </div>
+              <button
+                type="button"
+                disabled={
+                  !verdictReadiness.ready ||
+                  caseCompleted ||
+                  !accusation.suspect ||
+                  !accusation.weapon ||
+                  !accusation.motive
+                }
+                onClick={submitAccusation}
+                className="mt-4 min-h-11 border border-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#ead8b8] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {caseCompleted ? "Capítulo concluído" : "Registrar as três respostas"}
+              </button>
+              {caseCompleted && (
+                <p
+                  role="status"
+                  className="mt-3 border border-emerald-700/70 bg-emerald-950/30 p-3 text-sm text-emerald-100"
+                >
+                  As três respostas estão corretas. O capítulo foi concluído e a revelação final
+                  está liberada.
+                </p>
+              )}
+              {!verdictReadiness.ready && (
+                <p className="mt-2 text-xs text-[#a9a092]">
+                  Conclua os requisitos investigativos para habilitar o envio das três respostas.
+                </p>
+              )}
+              {verdictReadiness.ready && !caseCompleted && (
+                <p className="mt-2 text-xs text-[#a9a092]">
+                  Uma combinação incorreta não encerra o caso; reavalie as pistas e tente novamente.
+                </p>
+              )}
+              {caseCompleted && allCodeLocksSolved && (
+                <p className="mt-3 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
+                  Senha do dossiê pós-jogo liberada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>
+                </p>
+              )}
+              <div className="mt-5">
+                <VivianFinalReveal unlocked={caseCompleted} />
+              </div>
+            </section>
             {reportSubmitted && (
               <div className="mt-5 border border-emerald-900/70 bg-emerald-950/20 p-4">
                 <p className="font-mono text-xs uppercase tracking-wider text-emerald-200">
@@ -2319,9 +2470,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   )[chosenConclusion] ?? "Relatório provisório registrado."}
                 </p>
                 <p className="mt-2 text-xs text-[#a9a092]">
-                  O caso continua aberto. A lógica de veredito final será habilitada quando a
-                  solução e as fontes estiverem verificadas.
+                  Este registro provisório é opcional e não altera as três respostas exigidas para
+                  concluir o caso.
                 </p>
+
                 <div className="mt-5 border border-[#79664c] bg-[#171512] p-4">
                   <p className="font-mono text-xs uppercase tracking-wider text-[#c4a779]">
                     Quadro de honra · resultado desta investigação
@@ -2378,16 +2530,6 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                     <p>Erros: -{mistakes * MISTAKE_PENALTY} pontos</p>
                   </div>
                 </div>
-                {allCodeLocksSolved ? (
-                  <p className="mt-4 border border-emerald-700/70 bg-emerald-950/30 p-3 font-mono text-sm uppercase tracking-wider text-emerald-100">
-                    Senha final revelada: <strong>{FINAL_DOSSIER_PASSWORD}</strong>
-                  </p>
-                ) : (
-                  <p className="mt-4 border border-amber-700/70 bg-amber-950/20 p-3 text-xs leading-relaxed text-amber-100">
-                    Resolva as {CODE_LOCKS.length} fechaduras de código na fase Explorar para
-                    revelar a senha final do dossiê.
-                  </p>
-                )}
               </div>
             )}
             <button

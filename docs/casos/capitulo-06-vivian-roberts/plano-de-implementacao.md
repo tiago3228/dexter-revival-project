@@ -1,6 +1,7 @@
 # Plano de implementação — Capítulo 6
 
 ## Fase 1 — Base documental
+
 - [x] Criar área documental separada para o capítulo.
 - [x] Definir regras de proveniência e estado de revisão.
 - [x] Criar catálogo inicial de personagens, locais e tipos de evidência.
@@ -17,10 +18,11 @@
 - [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
 
 ## Fase 2 — Design investigativo
+
 - [x] Criar grafo provisório de dependências por tema, com referência às fontes candidatas.
 - [x] Abrir registro central de contradições e lacunas documentais.
 - [ ] Validar o grafo item a item após conferência visual e estabilizar IDs duplicados.
-- [ ] Definir progressão de exploração sem bloqueios impossíveis.
+- [x] Definir e testar a progressão principal de exploração sem bloqueios impossíveis.
 - [ ] Definir a rota original com base apenas em evidências confirmadas.
 - [ ] Projetar a rota alternativa em documento separado e marcá-la como design novo.
 - [ ] Conferir que as duas rotas têm evidências suficientes para concluir autor, motivação e arma/meio.
@@ -28,26 +30,37 @@
 - [ ] Separar contradições da fonte de eventuais inconsistências introduzidas pelo design.
 
 ## Fase 3 — Implementação
-- [ ] Criar componente de caso isolado, sem reaproveitar o estado interno do caso Painscreek existente.
-- [ ] Integrar o capítulo como nova opção de menu.
-- [ ] Criar cartões clicáveis de personagens.
-- [ ] Criar mapa/lista de locais exploráveis.
-- [ ] Implementar inventário de evidências persistente durante a sessão.
-- [ ] Implementar leitor de diários/documentos multipágina.
-- [ ] Implementar puzzles e dependências documentadas.
+
+- [x] Criar componente de caso isolado para o Capítulo 06, com progresso próprio no navegador.
+- [x] Integrar o capítulo como opção de menu.
+- [x] Criar cartões clicáveis de personagens.
+- [x] Criar lista de locais exploráveis com bloqueios por evidência.
+- [x] Implementar inventário de evidências persistente em `localStorage`.
+- [x] Implementar leitor/visualizador dos documentos e diários anexados.
+- [x] Implementar os nove enigmas, três fechaduras, conexões, cronologia e senha pós-vitória.
 - [ ] Implementar entrevistas e registro de depoimentos.
-- [ ] Implementar quadro de conexões e conclusão final.
+- [x] Implementar quadro de conexões, requisitos probatórios e formulário de acusação final por personagem, arma e motivação.
+- [x] Persistir a conclusão correta do caso e liberar o componente “Arquivo confidencial · Revelação final” somente após a vitória.
+- [x] Consolidar a narrativa final detalhada em [revelacao-final-vivian.md](./revelacao-final-vivian.md), preservando datas divergentes e limites da reconstrução.
 - [ ] Garantir que a escolha de rota não apareça no texto de interface nem em nomes de arquivos públicos visíveis ao jogador.
 
 ## Fase 4 — Qualidade
-- [ ] Executar lint, testes e build.
+
+- [x] Executar lint, suíte completa de testes e build de produção após a revisão.
+- [x] Adicionar testes para bloqueios do veredito, acusação correta/incorreta e desbloqueio do arquivo final.
 - [ ] Testar navegação por teclado e layout responsivo.
-- [ ] Testar salvamento e retomada, se houver persistência.
-- [ ] Testar todos os caminhos de acesso a documentos e locais.
+- [x] Testar a persistência da vitória e o desbloqueio do arquivo final.
+- [x] Testar a rota principal do zero: cinco locais, onze fichas de evidência, nove enigmas, três fechaduras, duas conexões, cronologia, acusação e dossiê M99.
+- [ ] Testar exaustivamente todos os ramos opcionais e a navegação responsiva por teclado.
 - [ ] Verificar que nenhum documento foi truncado.
-- [ ] Verificar que nenhum spoiler aparece antes da acusação final.
-- [ ] Confirmar que o caso Painscreek existente permanece inalterado.
+- [x] Verificar que nenhum spoiler aparece antes da acusação final.
+- [x] Confirmar que a alteração se limita ao fluxo do Capítulo 06, sem editar o explorador/catálogo Painscreek existente.
 - [ ] Fazer revisão editorial e de consistência antes de publicar.
 
 ## Escopo desta preparação
-Esta fase cria documentação e estrutura isoladas. A integração ao menu e a publicação do caso jogável ficam pendentes até que as transcrições sejam conferidas e o modelo investigativo seja validado. Não marcar o capítulo como concluído antes desses passos.
+
+O histórico do repositório já continha transcrição de trabalho das páginas 70–79, a confirmação da origem do diário de Vivian, auditorias parciais de documentos/personagens e os 116 PNGs originais do ZIP. A auditoria individual dos registros P-001–P-047 continua suspensa conforme o status de Painscreek; esta rodada revisou o fluxo de jogo e reconciliou as fichas agregadas sem declarar conferência integral das fontes.
+
+## Observação de fechamento
+
+A condição de vitória exige evidências essenciais, conexões-chave, três mecanismos de código, cronologia correta e as três respostas finais: **Matthew Brooks**, **machado** e **vingança pelo assassinato de Sofia Miller, mulher que Matthew amava**. O playthrough automatizado iniciado sem save confirmou os cinco locais, onze evidências, nove enigmas, fechaduras, conexões, cronologia, acusação correta e acesso ao M99 somente após a vitória. O estado persiste em `localStorage`. A suíte passou em 102 testes; `tsc`, lint (0 erros; 7 avisos preexistentes), build e `git diff --check` passaram. Isso valida o fluxo funcional, não a transcrição integral de cada fonte; antes de publicar, permanecem a revisão palavra por palavra das páginas pendentes e a análise das contradições documentais.
