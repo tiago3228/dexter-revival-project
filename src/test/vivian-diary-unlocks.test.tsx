@@ -136,3 +136,149 @@ describe("diary image unlocks", () => {
     window.localStorage.clear();
   });
 });
+
+describe("diary viewer gestures and advanced navigation", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+    saveFoundClues(["vivian-medical"]);
+  });
+
+  afterEach(() => {
+    cleanup();
+    window.localStorage.clear();
+  });
+
+  function openUnlockedViewer() {
+    const diary = openVivianProfile();
+    act(() => {
+      window.dispatchEvent(new Event("vivian-investigation-progress"));
+    });
+    const thumbnail = within(diary).getByRole("button", {
+      name: "Abrir vivian.png do diário de Vivian Roberts",
+    });
+    fireEvent.click(thumbnail);
+    const viewer = screen.getByRole("dialog", { name: "Diário — Vivian Roberts" });
+    const image = within(viewer).getByRole("img", {
+      name: "Diário — Vivian Roberts: vivian.png",
+    });
+    return { viewer, image, surface: image.parentElement as HTMLElement };
+  }
+
+  function dispatchPointer(
+    target: HTMLElement,
+    type: "pointerdown" | "pointermove" | "pointerup",
+    values: { pointerId: number; clientX: number; clientY: number },
+  ) {
+    const event = new Event(type, { bubbles: true });
+    Object.entries(values).forEach(([key, value]) => {
+      Object.defineProperty(event, key, { configurable: true, value });
+    });
+    target.dispatchEvent(event);
+  }
+
+  it("navigates with swipe, zooms with pinch and pans with a drag at zoom", () => {
+    const { viewer, image, surface } = openUnlockedViewer();
+
+    act(() => {
+      dispatchPointer(surface, "pointerdown", { pointerId: 1, clientX: 220, clientY: 120 });
+      dispatchPointer(surface, "pointermove", { pointerId: 1, clientX: 120, clientY: 120 });
+      dispatchPointer(surface, "pointerup", { pointerId: 1, clientX: 120, clientY: 120 });
+    });
+    expect(within(viewer).getByRole("img")).toHaveAttribute(
+      "src",
+      "/images/painscreek-evidence/vivian1.png",
+    );
+
+    act(() => {
+      dispatchPointer(surface, "pointerdown", { pointerId: 1, clientX: 100, clientY: 100 });
+      dispatchPointer(surface, "pointerdown", { pointerId: 2, clientX: 180, clientY: 100 });
+      dispatchPointer(surface, "pointermove", { pointerId: 2, clientX: 260, clientY: 100 });
+      dispatchPointer(surface, "pointerup", { pointerId: 2, clientX: 260, clientY: 100 });
+      dispatchPointer(surface, "pointerup", { pointerId: 1, clientX: 100, clientY: 100 });
+    });
+    expect(viewer).toHaveTextContent(/zoom (?:1\d\d|2\d\d|300)%/);
+
+    act(() => {
+      dispatchPointer(surface, "pointerdown", { pointerId: 3, clientX: 100, clientY: 100 });
+      dispatchPointer(surface, "pointermove", { pointerId: 3, clientX: 145, clientY: 135 });
+      dispatchPointer(surface, "pointerup", { pointerId: 3, clientX: 145, clientY: 135 });
+    });
+    expect(image.style.transform).toContain("translate(45px, 35px)");
+  });
+
+  it("supports advanced keyboard shortcuts and opens presentation mode help", () => {
+    const { viewer } = openUnlockedViewer();
+
+    fireEvent.keyDown(window, { key: "End" });
+    expect(within(viewer).getByRole("img")).toHaveAttribute(
+      "src",
+      "/images/painscreek-evidence/vivian4.png",
+    );
+    fireEvent.keyDown(window, { key: "Home" });
+    expect(within(viewer).getByRole("img")).toHaveAttribute(
+      "src",
+      "/images/painscreek-evidence/vivian.png",
+    );
+    fireEvent.keyDown(window, { key: "?" });
+    expect(within(viewer).getByText("Atalhos de navegação")).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "p" });
+    expect(
+      within(viewer).getByRole("button", { name: "Sair do modo apresentação" }),
+    ).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "p" });
+    expect(
+      within(viewer).queryByRole("button", { name: "Sair do modo apresentação" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("enters and exits fullscreen through the visualizer controls", async () => {
+    const requestDescriptor = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      "requestFullscreen",
+    );
+    const exitDescriptor = Object.getOwnPropertyDescriptor(document, "exitFullscreen");
+    const requestFullscreen = vi.fn(async function (this: HTMLElement) {
+      Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        value: this,
+      });
+      document.dispatchEvent(new Event("fullscreenchange"));
+    });
+    const exitFullscreen = vi.fn(async () => {
+      Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        value: null,
+      });
+      document.dispatchEvent(new Event("fullscreenchange"));
+    });
+    Object.defineProperty(HTMLElement.prototype, "requestFullscreen", {
+      configurable: true,
+      value: requestFullscreen,
+    });
+    Object.defineProperty(document, "exitFullscreen", {
+      configurable: true,
+      value: exitFullscreen,
+    });
+
+    try {
+      const { viewer } = openUnlockedViewer();
+      await act(async () => {
+        fireEvent.click(within(viewer).getByRole("button", { name: "Abrir em tela cheia" }));
+      });
+      expect(requestFullscreen).toHaveBeenCalledTimes(1);
+      expect(
+        within(viewer).getByRole("button", { name: "Sair da tela cheia" }),
+      ).toBeInTheDocument();
+      await act(async () => {
+        fireEvent.click(within(viewer).getByRole("button", { name: "Sair da tela cheia" }));
+      });
+      expect(exitFullscreen).toHaveBeenCalledTimes(1);
+    } finally {
+      if (requestDescriptor)
+        Object.defineProperty(HTMLElement.prototype, "requestFullscreen", requestDescriptor);
+      else delete (HTMLElement.prototype as Partial<HTMLElement>).requestFullscreen;
+      if (exitDescriptor) Object.defineProperty(document, "exitFullscreen", exitDescriptor);
+      else delete (document as Partial<Document>).exitFullscreen;
+    }
+  });
+});

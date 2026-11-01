@@ -289,7 +289,9 @@ function DiaryImages({
   }, [viewerOpen, currentIndex, group.images.length]);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    if (typeof event.currentTarget.setPointerCapture === "function") {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     if (pointersRef.current.size === 1) {
       swipeRef.current = { startX: event.clientX, startY: event.clientY, hadMultiTouch: false };
@@ -320,10 +322,11 @@ function DiaryImages({
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!pointersRef.current.has(event.pointerId)) return;
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    if (pointersRef.current.size === 1 && panDragRef.current?.pointerId === event.pointerId) {
+    const panDrag = panDragRef.current;
+    if (pointersRef.current.size === 1 && panDrag?.pointerId === event.pointerId) {
       setPan({
-        x: panDragRef.current.originX + event.clientX - panDragRef.current.startX,
-        y: panDragRef.current.originY + event.clientY - panDragRef.current.startY,
+        x: panDrag.originX + event.clientX - panDrag.startX,
+        y: panDrag.originY + event.clientY - panDrag.startY,
       });
       return;
     }
@@ -1704,6 +1707,7 @@ export function VivianRobertsCase({
     if (!ambientOn || typeof window === "undefined") return;
     const startAmbient = () => {
       if (!ambientOn || ambientRef.current) return;
+      if (typeof AudioContext === "undefined") return;
       const context = new AudioContext();
       const buffer = context.createBuffer(1, context.sampleRate * 3, context.sampleRate);
       const data = buffer.getChannelData(0);
