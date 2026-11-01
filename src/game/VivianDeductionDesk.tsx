@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Check, FileSearch, NotebookPen, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VivianLogicGrid } from "./VivianLogicGrid";
+import { GRID_ID } from "./vivianLogicGrid";
 import { VIVIAN_DEDUCTIONS, evaluateVivianDeduction } from "./vivianDeductions";
 
 type Source = { id: string; title: string; source: string; summary: string; caution: string; audioSrc: string };
@@ -25,8 +27,9 @@ export function VivianDeductionDesk({ sources, selected, solved, notes, onSolve,
     <section className="mt-5 space-y-6 border-y border-border py-6 text-foreground" aria-label="Mesa de dedução">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="flex items-center gap-2 font-display text-2xl"><Scale size={22} /> Mesa de dedução</h2>
-        <span className="font-mono text-xs text-muted-foreground">Exercícios opcionais · {solved.length}/{VIVIAN_DEDUCTIONS.length}</span>
+        <span className="font-mono text-xs text-muted-foreground">Exercícios opcionais · {solved.filter((id) => id !== GRID_ID).length}/{VIVIAN_DEDUCTIONS.length}</span>
       </div>
+      <VivianLogicGrid found={found} solved={solved.includes(GRID_ID)} onSolve={() => onSolve(GRID_ID)} />
       {comparison.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2" aria-label="Fontes lado a lado">
           {comparison.map((source) => (
