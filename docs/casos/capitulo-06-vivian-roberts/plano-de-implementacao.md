@@ -28,7 +28,7 @@
 
 - [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
 
-- [ ] Fechar o inventário e registrar lacunas/contradições após a conferência.
+- [x] Classificar os 32 itens distintos do registro central após a conferência; manter explicitamente abertas 20 lacunas, 1 contradição e 1 ponto de design sem confirmação. A triagem está registrada em [contradições e lacunas](./contradicoes-e-lacunas.md); isso não significa que os fatos subjacentes estejam resolvidos.
 
 ## Fase 2 — Design investigativo
 

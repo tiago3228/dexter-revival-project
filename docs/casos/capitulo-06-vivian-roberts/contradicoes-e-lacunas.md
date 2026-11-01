@@ -1,6 +1,6 @@
 # Contradições e lacunas — O Caso Vivian Roberts
 
-> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. As 116 capturas PNG receberam três passadas visuais e correções pontuais, mas os resumos/OCR ainda não foram integralmente harmonizados página a página. Conferir proveniência e limites antes de alterar qualquer dado ou fechar a narrativa.
+> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. As 116 capturas PNG receberam quatro passadas abrangentes; as páginas 70–116 receberam uma quinta conferência focalizada. Em 01/11/2026, 32 questões distintas foram classificadas: 10 já têm correção/cautela adequada, 20 permanecem lacunas abertas, 1 contradição de grafia segue aberta e 1 item é decisão de design não confirmada. Isso fecha a triagem, não a transcrição diplomática nem a confirmação factual das alegações. Ver seção 9.
 
 ## 1. Identidade, nascimento e destino de Sofia/Vincent/Scott
 
@@ -61,11 +61,55 @@
 1. As páginas 70–116 foram recebidas inicialmente como OCR e depois cotejadas com capturas; permanecem palavras/linhas truncadas, manuscritos sobrepostos e ordem de colunas a harmonizar.
 2. Páginas 75, 89–90, 105–116 exigem atenção especial à ordem de leitura, datas e colunas.
 3. Nas páginas 93–95, 102–103 e 106–116, legendas, cabeçalhos e texto do documento podem estar misturados.
-4. O texto da ameaça citada na p. 100 não foi transcrito no lote recebido.
+4. Duplicata da “Carta de ameaça” da seção 3: manter uma única lacuna sobre o conteúdo não transcrito da p. 100; esta linha funciona apenas como referência cruzada.
 5. Os lotes 1–40 também têm transcrições de trabalho por imagem, mas ainda não constituem revisão diplomática integral nem substituem a harmonização página-a-página.
 6. `scott15.png`–`scott17.png` foram cotejadas e repetem o conteúdo de `scott12.png`–`scott14.png`; não contar esses trechos como testemunhos independentes.
 7. O nome “Timothy Scott” e a mulher aparentemente molhada no registro hospitalar da p. 105 não devem ser associados a outras pessoas sem evidência.
 
 ## 8. Regra de fechamento
+
+Uma questão só muda de **EM ABERTO** para **RESOLVIDA NA FONTE** quando houver referência precisa à imagem/página e a leitura puder ser verificada. Se a fonte continuar ilegível ou ausente, registrar como lacuna permanente e adaptar o design sem preencher a ausência com invenção.
+
+
+## 9. Classificação consolidada do registro — 01/11/2026
+
+As sete seções foram cotejadas com as transcrições harmonizadas e os relatórios de auditoria. A classificação abaixo fecha a triagem editorial de **32 questões distintas**; “correção/cautela adequada” não significa que o fato subjacente tenha sido provado. Relatos, alegações e hipóteses continuam atribuídos às respectivas fontes. A ameaça da p. 100 aparece duas vezes no registro original (§ 3 e § 7); deve ser tratada como **uma única lacuna**, com referências cruzadas.
+
+### Correções e cautelas já incorporadas — 10 itens
+
+1. **§ 2 — autoria das pp. 13–17:** corrigida para continuação do diário de Derrick; a seleção da interface não é assinatura textual.
+2. **§ 3 — horários da morte de Vivian:** leitura da testemunha na p. 83 corrigida para 23h50; manter separado o registro de 23h30 da p. 90 e não harmonizar os relatos sem prova.
+3. **§ 3 — versão de Scott:** falas/notícia da p. 88 e carta da p. 104 permanecem declarações atribuídas, sem confirmação independente.
+4. **§ 4 — desvio de fundos:** registrar o relatório de Nelson & Brown e a suspeita jornalística como alegações; não tratar como comprovação contábil ou causa da morte de Henry.
+5. **§ 4 — data clínica de Vivian:** “August 16, 1975” na p. 94 está confirmada; a relação com o episódio hospitalar relatado para 1974 não está provada.
+6. **§ 5 — incêndio de Andrew:** a notícia da p. 87 diz que a causa ainda não fora determinada; isso não identifica a causa real nem sustenta homicídio ou suicídio.
+7. **§ 6 — localização física dos diários:** a interface de caderno não estabelece esconderijo físico; não inventar um.
+8. **§ 6 — pinos do mapa:** aproximações de navegação não provam a localização de documentos/objetos.
+9. **§ 7 — capturas repetidas de Scott:** `scott15.png`–`scott17.png` repetem `scott12.png`–`scott14.png`; não são testemunhos independentes.
+10. **§ 7 — “Timothy Scott”/mulher aparentemente molhada:** manter a cautela de não associar nomes ou descrições a outras pessoas sem evidência.
+
+### Lacunas abertas — 20 questões distintas
+
+- **§ 1 — identidade e cronologia:** Scott/Vincent; datas de nascimento; relação entre a chegada de Scott em 04/07/1975 relatada por Rachel e o código 0318 associado por Matthew à chegada de Sofia; destino de Sofia após deixar Painscreek. A data de 04/07/1975 é uma afirmação da carta de Rachel, não confirmação independente de nascimento/identidade.
+- **§ 2 — autoria/identidade:** relação entre Matthew Brooks, Father Matthew/“Mathew” e Father Calvin; referente dos pronomes de Andrew; remetente da carta a Daniel (p. 91); autoria textual e ordem das camadas do diário de Dorothy (pp. 113–116).
+- **§ 3 — noite da morte:** conteúdo/remetente da ameaça citada na p. 100; identidade do médico legista da notícia da p. 82.
+- **§ 4 — Henry/hospital:** causa circunstancial e autoria da morte de Henry; nenhuma relação causal com as finanças é demonstrada.
+- **§ 5 — Andrew/incêndio:** relação entre os eventos datados de julho e setembro de 1994; identidade/conteúdo da fotografia emprestada a Scott.
+- **§ 6 — locais/objetos:** existência/acesso de sala secreta (distinguir a especulação sobre a mansão na p. 40 da pergunta sobre a cabana na p. 72); pintura e clique; cápsula do tempo e conteúdo.
+- **§ 7 — qualidade das transcrições:** manuscritos/cortes remanescentes das pp. 70–116; ordem de leitura/datas/colunas nas pp. 75, 89–90 e 105–116; separação de cabeçalhos, legendas, texto impresso e manuscrito nas pp. 93–95, 102–103 e 106–116; transcrição diplomática e harmonização dos lotes 1–40.
+
+### Contradição ainda aberta — 1 questão
+
+- **§ 2 — “Mathew”/“Matthew”:** preservar as grafias conforme aparecem nas respectivas fontes. O conjunto atual não permite decidir se é variação/erro de transcrição ou pessoa distinta; não normalizar nem separar identidades por inferência.
+
+### Decisão de design sem confirmação — 1 questão
+
+- **§ 6 — dreno/esgoto junto à igreja:** não implementar como rota canônica sem fonte documental pertinente ou decisão explícita de design. A falta de confirmação nas transcrições não prova inexistência.
+
+### Harmonização de transcrição da quinta conferência
+
+Em `doc9.png` (p. 97), **“Roland Brown”** foi confirmado na camada inglesa subjacente e acrescentado a [`15-documents.md`](./transcricoes-imagens-zip/15-documents.md); o fecho equivalente já aparecia na camada portuguesa. Quatro propostas com confiança inferior a 0,90 foram mantidas fora do texto confirmado. Ver o [relatório da quinta conferência](./transcricoes-imagens-zip/quinta-conferencia-paginas-070-116.md).
+
+## 10. Regra de fechamento
 
 Uma questão só muda de **EM ABERTO** para **RESOLVIDA NA FONTE** quando houver referência precisa à imagem/página e a leitura puder ser verificada. Se a fonte continuar ilegível ou ausente, registrar como lacuna permanente e adaptar o design sem preencher a ausência com invenção.
