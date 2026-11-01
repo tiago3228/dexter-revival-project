@@ -134,6 +134,11 @@ function DiaryImages({
   const viewerRef = useRef<HTMLDivElement>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const pinchDistanceRef = useRef<number | null>(null);
+  const swipeRef = useRef<{
+    startX: number;
+    startY: number;
+    hadMultiTouch: boolean;
+  } | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -229,6 +234,11 @@ function DiaryImages({
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 1) {
+      swipeRef.current = { startX: event.clientX, startY: event.clientY, hadMultiTouch: false };
+    } else if (swipeRef.current) {
+      swipeRef.current.hadMultiTouch = true;
+    }
     if (pointersRef.current.size === 2) {
       const points = [...pointersRef.current.values()] as [
         { x: number; y: number },
@@ -254,6 +264,22 @@ function DiaryImages({
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     pointersRef.current.delete(event.pointerId);
     if (pointersRef.current.size < 2) pinchDistanceRef.current = null;
+    if (pointersRef.current.size > 0) return;
+
+    const swipe = swipeRef.current;
+    swipeRef.current = null;
+    if (!swipe || swipe.hadMultiTouch || zoom > 1.05) return;
+
+    const deltaX = event.clientX - swipe.startX;
+    const deltaY = event.clientY - swipe.startY;
+    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.25) return;
+    changePage(deltaX < 0 ? 1 : -1);
+  };
+
+  const handlePointerCancel = (event: React.PointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    pinchDistanceRef.current = null;
+    swipeRef.current = null;
   };
 
   return (
@@ -516,7 +542,7 @@ function DiaryImages({
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
+              onPointerCancel={handlePointerCancel}
               onDoubleClick={() => setZoom((value) => (value === 1 ? 2 : 1))}
             >
               <img
@@ -566,7 +592,7 @@ function DiaryImages({
               ))}
             </div>
             <p className="text-center font-mono text-[10px] text-[#81796d]">
-              Setas: navegar · +/-: zoom · pinça: ampliar · Esc: fechar
+              Setas ou deslize: navegar · +/-: zoom · pinça: ampliar · Esc: fechar
             </p>
           </div>
         </div>
