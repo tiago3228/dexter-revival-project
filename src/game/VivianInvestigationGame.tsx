@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { VivianDeductionDesk } from "./VivianDeductionDesk";
 import { VIVIAN_DEDUCTIONS } from "./vivianDeductions";
+import { GRID_LEVEL_IDS } from "./vivianLogicGrid";
+import { QUICK_CASE_IDS } from "./vivianQuickCases";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -102,7 +104,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 5;
+  version: 6;
   found: ClueId[];
   readClues: ClueId[];
   solvedRiddles: RiddleId[];
@@ -119,6 +121,8 @@ type SaveData = {
   rankingRecorded: boolean;
   deductions: string[];
   investigationNotes: string;
+  logicGrids: string[];
+  completedQuickCases: string[];
 };
 
 const SAVE_KEY = "vivian-playable-investigation-v1";
@@ -814,15 +818,15 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4 | 5;
+      version?: 1 | 2 | 3 | 4 | 5 | 6;
     };
-    if (![1, 2, 3, 4, 5].includes(value.version ?? 0)) return null;
+    if (![1, 2, 3, 4, 5, 6].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 5,
+      version: 6,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -869,8 +873,16 @@ function readSave(): SaveData | null {
         ...CODE_LOCKS.map((lock) => `code:${lock.id}:1`),
       ]),
       rankingRecorded: value.rankingRecorded === true,
-      deductions: ids(value.deductions, VIVIAN_DEDUCTIONS.map((item) => item.id)),
-      investigationNotes: typeof value.investigationNotes === "string" ? value.investigationNotes.slice(0, 4000) : "",
+      deductions: ids(
+        value.deductions,
+        VIVIAN_DEDUCTIONS.map((item) => item.id),
+      ),
+      investigationNotes:
+        typeof value.investigationNotes === "string"
+          ? value.investigationNotes.slice(0, 4000)
+          : "",
+      logicGrids: ids(value.logicGrids, GRID_LEVEL_IDS.slice(1)),
+      completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
     };
   } catch {
     return null;
@@ -937,6 +949,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [roomCompletion, setRoomCompletion] = useState<PlaceId | null>(null);
   const [deductions, setDeductions] = useState<string[]>(saved?.deductions ?? []);
   const [investigationNotes, setInvestigationNotes] = useState(saved?.investigationNotes ?? "");
+  const [logicGrids, setLogicGrids] = useState<string[]>(saved?.logicGrids ?? []);
+  const [completedQuickCases, setCompletedQuickCases] = useState<string[]>(
+    saved?.completedQuickCases ?? [],
+  );
   const [nameEntryModes, setNameEntryModes] = useState<Record<string, "discs" | "text">>({});
 
   useEffect(() => {
@@ -953,7 +969,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 5,
+      version: 6,
       found,
       readClues,
       solvedRiddles,
@@ -970,6 +986,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       rankingRecorded,
       deductions,
       investigationNotes,
+      logicGrids,
+      completedQuickCases,
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(save));
     window.dispatchEvent(new Event("vivian-investigation-progress"));
@@ -990,6 +1008,8 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     rankingRecorded,
     deductions,
     investigationNotes,
+    logicGrids,
+    completedQuickCases,
   ]);
 
   const currentPlace = PLACES.find((place) => place.id === activePlace) ?? PLACES[0];
@@ -1960,11 +1980,31 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
             selected={selectedClues}
             solved={deductions}
             notes={investigationNotes}
+            gridProgress={logicGrids}
+            completedQuickCases={completedQuickCases}
             onNotes={setInvestigationNotes}
-            onSolve={(id) => {
-              setDeductions((current) => current.includes(id) ? current : [...current, id]);
+            onGridSolve={(id) => {
+              setLogicGrids((current) => (current.includes(id) ? current : [...current, id]));
               playInvestigationSound("connection");
-              setNotice("Dedução sustentada pelas fontes. Nenhum veredito de culpa foi estabelecido.");
+              setNotice(
+                "Nível de grade concluído. A associação organiza as fontes e não estabelece culpa.",
+              );
+            }}
+            onQuickCaseSolve={(id) => {
+              setCompletedQuickCases((current) =>
+                current.includes(id) ? current : [...current, id],
+              );
+              playInvestigationSound("connection");
+              setNotice(
+                "Desafio opcional conferido. A pontuação principal e o relatório final não foram alterados.",
+              );
+            }}
+            onSolve={(id) => {
+              setDeductions((current) => (current.includes(id) ? current : [...current, id]));
+              playInvestigationSound("connection");
+              setNotice(
+                "Dedução sustentada pelas fontes. Nenhum veredito de culpa foi estabelecido.",
+              );
             }}
           />
         )}

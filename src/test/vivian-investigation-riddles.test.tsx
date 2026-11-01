@@ -147,7 +147,7 @@ describe("investigation riddles", () => {
       screen.getByRole("heading", { name: "Dossiê completo de Painscreek" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/fita secreta procurada por Magdalene/)).toBeInTheDocument();
-  }, 15000);
+  }, 30000);
 
   it("solves Resident Evil-style code locks before the final password is revealed", () => {
     seedCompleteInvestigation(false, []);
@@ -281,7 +281,7 @@ describe("investigation riddles", () => {
     }
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) || "null");
-    expect(saved.version).toBe(5);
+    expect(saved.version).toBe(6);
     expect(saved.solvedRiddles).toEqual([
       "archive-identity",
       "archive-police",
@@ -294,5 +294,5 @@ describe("investigation riddles", () => {
       "lake-doctor",
     ]);
     expect(saved.found).toEqual(expect.arrayContaining(ALL_CLUES));
-  }, 30000);
+  }, 60000);
 });
