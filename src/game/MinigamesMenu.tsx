@@ -1,5 +1,6 @@
-import { CircuitBoard, Flag, Gamepad2 } from "lucide-react";
+import { CircuitBoard, Flag, Gamepad2, Route } from "lucide-react";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
+import { DotConnectionMinigame } from "./DotConnectionMinigame";
 import { FlagMinigame } from "./FlagMinigame";
 
 export function MinigamesMenu() {
@@ -20,10 +21,10 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          02 disponíveis
+          03 disponíveis
         </span>
       </div>
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <article className="border border-cyan-300/30 bg-[#11182a]/70 p-4 sm:p-5">
           <div className="flex items-start gap-3">
             <div className="border border-cyan-300/50 bg-cyan-300/10 p-2 text-cyan-200">
@@ -57,6 +58,24 @@ export function MinigamesMenu() {
             </div>
           </div>
           <CircuitPanelMinigame />
+        </article>
+        <article className="border border-rose-300/30 bg-[#251518]/80 p-4 sm:p-5">
+          <div className="flex items-start gap-3">
+            <div className="border border-rose-300/50 bg-rose-300/10 p-2 text-rose-200">
+              <Route size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-rose-200">
+                Raciocínio espacial · 3 dificuldades
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-rose-50">Conexão de Pontos</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#c0a7aa]">
+                Ligue todas as bolinhas uma única vez, sem deixar pontos de fora nem cruzar as
+                linhas.
+              </p>
+            </div>
+          </div>
+          <DotConnectionMinigame />
         </article>
       </div>
     </section>

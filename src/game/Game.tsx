@@ -2394,7 +2394,7 @@ function MainMenu({
           aria-expanded={showMinigames}
           className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
         >
-          {showMinigames ? "Fechar menu de minigames" : "Menu de minigames"} · 02 disponíveis
+          {showMinigames ? "Fechar menu de minigames" : "Menu de minigames"} · 03 disponíveis
         </button>
         {showMinigames && <MinigamesMenu />}
         <button
