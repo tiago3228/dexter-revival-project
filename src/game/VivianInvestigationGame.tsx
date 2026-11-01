@@ -1763,7 +1763,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       const hintKey = `code:${lock.id}:1`;
                       const hintUsed = usedHints.includes(hintKey);
                       return (
-                        <article key={lock.id} className="border border-[#4b4439] bg-[#171512] p-4">
+                        <article key={lock.id} id={`vivian-lock-${lock.id}`} className="border border-[#4b4439] bg-[#171512] p-4">
                           <div className="flex items-start justify-between gap-3">
                             <h3 className="font-display text-xl">{lock.title}</h3>
                             {solved && <Check size={17} className="shrink-0 text-emerald-300" />}
