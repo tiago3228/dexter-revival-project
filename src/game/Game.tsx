@@ -32,7 +32,7 @@ import {
 } from "./achievements";
 import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
-import { FlagMinigame } from "./FlagMinigame";
+import { MinigamesMenu } from "./MinigamesMenu";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import {
   loadCurrentPlayerName,
@@ -2054,6 +2054,7 @@ function MainMenu({
   const [showTrophies, setShowTrophies] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
+  const [showMinigames, setShowMinigames] = useState(false);
   const [showQuickCasesArchive, setShowQuickCasesArchive] = useState(false);
   const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
@@ -2387,7 +2388,15 @@ function MainMenu({
             </label>
           </div>
         </section>
-        <FlagMinigame />
+        <button
+          type="button"
+          onClick={() => setShowMinigames((visible) => !visible)}
+          aria-expanded={showMinigames}
+          className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
+        >
+          {showMinigames ? "Fechar menu de minigames" : "Menu de minigames"} · 02 disponíveis
+        </button>
+        {showMinigames && <MinigamesMenu />}
         <button
           type="button"
           onClick={() => setShowRanking((visible) => !visible)}
