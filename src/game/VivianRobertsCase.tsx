@@ -7,6 +7,7 @@ import {
   ChevronRight,
   ExternalLink,
   FileSearch,
+  Keyboard,
   Maximize2,
   Minimize2,
   LockKeyhole,
@@ -149,6 +150,7 @@ function DiaryImages({
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [readerTheme, setReaderTheme] = useState<"dark" | "light" | "sepia">("dark");
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -257,6 +259,23 @@ function DiaryImages({
       if (event.key === "ArrowRight") changePage(1);
       if (event.key === "+" || event.key === "=") adjustZoom(0.25);
       if (event.key === "-") adjustZoom(-0.25);
+      if (event.key === "0") {
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        saveProgress(0);
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        saveProgress(group.images.length - 1);
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "?") setShortcutsOpen((open) => !open);
     };
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     window.addEventListener("keydown", handleKeyDown);
@@ -543,6 +562,16 @@ function DiaryImages({
               </button>
               <button
                 type="button"
+                onClick={() => setShortcutsOpen((open) => !open)}
+                aria-label="Mostrar atalhos de teclado"
+                aria-expanded={shortcutsOpen}
+                className="viewer-control"
+                title="Atalhos de teclado (?)"
+              >
+                <Keyboard size={16} />
+              </button>
+              <button
+                type="button"
                 onClick={closeViewer}
                 aria-label="Fechar visualizador"
                 className="viewer-control"
@@ -552,6 +581,33 @@ function DiaryImages({
               </button>
             </div>
           </div>
+          {shortcutsOpen && (
+            <div className="border-b border-[#4b4439] bg-[#171512]/80 px-3 py-2 text-xs text-[#c9c1b5]">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                Atalhos de navegação
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-4">
+                <span>
+                  <kbd>←</kbd> <kbd>→</kbd> páginas
+                </span>
+                <span>
+                  <kbd>+</kbd> <kbd>-</kbd> zoom
+                </span>
+                <span>
+                  <kbd>0</kbd> resetar zoom
+                </span>
+                <span>
+                  <kbd>Home</kbd> / <kbd>End</kbd> início/fim
+                </span>
+                <span>
+                  <kbd>Esc</kbd> fechar
+                </span>
+                <span>
+                  <kbd>?</kbd> mostrar/ocultar ajuda
+                </span>
+              </div>
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-3 border-b border-[#4b4439] py-2 text-xs">
             <SlidersHorizontal size={15} aria-hidden="true" />
             <label className="flex items-center gap-2">
