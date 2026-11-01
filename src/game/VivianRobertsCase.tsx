@@ -13,6 +13,9 @@ import {
   MapPin,
   Minus,
   Plus,
+  RotateCcw,
+  SlidersHorizontal,
+  SunMedium,
   Users,
   X,
   Volume2,
@@ -22,6 +25,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
+import { PAINSCREEK_EVIDENCE_001_116 } from "./painscreekEvidence";
 import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
@@ -58,6 +62,29 @@ const DIARY_IMAGE_GROUP_IDS: Record<string, string> = {
   moss: "steven",
 };
 
+const DIARY_REFERENCE_TERMS: Record<string, string[]> = {
+  andrew: ["Andrew Reed"],
+  bernard: ["Bernard Hopkins"],
+  charles: ["Charles Roberts"],
+  derrick: ["Derrick Tyler"],
+  dorothy: ["Dorothy"],
+  james: ["James Howard"],
+  mary: ["Mary Martinez"],
+  matthew: ["Matthew Brooks"],
+  scott: ["Scott Brooks", "Scott"],
+  moss: ["Steven Moss"],
+  trisha: ["Trisha Roberts"],
+  vivian: ["Vivian Roberts"],
+  wanda: ["Wanda Tyler"],
+};
+
+function getDiaryReferences(personId: string) {
+  const terms = DIARY_REFERENCE_TERMS[personId] ?? [];
+  return PAINSCREEK_EVIDENCE_001_116.filter((evidence) =>
+    terms.some((term) => evidence.title.includes(term)),
+  ).slice(0, 4);
+}
+
 function readFoundVivianClues() {
   if (typeof window === "undefined") return [];
   try {
@@ -74,14 +101,20 @@ function DiaryImages({
   personId,
   personName,
   foundClues,
+  previousDiary,
+  nextDiary,
+  onNavigateDiary,
 }: {
   personId: string;
   personName: string;
   foundClues: string[];
+  previousDiary?: string | undefined;
+  nextDiary?: string | undefined;
+  onNavigateDiary?: ((personId: string) => void) | undefined;
 }) {
   const groupId = DIARY_IMAGE_GROUP_IDS[personId] ?? personId;
   const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === groupId);
-  if (!group) return null;
+  const imageCount = group?.images.length ?? 0;
 
   const requiredClue = DIARY_UNLOCK_CLUES[personId];
   const unlocked = requiredClue ? foundClues.includes(requiredClue) : false;
@@ -90,18 +123,50 @@ function DiaryImages({
   const [currentIndex, setCurrentIndex] = useState(() => {
     if (typeof window === "undefined") return 0;
     const saved = Number(window.localStorage.getItem(progressKey));
-    return Number.isInteger(saved) && saved >= 0 && saved < group.images.length ? saved : 0;
+    return Number.isInteger(saved) && saved >= 0 && saved < imageCount ? saved : 0;
   });
   const [viewerOpen, setViewerOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [brightness, setBrightness] = useState(100);
+  const [contrast, setContrast] = useState(100);
+  const [readerTheme, setReaderTheme] = useState<"dark" | "light" | "sepia">("dark");
   const viewerRef = useRef<HTMLDivElement>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const pinchDistanceRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = JSON.parse(
+        window.localStorage.getItem("vivian-diary-reader-settings-v1") || "null",
+      );
+      if (Number.isFinite(saved?.brightness))
+        setBrightness(Math.min(140, Math.max(70, saved.brightness)));
+      if (Number.isFinite(saved?.contrast))
+        setContrast(Math.min(160, Math.max(70, saved.contrast)));
+      if (["dark", "light", "sepia"].includes(saved?.readerTheme))
+        setReaderTheme(saved.readerTheme);
+    } catch {
+      // Ignora preferências corrompidas e mantém a leitura padrão.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        "vivian-diary-reader-settings-v1",
+        JSON.stringify({ brightness, contrast, readerTheme }),
+      );
+    }
+  }, [brightness, contrast, readerTheme]);
+
+  if (!group) return null;
+
   const currentImage = group.images[currentIndex];
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < group.images.length - 1;
+  const diaryReferences = getDiaryReferences(personId);
 
   const saveProgress = (index: number) => {
     setCurrentIndex(index);
@@ -232,15 +297,10 @@ function DiaryImages({
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
         {group.images.map((image, index) =>
           unlocked ? (
-            <a
+            <button
               key={image.fileName}
-              href={image.originalUrl}
-              onClick={(event) => {
-                event.preventDefault();
-                openViewer(index);
-              }}
-              target="_blank"
-              rel="noreferrer"
+              type="button"
+              onClick={() => openViewer(index)}
               aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
               className={`group overflow-hidden border bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e] ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
             >
@@ -255,7 +315,7 @@ function DiaryImages({
                 <span className="truncate">{image.fileName}</span>
                 {currentIndex === index && <span className="shrink-0 text-[#c4a779]">atual</span>}
               </span>
-            </a>
+            </button>
           ) : (
             <div
               key={image.fileName}
@@ -277,13 +337,60 @@ function DiaryImages({
           ),
         )}
       </div>
+      {(previousDiary || nextDiary) && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#4b4439] pt-4">
+          <button
+            type="button"
+            onClick={() => previousDiary && onNavigateDiary?.(previousDiary)}
+            disabled={!previousDiary}
+            className="min-h-10 border border-[#79664c] px-3 font-mono text-[10px] uppercase tracking-wider text-[#c9c1b5] disabled:opacity-35"
+          >
+            ← Diário anterior
+          </button>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-[#81796d]">
+            Navegação entre diários
+          </p>
+          <button
+            type="button"
+            onClick={() => nextDiary && onNavigateDiary?.(nextDiary)}
+            disabled={!nextDiary}
+            className="min-h-10 border border-[#79664c] px-3 font-mono text-[10px] uppercase tracking-wider text-[#c9c1b5] disabled:opacity-35"
+          >
+            Diário próximo →
+          </button>
+        </div>
+      )}
+      {diaryReferences.length > 0 && (
+        <details className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
+          <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+            Referências relacionadas no catálogo · {diaryReferences.length}
+          </summary>
+          <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#c9c1b5]">
+            {diaryReferences.map((reference) => (
+              <div key={reference.id} className="border-l-2 border-[#79664c] pl-3">
+                <p className="text-[#ead8b8]">
+                  {reference.id} · {reference.title}
+                </p>
+                <p className="text-[#a9a092]">
+                  PDF pp. {reference.pages.join(", ")} · {reference.sourceType}
+                </p>
+                <p className="mt-1 text-[#bdb5a8]">{reference.documented}</p>
+              </div>
+            ))}
+            <p className="border-t border-[#4b4439] pt-2 text-[#81796d]">
+              Relação por nome e referência de catálogo; o vínculo não é uma interpretação nem prova
+              independente.
+            </p>
+          </div>
+        </details>
+      )}
       {viewerOpen && currentImage && (
         <div
           ref={viewerRef}
-          className={`fixed inset-0 z-[80] flex flex-col bg-[#0d0c0b]/[.98] ${isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
+          className={`fixed inset-0 z-[80] flex flex-col ${readerTheme === "light" ? "bg-[#eee9df] text-[#211f1b]" : readerTheme === "sepia" ? "bg-[#33291e] text-[#f1dfbd]" : "bg-[#0d0c0b]/[.98] text-[#ead8b8]"} ${isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
           role="dialog"
           aria-modal="true"
-          aria-label={`${group.title}, página ${currentIndex + 1}`}
+          aria-label={group.title}
         >
           <div className="flex items-center justify-between gap-3 border-b border-[#4b4439] pb-3 text-[#ead8b8]">
             <div className="min-w-0">
@@ -332,6 +439,19 @@ function DiaryImages({
               </button>
               <button
                 type="button"
+                onClick={() =>
+                  setReaderTheme((theme) =>
+                    theme === "dark" ? "sepia" : theme === "sepia" ? "light" : "dark",
+                  )
+                }
+                aria-label="Alternar tema de leitura"
+                className="viewer-control"
+                title="Alternar tema"
+              >
+                <SunMedium size={16} />
+              </button>
+              <button
+                type="button"
                 onClick={closeViewer}
                 aria-label="Fechar visualizador"
                 className="viewer-control"
@@ -341,12 +461,52 @@ function DiaryImages({
               </button>
             </div>
           </div>
+          <div className="flex flex-wrap items-center gap-3 border-b border-[#4b4439] py-2 text-xs">
+            <SlidersHorizontal size={15} aria-hidden="true" />
+            <label className="flex items-center gap-2">
+              Brilho
+              <input
+                type="range"
+                min="70"
+                max="140"
+                value={brightness}
+                onChange={(event) => setBrightness(Number(event.target.value))}
+                aria-label="Brilho da página"
+                className="w-24 accent-[#c4a779]"
+              />
+              <span className="font-mono text-[10px]">{brightness}%</span>
+            </label>
+            <label className="flex items-center gap-2">
+              Contraste
+              <input
+                type="range"
+                min="70"
+                max="160"
+                value={contrast}
+                onChange={(event) => setContrast(Number(event.target.value))}
+                aria-label="Contraste da página"
+                className="w-24 accent-[#c4a779]"
+              />
+              <span className="font-mono text-[10px]">{contrast}%</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                setBrightness(100);
+                setContrast(100);
+                setReaderTheme("dark");
+              }}
+              className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[#c4a779]"
+            >
+              <RotateCcw size={13} /> Resetar leitura
+            </button>
+          </div>
           <div className="flex min-h-0 flex-1 items-center justify-center gap-2 py-3 sm:gap-4">
             <button
               type="button"
               onClick={() => changePage(-1)}
               disabled={!hasPrevious}
-              aria-label="Página anterior"
+              aria-label="Imagem anterior"
               className="viewer-nav"
             >
               <ChevronLeft size={22} />
@@ -361,9 +521,13 @@ function DiaryImages({
             >
               <img
                 src={currentImage.originalUrl}
-                alt={`${group.title}, página ${currentIndex + 1}`}
+                alt={`${group.title}: ${currentImage.fileName}`}
                 className="max-h-full max-w-full select-none object-contain transition-transform duration-100"
-                style={{ transform: `scale(${zoom})`, transformOrigin: "center center" }}
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: "center center",
+                  filter: `brightness(${brightness}%) contrast(${contrast}%)`,
+                }}
                 draggable={false}
               />
             </div>
@@ -371,7 +535,7 @@ function DiaryImages({
               type="button"
               onClick={() => changePage(1)}
               disabled={!hasNext}
-              aria-label="Próxima página"
+              aria-label="Próxima imagem"
               className="viewer-nav"
             >
               <ChevronRight size={22} />
@@ -1333,6 +1497,18 @@ export function VivianRobertsCase({
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [foundVivianClues, setFoundVivianClues] = useState<string[]>(readFoundVivianClues);
+  const diaryPeople = PEOPLE.filter((person) => {
+    const groupId = DIARY_IMAGE_GROUP_IDS[person.id] ?? person.id;
+    return PAINSCREEK_EVIDENCE_IMAGE_GROUPS.some((group) => group.id === groupId);
+  });
+  const selectedDiaryIndex = selectedPerson
+    ? diaryPeople.findIndex((person) => person.id === selectedPerson.id)
+    : -1;
+  const previousDiary = selectedDiaryIndex > 0 ? diaryPeople[selectedDiaryIndex - 1] : undefined;
+  const nextDiary =
+    selectedDiaryIndex >= 0 && selectedDiaryIndex < diaryPeople.length - 1
+      ? diaryPeople[selectedDiaryIndex + 1]
+      : undefined;
 
   useEffect(() => {
     const refreshDiaryUnlocks = () => setFoundVivianClues(readFoundVivianClues());
@@ -1827,11 +2003,23 @@ export function VivianRobertsCase({
                   <>
                     <p className="text-[#c4a779]">{selectedPerson.role}</p>
                     <p>{selectedPerson.note}</p>
-                    <DiaryImages
-                      personId={selectedPerson.id}
-                      personName={selectedPerson.name}
-                      foundClues={foundVivianClues}
-                    />
+                    {PAINSCREEK_EVIDENCE_IMAGE_GROUPS.some(
+                      (group) =>
+                        group.id ===
+                        (DIARY_IMAGE_GROUP_IDS[selectedPerson.id] ?? selectedPerson.id),
+                    ) && (
+                      <DiaryImages
+                        personId={selectedPerson.id}
+                        personName={selectedPerson.name}
+                        foundClues={foundVivianClues}
+                        previousDiary={previousDiary?.id}
+                        nextDiary={nextDiary?.id}
+                        onNavigateDiary={(personId) => {
+                          const target = diaryPeople.find((person) => person.id === personId);
+                          if (target) setSelectedPerson(target);
+                        }}
+                      />
+                    )}
                     {selectedPerson.status !== "confirmado" && (
                       <StatusPill status={selectedPerson.status} />
                     )}
