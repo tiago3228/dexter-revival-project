@@ -3,7 +3,7 @@
 
 **Escopo exclusivo:** páginas 31–69 do PDF. Não inclui páginas 1–30 nem 70–116.
 **Método informado:** OCR das imagens fornecido na conversa. Não houve conferência visual independente do PDF original.
-**Estado global:** OCR comparado visualmente com as imagens do PDF para as páginas 31–69. As páginas foram inspecionadas em conjunto e as páginas com divergências relevantes foram ampliadas. Isso não equivale a uma transcrição diplomática linha a linha de todos os caracteres; pontos ainda duvidosos permanecem sinalizados. Em páginas de duas colunas, a ordem de leitura deve seguir a disposição visual.
+**Estado global:** primeira passada visual das imagens PNG do ZIP original, mapeadas às páginas de referência 31–69 por conteúdo/data; transcrições por imagem em [transcricoes-imagens-zip](./transcricoes-imagens-zip/README.md). Não equivale à conferência diplomática palavra por palavra. Pontos duvidosos permanecem sinalizados.
 
 ## Páginas 31–34 — Matthew Brooks e Sofia; anotações de 1995
 
@@ -61,7 +61,7 @@
 |---|---|---|---|
 | 58 | 26/03/1997; Steven Moss | Moss registra que a investigação avança lentamente, moradores foram embora e a imprensa pode ter errado. Planeja visitar o Orfanato São Patrício e entrevistar antigos funcionários da mansão; acredita que Scott sabe algo, mas ainda não pretende falar com Matthew. | Trechos sobre distância/viagem e palavras no meio da página estão corrompidos. “Matthew parece ser responsável legal por Scott” é anotação investigativa, não confirmação jurídica. |
 | 59 | 30/03/1997; Steven Moss | Fragmentos citam a recuperação de Vivian após cirurgia de emergência em 1974, Trisha, a vice-presidência da Companhia de Mineração Roberts, a crise após acidente na mina em 1973 e apoio ao hospital comunitário. | OCR está severamente misturado e incompleto; não reconstruir a sequência nem a relação causal além do texto reconhecível. |
-| 60 | **Conferido na imagem:** anotação “Sala de segurança: 005241 (Mansão?)”. | O texto aparece isolado no canto inferior direito da página. “Mansão?” permanece com interrogação na fonte; o código legível é **005241**. Não confundir com o código da sala de estudo da p. 64 (**44871**). |
+| 60 | **Conferido na imagem:** anotação “Sala de segurança: 025241 (Mansão?)”. | O texto aparece isolado no canto inferior direito da página. “Mansão?” permanece com interrogação na fonte; o código legível é **025241**. Não confundir com o código da sala de estudo da p. 64 (**44871**). |
 | 61 | Bernard Hopkins; “1997-2” | Ficha com endereço “Av. Silverlake, n.º 31”, Painscreek, NL 28115. Nota diz que o pai morreu em acidente na mina e que Bernard estava em casa no dia em que Vivian foi morta, acrescentando “Sem álibi”. | Confirmar grafia/endereço e significado do campo “1997-2”. Ausência de álibi anotado não é prova de culpa. |
 | 62 | “Entrevista com Dorothy”; anotação de encontro | Aparecem nome(s) parcialmente reconhecíveis, incluindo texto OCR semelhante a “Catererta Moon”, e nota de encontro com o xerife no posto às 10h em 11/05; ele queria mostrar documentos. | Nome e ano não confirmados. Não normalizar o nome fragmentário nem presumir o conteúdo dos documentos. |
 
@@ -70,7 +70,7 @@
 | Página | Datas visíveis | Conteúdo organizado | Alertas e limites |
 |---|---|---|---|
 | 63 | 13/11/1988; 06/01/1989 | Trisha descreve Scott como quieto e estranho e questiona por que outros meninos o intimidam e por que os pais dele não o quiseram. Na entrada seguinte, rejeita atividades extracurriculares, especialmente balé e etiqueta, e questiona a expectativa de ser igual à mãe. | Duas entradas em colunas. O texto é a perspectiva de Trisha, não informação comprovada sobre a família de Scott. |
-| 64 | 03/08/1989 | Trisha diz que faz tempo que não vê o pai, sente falta dele, nota o cheiro de tabaco na sala de estudo e sente que a mãe está ocupada demais para ela; pensa em chamar Dorothy de mãe. O código da sala de estudo aparece como **44871**. | O código é transcrito do OCR fornecido; conferir visualmente antes de implementar como puzzle. Não confundir com a antiga nota incorreta “71”. |
+| 64 | 03/08/1989 | Trisha diz que faz tempo que não vê o pai, sente falta dele, nota o cheiro de tabaco na sala de estudo e sente que a mãe está ocupada demais para ela; pensa em chamar Dorothy de mãe. O código da sala de estudo aparece como **44871**. | O código foi confirmado visualmente na captura `trisha1.png`; a revisão palavra por palavra ainda está pendente antes de fechar o inventário. Não confundir com a antiga nota incorreta “71”. |
 | 65 | 26/03/1993; 01/04/1993 | Trisha diz sentir-se à vontade com Scott, que a escuta sem julgá-la. Os dois decidem montar um esconderijo para se encontrarem em segredo. | O esconderijo é combinado, mas o texto não confirma sua localização física. |
 | 66 | 03 e 16/09/1993 | Trisha fica feliz por Scott trabalhar na mansão, mas teme que Andrew seja má influência. Depois, diz que Scott tem muito trabalho no jardim e talvez não se encontrem naquele dia. | A avaliação de Andrew é opinião de Trisha. |
 | 67 | 01/10/1993 | A mãe contrata Oliver para ensinar fotografia. Trisha inicialmente duvida dele por ser mais velho e achar que suas técnicas seriam ultrapassadas; depois conversa com ele, vê as fotos e muda de opinião. | Confirmar nome e redação na imagem original. |
@@ -99,7 +99,7 @@
 - [ ] Comparar as páginas 46–48 com 49–51 para confirmar duplicatas visuais, não apenas repetição do OCR.
 - [ ] Conferir p. 54, especialmente a cronologia, os nomes e o final da narrativa.
 - [ ] Conferir ordem das entradas e descrição do corpo na p. 56.
-- [x] Conferir visualmente p. 60: anotação “Sala de segurança: 005241 (Mansão?)”.
+- [x] Conferir visualmente p. 60: anotação “Sala de segurança: 025241 (Mansão?)”.
 - [ ] Ler com ampliação adicional os documentos fragmentários das páginas 58–62 e confirmar todos os campos de p. 61–62.
 - [ ] Confirmar o código 44871 na p. 64.
 - [ ] Conferir a frase truncada na p. 69.

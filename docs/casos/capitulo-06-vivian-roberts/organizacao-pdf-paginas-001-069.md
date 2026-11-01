@@ -25,7 +25,8 @@ A transcrição por entrada das páginas 1–20 está em [Transcrição dos lote
 ### Observações e entradas de diário
 
 - As primeiras páginas apresentam entradas de diário e nomes na barra lateral do caderno. A seleção lateral é uma pista auxiliar de autoria, mas não substitui a identificação no corpo do texto.
-- **DIARIO-005, pp. 13–27:** a barra lateral sugere Mary Martinez, mas o corpo não identifica a autora de forma suficiente. **Autoria provisória; confirmar na imagem.**
+- **DIARIO-004, pp. 13–17:** as capturas `derrick6.png`–`derrick10.png` mostram Derrick Tyler selecionado; isso corrige a atribuição anterior a Mary na transcrição recebida.
+- **DIARIO-005, pp. 21–27:** as capturas `mary.png`–`mary6.png` mostram Mary Martinez selecionada. A atribuição decorre da interface, não de assinatura no corpo.
 - **DIARIO-007, pp. 28–32:** a barra lateral sugere Matthew Brooks. **Autoria provisória; confirmar na imagem.**
 - Entradas de 1975 atribuídas provisoriamente a Matthew: em 16/09/1975, o narrador diz que voltará para casa no dia seguinte e sentirá falta das pessoas que conheceu; em 19/09/1975, Father Calvin diz que Sofia deixou Painscreek e o narrador se pergunta se ela foi forçada a partir ou se escondia algo; em 29/12/1975, meses depois, ninguém sabe onde Sofia foi e Calvin aconselha o narrador a seguir em frente. **Confirmar autoria, grafia e transcrição.**
 - A entrada de Trisha de 13/05/1995 registra uma visita a Scott e uma suspeita de que Sofia tenha sido morta; Trisha considera possíveis suspeitos e pergunta se Dorothy, Wanda ou Charles sabem algo. Trata-se de suspeita, não de prova.
@@ -89,7 +90,7 @@ O OCR específico das páginas 31–69 foi recebido e organizado em [Inventário
 |---|---|---|
 | 58 | Steven Moss registra que a investigação é lenta, planeja visitar o Orfanato São Patrício e entrevistar antigos funcionários; evita falar com Matthew por enquanto. | Nota investigativa com trechos corrompidos; não é conclusão probatória. |
 | 59 | Fragmentos mencionam Vivian, a Companhia de Mineração Roberts, acidente na mina de 1973, Trisha e internação em 1974. | OCR severamente misturado; não reconstruir a sequência. |
-| 60 | **Conferida na imagem:** anotação “Sala de segurança: 005241 (Mansão?)”. | Código visível: **005241**. A identificação da mansão mantém o ponto de interrogação da fonte. Diferente do código da sala de estudo 44871 da p. 64. |
+| 60 | **Conferida na imagem:** anotação “Sala de segurança: 025241 (Mansão?)”. | Código visível: **025241**. A identificação da mansão mantém o ponto de interrogação da fonte. Diferente do código da sala de estudo 44871 da p. 64. |
 | 61 | Ficha de Bernard Hopkins com endereço na Av. Silverlake, n.º 31, e anotação de que estava em casa no dia da morte de Vivian, “Sem álibi”. | Confirmar campos; ausência de álibi não prova culpa. |
 | 62 | Nota “Entrevista com Dorothy” e anotação de encontro com o xerife no posto às 10h em 11/05, que queria mostrar documentos. | Nome adicional e ano incertos. |
 | 63 | Trisha comenta que Scott é quieto e sofre bullying; depois rejeita balé e etiqueta e questiona expectativas da mãe. | Duas entradas em colunas; perspectiva pessoal. |

@@ -1,8 +1,8 @@
 # Transcrição de trabalho — páginas 61–69 do PDF
 
-**Fonte:** `IMAGENS DE PAINSCREEK.zip` → `The Painscreek Killing.pdf`, páginas 61–69.  
-**Método:** leitura das páginas renderizadas com OCR auxiliar.  
-**Estado:** transcrição preliminar. Corrigir nomes, pontuação e trechos incompletos somente após ampliação/conferência. Não tratar anotações de investigação como fatos provados.
+**Fonte:** `ThePainscreekKilling.zip` (116 capturas PNG); páginas de referência 61–69 mapeadas por conteúdo/data.
+**Método:** leitura visual das capturas PNG com OCR auxiliar.
+**Estado:** transcrição de trabalho; primeira passada visual. Corrigir nomes, pontuação e trechos incompletos somente após revisão palavra por palavra. Não tratar anotações de investigação como fatos provados.
 
 ## Página 61 — nota de caderno sobre Bernard Hopkins
 

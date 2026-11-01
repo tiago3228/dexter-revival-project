@@ -184,13 +184,13 @@
 
 ---
 
-## DIARIO-005 — Caderno atribuído a Mary Martinez
-- **Páginas PDF:** 13–17.
-- **Autoria:** Mary Martinez conforme seleção visual da lista lateral, ainda a conferir em captura de maior resolução; o corpo das entradas não identifica a narradora pelo nome.
+## DIARIO-004 — Caderno de Derrick Tyler (continuação)
+- **Páginas de referência do OCR:** 13–17.
+- **Autoria indicada pela interface:** Derrick Tyler, visivelmente selecionado nas capturas `derrick6.png`–`derrick10.png`. O corpo das entradas não nomeia o autor; a atribuição é visual, não uma assinatura textual.
 - **Local físico:** não informado.
-- **Nota:** conteúdo menciona a mãe da narradora com câncer e proximidade com Trisha.
+- **Nota:** conteúdo menciona a mãe de Derrick Tyler (sem nome), seu câncer e a proximidade com Trisha.
 
-### DIARIO-005-ENTRADA-001 — Terça-feira, 21 de setembro de 1993 (p. 13)
+### DIARIO-004-ENTRADA-009 — Terça-feira, 21 de setembro de 1993 (p. 13)
 > Eu não me senti bem hoje. Eu tive um pesadelo esta noite. Não consigo me lembrar de como era, mas foi enervante.
 >
 > Eu vejo Scott o tempo todo agora, já que ele começou a trabalhar na mansão.
@@ -199,70 +199,69 @@
 >
 > Costumava ser eu a ficar com a Trisha.
 
-**Mencionados:** narradora (atribuída a Mary), Scott, Trisha. **Local:** mansão. **Leitura:** desconforto e sensação de afastamento de Trisha; não prova hostilidade criminosa. **Certeza declarada:** alta para o texto; autoria pendente de confirmação visual.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Scott, Trisha. **Local:** mansão. **Leitura:** desconforto e sensação de afastamento de Trisha; não prova hostilidade criminosa. **Certeza declarada:** alta para o texto; autoria indicada pela interface, sem assinatura nominal no corpo.
 
-### DIARIO-005-ENTRADA-002 — Sexta-feira, 1.º de outubro de 1993 (p. 13)
+### DIARIO-004-ENTRADA-010 — Sexta-feira, 1.º de outubro de 1993 (p. 13)
 > Mamãe se sente melhor ultimamente. É quase como se ela tivesse se esquecido de que tem câncer.
 >
 > Eu espero que ela se recupere rapidamente. O Sr. Johnson é um grande homem por nos ajudar assim.
 
-**Mencionados:** narradora, mãe sem nome, Dr. Johnson. **Local:** não especificado. **Leitura:** mãe da narradora tem câncer; ajuda do Dr. Johnson não é detalhada. **Certeza declarada:** alta para o texto.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), mãe sem nome, Dr. Johnson. **Local:** não especificado. **Leitura:** mãe de Derrick Tyler tem câncer; ajuda do Dr. Johnson não é detalhada. **Certeza declarada:** alta para o texto.
 
-### DIARIO-005-ENTRADA-003 — Segunda-feira, 8 de novembro de 1993 (p. 14)
+### DIARIO-004-ENTRADA-011 — Segunda-feira, 8 de novembro de 1993 (p. 14)
 > Trisha falou comigo hoje. Ela disse que Scott tem estado ocupado e ela se sente solitária.
 >
 > Eu nunca a faria se sentir assim. Eu não posso dizer isso a ela, mas eu estarei aqui sempre que ela precisar. Nós conversamos bastante. Eu queria que todo dia fosse como hoje.
 
-**Mencionados:** narradora, Trisha, Scott. **Local:** não especificado. **Leitura:** a narradora oferece apoio e guarda sentimentos não revelados; sua natureza não é explicitada. **Certeza declarada:** alta para o texto.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Trisha, Scott. **Local:** não especificado. **Leitura:** Derrick Tyler oferece apoio e guarda sentimentos não revelados; sua natureza não é explicitada. **Certeza declarada:** alta para o texto.
 
-### DIARIO-005-ENTRADA-004 — Segunda-feira, 14 de fevereiro de 1994 (p. 14)
+### DIARIO-004-ENTRADA-012 — Segunda-feira, 14 de fevereiro de 1994 (p. 14)
 > Hoje Scott veio e me perguntou se eu sei algo sobre o padre Calvin. Eu só o conheci como o padre anterior da igreja, antes do padre Mathew assumir. Eu disse a Scott para questionar Matthew sobre isso. Scott não disse nada e saiu.
 >
 > Parece que eles não estão se entendendo muito bem.
 
-**Mencionados:** narradora, Scott, padre Calvin, padre “Mathew” e “Matthew”. **Local:** igreja, sem nome. **Leitura:** Scott pergunta por Calvin; a razão da pergunta não é informada. Preservar a variação de grafia no original. **Certeza declarada:** alta para o texto.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Scott, padre Calvin, padre “Mathew” e “Matthew”. **Local:** igreja, sem nome. **Leitura:** Scott pergunta por Calvin; a razão da pergunta não é informada. Preservar a variação de grafia no original. **Certeza declarada:** alta para o texto.
 
-### DIARIO-005-ENTRADA-005 — Segunda-feira, 3 de abril de 1995 (p. 15)
+### DIARIO-004-ENTRADA-013 — Segunda-feira, 3 de abril de 1995 (p. 15)
 > Trisha me visitou novamente. Desde que Scott foi demitido e mandaram ele não se encontrar mais com Trisha, ela tem me visitado com mais frequência.
 >
 > Ela não está somente brava com Vivian, mas também chateada com Scott, dizendo que Scott a está evitando.
 
-**Mencionados:** narradora, Trisha, Scott, Vivian. **Local:** casa/local da narradora não identificado. **Leitura:** Scott foi demitido e alguém o proibiu de encontrar Trisha; fonte não identifica quem deu a ordem nem o motivo da demissão. **Certeza declarada:** alta para o relato.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Trisha, Scott, Vivian. **Local:** casa/local do narrador não identificado. **Leitura:** Scott foi demitido e alguém o proibiu de encontrar Trisha; fonte não identifica quem deu a ordem nem o motivo da demissão. **Certeza declarada:** alta para o relato.
 
-### DIARIO-005-ENTRADA-006 — Quarta-feira, 28 de junho de 1995 (p. 15)
+### DIARIO-004-ENTRADA-014 — Quarta-feira, 28 de junho de 1995 (p. 15)
 > Eu visitei mamãe hoje. Seu câncer reincidiu. Depois que seu tumor desapareceu dois anos atrás, ninguém esperava que retornasse, ainda mais tão rápido.
 >
 > Mamãe parecia bem, e parecia estar se acostumando com as visitas ao hospital. O Dr. Johnson disse que as sessões de quimioterapia são necessárias devido ao estágio avançado do câncer, e que ela precisará, mais do que nunca, do meu suporte.
 >
 > Ao sair, eu vi Scott conversando com o Dr. Johnson. Eles pareciam sérios. Será que o Scott encontrou um novo emprego após ter sido demitido?
 
-**Mencionados:** narradora, mãe, Dr. Johnson, Scott. **Local:** hospital sem nome. **Leitura:** a narradora vê Scott conversar seriamente com o médico, mas não ouve o conteúdo da conversa. **Certeza declarada:** alta para o texto; conversa desconhecida.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), mãe, Dr. Johnson, Scott. **Local:** hospital sem nome. **Leitura:** Derrick Tyler vê Scott conversar seriamente com o médico, mas não ouve o conteúdo da conversa. **Certeza declarada:** alta para o texto; conversa desconhecida.
 
-### DIARIO-005-ENTRADA-007 — Quarta-feira, 12 de julho de 1995 (p. 16)
+### DIARIO-004-ENTRADA-015 — Quarta-feira, 12 de julho de 1995 (p. 16)
 > O corpo do Dr. Johnson foi encontrado hoje, próximo ao lago Cherry Creek. A polícia veio e interrogou Vivian. Aparentemente ela era sempre vista com o Dr. Johnson. Vivian levantou a voz para a polícia durante o interrogatório. Trisha ficou assustada e se trancou no quarto.
 >
 > Eu não sei o que está acontecendo.
 
-**Mencionados:** narradora, Dr. Johnson, Vivian, Trisha, policiais. **Locais:** lago Cherry Creek, quarto de Trisha e local da narradora não identificado. **Leitura:** registra o achado do corpo e o interrogatório de Vivian; a observação sobre a proximidade com o médico não prova envolvimento. **Certeza declarada:** alta para o texto; não foi anexada fonte independente do achado.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Dr. Johnson, Vivian, Trisha, policiais. **Locais:** lago Cherry Creek, quarto de Trisha e local do narrador não identificado. **Leitura:** registra o achado do corpo e o interrogatório de Vivian; a observação sobre a proximidade com o médico não prova envolvimento. **Certeza declarada:** alta para o texto; não foi anexada fonte independente do achado.
 
-### DIARIO-005-ENTRADA-008 — Sábado, 15 de julho de 1995 (p. 16)
+### DIARIO-004-ENTRADA-016 — Sábado, 15 de julho de 1995 (p. 16)
 > A polícia veio à minha casa, me interrogar novamente sobre a morte do Dr. Johnson.
 >
 > Eu estou tão cansado de tudo o que tem acontecido ultimamente.
 
-**Mencionados:** narradora, policiais, Dr. Johnson. **Local:** casa da narradora não identificada. **Leitura:** relata novo interrogatório; o conteúdo não é informado. **Certeza declarada:** alta para o texto.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), policiais, Dr. Johnson. **Local:** casa do narrador não identificada. **Leitura:** relata novo interrogatório; o conteúdo não é informado. **Certeza declarada:** alta para o texto.
 
-### DIARIO-005-ENTRADA-009 — Sexta-feira, 27 de outubro de 1995 (p. 17)
+### DIARIO-004-ENTRADA-017 — Sexta-feira, 27 de outubro de 1995 (p. 17)
 > Scott voltou com o padre Matthew hoje. O advogado deles veio junto. Repórteres estavam aguardando na igreja, perguntando por que eles deixaram um assassino voltar para Painscreek.
 >
 > Trisha voltou do hospital e estava desesperada para ver Scott. Quando Charles e Bernard a impediram, ela começou a chorar.
 >
 > O que eu posso fazer?
 
-**Mencionados:** narradora, Scott, padre Matthew, advogado não identificado, repórteres, Trisha, Charles, Bernard. **Locais:** igreja, hospital, Painscreek. **Leitura:** “assassino” é acusação atribuída aos repórteres, não prova independente de culpa. Charles e Bernard impediram Trisha de se aproximar de Scott. **Certeza declarada:** alta para o texto; fundamento da acusação e motivo do retorno não informados.
+**Mencionados:** Derrick Tyler (autor indicado pela interface), Scott, padre Matthew, advogado não identificado, repórteres, Trisha, Charles, Bernard. **Locais:** igreja, hospital, Painscreek. **Leitura:** “assassino” é acusação atribuída aos repórteres, não prova independente de culpa. Charles e Bernard impediram Trisha de se aproximar de Scott. **Certeza declarada:** alta para o texto; fundamento da acusação e motivo do retorno não informados.
 
 ---
-
 ## DIARIO-006 — Caderno de James Howard
 - **Páginas PDF:** 18–20.
 - **Autor:** James Howard, conforme seleção visual da lista lateral.

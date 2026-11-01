@@ -9,11 +9,11 @@
 
 ---
 
-## DIARIO-005 — Caderno atribuído a Mary Martinez (continuação)
+## DIARIO-005 — Caderno atribuído a Mary Martinez (páginas 21–27)
 
-**Autoria:** atribuição baseada na seleção lateral do diário; deve permanecer provisória até confirmação visual independente.
+**Autoria indicada pela interface:** Mary Martinez, seleção lateral visível nas capturas `mary.png`–`mary6.png`; o texto não contém assinatura nominal.
 
-### DIARIO-005-ENTRADA-010 — 24 de maio de 1993 (p. 21)
+### DIARIO-005-ENTRADA-001 — 24 de maio de 1993 (p. 21)
 > Estou aqui já há quase três meses. Todos me tratam bem.
 >
 > A maioria dos empregados está aqui há muito tempo, alguns há 30 anos. Dorothy provavelmente é a empregada mais antiga aqui. Ela é legal e responsável por todas as outras empregadas. Ela está sempre me dando lanches.
@@ -22,14 +22,14 @@
 
 **Mencionados:** narradora atribuída a Mary, Dorothy, Bernard. **Leitura:** descrição da hierarquia dos empregados da mansão, segundo a narradora.
 
-### DIARIO-005-ENTRADA-011 — 2 de junho de 1993 (p. 21)
+### DIARIO-005-ENTRADA-002 — 2 de junho de 1993 (p. 21)
 > Dorothy e Bernard não se falam muito. Ainda assim, eles são perfeitos quando se trata de atender às necessidades de Charles e Vivian. Acho que é por isso que eles estão no comando por aqui.
 >
 > Notei que Charles e Vivian também não ficam muito juntos, mesmo quando ambos estão em casa. Eles não parecem felizes. O que está acontecendo?
 
 **Mencionados:** narradora, Dorothy, Bernard, Charles Roberts, Vivian Roberts. **Leitura:** observações subjetivas sobre relações dentro da mansão; não estabelecem a causa da aparente infelicidade.
 
-### DIARIO-005-ENTRADA-012 — 13 de junho de 1993 (p. 22)
+### DIARIO-005-ENTRADA-003 — 13 de junho de 1993 (p. 22)
 > Vivian estava passando quando eu quebrei o vaso. Eu devia estar muito nervosa, porque travei ali e só Deus sabe por quanto tempo. Achei que ela iria ralhar comigo, ou até me demitir. Em vez disso, Vivian me convidou para tomar um chá com ela.
 >
 > Ela perguntou sobre os meus pais e o que eu gostaria de fazer no futuro. Eu disse a ela que espero ter minha própria lanchonete um dia. Ela disse que eu poderia fazer qualquer coisa, desde que focasse nisso e trabalhasse duro. Como eu, ela era pobre. Agora, ela é uma empresária de sucesso.
@@ -38,7 +38,7 @@
 
 **Mencionados:** narradora, Vivian Roberts e os pais da narradora (sem nomes). **Objetos:** vaso, chá. **Leitura:** Vivian oferece incentivo à narradora.
 
-### DIARIO-005-ENTRADA-013 — 6 de julho de 1993 (p. 22)
+### DIARIO-005-ENTRADA-004 — 6 de julho de 1993 (p. 22)
 > Wanda está doente. Ouvi dizer que ela está com câncer. Já faz dois meses desde que eu a substituí. O filho dela, Derrick, fica com ela sempre que não está dirigindo para Charles.
 >
 > Sinto muito por eles. Felizmente, o Sr. Roberts os ajuda nas necessidades financeiras.
@@ -47,7 +47,7 @@
 
 **Mencionados:** narradora, Wanda Tyler, Derrick Tyler, Charles Roberts. **Leitura:** a narradora relata a doença de Wanda e ajuda financeira atribuída a Charles; isso é o relato dela.
 
-### DIARIO-005-ENTRADA-014 — 14 de outubro de 1993 (p. 23)
+### DIARIO-005-ENTRADA-005 — 14 de outubro de 1993 (p. 23)
 > Andrew gritou comigo por andar na grama, apesar de eu estar certa de não ter pisado lá desta vez. Ele está sempre bêbado, de qualquer forma.
 >
 > Scott me disse para ignorá-lo. Não sei como ele pode ser tão paciente, sempre cuidando de Andrew e fazendo o trabalho dele.
@@ -56,45 +56,45 @@
 
 **Mencionados:** narradora, Andrew Reed, Scott Brooks, padre Matthew. **Leitura:** a narradora descreve Andrew como frequentemente bêbado e Scott como paciente; a adoção é informação relatada pela narradora, sem documento de adoção anexado aqui.
 
-### DIARIO-005-ENTRADA-015 — 3 de fevereiro de 1995 (p. 24)
+### DIARIO-005-ENTRADA-006 — 3 de fevereiro de 1995 (p. 24)
 > Eu estava limpando o sótão da mansão hoje quando encontrei algumas coisas velhas de Derrick e Wanda. Perguntei a Derrick sobre isso e ele me falou que morou aqui com sua mãe até os seis anos de idade. Conversamos por uma hora mais ou menos. Nunca conversei tanto assim com ele. Senti-me bem conversando com ele. Foi bem relaxante.
 
 **Mencionados:** narradora, Derrick Tyler, Wanda Tyler. **Local/objetos:** sótão da mansão; objetos antigos não descritos. **Leitura:** Derrick teria contado que morou na mansão com a mãe até os seis anos; os objetos encontrados não são identificados.
 
-### DIARIO-005-ENTRADA-016 — 3 de março de 1995 (p. 24)
+### DIARIO-005-ENTRADA-007 — 3 de março de 1995 (p. 24)
 > Tive que interagir com Bernard hoje. Seu pulso esquerdo estava bem inchado. Quando perguntei o que aconteceu, ele disse que caiu durante uma escalada e torceu a mão esquerda, então não pode ajudar a escrever os convites para a Páscoa deste ano. Eu disse a ele que só precisava da mão direita para isso. Ele olhou para mim como se eu estivesse tirando sarro dele.
 >
 > Como eu poderia saber que ele é canhoto?
 
 **Mencionados:** narradora, Bernard Hopkins. **Leitura:** Bernard atribui o inchaço a uma queda durante escalada; a causa não é confirmada por outra fonte. A narradora não sabia que ele era canhoto.
 
-### DIARIO-005-ENTRADA-017 — 17 de abril de 1995 (p. 25)
+### DIARIO-005-ENTRADA-008 — 17 de abril de 1995 (p. 25)
 > Dorothy me pediu para ajudar a limpar sua casa amanhã. Eu não sabia que ela tem seu próprio lugar. Pensava que ela morava com a família Roberts no quarto da babá. Ela disse que não usou a casa nos últimos meses, mas precisa ser cuidada de vez em quando. Ela vai fazer 60 este ano. Acho que deveria ajudá-la.
 >
 > **P.S.:** O endereço é Rua Blackpine, 40, Painscreek, NV.
 
 **Mencionados:** narradora, Dorothy Patterson, família Roberts. **Local:** Rua Blackpine, 40, Painscreek, NV (endereço transcrito; conferir grafia e formatação no original). **Leitura:** a narradora diz que Dorothy tem uma casa própria; isso não fixa, por si só, um marcador exato no mapa do jogo.
 
-### DIARIO-005-ENTRADA-018 — 29 de maio de 1995 (p. 25)
+### DIARIO-005-ENTRADA-009 — 29 de maio de 1995 (p. 25)
 > Trisha e Vivian discutiram durante o jantar. Vivian está pensando em enviar Trisha para a faculdade, mas Trisha quer ficar com Scott. Ela não está pensando direito.
 
 **Mencionados:** narradora, Trisha Roberts, Vivian Roberts, Scott Brooks. **Local:** jantar em local não especificado. **Leitura:** a avaliação de que Trisha “não está pensando direito” é opinião da narradora.
 
-### DIARIO-005-ENTRADA-019 — 1.º de junho de 1995 (p. 26)
+### DIARIO-005-ENTRADA-010 — 1.º de junho de 1995 (p. 26)
 > Eu estava prestes a limpar a galeria quando notei que a porta já estava ligeiramente aberta. Olhei para dentro e vi o Sr. Roberts em frente a uma pintura. Logo antes de sair, ouvi um leve clique. Quando ele estava saindo da galeria, escondi-me no corredor da escada. Quando tive certeza de que ele tinha ido embora, entrei na galeria para ver pelo que ele estava tão fascinado.
 >
 > É apenas uma pintura de uma mulher velha com uma faixa branca. Pergunto-me o que há de tão interessante nesta senhora.
 
 **Mencionados:** narradora, Charles Roberts. **Local/objeto:** galeria da mansão; pintura de uma mulher idosa com faixa branca; clique ouvido, sem origem identificada. **Leitura:** o clique pode ser relevante para investigação, mas a entrada não comprova mecanismo secreto nem sua localização.
 
-### DIARIO-005-ENTRADA-020 — 11 de junho de 1995 (p. 26)
+### DIARIO-005-ENTRADA-011 — 11 de junho de 1995 (p. 26)
 > Haverá uma grande festa para celebrar o aniversário de Trisha esta noite. Ela terá oficialmente 21 anos de idade.
 >
 > Trisha e Scott estão se encontrando na cabana atrás da mansão. Eles a chamam de esconderijo secreto. Sei que Vivian não quer que Trisha fique com Scott. Devo contar a ela sobre isso?
 
 **Mencionados:** narradora, Trisha, Scott, Vivian. **Local:** cabana atrás da mansão, conforme o relato. **Leitura:** a narradora afirma que o casal se encontra na cabana; o texto não informa que Vivian tenha descoberto esse encontro.
 
-### DIARIO-005-ENTRADA-021 — 12 de julho de 1995 (p. 27)
+### DIARIO-005-ENTRADA-012 — 12 de julho de 1995 (p. 27)
 > O Dr. Johnson está morto. Ele era o chefe do Hospital Comunitário de Painscreek, bem como o médico da família Roberts. A polícia veio e perguntou se Vivian estaria disposta a ir até a delegacia para um outro interrogatório. Eu estava nervosa, mas Vivian estava muito calma e aceitou o pedido deles. Ela voltou à noite e nos assegurou que tudo estava bem. Ela não teve nada a ver com a morte do Dr. Johnson. Sua morte foi inteiramente por acidente.
 
 **Mencionados:** narradora, Dr. Johnson, Vivian Roberts, policiais. **Locais:** Hospital Comunitário de Painscreek e delegacia, sem endereço. **Leitura crítica:** a afirmação de que Vivian não teve envolvimento e de que a morte foi acidental é atribuída à declaração tranquilizadora de Vivian conforme a narradora; não é confirmação independente da causa da morte.

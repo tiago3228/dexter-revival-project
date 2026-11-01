@@ -1,6 +1,6 @@
-# Checklist de conferência visual do PDF — O Caso Vivian Roberts
+# Checklist de conferência visual das imagens-fonte — O Caso Vivian Roberts
 
-> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist não afirma que as páginas foram revisadas; registra o que precisa ser conferido e permite acompanhar a revisão futura.
+> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist registra duas passadas visuais pelas imagens PNG do ZIP original do usuário, incluindo uma segunda conferência palavra por palavra do texto transcrito. A transcrição diplomática integral ainda não está concluída onde há manuscritos sobrepostos, cortes ou leituras incertas.
 
 ## Estados permitidos
 
@@ -12,33 +12,36 @@
 
 Não usar **CONFERIDO** só porque o OCR parece coerente. Se não houver acesso à imagem da página, o estado continua PENDENTE.
 
-## Ordem recomendada
+## Ordem de consolidação após o cotejo
 
-1. **Páginas 70–116 de maior risco:** páginas com colunas misturadas, cartas incompletas, datas sensíveis ou documentos citados mas ausentes.
-2. **Páginas 41–69:** confirmar resumos de trabalho e separar texto literal de interpretação.
-3. **Páginas 1–40:** recuperar/verificar as páginas sem transcrição independente completa no repositório.
-4. Só depois consolidar cronologia, IDs de evidência, locais de descoberta e requisitos de puzzles.
+1. **Páginas 70–116:** expandir as camadas manuscritas residuais, resolver transcrições parciais e preservar os documentos citados mas ausentes.
+2. **Páginas 41–69:** completar trechos manuscritos/ilegíveis e separar texto literal de interpretação.
+3. **Páginas 1–40:** completar transcrições de trabalho onde houver palavras visíveis ainda não registradas.
+4. Só depois consolidar cronologia, IDs de evidência, locais de descoberta e requisitos de puzzles. A segunda conferência visual das 116 capturas já foi feita; estes passos tratam do conteúdo residual, não de reabrir o que já foi cotejado.
 
 ## Registro por lote
 
+> As páginas abaixo são números de referência dos OCRs/transcrições; o original disponível nesta etapa é `ThePainscreekKilling.zip` com 116 capturas PNG, e não um PDF contínuo. O mapa conteúdo–imagem está em [transcricoes-imagens-zip/README.md](./transcricoes-imagens-zip/README.md).
+
 | Lote | Estado inicial | Campos obrigatórios a conferir | Observações |
 |---|---|---|---|
-| pp. 1–12 | PENDENTE | Título do diário, autor, datas, texto, paginação e duplicatas | O repositório não contém transcrição independente completa deste lote. |
-| pp. 13–27 | PENDENTE | Autoria de DIARIO-005, texto, datas e seleção lateral | Mary Martinez é apenas autoria sugerida pela barra lateral; verificar no corpo. |
-| pp. 28–40 | PENDENTE | Autoria de DIARIO-007, datas, pronomes, nomes e trechos riscados | Matthew/Father Matthew e Father Calvin devem continuar separados até prova. |
-| pp. 41–52 | PENDENTE | Datas, entradas lado a lado, autoria e páginas repetidas | pp. 49–51 foram descritas como possíveis duplicatas visuais; confirmar. |
-| pp. 53–62 | PENDENTE | Relato de Andrew, cronologia, nomes e distinção entre fala e fato | A conversa atribuída a Andrew é testemunho indireto no diário de Scott. |
-| pp. 63–69 | PENDENTE | Relatórios, cartas, cronologia e limites dos resumos | Conferir cada detalhe na imagem antes de integrar ao grafo. |
-| pp. 70–74 | PENDENTE | Texto de Trisha/Vivian, datas e limites de cada entrada | Confirmar a leitura de EV-073-01 e EV-074-01. |
-| p. 75 | PENDENTE | Ordem das entradas/colunas, cabeçalho/ano e texto completo | Dois itens provisórios (EV-075-01 e EV-075-02) devem continuar separados se forem trechos distintos. |
-| pp. 76–81 | PENDENTE | Datas, autores, grafias e texto integral | Não converter opiniões de Wanda em fatos sobre Sofia. |
-| pp. 82–88 | PENDENTE | Horários, autor da notícia, fonte da testemunha, palavras exatas e sequência | Comparar notícia, declaração atribuída a Scott e estimativa de morte sem assumir independência. |
-| pp. 89–90 | PENDENTE | Ordem de colunas, destinatário, cabeçalho, datas e texto do relatório | Confirmar transferência de James Howard e relatório do xerife; OCR pode misturar colunas. |
-| pp. 91–96 | PENDENTE | Remetente, destinatário, assinatura, cabeçalho e campos de formulários | p. 91: remetente não identificado; pp. 93–95: possível mistura de legenda/carta/campos. |
-| p. 97 | PENDENTE | Valores, moeda, período, método e autoria da alegação financeira | Não tratar o valor como desvio comprovado sem documentação de suporte. |
-| pp. 98–104 | PENDENTE | Texto integral, assinaturas, datas, código 0318, ordem dos documentos | p. 102 está truncada no OCR; p. 100 menciona ameaça cujo conteúdo não está transcrito; p. 104 deve ser uma única evidência EV-104-01. |
-| pp. 105–111 | PENDENTE | Datas/horas, nomes, colunas, entradas de segurança e registro da pousada | p. 105: confirmar “Timothy Scott” e o trecho da mulher molhada; pp. 106–107: intruso e fita desaparecida; pp. 110–111: autoria dos registros. |
-| pp. 112–116 | PENDENTE | Ordem das colunas, autor, datas, nomes, fotografias e texto incompleto | Não reconstruir trechos ilegíveis nem inferir o conteúdo da fotografia citada na p. 116. |
+| pp. 1–12 | EM REVISÃO | Título do diário, autor, datas, texto, paginação e duplicatas | Segunda passada palavra por palavra feita nas partes transcritas; manuscritos sobrepostos permanecem incompletos. |
+| pp. 13–17 | EM REVISÃO | Texto, datas, autoria e manuscritos | Capturas mostram Derrick Tyler selecionado; atribuição corrigida. Segunda passada feita; parte do manuscrito segue ilegível. |
+| pp. 21–27 | EM REVISÃO | Texto, datas, autoria e seleção lateral | Segunda passada feita; corrigida a leitura impressa de mary3 e expandidas notas manuscritas legíveis. |
+| pp. 28–40 | EM REVISÃO | Autoria de DIARIO-007, datas, pronomes, nomes e trechos riscados | Segunda passada feita; Matthew/Father Matthew e Father Calvin permanecem distintos. Anotações cobertas seguem incertas. |
+| pp. 41–52 | EM REVISÃO | Datas, entradas lado a lado, autoria e páginas repetidas | Segunda passada feita; confirmados os pares scott12/15, scott13/16 e scott14/17. |
+| pp. 53–62 | EM REVISÃO | Relato de Andrew, cronologia, nomes e distinção entre fala e fato | Segunda passada feita; a conversa atribuída a Andrew continua sendo testemunho indireto no diário de Scott. Manuscritos residuais seguem em revisão. |
+| pp. 63–69 | EM REVISÃO | Relatórios, cartas, cronologia e limites dos resumos | Segunda passada feita; completar os trechos ainda parciais e não integrar inferências como fatos. |
+| pp. 70–74 | EM REVISÃO | Texto de Trisha/Vivian, datas e limites de cada entrada | Segunda passada feita; manuscritos sobrepostos e limites de cada entrada continuam documentados. |
+| p. 75 | EM REVISÃO | Ordem das entradas/colunas, cabeçalho/ano e texto completo | Segunda passada feita; manter EV-075-01 e EV-075-02 separados enquanto a imagem não provar que são o mesmo trecho. |
+| pp. 76–81 | EM REVISÃO | Datas, autores, grafias e texto integral | Segunda passada feita; não converter opiniões de Wanda em fatos sobre Sofia; há manuscritos sobrepostos ainda ilegíveis. |
+| pp. 82–88 | EM REVISÃO | Horários, autor da notícia, fonte da testemunha, palavras exatas e sequência | Segunda passada feita; analisar notícia, declaração atribuída a Scott e estimativa de morte sem assumir independência entre fontes. |
+| pp. 89–90 | EM REVISÃO | Ordem de colunas, destinatário, cabeçalho, datas e texto do relatório | Segunda passada feita; doc1 é a transferência de James Howard e doc2 o relatório policial de Vivian; manter atenção à ordem das colunas. |
+| pp. 91–96 | EM REVISÃO | Remetente, destinatário, assinatura, cabeçalho e campos de formulários | Segunda passada feita; p. 95 confirma telefone (874) 499-7532 e contratação 08/05/1973; outros campos/documentos continuam em revisão. |
+| p. 97 | EM REVISÃO | Valores, moeda, período, método e autoria da alegação financeira | Não tratar o valor como desvio comprovado sem documentação de suporte. |
+| pp. 98–104 | EM REVISÃO | Texto integral, assinaturas, datas, código 0318, ordem dos documentos | p. 102 está truncada no OCR; p. 100 menciona ameaça cujo conteúdo não está transcrito; p. 104 deve ser uma única evidência EV-104-01. |
+| pp. 105–111 | EM REVISÃO | Datas/horas, nomes, colunas, entradas de segurança e registro da pousada | Segunda passada feita; manter relatos e entradas de segurança atribuídos à fonte, com os cortes/trechos incertos registrados. |
+| pp. 112–116 | EM REVISÃO | Ordem das colunas, autor, datas, nomes, fotografias e texto incompleto | Segunda passada feita; não reconstruir manuscritos ilegíveis nem inferir o conteúdo da fotografia citada na p. 116. |
 
 ## Ficha de conferência para cada documento
 
@@ -90,20 +93,34 @@ Não fechar uma rota investigativa nem criar puzzle obrigatório antes que os do
 
 
 ## Prioridades acrescentadas — OCR das páginas 31–69
-- [ ] Conferir páginas 31–42, especialmente colunas e datas.
+- [x] Fazer segunda conferência das partes transcritas nas páginas 31–42; colunas/datas cotejadas, com manuscritos residuais ainda em revisão.
 - [x] Inspecionar páginas 43 e 55: ambas têm texto legível nas imagens, apesar da falha de OCR; atualizar inventário e organização.
-- [ ] Comparar páginas 46–48 com 49–51 para confirmar duplicatas.
-- [ ] Conferir a narrativa atribuída a Andrew na p. 54 e a ordem de entradas na p. 56.
-- [x] Registrar na p. 60 a anotação visual “Sala de segurança: 005241 (Mansão?)”.
-- [ ] Conferir com ampliação adicional os nomes e campos fragmentários das páginas 58–62, especialmente p. 61–62.
-- [ ] Confirmar o código 44871 na p. 64 e a frase truncada na p. 69.
+- [x] Comparar páginas 46–48 com 49–51: confirmados os pares duplicados scott12/15, scott13/16 e scott14/17.
+- [x] Cotejar a narrativa atribuída a Andrew na p. 54 e a ordem de entradas na p. 56; manter a narrativa como testemunho indireto de Scott.
+- [x] Registrar na p. 60 a anotação visual “Sala de segurança: 025241 (Mansão?)”.
+- [x] Fazer segunda conferência dos nomes/campos visíveis nas páginas 58–62; os fragmentos ilegíveis e o corte de steven1 permanecem descritos no relatório.
+- [x] Confirmar 44871 na p. 64 e registrar os limites da frase cortada na p. 69 sem completá-la por inferência.
 
 
 ## Resultado da primeira inspeção visual — páginas 31–69 (12/10/2026)
 
-- [x] O PDF original foi aberto a partir de `IMAGENS DE PAINSCREEK.zip`; foram inspecionadas as imagens das páginas 31–69.
+- [x] As imagens PNG originais do ZIP enviado pelo usuário foram abertas; os rótulos 31–69 foram associados por conteúdo e data, não pela ordem do ZIP.
 - [x] Corrigida a falsa marcação de “sem texto OCR” para as páginas 43 e 55: ambas exibem texto legível que o OCR omitiu.
-- [x] Recuperada a anotação da página 60: “Sala de segurança: 005241 (Mansão?)”.
+- [x] Recuperada a anotação da página 60: “Sala de segurança: 025241 (Mansão?)”.
 - [x] Confirmado visualmente que as páginas 49–51 repetem o conteúdo das páginas 46–48, respectivamente, no material mostrado.
 - [x] Confirmado visualmente o código **44871** na página 64.
-- [ ] A transcrição literal de cada página ainda requer revisão ampliada de caracteres pequenos e manuscritos; esta inspeção corrige omissões evidentes, mas não declara cada palavra de todas as páginas validada.
+- [ ] A transcrição literal de cada página ainda requer revisão ampliada de caracteres pequenos e manuscritos; esta passada não declara cada palavra de todas as páginas validada.
+
+
+## Resultado da primeira passada visual das 116 imagens — 01/11/2026
+
+- [x] Transcrições visuais preliminares produzidas para os 116 PNGs do ZIP original e organizadas por grupo.
+- [x] Mapeamento das capturas às páginas de referência registrado em [índice e mapa do ZIP](./transcricoes-imagens-zip/README.md).
+- [x] Corrigidas atribuições/dados incompatíveis com as capturas: autoria de pp. 13–17, código da p. 60, data/código da p. 64 e data da p. 84.
+
+## Resultado da segunda conferência independente das 116 imagens — 01/11/2026
+
+- [x] Cotejadas individualmente as 116 capturas PNG com as transcrições de trabalho, em 16 grupos; todas abriram e não houve falhas de cobertura visual.
+- [x] Aplicadas as correções legíveis em transcrições por grupo; a lista por arquivo, os casos sem divergência e as limitações remanescentes estão em [segunda-conferencia-116-imagens.md](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md).
+- [x] Confirmados os pares repetidos de Scott: scott12/15, scott13/16 e scott14/17.
+- [ ] A revisão diplomática integral ainda não terminou: manuscritos encobertos, cortes e leituras prováveis permanecem em aberto. Manter os lotes afetados como EM REVISÃO; não inferir texto nem declarar CONFERIDO por extrapolação.

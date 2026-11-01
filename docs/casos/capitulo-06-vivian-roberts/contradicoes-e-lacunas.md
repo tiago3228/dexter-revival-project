@@ -15,7 +15,7 @@
 
 | Questão | Fonte/nota | Cuidado necessário |
 |---|---|---|
-| DIARIO-005, pp. 13–27 | Barra lateral sugere Mary Martinez, mas o corpo não identifica a autora com segurança. | Autoria provisória; não publicar como fato até conferir imagem. |
+| Transcrição recebida das pp. 13–17 | O texto recebido atribuía o diário a Mary; as capturas originais `derrick6.png`–`derrick10.png` mostram Derrick Tyler selecionado e correspondem às entradas. | A atribuição foi corrigida para continuação de DIARIO-004 (Derrick); a seleção é da interface, não assinatura textual. Mary aparece selecionada nas capturas de pp. 21–27. |
 | DIARIO-007, pp. 28–32 | Barra lateral sugere Matthew Brooks. | Não confundir automaticamente Matthew/Father Matthew com Father Calvin Bennett. |
 | “Mathew” vs. “Matthew” | Grafias divergentes em notas de trabalho. | Preservar a grafia visível em cada fonte até confirmar se é erro de OCR ou pessoa diferente. |
 | Pronomes de Andrew | Algumas passagens usam pronomes sem referência inequívoca. | Não associar automaticamente a Sofia, Scott ou outra pessoa. |
