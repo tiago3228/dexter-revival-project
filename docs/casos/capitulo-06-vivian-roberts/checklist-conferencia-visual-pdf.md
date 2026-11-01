@@ -1,6 +1,6 @@
 # Checklist de conferência visual das imagens-fonte — O Caso Vivian Roberts
 
-> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist registra duas passadas visuais pelas imagens PNG do ZIP original do usuário, incluindo uma segunda conferência palavra por palavra do texto transcrito. A transcrição diplomática integral ainda não está concluída onde há manuscritos sobrepostos, cortes ou leituras incertas.
+> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist registra três passadas visuais pelas imagens PNG do ZIP original do usuário: inspeção inicial, cotejo palavra por palavra e auditoria independente de omissões/leituras. A transcrição diplomática integral ainda não está concluída onde há manuscritos sobrepostos, cortes ou leituras incertas.
 
 ## Estados permitidos
 
@@ -111,6 +111,14 @@ Não fechar uma rota investigativa nem criar puzzle obrigatório antes que os do
 - [x] Confirmado visualmente o código **44871** na página 64.
 - [ ] A transcrição literal de cada página ainda requer revisão ampliada de caracteres pequenos e manuscritos; esta passada não declara cada palavra de todas as páginas validada.
 
+
+
+## Resultado da terceira auditoria independente das 116 imagens — 01/11/2026
+
+- [x] As 116 capturas foram comparadas novamente, em 16 grupos, especificamente para localizar palavras/fragmentos legíveis omitidos ou incorretos nas transcrições.
+- [x] Aplicadas correções e inclusões sustentadas em Bernard, Charles, Derrick, Dorothy, Mary, Matthew, Scott, Steven, Trisha, Vivian, jornais, documentos e outros registros; o detalhe por grupo está em [terceira-conferencia-116-imagens.md](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md).
+- [x] Um possível achado em Derrick10 foi rejeitado como falso positivo, pois “com o padre Matthew” já consta corretamente na transcrição.
+- [ ] A transcrição diplomática integral continua aberta para manuscritos sobrepostos, fragmentos cortados e áreas de baixa confiança; manter esses registros como EM REVISÃO.
 
 ## Resultado da primeira passada visual das 116 imagens — 01/11/2026
 

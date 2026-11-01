@@ -1,13 +1,13 @@
 # Análise documental — páginas 110–116
 
-**Fonte:** *The Painscreek Killing.pdf*, páginas 110–116 (numeração do PDF).
-**Método:** inspeção visual das capturas do PDF e OCR auxiliar. Este arquivo é uma análise documental, não uma transcrição literal. Corrigi apenas erros evidentes de OCR; datas e relações devem ser conferidas com as páginas anteriores quando houver conflito.
-**Status:** leitura das sete páginas finais concluída. As páginas 110–111 são entradas de um livro de registro; as páginas 112–116 exibem entradas de diário atribuídas a Dorothy Patterson no acervo do jogo.
+**Fonte textual:** transcrição/OCR de trabalho das páginas de referência 110–116; imagens PNG correspondentes do `ThePainscreekKilling.zip` foram associadas por conteúdo/data.
+**Método:** análise documental baseada na transcrição/OCR e no cotejo das capturas PNG do ZIP; este arquivo não é transcrição literal. Datas e relações devem ser conferidas com as fontes página a página e suas camadas.
+**Status:** leitura de trabalho das sete páginas de referência finais cotejada com as capturas; manuscritos sobrepostos ainda não foram transcritos integralmente. As páginas 110–111 são entradas de um livro de registro; 112–116 exibem entradas atribuídas a Dorothy Patterson.
 
 ## Página 110 — Livro de registro da pousada
 **20 de março de 1997:** uma entrada menciona que o detetive particular Steven Moss está em Painscreek para investigar a morte de Vivian, depois que a polícia encerrou as buscas. O autor lamenta que o caso continue sem solução.
 
-**9 de abril de 1997:** o autor relata ter conversado com Matthew enquanto ele limpava a igreja. Matthew teria dito que deixaria Painscreek em breve porque seus serviços já não seriam necessários. A entrada menciona que as mortes recentes e o destino do filho adotivo Scott o afetaram. O autor questiona se Scott realmente matou Vivian ou se foi acusado injustamente.
+**9 de abril de 1997:** o autor relata ter conversado com Matthew enquanto ele limpava a igreja. Matthew teria dito que deixaria Painscreek em breve porque seus serviços já não seriam necessários. A entrada menciona que as mortes recentes e o destino do filho adotivo Scott o afetaram. Uma anotação manuscrita acrescenta “None of the cases were ever solved.” O autor questiona se Scott realmente matou Vivian ou se foi acusado injustamente; a leitura manuscrita é “was he just unfortunate”, não “is”.
 
 **Valor documental:** registra rumores locais e a percepção de que o caso de Vivian permaneceu sem solução; não é depoimento formal.
 
@@ -61,3 +61,9 @@
 2. Montar uma cronologia única de 1973 a 1997, distinguindo datas do documento e datas dos acontecimentos relatados.
 3. Criar um registro de pistas com fonte, natureza da evidência, grau de certeza e conexões ainda não confirmadas.
 4. Verificar a integração dessas informações na interface do jogo separadamente; a documentação no GitHub não prova que a interface já foi alterada.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 110 / `outros6.png`:** a camada manuscrita contém “None of the cases were ever solved.”; a frase final lê-se “... or was he just unfortunate, and wrongly accused” (a palavra é **was**).
+- **p. 116 / `Dorothy4.png`:** incluído o fragmento manuscrito “they could be together again”; o texto restante sobre o incêndio já consta da transcrição por imagem.
+- Para limites de camada e imagem, consultar `transcricoes-imagens-zip/16-other.md` e `05-dorothy.md`.

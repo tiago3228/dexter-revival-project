@@ -189,7 +189,7 @@ Hoje vi o Matthew enquanto ele limpava a igreja. Ele me pareceu mais magro do qu
 
 20 de março: “murder case was never solved”
 
-9 de abril: trecho manuscrito parcialmente sobreposto ao texto impresso: “... mention the tragedy that befell his adopted son,”; restante sobreposto: [ilegível]. Mais abaixo: “sometimes I wonder if Scott did kill Vivian, or was he just unfortunate, and wrongly accused” [leitura incerta: “was”/“is” antes de “he just unfortunate”].
+9 de abril: trecho manuscrito parcialmente sobreposto ao texto impresso: “... mention the tragedy that befell his adopted son,”; restante sobreposto: [ilegível]. Mais abaixo, anotação legível: “None of the cases were ever solved.” A frase final lê-se: “sometimes I wonder if Scott did kill Vivian, or was he just unfortunate, and wrongly accused” (a palavra é “was”).
 
 ## Cabeçalho, assinatura
 

@@ -1,12 +1,12 @@
-# Transcrição — lotes 01 e 02 (PDF, páginas 1–20)
+# Transcrição de trabalho — lotes 01 e 02 (páginas de referência 1–20)
 
 **Caso de destino:** Capítulo 6 — O Caso Vivian Roberts  
-**Fonte imediata:** transcrição fornecida pelo usuário em 12/10/2026.  
-**Estado de revisão:** texto recebido e organizado; ainda requer conferência visual independente, palavra por palavra, contra as imagens originais antes de ser tratado como transcrição diplomática verificada. As interpretações abaixo são notas de trabalho, não fatos independentes.  
+**Fonte textual imediata:** transcrição/OCR fornecida pelo usuário em 12/10/2026. **Fonte visual conferida:** capturas PNG do `ThePainscreekKilling.zip`, associadas às páginas de referência pelo crosswalk.
+**Estado de revisão:** as capturas correspondentes do ZIP receberam conferência palavra por palavra e auditoria independente; correções pontuais foram incorporadas. Este texto de trabalho ainda não é uma transcrição diplomática integral, especialmente nas camadas manuscritas sobrepostas. As interpretações abaixo são notas de trabalho, não fatos independentes.
 **Regra de preservação:** não completar pronomes, frases truncadas, nomes riscados ou locais que a fonte não identifica. Não converter acusações ou impressões de narradores em prova.
 
 ## DIARIO-001 — Caderno de Andrew Reed
-- **Páginas PDF:** 1–2.
+- **Páginas de referência:** 1–2.
 - **Autor:** Andrew Reed, conforme nome selecionado na lista lateral.
 - **Local físico:** não informado; usar \`LOCAL A DEFINIR NO DESIGN DO JOGO\` se necessário.
 - **Nota:** há escrita cursiva em inglês parcialmente sobreposta ao fundo; não foi separada como camada textual independente.
@@ -42,7 +42,7 @@
 ---
 
 ## DIARIO-002 — Caderno de Bernard Hopkins
-- **Páginas PDF:** 3–5.
+- **Páginas de referência:** 3–5.
 - **Autor:** Bernard Hopkins, conforme nome selecionado na lista lateral.
 - **Local físico:** não informado.
 - **Nota:** na p. 5, “Vivian” aparece riscado, seguido de “Eu não sei quem”; a frase não tem continuação visível nesta página.
@@ -91,7 +91,7 @@
 ---
 
 ## DIARIO-003 — Caderno de Charles Roberts
-- **Páginas PDF:** 6–7.
+- **Páginas de referência:** 6–7.
 - **Autor:** Charles Roberts, conforme nome selecionado na lista lateral.
 - **Local físico:** não informado.
 
@@ -124,7 +124,7 @@
 ---
 
 ## DIARIO-004 — Caderno de Derrick Tyler
-- **Páginas PDF:** 8–12.
+- **Páginas de referência:** 8–12.
 - **Autor:** Derrick Tyler, conforme nome selecionado na lista lateral.
 - **Local físico:** não informado.
 
@@ -263,7 +263,7 @@
 
 ---
 ## DIARIO-006 — Caderno de James Howard
-- **Páginas PDF:** 18–20.
+- **Páginas de referência:** 18–20.
 - **Autor:** James Howard, conforme seleção visual da lista lateral.
 - **Local físico:** não informado.
 
@@ -297,3 +297,11 @@
 
 ## Nota de controle
 A transcrição recebida pretende reproduzir o texto impresso em português legível das páginas 1–20. A escrita cursiva em inglês parcialmente sobreposta não foi incluída como camada independente por não ser possível separar todas as palavras com segurança. A sequência da p. 5 permanece exatamente incompleta: “Vivian” riscado, seguido de “Eu não sei quem”. Antes de integrar trechos ao jogo, conferir visualmente pontuação, grafia, datas, seleção lateral dos autores e correspondência de cada entrada com a imagem original.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 3 / `bernard1.png`:** a camada impressa foi corrigida para “Charles já fez viagens mais longas que essa”; ver a transcrição por imagem em `transcricoes-imagens-zip/02-bernard.md`.
+- **p. 7 / `charles1.png`:** completado o fragmento manuscrito legível “good mother. I’m grateful for that.”; as linhas manuscritas sob o impresso seguem parciais.
+- **p. 11 / `derrick4.png`:** acrescentado apenas o fragmento manuscrito “behind him he extended his right hand with / the stick towards the snake, and slowly”; continuação ilegível.
+
+O cotejo das capturas não torna diplomática a tradução de trabalho deste arquivo; preservar as incertezas e consultar as transcrições por imagem para detalhes de camada e interface.

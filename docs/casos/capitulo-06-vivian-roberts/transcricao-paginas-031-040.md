@@ -1,15 +1,15 @@
-# Transcrição de trabalho — páginas 31–40 do PDF
+# Transcrição de trabalho — páginas de referência 31–40
 
 **Caso de destino:** Capítulo 6 — O Caso Vivian Roberts  
-**Fonte original declarada:** *The Painscreek Killing.pdf*, páginas 31–40 (numeração do PDF).  
-**Fonte imediata:** conferência das imagens das páginas 31–40 e OCR auxiliar em 12/10/2026.  
+**Fonte textual:** OCR/transcrição de trabalho das páginas de referência 31–40. **Fonte visual:** capturas PNG do `ThePainscreekKilling.zip`, mapeadas por conteúdo/data; veja o crosswalk.
+**Fonte imediata:** imagens PNG do ZIP e OCR auxiliar; os números de página são referências de trabalho, não prova de acesso ao PDF original.
 **Estado:** transcrição de trabalho. O texto foi lido a partir das imagens e auxiliado por OCR; trechos com reconhecimento corrompido foram normalizados somente quando a leitura era clara. Pontos incertos estão assinalados e precisam de ampliação adicional antes de serem tratados como texto final do jogo.
 
 ---
 
 ## DIARIO-007 — Caderno atribuído a Matthew Brooks (continuação)
 
-**Páginas PDF:** 31–34.  
+**Páginas de referência:** 31–34.
 **Autoria:** atribuída a Matthew Brooks pela seleção lateral do caderno; confirmar no material original. Não presumir que Matthew Brooks e o padre Matthew sejam a mesma pessoa sem evidência específica.
 
 ### DIARIO-007-ENTRADA-007 — 16 de setembro de 1975 (p. 31)
@@ -149,3 +149,9 @@
 - Não inferir que a pessoa chamada Vincent em outro relato seja Scott sem documentação que confirme a cadeia de identidade.
 - A referência a uma sala secreta na mansão é uma expectativa de Scott, não confirmação independente de que ela exista.
 - Não confundir a menção ao espaço secreto no quarto de Scott (p. 35) com a possível sala secreta da mansão (p. 40); são referências distintas na fonte.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 31 / `matthew4.png`:** anotação inglesa legível em fragmentos: “I will miss the people here. At the same time,” e “Was she forced? Is she hiding”; continuação coberta.
+- **p. 34 / `matthew7.png`:** registrado o fragmento manuscrito “What should I do now? I know I should”; a continuação segue encoberta.
+- A transcrição literal dos fragmentos e as limitações estão em `transcricoes-imagens-zip/08-matthew.md`.

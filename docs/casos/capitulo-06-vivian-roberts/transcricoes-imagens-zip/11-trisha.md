@@ -83,6 +83,7 @@ Ele se importa com o que eu penso. Ele
 me faz feliz.
 
 ### Manuscrito / anotação sobreposta (página esquerda)
+Fragmento anterior legível no manuscrito: “to do.”
 He cares about
 what I think. He makes me
 happy
@@ -114,7 +115,7 @@ Estou tão feliz que agora o Scott trabalha
 na mansão, embora ter o Andrew como
 supervisor dele provavelmente não seja
 muito boa ideia. Ele vive bêbado. Não
-quero que ele influencie o Scott de uma
+quero que ele influencie o Scott de um
 jeito ruim.
 
 ### Manuscrito / anotação sobreposta (página esquerda)
@@ -206,8 +207,7 @@ não tricoto um cachecol para ele?
 Acho que vou visitá-lo hoje.
 
 ### Manuscrito / anotação sobreposta (página esquerda)
-I hope he should knit
-a scarf for Scott?
+Should I help mom? I should knit a scarf for Scott?
 
 I think I'll visit him today
 
@@ -233,8 +233,8 @@ Será que a mamãe falou com o padre
 Matthew? É por isso que ele também nos
 
 ### Manuscrito / anotação sobreposta (página esquerda)
-[ilegível]
-class as me. What does that
+[início encoberto]
+class as me. What does that mean?
 
 ### Texto impresso / corpo (página direita)
 proibiu de nos encontrarmos? Será que

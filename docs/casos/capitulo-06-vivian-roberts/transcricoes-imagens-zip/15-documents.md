@@ -159,7 +159,7 @@ O Hospital Comunitário de Painscreek tem a recuperação do paciente como prior
 
 Dr. Henry Johnson
 
-**Camada inglesa subjacente:** texto inglês parcialmente visível por trás do impresso português, [ilegível]. Fragmentos visíveis: “Vivian’s situation is stabilizing”; “I suggest that you try and”; “Please consider addressing this issue with your mother”; data aparentemente “August 16, 1975” [leitura incerta].
+**Camada inglesa subjacente:** texto inglês parcialmente visível por trás do impresso português, [ilegível]. Fragmentos visíveis: “Vivian’s situation is stabilizing”; “I suggest that you try and”; “Please consider addressing this issue with your mother”; data legível: “August 16, 1975”.
 
 **Interface/sidebar:** CADERNO; CARTA/DOCUMENTO; Laudo médico de Vivian (selecionado); lista de outros itens visível.
 

@@ -1,6 +1,6 @@
 # Transcrição visual — diário de Scott Brooks (23 capturas)
 
-Fonte: imagens do ZIP original do usuário. Esta é uma primeira passada visual, não uma revisão diplomática final. O mapeamento às páginas de referência está no [índice do conjunto](./README.md).
+Fonte: imagens do ZIP original do usuário. O conjunto recebeu cotejo palavra por palavra e auditoria independente; leituras seguras foram incorporadas, mas ainda não é revisão diplomática integral. O mapeamento às páginas de referência está no [índice do conjunto](./README.md) e os limites estão no relatório da terceira conferência.
 
 Transcrição baseada na inspeção visual individual de cada imagem. Não atribuo paginação de PDF. O texto principal impresso está em português; as anotações sobrepostas aparecem em inglês, em escrita manuscrita muito tênue. Onde não foi possível distinguir palavras com segurança, isso está indicado explicitamente.
 
@@ -162,10 +162,7 @@ Hoje é Dia dos Namorados. Eu queria passar o dia com a Trisha, mas o Charles me
 Acabou que eu até gostei de estar com ele. Me sinto confortável conversando com ele.
 
 **Manuscrito/segunda camada (inglês):**
-[leitura incerta: texto manuscrito sobreposto à primeira entrada]
-I actually enjoyed
-being with him, I feel comfortable talking
-[to him.]
+Manuscrito/segunda camada legível: “I actually enjoyed being with him, I feel comfortable talking to him.”
 
 **Cabeçalho/data/assinatura:** Data impressa: Domingo, 14 de fevereiro de 1993. Nenhuma assinatura visível.
 
@@ -521,7 +518,7 @@ Manuscrito parcialmente oculto pelo texto impresso; demais partes [ilegível].
 > Será que é por causa do caso que ninguém fala sobre isso?
 
 **Manuscrito/segunda camada (inglês):**
-> [leitura incerta: ... started a / new life in another place.]
+> “started a new life in another place.” (trecho legível; scott17.png repete conteúdo do conjunto scott12–scott14, portanto não constitui testemunho independente.)
 >
 > I wonder if the affair was the reason everyone's quiet about it.
 
@@ -697,7 +694,7 @@ que o padre Calvin não se
 incomodaria. Afinal, foi ele quem me
 salvou.
 
-**Manuscritos/anotações:** Escrita cursiva em inglês sobreposta ao impresso, parcialmente legível: [leitura incerta: “After he left, I came to my room and cried.”]; demais trechos parcialmente encobertos/ilegíveis, incluindo anotação nas linhas sobre o poço e sobre o padre Calvin.
+**Manuscritos/anotações:** Escrita cursiva em inglês sobreposta ao impresso. Trecho legível: “After he left, I came to my room and cried.” Demais trechos parcialmente encobertos/ilegíveis, incluindo anotações sobre o poço e o padre Calvin.
 
 **Interface/sidebar:** CADERNO; Bernard Hopkins; Charles Roberts; Derrick Tyler; Dorothy Patterson; James Howard; Mary Martinez; Matthew Brooks; Scott Brooks; Steven Moss; Trisha Roberts; Vivian Roberts; Wanda Tyler. Anos: 1985; 1990; 1993-1; 1993-2; 1994; 1995. Scott Brooks aparece selecionado. Ícones: ×, seta para a esquerda e seta para a direita.
 
@@ -737,7 +734,7 @@ Trisha é minha meia-irmã. Falei que
 eu não sabia o que fazer agora. Ele
 ouviu em silêncio.
 
-**Manuscritos/anotações:** Escrita cursiva em inglês sobreposta. Página esquerda, ao fim: [leitura incerta: “I don't know what to say to her, but I know we cannot be together anymore.”]. Página direita: [leitura incerta: “I know that I don't know what to do now. He listened and didn't speak.”]; trecho manuscrito entre as frases impressas parcialmente ilegível.
+**Manuscritos/anotações:** Escrita cursiva em inglês sobreposta. Página esquerda, ao fim, legível: “I don't know what to say to her, but I know we cannot be together anymore.” Página direita, legível: “I know that I don't know what to do now. He listened and didn't speak.” O trecho manuscrito entre essas frases permanece parcialmente ilegível.
 
 **Interface/sidebar:** CADERNO; Bernard Hopkins; Charles Roberts; Derrick Tyler; Dorothy Patterson; James Howard; Mary Martinez; Matthew Brooks; Scott Brooks; Steven Moss; Trisha Roberts; Vivian Roberts; Wanda Tyler. Anos: 1985; 1990; 1993-1; 1993-2; 1994; 1995. Scott Brooks aparece selecionado. Ícones: × e seta para a esquerda.
 

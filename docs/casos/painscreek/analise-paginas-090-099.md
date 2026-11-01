@@ -1,6 +1,6 @@
 # Dossiê de leitura — páginas 90–99
 
-**Fonte:** *The Painscreek Killing.pdf*, páginas 90–99 do arquivo enviado pelo usuário.  
+**Fonte textual:** OCR/transcrição recebida, associada às páginas de referência 90–99; a conferência visual usa capturas do `ThePainscreekKilling.zip` mapeadas por conteúdo/data.
 **Tipo de registro:** resumo documental e notas investigativas, não transcrição literal.  
 **Critério:** não preencher lacunas de OCR nem tratar alegações contidas em documentos como fatos judicialmente comprovados.
 
@@ -65,3 +65,7 @@ Carta de 2 de fevereiro de 1994, assinada pela irmã Rachel Davis, do Orfanato S
 - Página 91: recuperar a continuação da carta fora da área legível.
 - Página 93: separar os documentos sobrepostos e confirmar autora, título e final.
 - Página 94: confirmar visualmente o nome/título do documento adjacente, que aparece sobreposto.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 94 / `doc6.png`:** a data impressa na camada inglesa subjacente é legível como “August 16, 1975”. A data não resolve sozinha a relação temporal com outros registros clínicos. Ver `transcricoes-imagens-zip/15-documents.md`.

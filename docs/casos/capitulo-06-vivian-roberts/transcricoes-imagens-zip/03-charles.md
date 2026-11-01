@@ -90,7 +90,7 @@ Eu sabia que nosso relacionamento não seria mais tão próximo quanto era, mas 
 `... since ...` [ilegível]
 `... I think it was because of`
 `... didn't leave me. She is a g...` [ilegível]
-`good mother. I'm grateful ...` [ilegível]
+`good mother. I'm grateful for that.`
 
 ## Cobertura
 

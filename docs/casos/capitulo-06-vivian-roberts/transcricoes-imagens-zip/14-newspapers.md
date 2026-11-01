@@ -2,7 +2,7 @@
 
 ## Texto impresso — camada inglesa do jornal (fundo)
 
-**[cabeçalho parcialmente encoberto]** THE PAINSCREEK HERALD
+**THE PAINSCREEK HERALD**
 
 **Manchete:** VIVIAN ROBERTS, SUCCESSFUL [trecho encoberto] OF EX-MAYOR FOUND DEAD IN FRONT OF HER HOME
 
@@ -50,7 +50,7 @@ A impressão inglesa ao fundo é visível em fragmentos, mas encoberta pelo text
 
 ## Texto impresso — camada inglesa do jornal (fundo)
 
-**[cabeçalho parcialmente encoberto]** THE PAINSCREEK HERALD
+**THE PAINSCREEK HERALD**
 
 **Manchete:** SCOTT BROOKS, SON OF [ilegível] CHURCH PASTOR'S [ilegível] SON SUSPECTED FOR KILLING [ilegível] ROBERTS
 

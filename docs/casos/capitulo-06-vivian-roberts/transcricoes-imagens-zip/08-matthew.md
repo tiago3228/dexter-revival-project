@@ -16,7 +16,7 @@ A família Roberts está procurando uma nova empregada. Eu disse à Sra. Roberts
 
 Padre Calvin sempre disse que temos que ajudar aqueles que estão em necessidade. Sofia está precisando, e tenho certeza de que ela ficará feliz em ter esse emprego.
 
-**Manuscrito / anotação:** há escrita cursiva em inglês sob o texto impresso em ambas as páginas; fica parcialmente encoberta pelo texto impresso e não é integralmente legível: [ilegível].
+**Manuscrito / anotação:** escrita cursiva em inglês sob o texto impresso. Fragmento legível na página esquerda: “To be honest, I would prefer to have a real family with people whom I can”; o restante fica coberto/cortado e não foi completado.
 
 **Interface (sidebar/seleção):** CADERNO; Bernard Hopkins; Charles Roberts; Derrick Tyler; Dorothy Patterson; James Howard; Mary Martinez; Matthew Brooks (selecionado); Scott Brooks; Steven Moss; Trisha Roberts; Vivian Roberts; Wanda Tyler. Seletor de anos: 1971, 1975, 1995. Ícone de fechar e seta para avançar.
 
@@ -32,7 +32,7 @@ Desde que começou o trabalho na mansão, Sofia se estabeleceu bem. Sempre que e
 
 Hoje foi o dia de folga de Sofia. Nós comemos na cafeteria Moon novamente. Eu não consigo enjoar deste lugar. A comida é deliciosa, a atmosfera é relaxante, e o café é ótimo! Talvez seja tudo por causa da companhia de Sofia, ainda assim, eu amo ficar por aqui. Este é definitivamente um dos meus lugares favoritos em Painscreek, seguido de perto pela Igreja e a livraria Little Big Books.
 
-**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto impresso, parcialmente encoberta e não integralmente legível: [ilegível].
+**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto impresso. Fragmentos legíveis: “Since starting the job at the mansion, Sofia has settled in nicely.”; “This is just like the orphanage days, and I feel extremely comfortable with her.” Outras partes estão encobertas e não foram completadas.
 
 **Interface (sidebar/seleção):** CADERNO; Bernard Hopkins; Charles Roberts; Derrick Tyler; Dorothy Patterson; James Howard; Mary Martinez; Matthew Brooks (selecionado); Scott Brooks; Steven Moss; Trisha Roberts; Vivian Roberts; Wanda Tyler. Seletor de anos: 1971, 1975, 1995. Rótulo “LT” junto à seta para a esquerda; ícone de fechar.
 
@@ -54,7 +54,7 @@ Quando o padre Calvin me enviou para cá pela primeira vez, ele perguntou se eu 
 
 Vou avisar ao padre Calvin sobre a minha decisão.
 
-**Manuscrito / anotação:** escrita cursiva em inglês sob o texto impresso, parcialmente encoberta; trechos não legíveis com segurança: [ilegível].
+**Manuscrito / anotação:** escrita cursiva em inglês sob o texto impresso. Trechos legíveis: “This missionary trip is harder than I thought.”; “What can I do?”; “I will let Father Calvin know about my decision.” Outras partes permanecem encobertas/ilegíveis.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975, 1995 (1975 selecionado). Seta para avançar e ícone de fechar.
 
@@ -74,7 +74,7 @@ Padre Calvin me convocou esta manhã e me disse que Sofia havia deixado Painscre
 
 Ela foi forçada? Ela está escondendo alguma coisa? Eu simplesmente não consigo acreditar que Sofia se foi sem me dizer nada. Algo deve ter acontecido com ela, algo que ela não podia me contar.
 
-**Manuscrito / anotação:** escrita cursiva em inglês sob o corpo impresso, sobretudo na página direita; parcialmente encoberta: [ilegível].
+**Manuscrito / anotação:** escrita cursiva em inglês sob o corpo impresso. Fragmentos legíveis: “I will miss the people here. At the same time,”; “Was she forced? Is she hiding”. O restante das frases fica parcialmente encoberto; não foi reconstruído.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975 (selecionado), 1995. Setas para as páginas e ícone de fechar.
 
@@ -122,7 +122,7 @@ O que eu devo fazer agora? Eu sei que deveria perdoá-los, mas é tão difícil.
 
 Eu preciso falar com o Andrew. Eu preciso que ele confesse!
 
-**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto da página esquerda, encoberta em vários trechos: [ilegível].
+**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto da página esquerda. Fragmento legível: “What should I do now? I know I should”; continuação encoberta/ilegível.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975, 1995 (1995 selecionado). Seta para a esquerda e ícone de fechar.
 

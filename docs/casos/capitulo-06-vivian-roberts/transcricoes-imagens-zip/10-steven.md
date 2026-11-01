@@ -17,7 +17,7 @@ Terei que visitar o Orfanato São Patrício amanhã. Fica a um dia de carro daqu
 ## Manuscritos/anotações sobrepostos (inglês)
 Parte do manuscrito fica encoberta pelo texto impresso. Trechos legíveis, na ordem aproximada de leitura:
 
-[ilegível] investigation process [ilegível]
+[prefixo encoberto] “The investigation process is slow.” [continuação encoberta]
 [ilegível] left Painscreek and those [ilegível] moving out.
 [ilegível] things are not quite what they seem. The media didn't have it right.
 At the mansion, I've been too wary and haven't reached out yet.

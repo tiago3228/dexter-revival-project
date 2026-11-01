@@ -1,8 +1,8 @@
-# Transcrição — páginas 80–89 do PDF original
+# Transcrição de trabalho — páginas de referência 80–89
 
-**Fonte:** `IMAGENS DE PAINSCREEK/The Painscreek Killing.pdf`, páginas 80–89 (numeração do PDF).
+**Fonte visual:** `ThePainscreekKilling.zip` (capturas PNG); páginas 80–89 são números de referência ligados por conteúdo/data no crosswalk.
 **Método:** leitura visual ampliada e OCR auxiliar. A acentuação foi normalizada onde o reconhecimento era evidente. Trechos que não aparecem integralmente na captura estão explicitamente marcados; não foram completados por suposição.
-**Status:** transcrição parcial fiel ao conteúdo legível; revisar os finais cortados dos artigos nas páginas 84–87 quando houver captura mais ampla/legível.
+**Status:** transcrição parcial cotejada com as capturas do ZIP; manchetes/cabeçalhos legíveis foram harmonizados. Finais cortados dos artigos e trechos sobrepostos permanecem em revisão.
 
 ## Página 80 — Diário de Wanda Tyler
 
@@ -43,7 +43,7 @@ Vivian de fato era uma pessoa muito respeitada e adorada. Seu sucesso nos negóc
 
 A polícia deteve Scott Brooks ontem à tarde. Ele estava morando na cabana de caça dos Roberts no início da trilha.
 
-Uma testemunha, que no momento prefere não revelar sua identidade, alega ter visto Scott andando para longe da mansão dos Roberts com pressa em direção a Silverlake quando estava indo para casa por volta das 23h30 do dia 19 de julho. Embora Scott parecesse zangado, a testemunha não achou estranho até alguns dias depois, quando viu o artigo de jornal sobre o assassinato de Vivian Roberts. Sentindo-se inquieta quanto à situação, ela ligou para a polícia.
+Uma testemunha, que no momento prefere não revelar sua identidade, alega ter visto Scott andando para longe da mansão dos Roberts com pressa em direção a Silverlake quando estava indo para casa por volta das 23h50 do dia 19 de julho. Embora Scott parecesse zangado, a testemunha não achou estranho até alguns dias depois, quando viu o artigo de jornal sobre o assassinato de Vivian Roberts. Sentindo-se inquieta quanto à situação, ela ligou para a polícia.
 
 Pouco depois da ligação, a polícia chegou à cabana de Scott e o questionou sobre onde estava na noite da morte de Vivian. Scott disse que de fato a encontrou naquela noite, mas que não tinha nada a ver com a morte dela.
 
@@ -142,3 +142,8 @@ Richard O'Connell
 - A notícia da página 83 registra uma alegação de testemunha contra Scott Brooks; trata-se de uma alegação jornalística, não de prova conclusiva.
 - A página 89 documenta a transferência de James Howard para Grand County em maio de 1998. O documento, isoladamente, não explica a motivação administrativa além do declínio populacional indicado na carta.
 - As notícias das páginas 84–87 precisam de nova captura/inspeção para confirmar os finais de texto que não aparecem por completo nas imagens disponíveis.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **pp. 82–83 / `jornal1.png`–`jornal2.png`:** cabeçalho subjacente legível: “THE PAINSCREEK HERALD”.
+- **p. 83:** a captura/transcrição por imagem registra que a testemunha diz ter visto Scott por volta de **23h50** de 19 de julho; esta página de trabalho trazia 23h30 e deve ser corrigida para 23h50. A fala continua sendo relato de testemunha anônima, não prova independente de autoria.

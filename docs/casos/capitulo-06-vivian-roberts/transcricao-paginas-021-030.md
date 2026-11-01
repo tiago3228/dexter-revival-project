@@ -1,10 +1,10 @@
-# Transcrição integral — páginas 21–30 do PDF
+# Transcrição de trabalho — páginas de referência 21–30
 
 **Caso de destino:** Capítulo 6 — O Caso Vivian Roberts  
 **Fonte imediata:** transcrição fornecida pelo usuário em 12/10/2026.  
-**Fonte original declarada:** *The Painscreek Killing.pdf*, páginas 21–30 (numeração do PDF).  
-**Método declarado:** OCR das imagens; correções apenas quando o erro de reconhecimento era evidente; trechos duvidosos assinalados entre colchetes.  
-**Estado de revisão:** transcrição recebida e organizada; ainda requer conferência visual independente, palavra por palavra, contra as imagens originais. Não tratar como transcrição diplomaticamente verificada.  
+**Fonte primária conferida:** `ThePainscreekKilling.zip`, capturas PNG associadas por conteúdo às páginas de referência 21–30; veja o crosswalk em `transcricoes-imagens-zip/README.md`. A cópia do PDF não estava presente nesta revisão.
+**Método:** OCR/transcrição de trabalho cotejados com capturas PNG do ZIP em três passadas visuais; correções seguras estão registradas, mas ainda não é uma transcrição diplomática integral.
+**Estado de revisão:** as capturas correspondentes do ZIP foram cotejadas em passadas visuais, com correções pontuais registradas; este texto de trabalho ainda não é uma transcrição diplomática integral.
 **Regra de preservação:** manter ambiguidades e não transformar declarações dos narradores em fatos comprovados.
 
 ---
@@ -156,3 +156,9 @@
 - O clique ouvido na galeria, a pintura da mulher idosa com faixa branca e o endereço de Dorothy devem ser tratados como pistas a verificar, não como explicações já estabelecidas.
 - Não inferir que Matthew Brooks e o padre Matthew sejam a mesma pessoa sem evidência adicional.
 - Não fixar a localização da missão de 1975 nem posições precisas no mapa sem fonte.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 21 / `mary.png`:** a camada manuscrita começa “So that’s why they are in charge here”; a transcrição por imagem preserva o fragmento adicional.
+- **p. 26 / `mary5.png`:** a camada manuscrita contém “with a white hair band” e “I wonder what is so interesting about this lady.”, além das lacunas assinaladas.
+- **pp. 28–30 / `matthew1.png`–`matthew3.png`:** registrados na transcrição por imagem fragmentos manuscritos legíveis; confira `transcricoes-imagens-zip/08-matthew.md`. As continuações cobertas permanecem em aberto.

@@ -1,6 +1,6 @@
 # Grafo provisório de dependências — O Caso Vivian Roberts
 
-> **Estado:** mapa de trabalho derivado de resumos das páginas 1–69 e OCR das páginas 70–116. Nenhuma ligação abaixo foi confirmada visualmente no PDF. Este documento não define culpado, motivação ou arma e não deve ser usado como solução final.
+> **Estado:** mapa de trabalho derivado de resumos/OCR e de transcrições visuais em revisão; as 116 capturas receberam três passadas, mas arestas e IDs ainda não foram validados item a item. Este documento não define culpado, motivação ou arma e não deve ser usado como solução final.
 
 ## Regras do grafo
 

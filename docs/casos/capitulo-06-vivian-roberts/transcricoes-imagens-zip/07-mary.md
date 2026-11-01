@@ -22,7 +22,7 @@ Eu notei que Charles e Vivian também não ficam muito juntos, mesmo quando ambo
 
 ### Manuscritos / anotações sobrepostos
 
-Há escrita manuscrita em inglês sob o texto impresso das duas páginas. Trechos legíveis, preservando a ordem aproximada: “Everyone treats me well.”; “Dorothy probably is the oldest maid here.”; “She’s always giving me snacks.”; “Bernard, the butler, is so serious, I don’t think I’ve ever seen him smile.”; “Dorothy and Bernard don’t talk much”; “that’s why they are in charge here.”; “Charles and Vivian ... don’t seem happy.”; “What is going on?” Demais palavras cobertas pelo texto impresso ou pouco nítidas: [ilegível].
+Há escrita manuscrita em inglês sob o texto impresso das duas páginas. Trechos legíveis, preservando a ordem aproximada: “Everyone treats me well.”; “Dorothy probably is the oldest maid here.”; “She’s always giving me snacks.”; “Bernard, the butler, is so serious, I don’t think I’ve ever seen him smile.”; “Dorothy and Bernard don’t talk much”; “So that’s why they are in charge here.”; “Charles and Vivian ... don’t seem happy.”; “What is going on?” Demais palavras cobertas pelo texto impresso ou pouco nítidas: [ilegível].
 
 ### Cabeçalho/assinaturas e interface
 
@@ -147,7 +147,7 @@ Trisha e Scott estão se encontrando na cabana atrás da mansão. Eles chamam de
 
 ### Manuscritos / anotações sobrepostos
 
-Manuscrito em inglês sob o texto impresso. Fragmentos legíveis na página esquerda incluem “It’s just a painting of an old woman” e “I wonder ...”; demais palavras sob impressão não podem ser lidas com segurança: [ilegível]. Página direita: há manuscrito parcialmente encoberto; [ilegível].
+Manuscrito em inglês sob o texto impresso. Na página esquerda, o manuscrito legível inclui: “It’s just a painting of an old woman”; “with a white hair band.”; “I wonder what is so interesting about this lady.” Outros trechos sob o impresso não podem ser lidos com segurança: [ilegível]. Página direita: há manuscrito parcialmente encoberto; [ilegível].
 
 ### Cabeçalho/assinaturas e interface
 

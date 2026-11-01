@@ -1,8 +1,8 @@
-# Transcrição de trabalho — páginas 61–69 do PDF
+# Transcrição de trabalho — páginas de referência 61–69
 
 **Fonte:** `ThePainscreekKilling.zip` (116 capturas PNG); páginas de referência 61–69 mapeadas por conteúdo/data.
 **Método:** leitura visual das capturas PNG com OCR auxiliar.
-**Estado:** transcrição de trabalho; primeira passada visual. Corrigir nomes, pontuação e trechos incompletos somente após revisão palavra por palavra. Não tratar anotações de investigação como fatos provados.
+**Estado:** transcrição de trabalho cotejada e auditada em passadas visuais; fragmentos seguros foram harmonizados em adendo. A transcrição diplomática integral e as lacunas de manuscritos continuam em revisão. Não tratar anotações de investigação como fatos provados.
 
 ## Página 61 — nota de caderno sobre Bernard Hopkins
 
@@ -86,3 +86,10 @@ Trisha considera que a mãe a julga por querer ficar perto de Scott e diz que a 
 - [ ] Comparar o lote 70–79 com todas as transcrições integrais anteriores; a cobertura dos lotes 1–50 continua parcial.
 
 Este arquivo é documentação de investigação: **não foi integrado à interface jogável e não houve publicação de nova versão**.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 65 / `trisha2.png`:** recuperado o final manuscrito “to do.”; o restante dessa frase continua encoberto.
+- **p. 66 / `trisha3.png`:** corrigido o impresso para “de um jeito ruim”.
+- **p. 68 / `trisha5.png`:** corrigido o manuscrito para “Should I help mom? I should knit a scarf for Scott?”
+- **p. 69 / `trisha6.png`:** completada a pergunta manuscrita até “What does that mean?”; início da frase permanece encoberto. Ver `transcricoes-imagens-zip/11-trisha.md`.

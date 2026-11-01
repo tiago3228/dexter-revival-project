@@ -1,8 +1,8 @@
-# Transcrição de trabalho — páginas 51–60 do PDF
+# Transcrição de trabalho — páginas de referência 51–60
 
-**Fonte:** `IMAGENS DE PAINSCREEK.zip` → `The Painscreek Killing.pdf`, páginas 51–60 da numeração do PDF.  
+**Fonte visual:** `ThePainscreekKilling.zip` (capturas PNG); páginas 51–60 são números de referência ligados por conteúdo/data no crosswalk.
 **Método:** inspeção visual das páginas renderizadas, com OCR auxiliar para apoiar a leitura.  
-**Estado:** transcrição de trabalho; não é uma edição diplomática final. Grafia, pontuação e pequenos trechos devem ser conferidos novamente quando houver dúvida. Relatos e suspeitas permanecem atribuídos aos respectivos narradores.
+**Estado:** transcrição de trabalho cotejada com capturas e auditada em três passadas; ainda não é edição diplomática integral. Grafia, pontuação e manuscritos cobertos/cortados permanecem em revisão. Relatos e suspeitas continuam atribuídos aos narradores.
 
 ## Página 51 — Scott Brooks — duplicata da página 48
 
@@ -120,3 +120,9 @@ A página mostra a anotação: **“Sala de segurança: 025241 (Mansão?)”**.
 ## Estado do trabalho
 
 Esta transcrição registra a leitura visual e a comparação de duplicatas; não representa integração à interface jogável nem publicação de uma nova versão. Trechos incertos permanecem sinalizados. A etapa seguinte é revisar nomes, pontuação e pequenos detalhes diretamente nas imagens ampliadas e, separadamente, decidir quais evidências confirmadas serão integradas à interface.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 51 / `scott17.png`:** “started a new life in another place.” está legível na camada manuscrita; a página repete conteúdo de `scott14.png` e não é evidência independente.
+- **pp. 56–57 / `scott22.png`–`scott23.png`:** trechos manuscritos anteriormente incertos foram lidos como “After he left, I came to my room and cried.”; “I don’t know what to say to her, but I know we cannot be together anymore.”; “I know that I don’t know what to do now. He listened and didn’t speak.” Outros segmentos seguem encobertos.
+- **p. 58 / `steven.png`:** trecho manuscrito provável “The investigation process is slow.”; prefixo e continuação estão cobertos. Ver `transcricoes-imagens-zip/09-scott.md` e `10-steven.md`.

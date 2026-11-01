@@ -16,7 +16,7 @@
 
 - [x] Fazer uma primeira inspeção visual das imagens das páginas 31–69 e corrigir omissões evidentes do OCR (p. 43, p. 55 e código da p. 60); ver [inventário OCR 31–69](./inventario-ocr-paginas-031-069.md) e [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
 
-- [x] Fazer a primeira passada visual das 116 imagens do ZIP original e cruzá-las com as páginas de referência; depois, concluir uma segunda conferência palavra por palavra das partes transcritas em todas as 116 capturas, aplicar correções sustentadas e registrar limites. Ver [índice/mapeamento](./transcricoes-imagens-zip/README.md) e [relatório da segunda conferência](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md). A transcrição diplomática integral das camadas manuscritas sobrepostas/cortadas continua em andamento.
+- [x] Fazer a primeira passada visual das 116 imagens do ZIP original e cruzá-las com as páginas de referência; depois, concluir a segunda conferência palavra por palavra e a terceira auditoria independente de possíveis omissões em todas as 116 capturas, aplicar correções sustentadas e registrar limites. Ver [índice/mapeamento](./transcricoes-imagens-zip/README.md), [segunda conferência](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md) e [terceira conferência](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md). A transcrição diplomática integral das camadas manuscritas sobrepostas/cortadas continua em andamento.
 
 - [x] Organizar a transcrição recebida das páginas 1–20 com IDs de diário/entrada e notas de incerteza; ver [transcrição dos lotes 01–02](./transcricao-lotes-01-02-paginas-001-020.md).
 
@@ -24,7 +24,7 @@
 
 - [x] Preparar transcrição de trabalho das páginas 31–40 a partir das imagens, com OCR auxiliar e trechos incertos marcados; ver [transcrição das páginas 31–40](./transcricao-paginas-031-040.md).
 
-- [x] Fazer segunda conferência palavra por palavra das partes transcritas nas imagens de todas as páginas de referência 1–116; manter em aberto a expansão dos manuscritos ilegíveis/sobrepostos e os fragmentos cortados.
+- [x] Fazer segunda conferência palavra por palavra e terceira auditoria independente de omissões nas transcrições das 116 capturas; manter em aberto a expansão dos manuscritos ilegíveis/sobrepostos e dos fragmentos cortados. Ver [relatório da terceira conferência](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md).
 
 - [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
 
@@ -104,4 +104,4 @@ O histórico do repositório já continha transcrição de trabalho das páginas
 
 ## Observação de fechamento
 
-A condição de vitória exige evidências essenciais, conexões-chave, três mecanismos de código, cronologia correta e as três respostas finais: **Matthew Brooks**, **machado** e **vingança pelo assassinato de Sofia Miller, mulher que Matthew amava**. O playthrough automatizado iniciado sem save confirmou os cinco locais, onze evidências, nove enigmas, fechaduras, conexões, cronologia, acusação correta e acesso ao M99 somente após a vitória. O estado persiste em `localStorage`. A suíte passou em 102 testes; `tsc`, lint (0 erros; 7 avisos preexistentes), build e `git diff --check` passaram. Isso valida o fluxo funcional, não a transcrição diplomática integral de cada fonte. A segunda conferência palavra por palavra das transcrições existentes abrangeu as 116 imagens; antes de publicar, permanecem a expansão dos manuscritos ainda legíveis mas não integralmente transcritos, o registro de trechos ilegíveis e a análise das contradições documentais.
+A condição de vitória exige evidências essenciais, conexões-chave, três mecanismos de código, cronologia correta e as três respostas finais: **Matthew Brooks**, **machado** e **vingança pelo assassinato de Sofia Miller, mulher que Matthew amava**. O playthrough automatizado iniciado sem save confirmou os cinco locais, onze evidências, nove enigmas, fechaduras, conexões, cronologia, acusação correta e acesso ao M99 somente após a vitória. O estado persiste em `localStorage`. A suíte passou em 102 testes; `tsc`, lint (0 erros; 7 avisos preexistentes), build e `git diff --check` passaram. Isso valida o fluxo funcional, não a transcrição diplomática integral de cada fonte. A terceira auditoria independente também percorreu as 116 imagens; as leituras adicionais seguras foram incorporadas e a revisão diplomática integral continua em aberto; antes de publicar, permanecem a expansão dos manuscritos ainda legíveis mas não integralmente transcritos, o registro de trechos ilegíveis e a análise das contradições documentais.

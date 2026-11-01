@@ -1,7 +1,7 @@
-# Extração do PDF — páginas 41–116
+# Extração de trabalho — páginas de referência 41–116
 ## Caso de referência: The Painscreek Killing
 
-**Status:** extração de trabalho baseada no OCR recebido; as transcrições visuais preliminares das capturas PNG do ZIP original estão em [transcricoes-imagens-zip](./transcricoes-imagens-zip/README.md). Os números são referências do OCR, não a ordem do ZIP; a revisão palavra por palavra permanece pendente.
+**Status:** extração de trabalho baseada no OCR recebido e nos números de referência. As 116 capturas PNG do ZIP receberam segunda conferência e terceira auditoria independente; correções seguras foram incorporadas. A harmonização página a página e a transcrição diplomática de manuscritos encobertos/cortados continuam pendentes. Veja [transcrições e relatórios visuais](./transcricoes-imagens-zip/README.md).
 
 ## Regras de leitura e proveniência
 

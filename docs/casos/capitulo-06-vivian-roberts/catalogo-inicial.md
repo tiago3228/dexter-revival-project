@@ -140,7 +140,7 @@ O catálogo deve ser lido junto com os seguintes documentos de controle:
 - [Grafo provisório de dependências](./grafo-dependencias-provisorio.md): caminhos de investigação candidatos, ainda não liberados para implementação.
 - [Contradições e lacunas](./contradicoes-e-lacunas.md): divergências, autoria incerta, conteúdo ausente e verificações pendentes.
 
-**Estado geral atual:** TRANSCRIÇÃO PENDENTE. A organização das páginas 1–69 contém resumos de trabalho e notas de continuidade; o lote 70–116 está baseado no OCR recebido. Nenhuma data, autoria, localização de item, relação entre personagens ou hipótese de mecanismo deve ser promovida a fato definitivo sem conferência visual.
+**Estado geral atual:** TRANSCRIÇÃO EM REVISÃO. As 116 capturas PNG do ZIP foram mapeadas e receberam três passadas visuais; foram incorporadas leituras seguras e permanecem em aberto manuscritos encobertos/cortados, leituras de baixa confiança e cotejo página-a-página dos resumos/OCR recebidos. Nenhuma data, autoria, localização de item, relação entre personagens ou hipótese de mecanismo deve ser promovida a fato definitivo sem fonte visual e proveniência explícitas.
 
 ### Regras adicionais de catalogação
 

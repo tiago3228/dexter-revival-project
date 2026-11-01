@@ -1,6 +1,6 @@
 # Transcrição de trabalho — páginas 41–50
 
-**Estado:** leitura de trabalho feita a partir das imagens do PDF, com OCR auxiliar. Não é ainda uma transcrição diplomática revisada palavra por palavra. Os relatos abaixo são declarações dos narradores, não fatos automaticamente comprovados.
+**Estado:** leitura de trabalho cotejada com as capturas PNG do ZIP e auditada em passadas visuais; os números são páginas de referência. Fragmentos manuscritos seguros foram acrescentados, mas a transcrição diplomática integral continua pendente. Os relatos são declarações dos narradores, não fatos automaticamente comprovados.
 
 ## DIARIO-008 — Scott Brooks (atribuição indicada pela barra lateral)
 
@@ -69,11 +69,16 @@ Scott pergunta a Bernard sobre Sofia durante o almoço. Bernard se surpreende qu
 Scott pergunta a Dorothy sobre Sofia. Dorothy fica confusa e quer saber de onde ele ouviu o nome. Scott diz que foi Andrew. Dorothy explica que Sofia era uma amiga próxima quando ela começou a trabalhar para a família Roberts. Segundo Dorothy, Sofia teve um caso com Charles enquanto Vivian estava internada e deixou Painscreek pouco depois; ninguém teve notícias dela desde então. Dorothy supõe que Sofia tenha começado uma nova vida em outro lugar. Scott se pergunta se o caso explicaria por que ninguém fala sobre Sofia. O conteúdo é um relato de Dorothy e a interpretação de Scott.
 
 ### Páginas 49–50 — duplicatas
-As imagens das páginas 49 e 50 repetem, respectivamente, o conteúdo visual das páginas 46 e 47. Não contar essas repetições como novas entradas nem como confirmação independente. O padrão de duplicação já foi observado em outros trechos do PDF; conferir a página 51 para fechar o bloco.
+As imagens das páginas 49–51 repetem, respectivamente, o conteúdo visual das páginas 46–48 (`scott15.png`–`scott17.png` repetem `scott12.png`–`scott14.png`). Não contar essas repetições como novas entradas nem como confirmação independente.
 
 ## Pontos de conferência
 - Confirmar visualmente a pontuação e algumas expressões da p. 41; o OCR confundiu a palavra referente ao convite de Charles.
 - A leitura “Magdalene” na p. 43 parece legível, mas a associação do nome permanece sem explicação.
 - A p. 45 termina com Andrew murmurando “Sinto muito, Sofia”; manter como fala ouvida por Scott, não como confissão de crime.
 - As descrições de Wanda e Dorothy sobre Sofia são testemunhos atribuídos e podem conter viés.
-- A duplicação de pp. 49–50 deve ser documentada sem apagar as páginas originais.
+- A repetição visual de pp. 49–51 está documentada sem apagar as páginas originais; os fragmentos manuscritos em conteúdo repetido não são testemunho independente.
+
+## Adendo — terceira auditoria visual (01/11/2026)
+
+- **p. 41 / `scott7.png`:** anotação manuscrita legível: “I actually enjoyed being with him, I feel comfortable talking to him.”
+- A expressão é parte do diário de Scott e da mesma fonte narrativa; não constitui confirmação independente do relacionamento. Ver `transcricoes-imagens-zip/09-scott.md`.

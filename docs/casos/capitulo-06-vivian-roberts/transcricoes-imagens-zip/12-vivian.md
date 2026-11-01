@@ -22,7 +22,7 @@ Nem me lembro da última vez em que havia me sentido tão despreocupada.
 
 ### Manuscritos / anotações sobrepostos
 
-Há escrita manuscrita em inglês muito tênue por trás/sob o texto impresso nas duas páginas. Trechos cobertos pelo texto impresso ou sem leitura segura: [ilegível]. Não se completa texto a partir do contexto.
+Há escrita manuscrita em inglês sob o texto impresso. Trechos legíveis: “Charles invited me to my favorite restaurant.”; “we teenagers in love.” Outras partes estão encobertas ou não permitem leitura segura: [ilegível].
 
 ### Cabeçalhos / assinaturas
 
@@ -64,7 +64,7 @@ Eu não esperava que ele me ameaçasse dizendo que vai parar de apoiar o Charles
 
 ### Manuscritos / anotações sobrepostos
 
-Há escrita manuscrita em inglês muito tênue por trás/sob o texto impresso nas duas páginas. Trechos cobertos pelo texto impresso ou sem leitura segura: [ilegível]. Não se completa texto a partir do contexto.
+Há escrita manuscrita em inglês sob o texto impresso. Trecho legível: “She’s always asking when we’ll be having kids. I”; a anotação continua sob o impresso e não foi reconstruída.
 
 ### Cabeçalhos / assinaturas
 
@@ -113,7 +113,7 @@ Vou precisar que Bernard fique de olho em Scott. De agora em diante, vou tentar 
 
 ### Manuscritos / anotações sobrepostos
 
-Há escrita manuscrita em inglês muito tênue por trás/sob o texto impresso, sobretudo na página esquerda. Trechos cobertos pelo texto impresso ou sem leitura segura: [ilegível].
+Há escrita manuscrita em inglês sob o texto impresso. Fragmentos legíveis na página esquerda: “hiring him anyways.”; “always seems happy with his company.”; “He spends more time in his hunting cabin than he does at home.” As partes encobertas não foram completadas.
 
 ### Cabeçalhos / assinaturas
 

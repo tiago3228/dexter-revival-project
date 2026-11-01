@@ -1,9 +1,9 @@
 # Inventário OCR — páginas 31–69
 ## Capítulo 6: O Caso Vivian Roberts
 
-**Escopo exclusivo:** páginas 31–69 do PDF. Não inclui páginas 1–30 nem 70–116.
-**Método informado:** OCR das imagens fornecido na conversa. Não houve conferência visual independente do PDF original.
-**Estado global:** primeira passada visual das imagens PNG do ZIP original, mapeadas às páginas de referência 31–69 por conteúdo/data; transcrições por imagem em [transcricoes-imagens-zip](./transcricoes-imagens-zip/README.md). Não equivale à conferência diplomática palavra por palavra. Pontos duvidosos permanecem sinalizados.
+**Escopo exclusivo:** páginas de referência 31–69 do OCR recebido. Não inclui as faixas 1–30 nem 70–116.
+**Método:** OCR/transcrição recebida na conversa, depois cruzados com capturas PNG do `ThePainscreekKilling.zip`; não havia cópia do PDF original disponível nesta revisão.
+**Estado global:** as imagens do ZIP receberam três passadas visuais; correções e fragmentos legíveis foram incorporados em transcrições por imagem e adendos página-a-página. Isso não equivale a conferência diplomática integral; manuscritos cobertos, cortes e leituras incertas continuam em revisão.
 
 ## Páginas 31–34 — Matthew Brooks e Sofia; anotações de 1995
 

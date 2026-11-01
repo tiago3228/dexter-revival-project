@@ -1,6 +1,6 @@
 # Contradições e lacunas — O Caso Vivian Roberts
 
-> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. Os apontamentos combinam notas de trabalho das páginas 1–69 e OCR das páginas 70–116. Conferir diretamente as imagens antes de alterar qualquer dado ou fechar a narrativa.
+> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. As 116 capturas PNG receberam três passadas visuais e correções pontuais, mas os resumos/OCR ainda não foram integralmente harmonizados página a página. Conferir proveniência e limites antes de alterar qualquer dado ou fechar a narrativa.
 
 ## 1. Identidade, nascimento e destino de Sofia/Vincent/Scott
 
@@ -26,7 +26,7 @@
 
 | Questão | Fontes de trabalho | Por que permanece aberta | Próxima verificação |
 |---|---|---|---|
-| Janela da morte | Notícia p. 82 estima entre 23h e 1h; testemunho p. 83 fala de Scott por volta de 23h50; relatório p. 90 relata gritos/discussão | Estimativa, observação anônima e relatório têm origens e precisão diferentes. | Conferir horários exatos, data, local e se as fontes se referem ao mesmo evento. |
+| Janela da morte | Notícia p. 82 estima entre 23h e 1h; testemunho anônimo p. 83 situa Scott por volta de 23h50; relatório policial p. 90 registra que alguém o viu por volta de 23h30 e que dois caçadores ouviram gritos/discussão | A leitura visual de p. 83 foi corrigida de 23h30 para 23h50; p. 90 conserva 23h30 como uma afirmação separada do relatório. Estimativa, observação anônima e relatório têm origens e precisão diferentes. | Comparar horários, datas, locais e se os relatos se referem ao mesmo evento, sem tratar presença como prova de autoria. |
 | O que Scott fez após encontrar Vivian? | Declaração atribuída a Scott na p. 88 e carta p. 104 | São declarações do próprio interessado, não confirmação independente. | Comparar com registros independentes sem tratar negação ou presença como prova conclusiva. |
 | Carta de ameaça | Carta anônima p. 100 menciona uma cópia de ameaça recebida por Vivian no dia da morte. | O conteúdo e o remetente da ameaça não aparecem transcritos no lote OCR disponível. | Localizar a imagem/cópia; se ausente, registrar a lacuna e não inventar conteúdo. |
 | Médico/autoridade responsável | OCR da notícia p. 82 tem nome ilegível/duvidoso. | Não é seguro atribuir o laudo a uma pessoa por contexto. | Ampliar a imagem e preservar o campo como ilegível se não resolver. |
@@ -37,7 +37,7 @@
 |---|---|---|
 | Causa e autoria da morte de Henry | Notícia p. 85 fala de corpo encontrado em carro submerso; outras referências mencionam investigação financeira. | Não inferir homicídio, acidente ou vínculo causal com finanças sem fonte explícita. |
 | Desvio de fundos | Relatório atribuído a Nelson & Brown, p. 97; notícia de fechamento, p. 84; carta comercial p. 92. | Diferenciar alegação, contexto comercial e comprovação contábil. |
-| Contexto clínico de Vivian | Documento médico p. 94 atribuído a Henry; outros documentos podem descrever internação/recuperação. | Confirmar data, paciente, assinatura e relação temporal; não assumir que todos os registros são do mesmo episódio. |
+| Contexto clínico de Vivian | Documento médico p. 94 (`doc6.png`) atribuído a Henry; a data na camada inglesa subjacente é legível como “August 16, 1975”. Outros documentos podem descrever internação/recuperação. | A data foi recuperada, mas confirmar paciente, assinatura e relação temporal; não assumir que todos os registros são do mesmo episódio. |
 
 ## 5. Andrew Reed e o incêndio
 
@@ -58,12 +58,12 @@
 
 ## 7. Qualidade do OCR e lacunas de fonte
 
-1. Páginas 70–116 foram recebidas como texto OCR; alguns trechos têm palavras truncadas, cartas incompletas e ordem de colunas confusa.
+1. As páginas 70–116 foram recebidas inicialmente como OCR e depois cotejadas com capturas; permanecem palavras/linhas truncadas, manuscritos sobrepostos e ordem de colunas a harmonizar.
 2. Páginas 75, 89–90, 105–116 exigem atenção especial à ordem de leitura, datas e colunas.
 3. Nas páginas 93–95, 102–103 e 106–116, legendas, cabeçalhos e texto do documento podem estar misturados.
 4. O texto da ameaça citada na p. 100 não foi transcrito no lote recebido.
-5. Parte do lote 1–40 está documentada em notas de continuidade, não em transcrição completa por página.
-6. Páginas 49–51 foram marcadas como capturas duplicadas de conteúdo anterior; verificar se são duplicatas visuais ou conteúdo repetido no caderno.
+5. Os lotes 1–40 também têm transcrições de trabalho por imagem, mas ainda não constituem revisão diplomática integral nem substituem a harmonização página-a-página.
+6. `scott15.png`–`scott17.png` foram cotejadas e repetem o conteúdo de `scott12.png`–`scott14.png`; não contar esses trechos como testemunhos independentes.
 7. O nome “Timothy Scott” e a mulher aparentemente molhada no registro hospitalar da p. 105 não devem ser associados a outras pessoas sem evidência.
 
 ## 8. Regra de fechamento

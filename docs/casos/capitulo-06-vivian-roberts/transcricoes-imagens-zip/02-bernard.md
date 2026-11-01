@@ -16,7 +16,7 @@ Eu achei tudo isto perturbador.
 
 **19 de janeiro de 1994**
 
-Derrick não parece muito disposto a dirigir para Vivian. Eu não acho que uma viagem de cinco dias seja assim tão longa. Charles e fez viagens mais longas que essa e o Derrick nunca pareceu se importar.
+Derrick não parece muito disposto a dirigir para Vivian. Eu não acho que uma viagem de cinco dias seja assim tão longa. Charles já fez viagens mais longas que essa, e o Derrick nunca pareceu se importar.
 
 Parando pra pensar nisso, Derrick fica estranhamente quieto quando a Vivian está por perto. Ele nem ao menos olha para ela. É como se a estivesse evitando. Queria saber o porquê.
 
@@ -126,6 +126,6 @@ Interface (sidebar, seleção): Andrew Reed; Bernard Hopkins [selecionado]; Char
 
 | Arquivo | Cobertura | Trecho / limite incerto |
 |---|---|---|
-| bernard1.png | transcrito/parcial | Escrita manuscrita inglesa em diversas áreas sobreposta ao impresso; fragmentos [ilegível]. O impresso da página direita parece mostrar “Charles e fez viagens”; mantido como aparece. |
+| bernard1.png | transcrito/parcial | Escrita manuscrita inglesa em diversas áreas sobreposta ao impresso; fragmentos [ilegível]. Corrigida na terceira conferência a transcrição do impresso da página direita para “Charles já fez viagens”; manuscritos encobertos permanecem em aberto. |
 | bernard2.png | transcrito/parcial | Manuscritos em inglês parcialmente encobertos pelo corpo impresso; segmentos indecifráveis marcados [ilegível]. |
 | bernard3.png | transcrito/parcial | Manuscrito encoberto/sobreposto; há palavra impressa “Vivian” riscada; pequeno fragmento de interface cortado na borda inferior direita. |

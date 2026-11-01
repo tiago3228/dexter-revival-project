@@ -96,7 +96,7 @@ Eu acho que corri o mais rápido que consegui na vida.
 
 ### Manuscritos / anotações
 
-Há escrita manuscrita tênue na página esquerda, inclusive sob a última linha impressa; **[ilegível]**. Não foi possível ler manuscrito na página direita.
+Há escrita manuscrita tênue na página esquerda. Sob a última linha impressa, lê-se apenas o fragmento: “behind him he extended his right hand with / the stick towards the snake, and slowly”; a continuação não é recuperável com segurança. Não foi possível ler manuscrito na página direita.
 
 ### Cabeçalhos / assinaturas
 

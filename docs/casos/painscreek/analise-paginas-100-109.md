@@ -1,6 +1,6 @@
 # Dossiê de leitura — páginas 100–109
 
-**Fonte:** *The Painscreek Killing.pdf*, páginas 100–109 do arquivo enviado pelo usuário.  
+**Fonte textual:** OCR/transcrição recebida, associada às páginas de referência 100–109; a conferência visual usa capturas do `ThePainscreekKilling.zip` mapeadas por conteúdo/data.
 **Tipo de registro:** resumo documental e notas investigativas, não transcrição literal.  
 **Método:** OCR auxiliar e conferência visual das páginas. Trechos cortados ou parcialmente sobrepostos foram tratados como lacunas.
 

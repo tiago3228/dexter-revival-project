@@ -196,7 +196,7 @@ antes do incêndio. Sinto muito por eles.
 
 Página esquerda: “Scott came to fix my leaking sink today.” Partes cobertas pelo texto impresso: [ilegível]. Mais abaixo: “To my surprise, Scott became very quiet. He ...” com trecho intermediário encoberto; “... about ...” [ilegível]. Na parte inferior esquerda, manuscrito sob o texto: [ilegível].
 
-Página direita: “It’s ironic that Andrew died shortly after ...” restante encoberto; [ilegível]. Sob o último parágrafo: “fire accident. I feel so sorry for them”.
+Página direita: “It’s ironic that Andrew died shortly after ...” restante encoberto; [ilegível]. Sob o parágrafo sobre o retorno de Laura: “they could be together again”. Mais abaixo: “fire accident. I feel so sorry for them”.
 
 ### Cabeçalhos, assinaturas e interface
 

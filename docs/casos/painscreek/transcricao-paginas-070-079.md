@@ -1,8 +1,8 @@
-# Transcrição de trabalho — páginas 70–79 do PDF
+# Transcrição de trabalho — páginas de referência 70–79
 
-**Fonte:** `IMAGENS DE PAINSCREEK.zip` → `The Painscreek Killing.pdf`, páginas 70–79.  
+**Fonte visual:** `ThePainscreekKilling.zip` (capturas PNG); páginas 70–79 são números de referência ligados por conteúdo/data no crosswalk.
 **Método:** leitura das capturas ampliadas, com OCR auxiliar.  
-**Estado:** resumo de trabalho conferido visualmente; não é transcrição literal palavra por palavra. Datas e nomes foram mantidos conforme aparecem nas páginas. As opiniões dos diaristas e relatos atribuídos a terceiros não são fatos comprovados.
+**Estado:** resumo de trabalho cotejado com imagens e complementado com fragmentos manuscritos em adendo; não é transcrição diplomática palavra por palavra. Datas e nomes devem ser lidos com proveniência; opiniões dos diaristas e relatos atribuídos a terceiros não são fatos comprovados.
 
 ## Página 70 — Trisha Roberts
 
@@ -37,14 +37,14 @@ Sabendo que era o dia de folga de Scott, Trisha vai à cabana para surpreendê-l
 Vivian registra que Charles está concorrendo a uma eleição. Ela conversou com Wilson e Edwards, que concordaram em apoiá-lo. Vivian acredita que o apoio não se deve apenas a benefícios comerciais, mas também à confiança que eles têm em Charles; espera que isso eleve o moral da campanha.
 
 ### Sexta-feira, 30 de junho de 1972
-No aniversário do casal, Charles a leva de surpresa ao restaurante favorito dela. Vivian pensava que ele talvez tivesse esquecido a data. Depois do jantar, caminham pela praia e conversam como adolescentes apaixonados. Ela diz não se lembrar da última vez em que se sentiu tão despreocupada.
+No aniversário do casal, Charles a leva de surpresa ao restaurante favorito dela. Vivian pensava que ele talvez tivesse esquecido a data. Depois do jantar, caminham pela praia e conversam como adolescentes apaixonados. Ela diz não se lembrar da última vez em que se sentiu tão despreocupada. A camada manuscrita da captura `vivian.png` também permite ler “Charles invited me to my favorite restaurant” e “we teenagers in love”.
 
 **Nota cronológica:** as datas são de 1972; manter separadas das entradas posteriores de 1994.
 
 ## Página 74 — Vivian Roberts
 
 ### Quarta-feira, 9 de agosto de 1972
-Vivian escreve que Magdalene está vindo e não sabe como reagir. Magdalene sempre pergunta quando o casal terá filhos, mas Vivian ainda não se sente pronta e continua se recuperando de um aborto espontâneo.
+Vivian escreve que Magdalene está vindo e não sabe como reagir. Magdalene sempre pergunta quando o casal terá filhos, mas Vivian ainda não se sente pronta e continua se recuperando de um aborto espontâneo. A anotação manuscrita de `vivian1.png` reforça que “She’s always asking when we’ll be having kids. I…”; a continuação está coberta.
 
 ### Sexta-feira, 13 de outubro de 1972
 Edwards tenta pressionar Vivian a aceitar um acordo comercial discutido meses antes. Ela o recusa porque considera que isso violaria o acordo de confiança entre as empresas. Edwards ameaça deixar de apoiar Charles. Vivian aceita essa possibilidade e diz preferir perder o apoio a fazer negócios com pessoas sem integridade.
@@ -52,7 +52,7 @@ Edwards tenta pressionar Vivian a aceitar um acordo comercial discutido meses an
 ## Página 75 — Vivian Roberts
 
 ### Segunda-feira, 2 de janeiro de 1994
-Andrew diz a Vivian que não precisa de ajudante e que Scott é inexperiente e atrapalha. Vivian considera que Andrew não percebe o estado ruim do jardim, que sua bebida é irritante e que Scott trabalha mais do que ele. Ela afirma que Charles gosta de Scott e que os dois caçam juntos com frequência; observa que Charles às vezes passa mais tempo na cabana de caça do que em casa.
+Andrew diz a Vivian que não precisa de ajudante e que Scott é inexperiente e atrapalha. Vivian considera que Andrew não percebe o estado ruim do jardim, que sua bebida é irritante e que Scott trabalha mais do que ele. Ela afirma que Charles gosta de Scott e que os dois caçam juntos com frequência; observa que Charles às vezes passa mais tempo na cabana de caça do que em casa. Anotações manuscritas adicionais em `vivian2.png` incluem “hiring him anyways”, “always seems happy with his company” e “He spends more time in his hunting cabin than he does at home.”
 
 ### Terça-feira, 3 de janeiro de 1994
 Vivian fica chocada ao saber que Scott tem perguntado sobre Sofia. Pergunta-se como ele soube dela e suspeita que Andrew, a quem chama de bêbado, possa ter contado. Vivian afirma ter dito a Andrew que Sofia se foi e considera que as alucinações dele estão piorando; escreve que ele precisa falar com Henry e conseguir mais comprimidos. Ela decide pedir a Bernard que observe Scott e pretende acompanhar com quem ele fala e sobre quem pergunta.
