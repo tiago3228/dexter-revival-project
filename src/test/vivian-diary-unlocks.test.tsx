@@ -191,9 +191,9 @@ describe("diary viewer gestures and advanced navigation", () => {
 
     act(() => {
       dispatchPointer(surface, "pointerdown", { pointerId: 1, clientX: 100, clientY: 100 });
-      dispatchPointer(surface, "pointerdown", { pointerId: 2, clientX: 180, clientY: 100 });
-      dispatchPointer(surface, "pointermove", { pointerId: 2, clientX: 260, clientY: 100 });
-      dispatchPointer(surface, "pointerup", { pointerId: 2, clientX: 260, clientY: 100 });
+      dispatchPointer(surface, "pointerdown", { pointerId: 2, clientX: 260, clientY: 100 });
+      dispatchPointer(surface, "pointermove", { pointerId: 2, clientX: 180, clientY: 100 });
+      dispatchPointer(surface, "pointerup", { pointerId: 2, clientX: 180, clientY: 100 });
       dispatchPointer(surface, "pointerup", { pointerId: 1, clientX: 100, clientY: 100 });
     });
     expect(viewer).toHaveTextContent(/zoom (?:1\d\d|2\d\d|300)%/);

@@ -158,6 +158,7 @@ function DiaryImages({
   const viewerRef = useRef<HTMLDivElement>(null);
   const pointersRef = useRef(new Map<number, { x: number; y: number }>());
   const pinchDistanceRef = useRef<number | null>(null);
+  const pinchZoomRef = useRef(1);
   const swipeRef = useRef<{
     startX: number;
     startY: number;
@@ -233,7 +234,7 @@ function DiaryImages({
   };
 
   const adjustZoom = (amount: number) =>
-    setZoom((value) => Math.min(3, Math.max(1, Number((value + amount).toFixed(2)))));
+    setZoom((value) => Math.min(6, Math.max(1, Number((value + amount).toFixed(2)))));
 
   useEffect(() => {
     if (zoom <= 1.05) setPan({ x: 0, y: 0 });
@@ -316,6 +317,7 @@ function DiaryImages({
         { x: number; y: number },
       ];
       pinchDistanceRef.current = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      pinchZoomRef.current = zoom;
     }
   };
 
@@ -336,8 +338,7 @@ function DiaryImages({
       { x: number; y: number },
     ];
     const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
-    setZoom((value) => Math.min(3, Math.max(1, value * (distance / pinchDistanceRef.current!))));
-    pinchDistanceRef.current = distance;
+    setZoom(Math.min(6, Math.max(1, pinchZoomRef.current * (pinchDistanceRef.current / distance))));
   };
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -554,7 +555,7 @@ function DiaryImages({
               <button
                 type="button"
                 onClick={() => adjustZoom(0.25)}
-                disabled={zoom >= 3}
+                disabled={zoom >= 6}
                 aria-label="Aumentar zoom"
                 className="viewer-control"
                 title="Aumentar zoom"
@@ -752,8 +753,8 @@ function DiaryImages({
               ))}
             </div>
             <p className="text-center font-mono text-[10px] text-[#81796d]">
-              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · pinça: ampliar · P:
-              apresentação · Esc: fechar
+              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · aproxime os dedos:
+              ampliar · P: apresentação · Esc: fechar
             </p>
           </div>
         </div>
