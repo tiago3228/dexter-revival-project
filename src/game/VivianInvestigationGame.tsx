@@ -1494,7 +1494,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           <ol className="mt-4 grid gap-2 sm:grid-cols-4" aria-label="Como investigar">
             {[
               { n: 1, t: "Escolha um local", d: "Lista à esquerda. Cadeado = ainda bloqueado." },
-              { n: 2, t: "Abra os documentos", d: "Clique em “Examinar” em cada arquivo." },
+              { n: 2, t: "Abra os documentos", d: "Clique em “Abrir arquivo para leitura”." },
               { n: 3, t: "Resolva os enigmas", d: "As respostas estão nos documentos lidos." },
               { n: 4, t: "Siga para o próximo", d: "Novo local liberado ou quadro de evidências." },
             ].map((step) => (
