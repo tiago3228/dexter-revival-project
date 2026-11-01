@@ -5,6 +5,7 @@ import {
   DOT_COMPLETE_KEY,
   DOT_LEVELS,
   DOT_UNLOCK_KEY,
+  isDotEdgeBlocked,
   isSolvedDotLevelPath,
 } from "./dotConnectionPuzzle";
 import { playMinigameVictorySound } from "./minigameVictoryEffects";
@@ -119,7 +120,13 @@ export function DotConnectionMinigame() {
       return;
     }
     if (!areDotsAdjacent(last, point, level.size)) {
-      setFeedback("Conecte uma bolinha vizinha na horizontal ou na vertical.");
+      setFeedback(
+        "Salto inválido: conecte somente uma bolinha vizinha na horizontal ou na vertical.",
+      );
+      return;
+    }
+    if (isDotEdgeBlocked(last, point, level.blockedEdges)) {
+      setFeedback("Trecho bloqueado por uma parede: escolha outra passagem entre estas bolinhas.");
       return;
     }
 
@@ -227,7 +234,7 @@ export function DotConnectionMinigame() {
                     </div>
                     <div>
                       <h3 className="font-display text-2xl">
-                        Traçar rota · Nível {levelIndex + 1}/3 — {level.pattern}
+                        Traçar rota · Nível {levelIndex + 1}/{DOT_LEVELS.length} — {level.pattern}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-[#b9a9aa]">
                         Comece em I (bolinha {level.start + 1}), visite os checkpoints numerados na
@@ -237,7 +244,10 @@ export function DotConnectionMinigame() {
                       </p>
                     </div>
                   </div>
-                  <div className="mt-5 grid gap-2 sm:grid-cols-3" aria-label="Níveis de conexão">
+                  <div
+                    className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4"
+                    aria-label="Níveis de conexão"
+                  >
                     {DOT_LEVELS.map((item, index) => (
                       <button
                         key={item.id}
@@ -259,9 +269,9 @@ export function DotConnectionMinigame() {
                     ))}
                   </div>
                   <p className="mt-3 text-xs leading-relaxed text-[#a69093]">
-                    Os desenhos mudam entre serpentina, espiral e espiral reversa; os endpoints e a
-                    quantidade de checkpoints também variam. Complete cada padrão para liberar o
-                    próximo.
+                    Os desenhos, endpoints e checkpoints variam entre os quatro desafios. No
+                    labirinto avançado, as paredes bloqueiam passagens específicas. Complete cada
+                    padrão para liberar o próximo.
                   </p>
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-[#9b8588]">
@@ -285,8 +295,9 @@ export function DotConnectionMinigame() {
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${solved ? "bg-[#ffc4c9] shadow-[0_0_12px_#ffc4c9]" : "bg-[#8a4f58]"}`}
                       />
-                      Nível {levelIndex + 1}/3 · {level.pattern} · Pontos: {path.length}/
-                      {pointCount} · Checkpoints: {checkpointProgress}/{level.checkpoints.length}
+                      Nível {levelIndex + 1}/{DOT_LEVELS.length} · {level.pattern} · Pontos:{" "}
+                      {path.length}/{pointCount} · Checkpoints: {checkpointProgress}/
+                      {level.checkpoints.length}
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -319,6 +330,27 @@ export function DotConnectionMinigame() {
                         preserveAspectRatio="none"
                         aria-hidden="true"
                       >
+                        {level.blockedEdges?.map(([first, second]) => {
+                          const from = pointPosition(first, level.size);
+                          const to = pointPosition(second, level.size);
+                          const horizontal = from.y === to.y;
+                          const middleX = (from.x + to.x) / 2;
+                          const middleY = (from.y + to.y) / 2;
+                          const halfWall = 3.2;
+                          return (
+                            <line
+                              key={`wall-${first}-${second}`}
+                              x1={horizontal ? middleX : middleX - halfWall}
+                              y1={horizontal ? middleY - halfWall : middleY}
+                              x2={horizontal ? middleX : middleX + halfWall}
+                              y2={horizontal ? middleY + halfWall : middleY}
+                              stroke="#ff8a78"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                              vectorEffect="non-scaling-stroke"
+                            />
+                          );
+                        })}
                         {path.slice(1).map((point, index) => {
                           const from = pointPosition(path[index]!, level.size);
                           const to = pointPosition(point, level.size);
@@ -332,6 +364,15 @@ export function DotConnectionMinigame() {
                               stroke={solved ? "#ffc4c9" : "#9b84d5"}
                               strokeWidth="2.2"
                               strokeLinecap="round"
+                              pathLength="1"
+                              strokeDasharray={solved ? "1" : undefined}
+                              strokeDashoffset={solved ? "1" : undefined}
+                              className={solved ? "dot-connection-reveal-line" : undefined}
+                              style={
+                                solved
+                                  ? { animationDelay: `${index * 45}ms`, strokeDashoffset: 0 }
+                                  : undefined
+                              }
                             />
                           );
                         })}
@@ -408,7 +449,7 @@ export function DotConnectionMinigame() {
                       <p className="mt-1 text-sm leading-relaxed text-[#d7c9a8]">
                         {levelIndex < DOT_LEVELS.length - 1
                           ? "Todas as bolinhas foram ligadas sem repetições. O próximo nível foi liberado."
-                          : "Todas as três dificuldades foram concluídas. Nenhum ponto ficou de fora."}
+                          : "Todas as quatro dificuldades foram concluídas. Nenhum ponto ficou de fora."}
                       </p>
                       {levelIndex < DOT_LEVELS.length - 1 && (
                         <button

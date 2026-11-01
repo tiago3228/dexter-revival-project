@@ -1,5 +1,7 @@
+export type DotEdge = readonly [number, number];
+
 export type DotLevel = {
-  id: "easy" | "medium" | "hard";
+  id: "easy" | "medium" | "hard" | "advanced";
   label: string;
   description: string;
   size: number;
@@ -8,6 +10,7 @@ export type DotLevel = {
   end: number;
   checkpoints: readonly number[];
   basePath: readonly number[];
+  blockedEdges?: readonly DotEdge[];
 };
 
 function createClockwiseSpiralPath(size: number): number[] {
@@ -46,6 +49,13 @@ const easyPath = createHorizontalSnakePath(4);
 const mediumPath = createClockwiseSpiralPath(5);
 const hardPath = createClockwiseSpiralPath(6).reverse();
 
+// Percurso em zigue-zague com recuos e laços internos; cada aresta foi verificada
+// contra as barreiras abaixo para que a solução de referência continue possível.
+const advancedPath = [
+  0, 1, 2, 3, 4, 5, 6, 13, 20, 27, 34, 41, 48, 47, 46, 45, 44, 43, 42, 35, 36, 37, 38, 39, 40, 33,
+  26, 19, 12, 11, 18, 25, 32, 31, 24, 17, 10, 9, 8, 7, 14, 15, 16, 23, 30, 29, 22, 21, 28,
+];
+
 export const DOT_LEVELS: readonly DotLevel[] = [
   {
     id: "easy",
@@ -80,6 +90,30 @@ export const DOT_LEVELS: readonly DotLevel[] = [
     checkpoints: [26, 6, 35, 4],
     basePath: hardPath,
   },
+  {
+    id: "advanced",
+    label: "Avançado · Labirinto 7×7",
+    description: "49 pontos · 5 checkpoints e 11 passagens bloqueadas",
+    size: 7,
+    pattern: "Labirinto de recuos",
+    start: 0,
+    end: 28,
+    checkpoints: [3, 44, 33, 17, 30],
+    basePath: advancedPath,
+    blockedEdges: [
+      [0, 7],
+      [1, 8],
+      [2, 9],
+      [3, 10],
+      [4, 11],
+      [5, 12],
+      [8, 15],
+      [9, 16],
+      [10, 11],
+      [14, 21],
+      [22, 23],
+    ],
+  },
 ];
 
 export const DOT_UNLOCK_KEY = "dexter-dot-connection-unlocked-v1";
@@ -93,7 +127,23 @@ export function areDotsAdjacent(first: number, second: number, size: number): bo
   return Math.abs(firstRow - secondRow) + Math.abs(firstColumn - secondColumn) === 1;
 }
 
-export function isValidDotPath(path: readonly number[], size: number): boolean {
+export function isDotEdgeBlocked(
+  first: number,
+  second: number,
+  blockedEdges: readonly DotEdge[] = [],
+): boolean {
+  return blockedEdges.some(
+    ([edgeFirst, edgeSecond]) =>
+      (edgeFirst === first && edgeSecond === second) ||
+      (edgeFirst === second && edgeSecond === first),
+  );
+}
+
+export function isValidDotPath(
+  path: readonly number[],
+  size: number,
+  blockedEdges: readonly DotEdge[] = [],
+): boolean {
   if (!Number.isInteger(size) || size < 1) return false;
   const pointCount = size * size;
   if (path.length > pointCount) return false;
@@ -104,25 +154,35 @@ export function isValidDotPath(path: readonly number[], size: number): boolean {
     if (!Number.isInteger(point) || point < 0 || point >= pointCount || visited.has(point)) {
       return false;
     }
-    if (index > 0 && !areDotsAdjacent(path[index - 1]!, point, size)) return false;
+    if (index > 0) {
+      const previous = path[index - 1]!;
+      if (
+        !areDotsAdjacent(previous, point, size) ||
+        isDotEdgeBlocked(previous, point, blockedEdges)
+      ) {
+        return false;
+      }
+    }
     visited.add(point);
   }
   return true;
 }
 
-export function isSolvedDotPath(path: readonly number[], size: number): boolean {
-  return path.length === size * size && isValidDotPath(path, size);
+export function isSolvedDotPath(
+  path: readonly number[],
+  size: number,
+  blockedEdges: readonly DotEdge[] = [],
+): boolean {
+  return path.length === size * size && isValidDotPath(path, size, blockedEdges);
 }
 
 export function isSolvedDotLevelPath(path: readonly number[], level: DotLevel): boolean {
   return (
-    isSolvedDotPath(path, level.size) &&
+    isSolvedDotPath(path, level.size, level.blockedEdges) &&
     path[0] === level.start &&
     path[path.length - 1] === level.end &&
     level.checkpoints.every((checkpoint) => path.includes(checkpoint)) &&
-    level.checkpoints.every(
-      (checkpoint, index) => path.indexOf(checkpoint) < path.indexOf(level.end),
-    ) &&
+    level.checkpoints.every((checkpoint) => path.indexOf(checkpoint) < path.indexOf(level.end)) &&
     level.checkpoints.every(
       (checkpoint, index) =>
         index === 0 || path.indexOf(level.checkpoints[index - 1]!) < path.indexOf(checkpoint),

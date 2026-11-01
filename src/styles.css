@@ -53,6 +53,21 @@
   animation: dot-connection-victory-board 850ms ease-out both;
 }
 
+@keyframes dot-connection-reveal-line {
+  from {
+    stroke-dashoffset: 1;
+    filter: drop-shadow(0 0 0 rgb(255 196 201 / 0%));
+  }
+  to {
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 4px rgb(255 196 201 / 85%));
+  }
+}
+
+.dot-connection-reveal-line {
+  animation: dot-connection-reveal-line 380ms ease-out both;
+}
+
 .dot-connection-victory-notice {
   animation: dot-connection-victory-notice 850ms ease-out both;
 }
@@ -110,11 +125,17 @@
   }
 
   .dot-connection-victory-board,
+  .dot-connection-reveal-line,
   .dot-connection-victory-notice,
   .seal-code-victory-notice {
     animation: none;
     outline: 2px solid #ffc4c9;
     outline-offset: 2px;
+  }
+
+  .dot-connection-reveal-line {
+    stroke-dashoffset: 0;
+    filter: none;
   }
 }
 
