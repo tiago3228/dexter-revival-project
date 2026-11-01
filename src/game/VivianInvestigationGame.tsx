@@ -878,9 +878,7 @@ function readSave(): SaveData | null {
         VIVIAN_DEDUCTIONS.map((item) => item.id),
       ),
       investigationNotes:
-        typeof value.investigationNotes === "string"
-          ? value.investigationNotes.slice(0, 4000)
-          : "",
+        typeof value.investigationNotes === "string" ? value.investigationNotes.slice(0, 4000) : "",
       logicGrids: ids(value.logicGrids, GRID_LEVEL_IDS.slice(1)),
       completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
     };
@@ -1037,7 +1035,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       : nextClue
         ? `vivian-clue-${nextClue.id}`
         : "vivian-places";
-  const guideStep = !nextRiddle && !nextCodeLock && !nextClue ? 4 : nextClue && !nextRiddle && !nextCodeLock ? 2 : 3;
+  const guideStep =
+    !nextRiddle && !nextCodeLock && !nextClue
+      ? 4
+      : nextClue && !nextRiddle && !nextCodeLock
+        ? 2
+        : 3;
   const goToNextTarget = () => {
     const target = document.getElementById(nextTargetId);
     if (!target) return;
@@ -1522,12 +1525,16 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                 key={step.n}
                 className={`flex gap-3 border p-3 ${guideStep === step.n ? "border-[#c4a779] bg-[#c4a779]/10" : guideStep > step.n ? "border-emerald-900/70 opacity-70" : "border-[#4b4439] opacity-60"}`}
               >
-                <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border font-mono text-xs ${guideStep === step.n ? "border-[#c4a779] text-[#ead8b8]" : "border-[#4b4439] text-[#a9a092]"}`}>
+                <span
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border font-mono text-xs ${guideStep === step.n ? "border-[#c4a779] text-[#ead8b8]" : "border-[#4b4439] text-[#a9a092]"}`}
+                >
                   {guideStep > step.n ? <Check size={14} /> : step.n}
                 </span>
                 <span>
                   <span className="block text-sm text-[#ead8b8]">{step.t}</span>
-                  <span className="mt-0.5 block text-[11px] leading-snug text-[#a9a092]">{step.d}</span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-[#a9a092]">
+                    {step.d}
+                  </span>
                 </span>
               </li>
             ))}
@@ -1558,7 +1565,10 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
         {phase === "explore" && (
           <div className="mt-5 grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <aside id="vivian-places" className="border border-[#4b4439] bg-[#191714] p-4 lg:sticky lg:top-4 lg:self-start">
+            <aside
+              id="vivian-places"
+              className="border border-[#4b4439] bg-[#191714] p-4 lg:sticky lg:top-4 lg:self-start"
+            >
               <h2 className="font-display text-2xl">Locais</h2>
               <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
                 Novos locais abrem quando uma pista documental justifica o próximo passo.
@@ -1583,10 +1593,14 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                         <span className="flex flex-wrap items-center gap-2 text-sm">
                           {place.name}
                           {activePlace === place.id && (
-                            <span className="border border-[#c4a779] px-1.5 font-mono text-[9px] uppercase text-[#ead8b8]">Você está aqui</span>
+                            <span className="border border-[#c4a779] px-1.5 font-mono text-[9px] uppercase text-[#ead8b8]">
+                              Você está aqui
+                            </span>
                           )}
                           {unlocked && activePlace !== place.id && !visited.includes(place.id) && (
-                            <span className="animate-pulse bg-[#c4a779] px-1.5 font-mono text-[9px] uppercase text-[#11100e]">Novo · clique</span>
+                            <span className="animate-pulse bg-[#c4a779] px-1.5 font-mono text-[9px] uppercase text-[#11100e]">
+                              Novo · clique
+                            </span>
                           )}
                         </span>
                         <span className="mt-1 block text-[10px] leading-relaxed text-[#a9a092]">
@@ -1616,11 +1630,21 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                 <p className="mt-2 text-sm leading-relaxed text-[#ead8b8]">{nextStep}</p>
                 <button
                   type="button"
-                  onClick={guideStep === 4 && activePlace !== "archive" && !PLACES.some((p) => isUnlocked(p.id, found) && !visited.includes(p.id)) ? () => setPhase("board") : goToNextTarget}
+                  onClick={
+                    guideStep === 4 &&
+                    activePlace !== "archive" &&
+                    !PLACES.some((p) => isUnlocked(p.id, found) && !visited.includes(p.id))
+                      ? () => setPhase("board")
+                      : goToNextTarget
+                  }
                   className="mt-3 inline-flex min-h-11 items-center gap-2 border border-[#c4a779] bg-[#c4a779] px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#11100e] hover:bg-[#ead8b8]"
                 >
                   <MapPin size={15} />
-                  {guideStep === 4 && activePlace !== "archive" && !PLACES.some((p) => isUnlocked(p.id, found) && !visited.includes(p.id)) ? "Ir ao quadro de evidências" : "Mostrar onde clicar"}
+                  {guideStep === 4 &&
+                  activePlace !== "archive" &&
+                  !PLACES.some((p) => isUnlocked(p.id, found) && !visited.includes(p.id))
+                    ? "Ir ao quadro de evidências"
+                    : "Mostrar onde clicar"}
                 </button>
                 <p className="mt-2 text-[10px] leading-relaxed text-[#a9a092]">
                   Abra cada arquivo antes de registrar a evidência. O botão de voltar mantém você no
@@ -1674,13 +1698,52 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                               className="mt-4 flex flex-wrap gap-2"
                               onSubmit={(event) => {
                                 event.preventDefault();
-                                solveRiddle(riddle, riddle.nameLength && nameEntryModes[riddle.id] !== "text" ? nameAnswer : answer);
+                                solveRiddle(
+                                  riddle,
+                                  riddle.nameLength && nameEntryModes[riddle.id] !== "text"
+                                    ? nameAnswer
+                                    : answer,
+                                );
                               }}
                             >
                               {riddle.nameLength && (
-                                <div className="flex w-full gap-1" role="group" aria-label={`Modo de resposta para ${riddle.title}`}>
-                                  <Button type="button" size="sm" variant={nameEntryModes[riddle.id] !== "text" ? "secondary" : "ghost"} aria-pressed={nameEntryModes[riddle.id] !== "text"} onClick={() => setNameEntryModes((current) => ({ ...current, [riddle.id]: "discs" }))}>Discos</Button>
-                                  <Button type="button" size="sm" variant={nameEntryModes[riddle.id] === "text" ? "secondary" : "ghost"} aria-pressed={nameEntryModes[riddle.id] === "text"} onClick={() => setNameEntryModes((current) => ({ ...current, [riddle.id]: "text" }))}>Digitar</Button>
+                                <div
+                                  className="flex w-full gap-1"
+                                  role="group"
+                                  aria-label={`Modo de resposta para ${riddle.title}`}
+                                >
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant={
+                                      nameEntryModes[riddle.id] !== "text" ? "secondary" : "ghost"
+                                    }
+                                    aria-pressed={nameEntryModes[riddle.id] !== "text"}
+                                    onClick={() =>
+                                      setNameEntryModes((current) => ({
+                                        ...current,
+                                        [riddle.id]: "discs",
+                                      }))
+                                    }
+                                  >
+                                    Discos
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant={
+                                      nameEntryModes[riddle.id] === "text" ? "secondary" : "ghost"
+                                    }
+                                    aria-pressed={nameEntryModes[riddle.id] === "text"}
+                                    onClick={() =>
+                                      setNameEntryModes((current) => ({
+                                        ...current,
+                                        [riddle.id]: "text",
+                                      }))
+                                    }
+                                  >
+                                    Digitar
+                                  </Button>
                                 </div>
                               )}
                               {riddle.nameLength && nameEntryModes[riddle.id] !== "text" ? (
@@ -1692,7 +1755,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                                           type="button"
                                           aria-label={`Girar letra ${index + 1} para cima`}
                                           onClick={() =>
-                                            rotateNameDial(riddle.id, index, 1, riddle.nameLength ?? 0)
+                                            rotateNameDial(
+                                              riddle.id,
+                                              index,
+                                              1,
+                                              riddle.nameLength ?? 0,
+                                            )
                                           }
                                           className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
                                         >
@@ -1705,7 +1773,12 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                                           type="button"
                                           aria-label={`Girar letra ${index + 1} para baixo`}
                                           onClick={() =>
-                                            rotateNameDial(riddle.id, index, -1, riddle.nameLength ?? 0)
+                                            rotateNameDial(
+                                              riddle.id,
+                                              index,
+                                              -1,
+                                              riddle.nameLength ?? 0,
+                                            )
                                           }
                                           className="min-h-8 w-full border border-[#4b4439] text-[#c4a779] hover:bg-[#c4a779]/10"
                                         >
@@ -1783,7 +1856,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                       const hintKey = `code:${lock.id}:1`;
                       const hintUsed = usedHints.includes(hintKey);
                       return (
-                        <article key={lock.id} id={`vivian-lock-${lock.id}`} className="border border-[#4b4439] bg-[#171512] p-4">
+                        <article
+                          key={lock.id}
+                          id={`vivian-lock-${lock.id}`}
+                          className="border border-[#4b4439] bg-[#171512] p-4"
+                        >
                           <div className="flex items-start justify-between gap-3">
                             <h3 className="font-display text-xl">{lock.title}</h3>
                             {solved && <Check size={17} className="shrink-0 text-emerald-300" />}
@@ -1851,7 +1928,11 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
                   const collected = found.includes(clue.id);
                   const catalogLink = collected ? getCatalogEvidenceForClue(clue.id) : undefined;
                   return (
-                    <article key={clue.id} id={`vivian-clue-${clue.id}`} className={`border bg-[#211f1b] p-4 ${nextClue?.id === clue.id && !nextRiddle && !nextCodeLock ? "border-[#c4a779] ring-1 ring-[#c4a779]/50" : collected ? "border-emerald-900/60" : "border-[#4b4439]"}`}>
+                    <article
+                      key={clue.id}
+                      id={`vivian-clue-${clue.id}`}
+                      className={`border bg-[#211f1b] p-4 ${nextClue?.id === clue.id && !nextRiddle && !nextCodeLock ? "border-[#c4a779] ring-1 ring-[#c4a779]/50" : collected ? "border-emerald-900/60" : "border-[#4b4439]"}`}
+                    >
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="font-display text-xl">{clue.title}</h3>
                         {collected && <Check size={17} className="shrink-0 text-emerald-300" />}

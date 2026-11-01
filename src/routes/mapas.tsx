@@ -55,14 +55,23 @@ const cityMapHotspots = [
 ];
 
 export const Route = createFileRoute("/mapas")({
-  head: () => ({ meta: [
-    { title: "Mapas do Caso Vivian Roberts | Dexter — The Game" },
-    { name: "description", content: "Mapas de Painscreek, da mansão, do hospital e dos esgotos para investigar o caso Vivian Roberts." },
-    { property: "og:title", content: "Mapas do Caso Vivian Roberts | Dexter — The Game" },
-    { property: "og:description", content: "Consulte os locais e plantas da investigação em Painscreek." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary" },
-  ] }),
+  head: () => ({
+    meta: [
+      { title: "Mapas do Caso Vivian Roberts | Dexter — The Game" },
+      {
+        name: "description",
+        content:
+          "Mapas de Painscreek, da mansão, do hospital e dos esgotos para investigar o caso Vivian Roberts.",
+      },
+      { property: "og:title", content: "Mapas do Caso Vivian Roberts | Dexter — The Game" },
+      {
+        property: "og:description",
+        content: "Consulte os locais e plantas da investigação em Painscreek.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: MapasPage,
 });
 
