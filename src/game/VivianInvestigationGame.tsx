@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { VivianDeductionDesk } from "./VivianDeductionDesk";
+import { VivianMurdleDeduction } from "./VivianMurdleDeduction";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
@@ -131,6 +132,7 @@ type SaveData = {
   logicGrids: string[];
   completedQuickCases: string[];
   circuitPanelSolved: boolean;
+  murdleDeductionSolved: boolean;
   caseCompleted: boolean;
   accusation: { suspect: string; weapon: string; motive: string };
 };
@@ -907,6 +909,7 @@ function readSave(): SaveData | null {
       logicGrids: ids(value.logicGrids, GRID_LEVEL_IDS.slice(1)),
       completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
       circuitPanelSolved: value.circuitPanelSolved === true,
+      murdleDeductionSolved: value.murdleDeductionSolved === true,
       caseCompleted: value.caseCompleted === true,
       accusation: {
         suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
@@ -984,6 +987,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     saved?.completedQuickCases ?? [],
   );
   const [circuitPanelSolved, setCircuitPanelSolved] = useState(saved?.circuitPanelSolved ?? false);
+  const [murdleDeductionSolved, setMurdleDeductionSolved] = useState(
+    saved?.murdleDeductionSolved ?? false,
+  );
   const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
   const [accusation, setAccusation] = useState(
     saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
@@ -1024,6 +1030,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       logicGrids,
       completedQuickCases,
       circuitPanelSolved,
+      murdleDeductionSolved,
       caseCompleted,
       accusation,
     };
@@ -1049,6 +1056,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     logicGrids,
     completedQuickCases,
     circuitPanelSolved,
+    murdleDeductionSolved,
     caseCompleted,
     accusation,
   ]);
@@ -1449,6 +1457,7 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
     setDeductions([]);
     setInvestigationNotes("");
     setCircuitPanelSolved(false);
+    setMurdleDeductionSolved(false);
     setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
@@ -2205,6 +2214,24 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
               playInvestigationSound("connection");
               setNotice(
                 "Dedução sustentada pelas fontes. Nenhum veredito de culpa foi estabelecido.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <VivianMurdleDeduction
+            solved={murdleDeductionSolved}
+            onSolved={() => {
+              setMurdleDeductionSolved(true);
+              setInvestigationNotes((current) => {
+                const marker = "[EXERCÍCIO DE DEDUÇÃO · DOSSIÊ DE RELAÇÕES]";
+                if (current.includes(marker)) return current;
+                const entry = `${marker}\nGrade resolvida como exercício de organização de hipóteses: pessoa × local × objeto.\nEstado editorial: associação de design, não prova canônica sobre autoria, localização ou conteúdo das fontes.`;
+                return current.trim() ? `${current.trim()}\n\n${entry}` : entry;
+              });
+              setNotice(
+                "Dossiê de relações conferido. O exercício foi registrado no caderno sem alterar o veredito nem fechar uma lacuna documental.",
               );
             }}
           />

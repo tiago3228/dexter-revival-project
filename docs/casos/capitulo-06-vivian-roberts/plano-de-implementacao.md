@@ -68,7 +68,9 @@
 
 - [ ] Implementar entrevistas e registro de depoimentos.
 
-- [x] Implementar quadro de conexões, requisitos probatórios e formulário de acusação final por personagem, arma e motivação.
+- [x] Criar quadro de conexões, requisitos probatórios e formulário de acusação final por personagem, arma e motivação.
+
+- [x] Integrar exercício opcional de dedução estilo Murdle no Caso Vivian, com grades pessoa × local e pessoa × objeto, pistas de eliminação/afirmação, validação da combinação e registro editorial no caderno; o exercício não estabelece culpa nem fecha lacunas documentais.
 
 - [x] Persistir a conclusão correta do caso e liberar o componente “Arquivo confidencial · Revelação final” somente após a vitória.
 
