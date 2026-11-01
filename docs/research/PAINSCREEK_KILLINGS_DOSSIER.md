@@ -369,3 +369,39 @@ Manter estas questões abertas até confirmação por fontes primárias:
 Este arquivo é uma base de pesquisa viva. Ao confirmar uma informação no jogo, atualizar a entrada com a localização, o nome do documento/objeto e a evidência exata. Não apagar divergências sem registrar como foram resolvidas. Preservar a distinção entre fatos do jogo, transcrição do walkthrough e hipóteses do pesquisador.
 
 **Próxima evolução recomendada:** decompor este dossiê em um catálogo de evidências e um grafo de dependências verificável, com IDs estáveis e referências cruzadas, antes de transformar os padrões observados em especificação dos sistemas do Dexter.
+
+## Galeria adicional — imagens verificadas
+
+As imagens a seguir foram localizadas em resultados de pesquisa e apontam para capturas/visuais associados ao jogo. São referências visuais externas; os direitos pertencem aos respectivos autores e titulares.
+
+### Cemitério de Painscreek
+![Entrada do cemitério de Painscreek](https://www.gamersdecide.com/sites/default/files/authors/u151747/the_painscreek_killings_cemetary.jpg)
+
+Fonte: [Gamers Decide — The Best Detective Games Ever Made](https://www.gamersdecide.com/articles/best-detective-games-1).
+
+### Igreja Trinity
+![Igreja de Painscreek](https://static.wixstatic.com/media/2bcb88_77c4ac65eab74db8a08c6122f70b10fb~mv2.jpg/v1/fill/w_1397%2Ch_786%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01/Church.webp)
+
+Fonte: [Dystopeek — The Painscreek Killings](https://dystopeek.fr/jouer/the-painscreek-killings/).
+
+### Diário / interface de investigação
+![Interface do diário de Vivian Roberts](https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/624270/ss_e0e3c32c8e39623c23efe9b85a81ba07c657bff0.1920x1080.jpg?t=1700694434)
+
+Fonte: [Página Steam — The Painscreek Killings](https://store.steampowered.com/app/624270/The_Painscreek_Killings/).
+
+### Mapa da cidade e interface
+![Mapa da cidade de Painscreek](https://static.wixstatic.com/media/2bcb88_58acabd62aeb4a02b79827cccde896ec~mv2.jpg/v1/fill/w_980%2Ch_551%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/2bcb88_58acabd62aeb4a02b79827cccde896ec~mv2.jpg)
+
+Fonte: [EQ Studios — Devlog #6: Designing The Menu & UI](https://www.eqstudios.com/post/painscreek-devlog-6-designing-the-menu-ui).
+
+### Diário de Scott
+![Diário de Scott Brooks](https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/624270/ss_ed24b0352f501c65db758602fc2400d6dac1758a.1920x1080.jpg?t=1766452249)
+
+Fonte: [Página Steam — The Painscreek Killings](https://store.steampowered.com/app/624270/The_Painscreek_Killings/).
+
+### Jornal / recorte de notícia
+![Jornal encontrado em Painscreek](https://images.steamusercontent.com/ugc/14479730549966543373/9DCD72A26CB1374BAC039F89A562046E6384AF1E/?ima=fit&imcolor=%23000000&impolicy=Letterbox&imw=1024&letterbox=false)
+
+Fonte: [Steam Community — The Painscreek Killings](https://steamcommunity.com/app/624270).
+
+**Observação:** o GitHub renderiza imagens remotas no Markdown quando a origem permite hotlink. Caso alguma origem bloqueie a exibição, o link da fonte permanece disponível. Para arquivamento duradouro no repositório, seria necessário obter os arquivos de imagem e confirmar as permissões/licenças antes de versioná-los localmente.
