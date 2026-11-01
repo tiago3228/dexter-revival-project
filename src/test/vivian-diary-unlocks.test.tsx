@@ -281,4 +281,13 @@ describe("diary viewer gestures and advanced navigation", () => {
       else delete (document as Partial<Document>).exitFullscreen;
     }
   });
+
+  it("closes the photo viewer through the visible mobile close button", () => {
+    const { viewer } = openUnlockedViewer();
+
+    fireEvent.click(within(viewer).getByRole("button", { name: "Fechar visualizador" }));
+    expect(
+      screen.queryByRole("dialog", { name: "Diário — Vivian Roberts" }),
+    ).not.toBeInTheDocument();
+  });
 });

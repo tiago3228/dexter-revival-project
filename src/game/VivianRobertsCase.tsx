@@ -514,12 +514,21 @@ function DiaryImages({
               type="button"
               onClick={() => setPresentationMode(false)}
               aria-label="Sair do modo apresentação"
-              className="absolute right-3 top-3 z-10 border border-[#79664c] bg-black/60 p-2 text-[#ead8b8] opacity-30 transition hover:opacity-100"
+              className="absolute right-14 top-3 z-10 border border-[#79664c] bg-black/60 p-2 text-[#ead8b8] opacity-30 transition hover:opacity-100"
               title="Sair do modo apresentação (P)"
             >
               <EyeOff size={16} />
             </button>
           )}
+          <button
+            type="button"
+            onClick={closeViewer}
+            aria-label="Fechar visualizador"
+            className="absolute right-3 top-3 z-10 inline-flex min-h-10 min-w-10 items-center justify-center border border-[#c4a779] bg-black/75 text-[#ead8b8] shadow-lg transition hover:bg-black"
+            title="Fechar foto"
+          >
+            <X size={20} />
+          </button>
           <div
             className={
               presentationMode
@@ -602,15 +611,6 @@ function DiaryImages({
                 title="Modo apresentação (P)"
               >
                 <EyeOff size={16} />
-              </button>
-              <button
-                type="button"
-                onClick={closeViewer}
-                aria-label="Fechar visualizador"
-                className="viewer-control"
-                title="Fechar"
-              >
-                <X size={17} />
               </button>
             </div>
           </div>
