@@ -16,7 +16,7 @@
 
 - [x] Fazer uma primeira inspeção visual das imagens das páginas 31–69 e corrigir omissões evidentes do OCR (p. 43, p. 55 e código da p. 60); ver [inventário OCR 31–69](./inventario-ocr-paginas-031-069.md) e [checklist de conferência visual](./checklist-conferencia-visual-pdf.md).
 
-- [x] Fazer a primeira passada visual das 116 imagens do ZIP original e cruzá-las com as páginas de referência; concluir a segunda conferência palavra por palavra, a terceira auditoria independente e a quarta conferência focalizada nas lacunas residuais, aplicar somente leituras sustentadas e harmonizar os acréscimos página-a-página. Ver [índice/mapeamento](./transcricoes-imagens-zip/README.md) e os relatórios da [segunda](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md), [terceira](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md) e [quarta conferência](./transcricoes-imagens-zip/quarta-conferencia-lacunas-116-imagens.md). A transcrição diplomática integral das camadas manuscritas sobrepostas/cortadas continua em andamento.
+- [x] Fazer a primeira passada visual das 116 imagens do ZIP original e cruzá-las com as páginas de referência; concluir a segunda conferência palavra por palavra, a terceira auditoria independente e a quarta conferência focalizada nas lacunas residuais; depois, fazer uma quinta conferência focalizada nas páginas 70–116 (47 imagens). Aplicar somente leituras sustentadas e harmonizar os acréscimos página-a-página. Ver [índice/mapeamento](./transcricoes-imagens-zip/README.md) e os relatórios da [segunda](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md), [terceira](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md), [quarta](./transcricoes-imagens-zip/quarta-conferencia-lacunas-116-imagens.md) e [quinta conferência](./transcricoes-imagens-zip/quinta-conferencia-paginas-070-116.md). A transcrição diplomática integral das camadas manuscritas sobrepostas/cortadas continua em andamento.
 
 - [x] Organizar a transcrição recebida das páginas 1–20 com IDs de diário/entrada e notas de incerteza; ver [transcrição dos lotes 01–02](./transcricao-lotes-01-02-paginas-001-020.md).
 
@@ -24,7 +24,7 @@
 
 - [x] Preparar transcrição de trabalho das páginas 31–40 a partir das imagens, com OCR auxiliar e trechos incertos marcados; ver [transcrição das páginas 31–40](./transcricao-paginas-031-040.md).
 
-- [x] Fazer segunda conferência palavra por palavra, terceira auditoria independente e quarta conferência focalizada de omissões nas transcrições das 116 capturas; harmonizar fragmentos confirmados nos registros por página e manter em aberto manuscritos ilegíveis/sobrepostos e cortes. Ver os relatórios da [terceira](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md) e [quarta conferência](./transcricoes-imagens-zip/quarta-conferencia-lacunas-116-imagens.md).
+- [x] Fazer segunda conferência palavra por palavra, terceira e quarta auditorias das 116 capturas, e quinta conferência focalizada nas páginas 70–116; harmonizar a leitura confirmada “Roland Brown” na camada inglesa do `doc9.png` e manter em aberto manuscritos ilegíveis/sobrepostos e cortes. Ver os relatórios da [terceira](./transcricoes-imagens-zip/terceira-conferencia-116-imagens.md), [quarta](./transcricoes-imagens-zip/quarta-conferencia-lacunas-116-imagens.md) e [quinta conferência](./transcricoes-imagens-zip/quinta-conferencia-paginas-070-116.md).
 
 - [ ] Completar as transcrições literais restantes, preservando trechos ilegíveis sem reconstrução inventada.
 

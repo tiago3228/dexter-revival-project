@@ -255,7 +255,7 @@ Isto tem ocorrido pelos últimos dezesseis meses. Neste momento, a quantia total
 Atenciosamente,
 Roland Brown
 
-**Camada inglesa subjacente:** parcialmente coberta pelo português; fragmentos “Our latest investigation shows that Dr. Henry Johnson has been”; “As of now, the total amount embezzled nears $160,000”; restante [ilegível].
+**Camada inglesa subjacente:** parcialmente coberta pelo português; fragmentos “Our latest investigation shows that Dr. Henry Johnson has been”; “As of now, the total amount embezzled nears $160,000”; nome “Roland Brown” legível no encerramento; demais trechos [ilegíveis].
 
 **Interface/sidebar:** CADERNO; CARTA/DOCUMENTO; Desvio de fundos (selecionado); lista restante visível.
 
