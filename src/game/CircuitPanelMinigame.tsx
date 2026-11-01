@@ -153,7 +153,17 @@ function TileShape({ mask, energized }: { mask: Mask; energized: boolean }) {
   );
 }
 
-export function CircuitPanelMinigame() {
+type CircuitPanelMinigameProps = {
+  embedded?: boolean;
+  onSolved?: () => void;
+  onExit?: () => void;
+};
+
+export function CircuitPanelMinigame({
+  embedded = false,
+  onSolved,
+  onExit,
+}: CircuitPanelMinigameProps = {}) {
   const [open, setOpen] = useState(false);
   const [started, setStarted] = useState(false);
   const [rotations, setRotations] = useState<number[]>(() => createPuzzle());
@@ -177,6 +187,7 @@ export function CircuitPanelMinigame() {
   const close = () => {
     setOpen(false);
     setStarted(false);
+    onExit?.();
   };
 
   const rotateTile = (index: number) => {
@@ -193,6 +204,7 @@ export function CircuitPanelMinigame() {
       setSolved(true);
       setCompletedBefore(true);
       window.localStorage.setItem(CIRCUIT_SAVE_KEY, "true");
+      onSolved?.();
     }
   };
 
@@ -204,7 +216,8 @@ export function CircuitPanelMinigame() {
         className="mt-4 inline-flex min-h-11 items-center gap-2 border border-amber-300/70 bg-amber-300/10 px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-amber-100 transition hover:bg-amber-300 hover:text-[#17120d]"
         aria-haspopup="dialog"
       >
-        <CircuitBoard size={16} aria-hidden="true" /> Painel Elétrico
+        <CircuitBoard size={16} aria-hidden="true" />
+        {embedded ? "Abrir painel elétrico" : "Painel Elétrico"}
       </button>
       {open && (
         <div

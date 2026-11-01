@@ -98,6 +98,12 @@ As sete seções foram cotejadas com as transcrições harmonizadas e os relató
 - **§ 6 — locais/objetos:** existência/acesso de sala secreta (distinguir a especulação sobre a mansão na p. 40 da pergunta sobre a cabana na p. 72); pintura e clique; cápsula do tempo e conteúdo.
 - **§ 7 — qualidade das transcrições:** manuscritos/cortes remanescentes das pp. 70–116; ordem de leitura/datas/colunas nas pp. 75, 89–90 e 105–116; separação de cabeçalhos, legendas, texto impresso e manuscrito nas pp. 93–95, 102–103 e 106–116; transcrição diplomática e harmonização dos lotes 1–40.
 
+### Progresso jogável registrado — sem encerramento de lacuna
+
+- **§ 6 — passagem secreta:** o Caso Vivian agora permite resolver um painel elétrico como linha investigativa opcional. A vitória registra no caderno um **croqui parcial da rede auxiliar** (linha auxiliar → áreas de serviço → zona não identificada) e abre três hipóteses explicitamente não confirmadas: associação com a cabana de Scott, associação com a mansão Roberts e possível relação com o dreno/esgoto.
+- Esse desbloqueio é uma decisão de design do jogo e não uma nova fonte primária. Ele não confirma a existência da sala, não escolhe entre mansão e cabana, não transforma a rota pelo dreno/esgoto em cânone e não altera o gabarito do caso.
+- O registro continua contado entre as **20 lacunas abertas**; “progresso” aqui significa apenas que a investigação jogável ganhou uma pista técnica e uma superfície para comparação documental.
+
 ### Contradição ainda aberta — 1 questão
 
 - **§ 2 — “Mathew”/“Matthew”:** preservar as grafias conforme aparecem nas respectivas fontes. O conjunto atual não permite decidir se é variação/erro de transcrição ou pessoa distinta; não normalizar nem separar identidades por inferência.

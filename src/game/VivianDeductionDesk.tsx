@@ -14,6 +14,13 @@ type Source = {
   caution: string;
   audioSrc: string;
 };
+type BonusEvidence = {
+  title: string;
+  source: string;
+  summary: string;
+  caution: string;
+  hypotheses: string[];
+};
 type Props = {
   sources: Source[];
   selected: string[];
@@ -25,6 +32,7 @@ type Props = {
   onGridSolve: (id: string) => void;
   onQuickCaseSolve: (id: string) => void;
   onNotes: (text: string) => void;
+  bonusEvidence?: BonusEvidence | undefined;
 };
 
 export function VivianDeductionDesk({
@@ -38,6 +46,7 @@ export function VivianDeductionDesk({
   onGridSolve,
   onQuickCaseSolve,
   onNotes,
+  bonusEvidence,
 }: Props) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -98,6 +107,39 @@ export function VivianDeductionDesk({
             </article>
           ))}
         </div>
+      )}
+      {bonusEvidence && (
+        <article
+          className="border border-[#c4a779]/70 bg-[#c4a779]/10 p-4 sm:p-5"
+          aria-label={bonusEvidence.title}
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#e1c18d]">
+                Nova pista técnica · registro de jogo
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#f0dfbd]">{bonusEvidence.title}</h3>
+              <p className="mt-1 font-mono text-xs text-[#bdb5a8]">{bonusEvidence.source}</p>
+            </div>
+            <span className="border border-[#c4a779]/60 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-[#e1c18d]">
+              Não conclusivo
+            </span>
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-[#e2d7c4]">{bonusEvidence.summary}</p>
+          <p className="mt-3 border-l-2 border-[#8f7955] pl-3 text-xs leading-relaxed text-[#c7bba8]">
+            {bonusEvidence.caution}
+          </p>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {bonusEvidence.hypotheses.map((hypothesis) => (
+              <p
+                key={hypothesis}
+                className="border border-[#5f503b] bg-[#211f1b] p-3 text-xs leading-relaxed text-[#d5c9b5]"
+              >
+                {hypothesis}
+              </p>
+            ))}
+          </div>
+        </article>
       )}
       <div className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)]">
         <nav className="space-y-2" aria-label="Deduções disponíveis">

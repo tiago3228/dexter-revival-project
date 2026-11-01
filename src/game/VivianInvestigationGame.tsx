@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { VivianDeductionDesk } from "./VivianDeductionDesk";
+import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
   getVivianVerdictReadiness,
@@ -129,6 +130,7 @@ type SaveData = {
   investigationNotes: string;
   logicGrids: string[];
   completedQuickCases: string[];
+  circuitPanelSolved: boolean;
   caseCompleted: boolean;
   accusation: { suspect: string; weapon: string; motive: string };
 };
@@ -138,6 +140,19 @@ const MAP_TARGET_KEY = "vivian-map-target";
 const FINAL_DOSSIER_PASSWORD = "M99";
 const DOSSIER_LETTERS = Array.from({ length: 26 }, (_, index) => String.fromCharCode(65 + index));
 const DOSSIER_DIGITS = Array.from({ length: 10 }, (_, index) => String(index));
+const SECRET_PASSAGE_BONUS = {
+  title: "Croqui parcial da rede auxiliar",
+  source: "Painel elétrico · pista técnica desbloqueada no Caso Vivian",
+  summary:
+    "O circuito restaurado alimenta uma linha subterrânea que atravessa áreas de serviço e termina em uma zona não identificada. O croqui não informa se o destino é a mansão, a cabana ou o sistema de drenagem.",
+  caution:
+    "Registro de jogo baseado no painel restaurado: abre uma linha investigativa, mas não comprova a existência, o acesso ou a localização de uma sala secreta.",
+  hypotheses: [
+    "Hipótese A — A passagem pode estar associada à cabana de Scott. Suporte: relatos sobre a cabana e a pergunta de Trisha. Estado: plausível, não confirmado.",
+    "Hipótese B — A passagem pode pertencer à mansão Roberts. Suporte: a referência de Scott à mansão e a linha auxiliar próxima ao complexo. Estado: plausível, não confirmado.",
+    "Hipótese C — A rota pode envolver dreno/esgoto. Estado: design não confirmado; não tratar como rota canônica.",
+  ],
+};
 const CODE_LOCKS: CodeLock[] = [
   {
     id: "katherine-cabinet",
@@ -891,6 +906,7 @@ function readSave(): SaveData | null {
         typeof value.investigationNotes === "string" ? value.investigationNotes.slice(0, 4000) : "",
       logicGrids: ids(value.logicGrids, GRID_LEVEL_IDS.slice(1)),
       completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
+      circuitPanelSolved: value.circuitPanelSolved === true,
       caseCompleted: value.caseCompleted === true,
       accusation: {
         suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
@@ -967,6 +983,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [completedQuickCases, setCompletedQuickCases] = useState<string[]>(
     saved?.completedQuickCases ?? [],
   );
+  const [circuitPanelSolved, setCircuitPanelSolved] = useState(saved?.circuitPanelSolved ?? false);
   const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
   const [accusation, setAccusation] = useState(
     saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
@@ -1006,6 +1023,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       investigationNotes,
       logicGrids,
       completedQuickCases,
+      circuitPanelSolved,
       caseCompleted,
       accusation,
     };
@@ -1030,6 +1048,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     investigationNotes,
     logicGrids,
     completedQuickCases,
+    circuitPanelSolved,
     caseCompleted,
     accusation,
   ]);
@@ -1092,6 +1111,22 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
           : score > 0
             ? "Precisou de bastante ajuda"
             : "Assistência máxima";
+  const handleCircuitPanelSolved = () => {
+    const noteMarker = "[PAINEL ELÉTRICO · CROQUI PARCIAL]";
+    setInvestigationNotes((current) => {
+      if (current.includes(noteMarker)) return current;
+      const entry = `${noteMarker}
+Linha auxiliar → áreas de serviço → zona não identificada.
+Hipótese A: possível associação com a cabana de Scott — plausível, não confirmada.
+Hipótese B: possível associação com a mansão Roberts — plausível, não confirmada.
+Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não tratar como rota canônica.`;
+      return current.trim() ? `${current.trim()}\n\n${entry}` : entry;
+    });
+    setCircuitPanelSolved(true);
+    setNotice(
+      "Painel restaurado. Croqui parcial e hipóteses sobre a passagem secreta adicionados ao caderno; a lacuna continua aberta.",
+    );
+  };
   const playerRank = playerRanking.findIndex(
     (entry) => entry.name.toLocaleLowerCase("pt-BR") === playerName.toLocaleLowerCase("pt-BR"),
   );
@@ -1413,6 +1448,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     setRankingRecorded(false);
     setDeductions([]);
     setInvestigationNotes("");
+    setCircuitPanelSolved(false);
     setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
@@ -1617,6 +1653,33 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
               ))}
             </div>
           </details>
+        )}
+
+        {phase === "explore" && (
+          <section
+            className="mt-5 border border-[#8f7955] bg-[#201d18] p-4 sm:p-5"
+            aria-label="Pista técnica da passagem secreta"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e1c18d]">
+                  Linha investigativa opcional
+                </p>
+                <h2 className="mt-1 font-display text-2xl text-[#ead8b8]">
+                  Painel da rede auxiliar
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
+                  Um circuito interrompido pode revelar o destino de uma linha de serviço. Resolva o
+                  painel para registrar um croqui parcial e abrir hipóteses sobre a passagem — sem
+                  transformar nenhuma delas em fato.
+                </p>
+              </div>
+              <span className="border border-[#6c5a42] px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                {circuitPanelSolved ? "Croqui registrado" : "Ainda não conferido"}
+              </span>
+            </div>
+            <CircuitPanelMinigame embedded onSolved={handleCircuitPanelSolved} />
+          </section>
         )}
 
         {phase === "explore" && (
@@ -2117,6 +2180,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
             selected={selectedClues}
             solved={deductions}
             notes={investigationNotes}
+            bonusEvidence={circuitPanelSolved ? SECRET_PASSAGE_BONUS : undefined}
             gridProgress={logicGrids}
             completedQuickCases={completedQuickCases}
             onNotes={setInvestigationNotes}
