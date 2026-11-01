@@ -131,4 +131,46 @@ describe("desafios rápidos no mapa de transição", () => {
     expect(saved.mistakes).toBe(4);
     expect(saved.investigationNotes).toBe("A conversa não foi ouvida pelos caçadores.");
   });
+
+  it("cruza a janela estimada e o avistamento sem transformar a coincidência em álibi", () => {
+    const chronologyCase = VIVIAN_QUICK_CASES.find(
+      (quickCase) => quickCase.id === "alibi-chronology",
+    );
+    expect(chronologyCase).toBeDefined();
+    if (!chronologyCase) throw new Error("Alibi chronology quick case is missing");
+    expect(chronologyCase.requiredRecords).toEqual(["scott-denial", "police-report"]);
+
+    window.localStorage.setItem(
+      SAVE_KEY,
+      JSON.stringify({
+        version: 6,
+        found: ["scott-denial", "police-report"],
+        completedQuickCases: [],
+        mistakes: 1,
+        investigationNotes: "23h30 é um relato retrospectivo.",
+      }),
+    );
+    render(<VivianMapQuickChallenges />);
+    fireEvent.click(screen.getByRole("button", { name: /Entre um local e outro/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Álibis cruzados: a janela das 23h30/ }));
+
+    const challenge = screen.getByRole("article", { name: chronologyCase.title });
+    expect(within(challenge).getByText(/23h30 de 19 de julho/)).toBeInTheDocument();
+    expect(within(challenge).getByText(/7h15/)).toBeInTheDocument();
+    expect(
+      within(challenge).getByText(/só ligou para a polícia alguns dias depois/),
+    ).toBeInTheDocument();
+    expect(within(challenge).getAllByLabelText(/Ouvir resumo narrado/)).toHaveLength(3);
+
+    for (const step of chronologyCase.steps) {
+      const correctOption = step.options.find((option) => option.id === step.answer)!;
+      fireEvent.click(within(challenge).getByRole("radio", { name: correctOption.label }));
+    }
+    fireEvent.click(within(challenge).getByRole("button", { name: "Conferir caso" }));
+
+    const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) ?? "{}");
+    expect(saved.completedQuickCases).toEqual(["alibi-chronology"]);
+    expect(saved.mistakes).toBe(1);
+    expect(saved.investigationNotes).toBe("23h30 é um relato retrospectivo.");
+  });
 });

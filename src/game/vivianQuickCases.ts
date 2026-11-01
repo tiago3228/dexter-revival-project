@@ -264,6 +264,106 @@ export const VIVIAN_QUICK_CASES: readonly QuickCase[] = [
     ],
   },
   {
+    id: "alibi-chronology",
+    title: "Álibis cruzados: a janela das 23h30",
+    summary:
+      "Cruze a janela estimada, o avistamento e a versão de Scott sem tomar coincidência por álibi.",
+    requiredRecords: ["scott-denial", "police-report"],
+    sourceReference: "Notícias · PDF pp. 82–83 + versão de Scott · PDF p. 88",
+    briefing:
+      "A p. 82 informa que Mary encontrou Vivian às 7h15 e estima a morte entre 23h da noite anterior e 1h da madrugada. Na p. 83, uma testemunha anônima alega ter visto Scott se afastando depressa da mansão em direção a Silverlake por volta das 23h30 de 19 de julho; só ligou para a polícia alguns dias depois, após ler a notícia. Na p. 88, Scott afirma que encontrou Vivian na floresta, voltou à cabana e não saiu por dias. O encaixe entre os relatos é possível, mas não confirma o trajeto completo nem um álibi.",
+    objective:
+      "Compare horários, ordem dos relatos e grau de confirmação. Determine se a sobreposição temporal comprova um álibi, uma contradição ou apenas uma hipótese a verificar.",
+    audioSources: [
+      {
+        id: "vivian-death-window-audio",
+        title: "Notícia da morte de Vivian · resumo narrado",
+        reference: "Notícia · PDF p. 82",
+        audioSrc: "/audio/painscreek/archive/p046-vivian-death-news.wav",
+      },
+      {
+        id: "scott-sighting-audio",
+        title: "Suspeita de Scott · resumo narrado",
+        reference: "Catálogo · PDF pp. 83, 90 e 104",
+        audioSrc: "/audio/painscreek/archive/p010-scott-vivian-suspect.wav",
+      },
+      {
+        id: "scott-account-audio",
+        title: "Versão de Scott sobre o encontro · resumo narrado",
+        reference: "Notícia · PDF p. 88",
+        audioSrc: "/audio/painscreek/clues/scott-denial.wav",
+      },
+    ],
+    steps: [
+      {
+        id: "overlapping-window",
+        question: "Como o horário de 23h30 da p. 83 se relaciona à estimativa da p. 82?",
+        options: [
+          {
+            id: "possible-overlap",
+            label:
+              "Ele cai dentro da faixa de 23h a 1h se a referência da notícia corresponder à noite de 19 para 20 de julho; isso é uma sobreposição possível, não prova de presença no local do crime.",
+          },
+          {
+            id: "exact-death-time",
+            label:
+              "Ele fixa 23h30 como o horário exato da morte e confirma que a testemunha viu o crime.",
+          },
+          {
+            id: "outside-window",
+            label:
+              "Ele fica fora da faixa estimada e elimina qualquer relação temporal entre os relatos.",
+          },
+        ],
+        answer: "possible-overlap",
+        explanation:
+          "23h30 está numericamente dentro da estimativa ampla, mas a janela jornalística e a lembrança retrospectiva não estabelecem hora ou local exatos do crime.",
+      },
+      {
+        id: "delayed-witness-report",
+        question: "O que a p. 83 informa sobre quando a testemunha conectou a cena ao assassinato?",
+        options: [
+          {
+            id: "after-news",
+            label:
+              "Ela só achou a cena suspeita e ligou para a polícia alguns dias depois, quando leu a notícia sobre Vivian.",
+          },
+          { id: "at-scene", label: "Ela chamou a polícia no instante em que viu Scott às 23h30." },
+          {
+            id: "identified-crime",
+            label: "Ela declarou ter presenciado o assassinato e reconhecido o autor na hora.",
+          },
+        ],
+        answer: "after-news",
+        explanation:
+          "A notícia descreve uma observação que só foi associada ao caso depois da publicação; não é um relato contemporâneo do crime em si.",
+      },
+      {
+        id: "alibi-assessment",
+        question: "Qual conclusão é mais cuidadosa ao cruzar o avistamento com a versão de Scott?",
+        options: [
+          {
+            id: "unverified-route",
+            label:
+              "A testemunha relata Scott indo em direção a Silverlake; Scott diz que voltou à cabana. Os relatos podem ser compatíveis, mas não confirmam independentemente o trajeto, a chegada ou um álibi completo.",
+          },
+          {
+            id: "confirmed-alibi",
+            label:
+              "A direção para Silverlake prova que Scott estava longe de Vivian durante toda a janela estimada.",
+          },
+          {
+            id: "proven-guilt",
+            label: "A sobreposição dos horários prova que Scott cometeu o assassinato.",
+          },
+        ],
+        answer: "unverified-route",
+        explanation:
+          "A notícia registra uma alegação anônima e Scott oferece sua própria versão. Sem confirmação independente do percurso e da sequência, não há álibi completo nem prova de culpa.",
+      },
+    ],
+  },
+  {
     id: "funds-report",
     title: "Acusação ou conclusão judicial?",
     summary: "Leia a natureza e o limite do relatório sobre a Roberts Relief.",
