@@ -1,6 +1,6 @@
 # Transcrições visuais e revisão — 116 imagens do ZIP
 
-**Estado:** as 116 imagens receberam três passadas: inspeção inicial, segunda conferência palavra por palavra e terceira auditoria independente por grupo. As correções e os fragmentos legíveis sustentados foram incorporados; manuscritos encobertos, cortes e leituras ainda duvidosas permanecem em aberto. Consulte os [relatórios da segunda](./segunda-conferencia-116-imagens.md) e da [terceira conferência](./terceira-conferencia-116-imagens.md).
+**Estado:** as 116 imagens receberam quatro passadas: inspeção inicial, segunda conferência palavra por palavra, terceira auditoria independente e quarta conferência focalizada nas lacunas residuais. As leituras legíveis sustentadas foram incorporadas; manuscritos encobertos, cortes e leituras ainda duvidosas permanecem em aberto. Consulte os [relatórios da segunda](./segunda-conferencia-116-imagens.md), da [terceira](./terceira-conferencia-116-imagens.md) e da [quarta conferência](./quarta-conferencia-lacunas-116-imagens.md).
 
 ## Fonte e regra de paginação
 
@@ -30,7 +30,7 @@ As páginas abaixo são os números de referência usados nos OCRs/transcriçõe
 | `outros1.png`–`outros7.png` | 105–111 | Registros adicionais, formulários e livro de segurança. |
 | `Dorothy.png`, `Dorothy1.png`–`Dorothy4.png` | 112–116 | Diário de Dorothy; correspondência feita pelas datas e conteúdo de cada captura. |
 
-A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [crosswalk individual (CSV)](./mapeamento-imagens-paginas.csv) registra cada par arquivo–página. Os [relatórios da segunda](./segunda-conferencia-116-imagens.md) e da [terceira conferência](./terceira-conferencia-116-imagens.md) documentam as verificações e correções por imagem. As três passadas não substituem a transcrição diplomática dos manuscritos encobertos/cortados nem confirmam interpretações narrativas.
+A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [crosswalk individual (CSV)](./mapeamento-imagens-paginas.csv) registra cada par arquivo–página. Os relatórios da segunda, terceira e quarta conferências documentam as verificações e correções por imagem. As quatro passadas não substituem a transcrição diplomática dos manuscritos encobertos/cortados nem confirmam interpretações narrativas.
 
 ## Divergências verificadas nesta etapa
 
@@ -64,7 +64,7 @@ A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [cross
 
 ## Limites e próxima etapa
 
-1. A segunda passada comparou palavra por palavra o conteúdo transcrito com as 116 imagens; a terceira foi uma auditoria independente de possíveis omissões/leituras incorretas. As correções sustentadas estão registradas no relatório da terceira conferência. Nenhuma página é marcada como revisão diplomática integral apenas por ter sido aberta e cotejada.
+1. A segunda passada comparou palavra por palavra o conteúdo transcrito com as 116 imagens; a terceira e a quarta procuraram omissões residuais de forma independente. As inclusões e as sugestões rejeitadas por incerteza estão registradas nos relatórios da terceira e da quarta conferência. Nenhuma página é marcada como revisão diplomática integral apenas por ter sido aberta e cotejada.
 2. As anotações manuscritas em inglês aparecem frequentemente sob/por trás do texto impresso em português. Trechos encobertos, cortados ou ambíguos permanecem assinalados como incertos ou ilegíveis; não foram completados por contexto.
-3. A etapa seguinte é expandir, onde a imagem permitir, a transcrição das camadas manuscritas residuais e harmonizar os achados nos registros página-a-página, no inventário de lacunas e nas contradições — sem atribuir paginação por ordem do ZIP.
+3. A próxima etapa é prosseguir a transcrição das camadas manuscritas residuais e a harmonização nos registros página-a-página, inventários e contradições, priorizando os trechos ainda parciais — sem atribuir paginação pela ordem do ZIP.
 4. Manter o estado **EM REVISÃO** para trechos incompletos; não promover hipóteses, relatos de personagens ou interpretações a fatos canônicos nem alterar a narrativa do jogo com base apenas em OCR ou inferência.

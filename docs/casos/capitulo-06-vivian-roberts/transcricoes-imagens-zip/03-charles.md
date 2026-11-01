@@ -88,9 +88,7 @@ Eu sabia que nosso relacionamento não seria mais tão próximo quanto era, mas 
 
 `I know our relationship ...` [ilegível]
 `... since ...` [ilegível]
-`... I think it was because of`
-`... didn't leave me. She is a g...` [ilegível]
-`good mother. I'm grateful for that.`
+`I think it was because of Trisha that she didn't leave me. She is a good wife and a good mother. I'm grateful for that.`
 
 ## Cobertura
 

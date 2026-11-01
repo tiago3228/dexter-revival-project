@@ -54,7 +54,7 @@ Quando o padre Calvin me enviou para cá pela primeira vez, ele perguntou se eu 
 
 Vou avisar ao padre Calvin sobre a minha decisão.
 
-**Manuscrito / anotação:** escrita cursiva em inglês sob o texto impresso. Trechos legíveis: “This missionary trip is harder than I thought.”; “What can I do?”; “I will let Father Calvin know about my decision.” Outras partes permanecem encobertas/ilegíveis.
+**Manuscrito / anotação:** escrita cursiva em inglês sob o texto impresso. Trechos legíveis: “A few months have passed since I've been here.”; “This missionary trip is harder than I thought.”; “What can I do?”; “I will let Father Calvin know about my decision.” Outras partes permanecem encobertas/ilegíveis.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975, 1995 (1975 selecionado). Seta para avançar e ícone de fechar.
 
@@ -74,7 +74,7 @@ Padre Calvin me convocou esta manhã e me disse que Sofia havia deixado Painscre
 
 Ela foi forçada? Ela está escondendo alguma coisa? Eu simplesmente não consigo acreditar que Sofia se foi sem me dizer nada. Algo deve ter acontecido com ela, algo que ela não podia me contar.
 
-**Manuscrito / anotação:** escrita cursiva em inglês sob o corpo impresso. Fragmentos legíveis: “I will miss the people here. At the same time,”; “Was she forced? Is she hiding”. O restante das frases fica parcialmente encoberto; não foi reconstruído.
+**Manuscrito / anotação:** escrita cursiva em inglês sob o corpo impresso. Trechos legíveis: “I will miss the people here. At the same time, I can't wait to go back home and see everyone.”; “Was she forced? Is she hiding”. A continuação da segunda frase fica parcialmente encoberta; não foi reconstruída.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975 (selecionado), 1995. Setas para as páginas e ícone de fechar.
 
@@ -122,7 +122,7 @@ O que eu devo fazer agora? Eu sei que deveria perdoá-los, mas é tão difícil.
 
 Eu preciso falar com o Andrew. Eu preciso que ele confesse!
 
-**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto da página esquerda. Fragmento legível: “What should I do now? I know I should”; continuação encoberta/ilegível.
+**Manuscrito / anotação:** escrita cursiva em inglês por baixo do texto da página esquerda. Trecho legível: “What should I do now? I know I should forgive them, but it's so difficult.” Outros trechos permanecem encobertos/ilegíveis.
 
 **Interface (sidebar/seleção):** CADERNO; Matthew Brooks selecionado entre os nomes listados. Seletor de anos: 1971, 1975, 1995 (1995 selecionado). Seta para a esquerda e ícone de fechar.
 

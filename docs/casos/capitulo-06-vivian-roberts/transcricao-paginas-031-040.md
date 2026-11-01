@@ -155,3 +155,11 @@
 - **p. 31 / `matthew4.png`:** anotação inglesa legível em fragmentos: “I will miss the people here. At the same time,” e “Was she forced? Is she hiding”; continuação coberta.
 - **p. 34 / `matthew7.png`:** registrado o fragmento manuscrito “What should I do now? I know I should”; a continuação segue encoberta.
 - A transcrição literal dos fragmentos e as limitações estão em `transcricoes-imagens-zip/08-matthew.md`.
+
+
+## Adendo — quarta conferência visual (01/11/2026)
+
+- **p. 31 / `matthew4.png`, camada manuscrita inglesa:** lê-se “I will miss the people here. At the same time, I can't wait to go back home and see everyone.” A pergunta manuscrita seguinte permanece parcial: “Was she forced? Is she hiding …”.
+- **p. 34 / `matthew7.png`, camada manuscrita inglesa:** continuação legível: “What should I do now? I know I should forgive them, but it's so difficult.” É uma expressão da reação do narrador, não prova dos fatos sobre Sofia.
+- **p. 35 / `scott1.png`:** na camada manuscrita inglesa da página direita, lê-se “I love Father Matthew!”; trata-se de repetição manuscrita da frase impressa em português, não de fonte independente.
+- **p. 40 / `scott6.png`:** camada manuscrita: “I can't wait to explore it with Trisha!”; também repete o texto impresso em português. A referência à sala secreta continua sendo expectativa de Scott, não confirmação independente de sua existência.

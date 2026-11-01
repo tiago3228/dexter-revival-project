@@ -147,3 +147,9 @@ Richard O'Connell
 
 - **pp. 82–83 / `jornal1.png`–`jornal2.png`:** cabeçalho subjacente legível: “THE PAINSCREEK HERALD”.
 - **p. 83:** a captura/transcrição por imagem registra que a testemunha diz ter visto Scott por volta de **23h50** de 19 de julho; esta página de trabalho trazia 23h30 e deve ser corrigida para 23h50. A fala continua sendo relato de testemunha anônima, não prova independente de autoria.
+
+
+## Adendo — quarta conferência visual (01/11/2026)
+
+- **p. 81 / `wanda3.png`, camada manuscrita inglesa:** início legível “My hair is” no fragmento “My hair is falling off more now. I really …”. A continuação manuscrita permanece parcialmente encoberta e não foi completada.
+- **p. 83 / `jornal2.png`:** pequeno rótulo visual “PAGE 4” próximo à borda inferior, registrado como elemento gráfico da captura e não como parte do corpo do artigo.

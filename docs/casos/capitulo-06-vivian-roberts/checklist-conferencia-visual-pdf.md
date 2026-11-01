@@ -1,6 +1,6 @@
 # Checklist de conferência visual das imagens-fonte — O Caso Vivian Roberts
 
-> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist registra três passadas visuais pelas imagens PNG do ZIP original do usuário: inspeção inicial, cotejo palavra por palavra e auditoria independente de omissões/leituras. A transcrição diplomática integral ainda não está concluída onde há manuscritos sobrepostos, cortes ou leituras incertas.
+> **Objetivo:** transformar resumos e OCR em transcrições verificadas sem preencher lacunas por suposição. Este checklist registra quatro passadas visuais pelas imagens PNG do ZIP original do usuário: inspeção inicial, cotejo palavra por palavra, auditoria independente e conferência focalizada de omissões/leituras residuais. A transcrição diplomática integral ainda não está concluída onde há manuscritos sobrepostos, cortes ou leituras incertas.
 
 ## Estados permitidos
 
@@ -14,10 +14,10 @@ Não usar **CONFERIDO** só porque o OCR parece coerente. Se não houver acesso 
 
 ## Ordem de consolidação após o cotejo
 
-1. **Páginas 70–116:** expandir as camadas manuscritas residuais, resolver transcrições parciais e preservar os documentos citados mas ausentes.
-2. **Páginas 41–69:** completar trechos manuscritos/ilegíveis e separar texto literal de interpretação.
+1. **Páginas 70–116:** continuar expandindo as camadas manuscritas residuais e preservar os documentos citados mas ausentes.
+2. **Páginas 41–69:** continuar a conferência dos trechos manuscritos/ilegíveis e separar texto literal de interpretação.
 3. **Páginas 1–40:** completar transcrições de trabalho onde houver palavras visíveis ainda não registradas.
-4. Só depois consolidar cronologia, IDs de evidência, locais de descoberta e requisitos de puzzles. A segunda conferência visual das 116 capturas já foi feita; estes passos tratam do conteúdo residual, não de reabrir o que já foi cotejado.
+4. Só depois consolidar cronologia, IDs de evidência, locais de descoberta e requisitos de puzzles. A quarta conferência focalizou omissões residuais; trechos ambíguos permanecem abertos e não foram completados por contexto.
 
 ## Registro por lote
 
@@ -132,3 +132,10 @@ Não fechar uma rota investigativa nem criar puzzle obrigatório antes que os do
 - [x] Aplicadas as correções legíveis em transcrições por grupo; a lista por arquivo, os casos sem divergência e as limitações remanescentes estão em [segunda-conferencia-116-imagens.md](./transcricoes-imagens-zip/segunda-conferencia-116-imagens.md).
 - [x] Confirmados os pares repetidos de Scott: scott12/15, scott13/16 e scott14/17.
 - [ ] A revisão diplomática integral ainda não terminou: manuscritos encobertos, cortes e leituras prováveis permanecem em aberto. Manter os lotes afetados como EM REVISÃO; não inferir texto nem declarar CONFERIDO por extrapolação.
+
+## Resultado da quarta conferência focalizada das 116 imagens — 01/11/2026
+
+- [x] Os 16 grupos e as 116 capturas foram comparados novamente com as transcrições atuais; não houve falhas de cobertura.
+- [x] Fragmentos confirmados em `charles1.png`, `matthew3.png`, `matthew4.png`, `matthew7.png`, `scott1.png`, `scott6.png`, `wanda3.png`, `jornal2.png` e `doc14.png` foram acrescentados e harmonizados nas referências página-a-página.
+- [x] Leituras duvidosas ou já contempladas foram mantidas sem duplicação; veja o [relatório da quarta conferência](./transcricoes-imagens-zip/quarta-conferencia-lacunas-116-imagens.md).
+- [ ] A transcrição diplomática integral continua aberta para manuscritos encobertos, cortes e palavras incertas. Manter EM REVISÃO e não completar por contexto.

@@ -94,7 +94,7 @@ Morte de Henry Johnson
 
 ## Limite de leitura
 
-Texto inglês está em grande parte encoberto; os fragmentos transcritos acima são os legíveis. O fim da linha fina está coberto.
+Texto inglês está em grande parte encoberto; os fragmentos transcritos acima são os legíveis. O fim da linha fina está coberto. Um pequeno rótulo “PAGE 4” aparece próximo à borda inferior e é registrado como elemento gráfico, não como texto do artigo.
 
 # jornal3.png
 

@@ -65,3 +65,8 @@ Entrada de 2 de novembro de 1994: Stephanie, uma menina de seis anos, desaparece
 - Página 102: recuperar o restante da carta de Matthew, que continua além do trecho visível.
 - Página 103: separar o bilhete de Matthew e a mensagem de aniversário sobreposta.
 - Página 109: confirmar a continuação da última entrada em imagem mais completa.
+
+
+## Adendo — quarta conferência visual (01/11/2026)
+
+- **p. 102 / `doc14.png`, camada manuscrita inglesa:** a carta permite ler “I've changed the code [trecho encoberto] to 0318, the day you came to the orphanage.” A palavra ou palavras após “code” e antes de “to 0318” continuam incertas. O código `0318` também aparece no texto português impresso; esta nota registra a camada manuscrita sem criar evidência independente.

@@ -162,3 +162,8 @@
 - **p. 21 / `mary.png`:** a camada manuscrita começa “So that’s why they are in charge here”; a transcrição por imagem preserva o fragmento adicional.
 - **p. 26 / `mary5.png`:** a camada manuscrita contém “with a white hair band” e “I wonder what is so interesting about this lady.”, além das lacunas assinaladas.
 - **pp. 28–30 / `matthew1.png`–`matthew3.png`:** registrados na transcrição por imagem fragmentos manuscritos legíveis; confira `transcricoes-imagens-zip/08-matthew.md`. As continuações cobertas permanecem em aberto.
+
+
+## Adendo — quarta conferência visual (01/11/2026)
+
+- **p. 30 / `matthew3.png`, camada manuscrita inglesa:** lê-se “A few months have passed since I've been here.” A frase é registrada separadamente do texto português impresso; outros trechos da camada permanecem encobertos.

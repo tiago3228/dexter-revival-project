@@ -88,7 +88,7 @@ Toda vez que o Derrick me visita, me dói vê-lo segurando as lágrimas. Eu quer
 
 ### Manuscritos / anotações (inglês)
 
-Página esquerda: [trecho inicial manuscrito parcialmente encoberto: “... falling off more now. I really ...”; segmento ilegível]. Legível: “... make me throw up afterwards.” [sobreposto]. Na continuação: “... holding back his tears ...”; “comfort him, saying that I’m getting better.”; “but my appearance betrays me.” Trechos cobertos pelo impresso: [ilegível].
+Página esquerda: [trecho inicial manuscrito parcialmente encoberto: “My hair is falling off more now. I really ...”; continuação ilegível]. Legível: “... make me throw up afterwards.” [sobreposto]. Na continuação: “... holding back his tears ...”; “comfort him, saying that I’m getting better.”; “but my appearance betrays me.” Trechos cobertos pelo impresso: [ilegível].
 
 Página direita: [trecho manuscrito sob o impresso, em grande parte ilegível]. Na parte inferior, legível: “... always there for him? I could have done ...”; “... so much more. If only there was more ...”; “time.” Trechos encobertos/cortados pelo texto impresso: [ilegível].
 

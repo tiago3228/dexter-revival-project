@@ -305,3 +305,8 @@ A transcrição recebida pretende reproduzir o texto impresso em português leg�
 - **p. 11 / `derrick4.png`:** acrescentado apenas o fragmento manuscrito “behind him he extended his right hand with / the stick towards the snake, and slowly”; continuação ilegível.
 
 O cotejo das capturas não torna diplomática a tradução de trabalho deste arquivo; preservar as incertezas e consultar as transcrições por imagem para detalhes de camada e interface.
+
+
+## Adendo — quarta conferência visual (01/11/2026)
+
+- **p. 7 / `charles1.png`, camada manuscrita inglesa:** trecho legível: “I think it was because of Trisha that she didn't leave me. She is a good wife and a good mother. I'm grateful for that.” O trecho complementa a camada portuguesa da mesma entrada; não identifica a pessoa com quem Charles teve o caso.

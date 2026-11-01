@@ -24,7 +24,7 @@ Transcrição baseada na inspeção visual individual de cada imagem. Não atrib
 >
 > Ele até fez um espaço secreto para mim no meu quarto para eu poder guardar meus tesouros especiais! Eu adoro o padre Matthew!
 
-**Manuscrito/segunda camada (inglês):** Escrita muito tênue aparece sob várias linhas; não é possível lê-la integralmente com segurança [ilegível].
+**Manuscrito/segunda camada (inglês):** Escrita muito tênue aparece sob várias linhas; na página direita, lê-se “I love Father Matthew!” (correspondente à última frase impressa em português). O restante não é legível integralmente com segurança [ilegível].
 
 **Assinatura:** Nenhuma visível.
 
@@ -141,7 +141,7 @@ Domingo, 20 de maio de 1990
 
 Tem uma sala secreta na mansão? Não acredito. Não vejo a hora de chegar domingo para explorar ela com a Trisha!
 
-**Manuscrito/segunda camada (inglês):** [ilegível]
+**Manuscrito/segunda camada (inglês):** Lê-se “I can't wait to explore it with Trisha!”; outras partes sob o texto impresso permanecem [ilegível].
 
 **Cabeçalho/data/assinatura:** Data impressa: Domingo, 20 de maio de 1990. Nenhuma assinatura visível.
 

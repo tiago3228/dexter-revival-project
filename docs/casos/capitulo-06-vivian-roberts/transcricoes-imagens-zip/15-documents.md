@@ -371,7 +371,7 @@ Quanto a mim, bom, continuo aqui, esperando você voltar.
 
 Lembra do sótão da igreja? Então, eu passo a maior [cortado na captura]
 
-**Manuscrito inglês subjacente:** trechos parcialmente visíveis, sobrepostos ao impresso: “I hope …”; “Calvin”; “for … to sleep”; “responsibilities”; “I've changed”; “She’s really smart and loves to hang out with her dad. Dorothy’s the same old Dorothy that we”; “think he’ll ever be replaced. As for me, well, I’m still here, waiting for your return.”; demais partes [ilegível]. O corpo impresso termina cortado na margem inferior; não se completa o trecho.
+**Manuscrito inglês subjacente:** trechos parcialmente visíveis, sobrepostos ao impresso: “I hope …”; “Calvin”; “for … to sleep”; “responsibilities”; “I've changed the code [trecho encoberto] to 0318, the day you came to the orphanage.”; “She’s really smart and loves to hang out with her dad. Dorothy’s the same old Dorothy that we”; “think he’ll ever be replaced. As for me, well, I’m still here, waiting for your return.”; demais partes [ilegível]. O trecho entre “changed the code” e “to 0318” não pode ser lido integralmente; o corpo impresso termina cortado na margem inferior e não se completa.
 
 **Interface/sidebar:** CADERNO; navegação rolada para baixo; “Carta de Matthew para Sofia” selecionado; itens vizinhos legíveis: Laudo médico de Vivian; Lista de funcionários da mansão; Carta de despedida de Dorothy; Desvio de fundos; Conselho de Henry para Vivian; Confissão da irmã Rachel; Contratação do detetive Steven Moss; Matthew contrata advogado; Presente de aniversário de Sofia; Carta de Scott para Trisha; OUTRO.
 
