@@ -50,7 +50,7 @@ export function VivianQuickChallenges({ found, completed, onComplete }: Props) {
       setCaseFeedback(
         result === "locked"
           ? "Este caso ainda está bloqueado pelos registros necessários."
-          : "Ainda há uma resposta que extrapola ou contradiz as fontes. Revise os dois passos; sua pontuação não muda.",
+          : "Ainda há uma resposta que extrapola ou contradiz as fontes. Revise as etapas; sua pontuação não muda.",
       );
     }
   };
@@ -218,6 +218,22 @@ export function VivianQuickChallenges({ found, completed, onComplete }: Props) {
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {activeCase.summary}
                 </p>
+                {activeCase.sourceReference && (
+                  <aside
+                    className="mt-3 space-y-2 border-l-2 border-primary/70 bg-muted/30 p-3 text-sm leading-relaxed"
+                    aria-label="Contexto documental do caso"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                      Fonte de apoio · {activeCase.sourceReference}
+                    </p>
+                    {activeCase.briefing && <p>{activeCase.briefing}</p>}
+                    {activeCase.objective && (
+                      <p>
+                        <strong>Desafio:</strong> {activeCase.objective}
+                      </p>
+                    )}
+                  </aside>
+                )}
                 {completed.includes(activeCase.id) ? (
                   <div className="mt-3 space-y-2 border-l-2 border-primary pl-3 text-sm leading-relaxed">
                     {activeCase.steps.map((step) => (

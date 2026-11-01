@@ -112,6 +112,33 @@ describe("depoimento incompatível e casos curtos", () => {
     );
   });
 
+  it("apresenta o contexto da p. 90 e três etapas detalhadas no caso da floresta", () => {
+    const forestCase = VIVIAN_QUICK_CASES.find((item) => item.id === "forest-witnesses");
+    expect(forestCase).toBeDefined();
+    if (!forestCase) throw new Error("Forest quick case is missing");
+
+    expect(forestCase.sourceReference).toContain("PDF p. 90");
+    expect(forestCase.steps).toHaveLength(3);
+    const onComplete = vi.fn();
+    render(
+      <VivianQuickChallenges found={["police-report"]} completed={[]} onComplete={onComplete} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Entre um local e outro/ }));
+    fireEvent.click(screen.getByRole("button", { name: /O que foi possível ouvir na floresta/ }));
+
+    const challenge = screen.getByRole("article", { name: forestCase.title });
+    expect(within(challenge).getByText(/Relatório policial · PDF p\. 90/)).toBeInTheDocument();
+    expect(within(challenge).getByText(/dois caçadores ouviram gritos/)).toBeInTheDocument();
+    expect(within(challenge).getByText(/Reconstrua em três passos/)).toBeInTheDocument();
+
+    for (const step of forestCase.steps) {
+      const correctOption = step.options.find((option) => option.id === step.answer)!;
+      fireEvent.click(within(challenge).getByRole("radio", { name: correctOption.label }));
+    }
+    fireEvent.click(within(challenge).getByRole("button", { name: "Conferir caso" }));
+    expect(onComplete).toHaveBeenCalledWith(forestCase.id);
+  });
+
   it("só mostra resposta do depoimento após selecionar uma versão e preserva o enunciado simulado", () => {
     const onComplete = vi.fn();
     render(

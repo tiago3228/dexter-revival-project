@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Map, ZoomIn, ZoomOut, Volume2, VolumeX, Music2, Hand } from "lucide-react";
+import { VivianMapQuickChallenges } from "@/game/VivianMapQuickChallenges";
 
 const maps = [
   {
@@ -490,6 +491,9 @@ function MapasPage() {
                     </span>
                   </Link>
                 ))}
+              </div>
+              <div className="mt-5 border-t border-[#383b32] pt-4">
+                <VivianMapQuickChallenges />
               </div>
             </section>
           )}

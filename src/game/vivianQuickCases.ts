@@ -11,6 +11,9 @@ export type QuickCase = {
   title: string;
   summary: string;
   requiredRecords: readonly string[];
+  sourceReference?: string;
+  briefing?: string;
+  objective?: string;
   steps: readonly QuickCaseStep[];
 };
 
@@ -35,7 +38,7 @@ export const WITNESS_CASE = {
     {
       id: "c",
       speaker: "Relato C",
-      text: "O relatório registra Scott como principal suspeito da investigação.",
+      text: "O relatório registra Scott como o único suspeito detido naquele momento.",
     },
   ],
   answer: "b",
@@ -49,36 +52,58 @@ export const VIVIAN_QUICK_CASES: readonly QuickCase[] = [
     title: "O que foi possível ouvir na floresta?",
     summary: "Separe o que o relatório descreve do que ele não permite concluir.",
     requiredRecords: ["police-report"],
+    sourceReference: "Relatório policial · PDF p. 90 · 6 de agosto de 1995",
+    briefing:
+      "O documento registra que dois caçadores ouviram gritos e viram Scott e Vivian discutindo perto da floresta ao norte da mansão. A distância os impediu de ouvir a conversa. Scott aparece como o único suspeito detido naquele momento; o próprio relatório informa que a investigação continuava.",
+    objective:
+      "Reconstrua em três passos o que foi observado, o que não pôde ser ouvido e o que o relatório permite concluir sobre a autoria.",
     steps: [
       {
         id: "observation",
-        question: "O que os caçadores relataram observar?",
+        question: "Quais observações o relatório atribui aos dois caçadores?",
         options: [
           {
             id: "argument",
-            label: "Scott e Vivian discutiam; os caçadores também ouviram gritos.",
+            label: "Viram Scott e Vivian discutindo perto da floresta e ouviram gritos.",
           },
-          { id: "confession", label: "Scott confessou o crime diante deles." },
-          { id: "motive", label: "Eles ouviram o motivo da discussão." },
+          { id: "confession", label: "Viram o crime acontecer e identificaram quem o cometeu." },
+          { id: "motive", label: "Ouviram as palavras da conversa e o motivo da discussão." },
         ],
         answer: "argument",
-        explanation: "O relatório descreve uma discussão e gritos, sem transcrever palavras.",
+        explanation:
+          "O relatório atribui aos caçadores a observação de uma discussão e de gritos; não diz que presenciaram o crime.",
       },
       {
-        id: "limit",
-        question: "Qual conclusão respeita o limite da fonte?",
+        id: "hearing",
+        question: "O que a distância impediu os caçadores de confirmar?",
         options: [
-          { id: "proved", label: "A presença na discussão prova quem cometeu o crime." },
           {
-            id: "limit",
-            label:
-              "O relato confirma a discussão observada, não o conteúdo nem a autoria do crime.",
+            id: "words",
+            label: "As palavras da conversa; o relatório não transcreve o diálogo.",
           },
-          { id: "nothing", label: "O relatório não registra nenhuma observação de testemunhas." },
+          { id: "argument", label: "Se houve uma discussão entre Scott e Vivian." },
+          { id: "presence", label: "Se Scott e Vivian estavam perto da floresta." },
         ],
-        answer: "limit",
+        answer: "words",
         explanation:
-          "A fonte relata observações limitadas e registra uma suspeita, não uma conclusão de autoria.",
+          "A p. 90 diz que os caçadores estavam longe demais para ouvir a conversa; o conteúdo das falas permanece desconhecido.",
+      },
+      {
+        id: "inference",
+        question:
+          "Scott era o único suspeito detido. Qual conclusão respeita o restante do relatório?",
+        options: [
+          { id: "guilty", label: "A detenção comprova que Scott cometeu o crime." },
+          {
+            id: "open",
+            label:
+              "O relatório registra a situação de suspeito detido e diz que a investigação continuava.",
+          },
+          { id: "witnessed", label: "Os caçadores identificaram Scott como autor do crime." },
+        ],
+        answer: "open",
+        explanation:
+          "Ser o único suspeito detido descreve o estado da investigação, não uma prova de culpa. O relatório diz que o caso ainda estava sendo investigado.",
       },
     ],
   },
