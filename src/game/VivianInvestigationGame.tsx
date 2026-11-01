@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { VivianDeductionDesk } from "./VivianDeductionDesk";
 import { VivianMurdleDeduction } from "./VivianMurdleDeduction";
+import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
@@ -112,7 +113,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 7;
+  version: 8;
   found: ClueId[];
   readClues: ClueId[];
   solvedRiddles: RiddleId[];
@@ -133,6 +134,7 @@ type SaveData = {
   completedQuickCases: string[];
   circuitPanelSolved: boolean;
   murdleDeductionSolved: boolean;
+  murdleWitnessRouteSolved: boolean;
   caseCompleted: boolean;
   accusation: { suspect: string; weapon: string; motive: string };
 };
@@ -845,15 +847,15 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
     };
-    if (![1, 2, 3, 4, 5, 6, 7].includes(value.version ?? 0)) return null;
+    if (![1, 2, 3, 4, 5, 6, 7, 8].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 7,
+      version: 8,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -910,6 +912,7 @@ function readSave(): SaveData | null {
       completedQuickCases: ids(value.completedQuickCases, QUICK_CASE_IDS),
       circuitPanelSolved: value.circuitPanelSolved === true,
       murdleDeductionSolved: value.murdleDeductionSolved === true,
+      murdleWitnessRouteSolved: value.murdleWitnessRouteSolved === true,
       caseCompleted: value.caseCompleted === true,
       accusation: {
         suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
@@ -990,6 +993,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [murdleDeductionSolved, setMurdleDeductionSolved] = useState(
     saved?.murdleDeductionSolved ?? false,
   );
+  const [murdleWitnessRouteSolved, setMurdleWitnessRouteSolved] = useState(
+    saved?.murdleWitnessRouteSolved ?? false,
+  );
   const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
   const [accusation, setAccusation] = useState(
     saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
@@ -1010,7 +1016,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 7,
+      version: 8,
       found,
       readClues,
       solvedRiddles,
@@ -1031,6 +1037,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       completedQuickCases,
       circuitPanelSolved,
       murdleDeductionSolved,
+      murdleWitnessRouteSolved,
       caseCompleted,
       accusation,
     };
@@ -1057,6 +1064,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     completedQuickCases,
     circuitPanelSolved,
     murdleDeductionSolved,
+    murdleWitnessRouteSolved,
     caseCompleted,
     accusation,
   ]);
@@ -1458,6 +1466,7 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
     setInvestigationNotes("");
     setCircuitPanelSolved(false);
     setMurdleDeductionSolved(false);
+    setMurdleWitnessRouteSolved(false);
     setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
@@ -2232,6 +2241,24 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
               });
               setNotice(
                 "Dossiê de relações conferido. O exercício foi registrado no caderno sem alterar o veredito nem fechar uma lacuna documental.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <VivianMurdleWitnessRoute
+            solved={murdleWitnessRouteSolved}
+            onSolved={() => {
+              setMurdleWitnessRouteSolved(true);
+              setInvestigationNotes((current) => {
+                const marker = "[EXERCÍCIO DE LÓGICA · A ROTA DA FITA]";
+                if (current.includes(marker)) return current;
+                const entry = `${marker}\nRota reconstruída como exercício editorial: pessoa × local × objeto.\nEstado editorial: associação de design, não prova canônica sobre autoria ou localização.`;
+                return current.trim() ? `${current.trim()}\n\n${entry}` : entry;
+              });
+              setNotice(
+                "Rota da fita conferida. O exercício foi registrado no caderno sem alterar a acusação ou o veredito.",
               );
             }}
           />
