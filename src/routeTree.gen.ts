@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CasosCurtosRouteImport } from './routes/casos-curtos'
 import { Route as LinhaDoTempoRouteImport } from './routes/linha-do-tempo'
 import { Route as MapasRouteImport } from './routes/mapas'
 import { Route as PainscreekEvidenceRouteImport } from './routes/painscreek-evidence'
@@ -17,6 +18,11 @@ import { Route as PainscreekEvidenceRouteImport } from './routes/painscreek-evid
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CasosCurtosRoute = CasosCurtosRouteImport.update({
+  id: '/casos-curtos',
+  path: '/casos-curtos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LinhaDoTempoRoute = LinhaDoTempoRouteImport.update({
@@ -37,12 +43,14 @@ const PainscreekEvidenceRoute = PainscreekEvidenceRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/casos-curtos': typeof CasosCurtosRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/mapas': typeof MapasRoute
   '/painscreek-evidence': typeof PainscreekEvidenceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/casos-curtos': typeof CasosCurtosRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/mapas': typeof MapasRoute
   '/painscreek-evidence': typeof PainscreekEvidenceRoute
@@ -50,20 +58,38 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/casos-curtos': typeof CasosCurtosRoute
   '/linha-do-tempo': typeof LinhaDoTempoRoute
   '/mapas': typeof MapasRoute
   '/painscreek-evidence': typeof PainscreekEvidenceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/linha-do-tempo' | '/mapas' | '/painscreek-evidence'
+  fullPaths:
+    | '/'
+    | '/casos-curtos'
+    | '/linha-do-tempo'
+    | '/mapas'
+    | '/painscreek-evidence'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/linha-do-tempo' | '/mapas' | '/painscreek-evidence'
-  id: '__root__' | '/' | '/linha-do-tempo' | '/mapas' | '/painscreek-evidence'
+  to:
+    | '/'
+    | '/casos-curtos'
+    | '/linha-do-tempo'
+    | '/mapas'
+    | '/painscreek-evidence'
+  id:
+    | '__root__'
+    | '/'
+    | '/casos-curtos'
+    | '/linha-do-tempo'
+    | '/mapas'
+    | '/painscreek-evidence'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CasosCurtosRoute: typeof CasosCurtosRoute
   LinhaDoTempoRoute: typeof LinhaDoTempoRoute
   MapasRoute: typeof MapasRoute
   PainscreekEvidenceRoute: typeof PainscreekEvidenceRoute
@@ -76,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/casos-curtos': {
+      id: '/casos-curtos'
+      path: '/casos-curtos'
+      fullPath: '/casos-curtos'
+      preLoaderRoute: typeof CasosCurtosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/linha-do-tempo': {
@@ -104,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CasosCurtosRoute: CasosCurtosRoute,
   LinhaDoTempoRoute: LinhaDoTempoRoute,
   MapasRoute: MapasRoute,
   PainscreekEvidenceRoute: PainscreekEvidenceRoute,

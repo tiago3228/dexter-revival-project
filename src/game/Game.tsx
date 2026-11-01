@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Search, ZoomIn } from "lucide-react";
+import { FolderOpen, Search, ZoomIn } from "lucide-react";
 import {
   CIPHER_KEY,
   CIPHER_TEXT,
@@ -18,6 +18,8 @@ import { DexterCase } from "./DexterCase";
 import { MentalistCase } from "./MentalistCase";
 import { WinchesterCase } from "./WinchesterCase";
 import { VivianRobertsCase } from "./VivianRobertsCase";
+import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
+import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
 import { ORTEGA_DIALOGUE } from "./ortegaDialogues";
 import {
@@ -2052,6 +2054,7 @@ function MainMenu({
   const [showTrophies, setShowTrophies] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
+  const [showQuickCasesArchive, setShowQuickCasesArchive] = useState(false);
   const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
   const [playerRanking] = useState<PlayerRankingEntry[]>(() => loadPlayerRanking());
@@ -2146,6 +2149,23 @@ function MainMenu({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeVideo, onReflectionModalOpenChange]);
+
+  if (showQuickCasesArchive) {
+    return (
+      <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-8 sm:py-10">
+        <div className="mx-auto max-w-6xl">
+          <button
+            type="button"
+            onClick={() => setShowQuickCasesArchive(false)}
+            className="mb-2 min-h-11 border border-border px-4 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground transition hover:border-primary hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            ← Voltar à seleção de capítulos
+          </button>
+        </div>
+        <VivianQuickCasesArchive />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-10 sm:py-16">
@@ -2283,6 +2303,33 @@ function MainMenu({
           Escolha um capítulo para investigar. Você pode voltar a este menu e alternar entre os três
           casos sempre que quiser.
         </p>
+        <button
+          type="button"
+          disabled={transitionChapter !== null}
+          onClick={() => setShowQuickCasesArchive(true)}
+          className="mt-6 flex w-full max-w-3xl flex-wrap items-center justify-between gap-4 border border-primary/60 bg-[#171516] p-4 text-left transition hover:border-primary hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-50 sm:p-5"
+        >
+          <span className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-primary/50 bg-primary/10 text-primary">
+              <FolderOpen size={22} />
+            </span>
+            <span>
+              <span className="block font-mono text-[9px] uppercase tracking-[0.22em] text-primary">
+                Arquivo suplementar · {VIVIAN_QUICK_CASES.length} dossiês
+              </span>
+              <span className="mt-1 block font-display text-xl sm:text-2xl">
+                Casos curtos de Painscreek
+              </span>
+              <span className="mt-1 block max-w-xl text-xs leading-relaxed text-muted-foreground">
+                Selecione casos de cinco minutos, consulte o que falta desbloquear e acompanhe
+                conclusão e pontuação.
+              </span>
+            </span>
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
+            Abrir arquivo →
+          </span>
+        </button>
         <section
           className="mt-8 max-w-xl border border-border bg-card/40 p-4 sm:p-5"
           aria-label="Controles de áudio"

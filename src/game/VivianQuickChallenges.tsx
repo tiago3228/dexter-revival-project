@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Check, ChevronDown, Clock3, FileSearch, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VivianQuickCaseRunner } from "./VivianQuickCaseRunner";
+import { VivianQuickCaseStats } from "./VivianQuickCaseStats";
 import {
   QUICK_CASE_IDS,
   VIVIAN_QUICK_CASES,
   WITNESS_CASE,
   WITNESS_CASE_ID,
-  evaluateQuickCase,
   evaluateWitnessClaim,
 } from "./vivianQuickCases";
 
@@ -22,8 +23,6 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
   const [selectedWitness, setSelectedWitness] = useState("");
   const [witnessFeedback, setWitnessFeedback] = useState("");
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Record<string, Record<string, string>>>({});
-  const [caseFeedback, setCaseFeedback] = useState("");
   const witnessUnlocked = WITNESS_CASE.requiredRecords.every((id) => found.includes(id));
   const activeCase = VIVIAN_QUICK_CASES.find((item) => item.id === activeCaseId);
   const witnessSolved = completed.includes(WITNESS_CASE_ID);
@@ -38,20 +37,6 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
         result === "locked"
           ? "Encontre o arquivo necessário antes de conferir."
           : "Essa versão não é a incompatível. Volte ao relatório e confira o que as testemunhas puderam ouvir.",
-      );
-    }
-  };
-
-  const completeQuickCase = (caseId: string) => {
-    const result = evaluateQuickCase(caseId, answers[caseId] ?? {}, found);
-    if (result === "supported") {
-      onComplete(caseId);
-      setCaseFeedback("");
-    } else {
-      setCaseFeedback(
-        result === "locked"
-          ? "Este caso ainda está bloqueado pelos registros necessários."
-          : "Ainda há uma resposta que extrapola ou contradiz as fontes. Revise as etapas; sua pontuação não muda.",
       );
     }
   };
@@ -73,14 +58,14 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
       >
         <span>
           <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
-            Desafios opcionais · sem impacto na pontuação
+            Desafios opcionais · placar independente
           </span>
           <span className="mt-1 flex items-center gap-2 font-display text-xl">
             <FileSearch size={18} /> Entre um local e outro
           </span>
           <span className="mt-1 block max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            Depoimentos e casos-relâmpago para pausas curtas durante a investigação. Não alteram a
-            história, o relatório final nem os áudios.
+            Depoimentos e casos-relâmpago para pausas curtas. O placar dos casos de cinco minutos é
+            separado da pontuação principal e não altera a história ou o relatório final.
           </span>
         </span>
         <span className="inline-flex shrink-0 items-center gap-2 font-mono text-xs text-muted-foreground">
@@ -98,6 +83,7 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
 
       {expanded && (
         <div className="space-y-5 pt-2">
+          <VivianQuickCaseStats completed={completed} />
           <article className="border border-border p-4" aria-label={WITNESS_CASE.title}>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h4 className="font-display text-lg">{WITNESS_CASE.title}</h4>
@@ -189,7 +175,6 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
                     className="h-auto min-h-14 justify-between whitespace-normal p-3 text-left"
                     onClick={() => {
                       setActiveCaseId(activeCaseId === quickCase.id ? null : quickCase.id);
-                      setCaseFeedback("");
                     }}
                   >
                     <span className="pr-2">
@@ -210,123 +195,13 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
               })}
             </div>
             {activeCase && (
-              <article
-                className="mt-3 border border-primary/40 bg-background p-4"
-                aria-label={activeCase.title}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h5 className="font-display text-lg">{activeCase.title}</h5>
-                  <span className="font-mono text-[10px] uppercase text-muted-foreground">
-                    ~5 min
-                  </span>
-                </div>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {activeCase.summary}
-                </p>
-                {activeCase.sourceReference && (
-                  <aside
-                    className="mt-3 space-y-2 border-l-2 border-primary/70 bg-muted/30 p-3 text-sm leading-relaxed"
-                    aria-label="Contexto documental do caso"
-                  >
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
-                      Fonte de apoio · {activeCase.sourceReference}
-                    </p>
-                    {activeCase.briefing && <p>{activeCase.briefing}</p>}
-                    {activeCase.objective && (
-                      <p>
-                        <strong>Desafio:</strong> {activeCase.objective}
-                      </p>
-                    )}
-                  </aside>
-                )}
-                {activeCase.audioSources && (
-                  <section
-                    className="mt-3 space-y-3 border border-border bg-muted/20 p-3"
-                    aria-label="Resumos em áudio das fontes"
-                  >
-                    <div>
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
-                        Comparação em áudio
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        São resumos narrados das fontes, não gravações originais de interrogatório.
-                      </p>
-                    </div>
-                    {activeCase.audioSources.map((audioSource) => (
-                      <div key={audioSource.id} className="space-y-1 border-t border-border pt-3">
-                        <p className="text-sm">{audioSource.title}</p>
-                        <p className="font-mono text-[10px] text-muted-foreground">
-                          {audioSource.reference}
-                        </p>
-                        <audio
-                          className="h-9 w-full"
-                          controls
-                          preload="none"
-                          src={audioSource.audioSrc}
-                          aria-label={`Ouvir resumo narrado: ${audioSource.title}`}
-                        />
-                      </div>
-                    ))}
-                  </section>
-                )}
-                {completed.includes(activeCase.id) ? (
-                  <div className="mt-3 space-y-2 border-l-2 border-primary pl-3 text-sm leading-relaxed">
-                    {activeCase.steps.map((step) => (
-                      <p key={step.id}>
-                        <strong>{step.question}</strong> {step.explanation}
-                      </p>
-                    ))}
-                    <p className="text-primary">Caso curto concluído. Nenhum ponto foi alterado.</p>
-                  </div>
-                ) : (
-                  <div className="mt-3 space-y-4">
-                    {activeCase.steps.map((step, index) => (
-                      <fieldset key={step.id} className="space-y-2">
-                        <legend className="text-sm">
-                          <strong>{index + 1}.</strong> {step.question}
-                        </legend>
-                        {step.options.map((option) => (
-                          <label
-                            key={option.id}
-                            className="flex cursor-pointer items-start gap-3 py-1 text-sm leading-relaxed"
-                          >
-                            <input
-                              type="radio"
-                              name={`${activeCase.id}-${step.id}`}
-                              value={option.id}
-                              checked={answers[activeCase.id]?.[step.id] === option.id}
-                              onChange={() => {
-                                setAnswers((current) => ({
-                                  ...current,
-                                  [activeCase.id!]: {
-                                    ...(current[activeCase.id!] ?? {}),
-                                    [step.id]: option.id,
-                                  },
-                                }));
-                                setCaseFeedback("");
-                              }}
-                              className="mt-1 shrink-0 accent-primary"
-                            />
-                            {option.label}
-                          </label>
-                        ))}
-                      </fieldset>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => completeQuickCase(activeCase.id)}
-                    >
-                      <Scale size={16} /> Conferir caso
-                    </Button>
-                    {caseFeedback && (
-                      <p role="status" className="text-sm text-destructive">
-                        {caseFeedback}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </article>
+              <VivianQuickCaseRunner
+                key={activeCase.id}
+                quickCase={activeCase}
+                found={found}
+                completed={completed.includes(activeCase.id)}
+                onComplete={onComplete}
+              />
             )}
           </div>
         </div>

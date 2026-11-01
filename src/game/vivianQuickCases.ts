@@ -482,6 +482,24 @@ export const QUICK_CASE_IDS = [
   ...VIVIAN_QUICK_CASES.map((quickCase) => quickCase.id),
 ] as const;
 
+export const QUICK_CASE_POINTS = 100;
+
+export function getQuickCaseStats(completed: readonly string[]) {
+  const completedIds = new Set(completed);
+  const completedCount = VIVIAN_QUICK_CASES.filter((quickCase) =>
+    completedIds.has(quickCase.id),
+  ).length;
+  const totalCases = VIVIAN_QUICK_CASES.length;
+
+  return {
+    completedCount,
+    totalCases,
+    score: completedCount * QUICK_CASE_POINTS,
+    maxScore: totalCases * QUICK_CASE_POINTS,
+    completionPercent: totalCases > 0 ? Math.round((completedCount / totalCases) * 100) : 0,
+  };
+}
+
 export type QuickCaseResult = "locked" | "supported" | "unsupported";
 
 export function evaluateWitnessClaim(
