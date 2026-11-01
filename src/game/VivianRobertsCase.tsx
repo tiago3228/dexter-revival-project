@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
+  EyeOff,
   FileSearch,
   Keyboard,
   Maximize2,
@@ -151,6 +152,7 @@ function DiaryImages({
   const [contrast, setContrast] = useState(100);
   const [readerTheme, setReaderTheme] = useState<"dark" | "light" | "sepia">("dark");
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [presentationMode, setPresentationMode] = useState(false);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -276,6 +278,7 @@ function DiaryImages({
         setPan({ x: 0, y: 0 });
       }
       if (event.key === "?") setShortcutsOpen((open) => !open);
+      if (event.key.toLowerCase() === "p") setPresentationMode((open) => !open);
     };
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     window.addEventListener("keydown", handleKeyDown);
@@ -497,12 +500,29 @@ function DiaryImages({
       {viewerOpen && currentImage && (
         <div
           ref={viewerRef}
-          className={`fixed inset-0 z-[80] flex flex-col ${readerTheme === "light" ? "bg-[#eee9df] text-[#211f1b]" : readerTheme === "sepia" ? "bg-[#33291e] text-[#f1dfbd]" : "bg-[#0d0c0b]/[.98] text-[#ead8b8]"} ${isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
+          className={`fixed inset-0 z-[80] flex flex-col ${readerTheme === "light" ? "bg-[#eee9df] text-[#211f1b]" : readerTheme === "sepia" ? "bg-[#33291e] text-[#f1dfbd]" : "bg-[#0d0c0b]/[.98] text-[#ead8b8]"} ${presentationMode ? "p-0" : isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
           role="dialog"
           aria-modal="true"
           aria-label={group.title}
         >
-          <div className="flex items-center justify-between gap-3 border-b border-[#4b4439] pb-3 text-[#ead8b8]">
+          {presentationMode && (
+            <button
+              type="button"
+              onClick={() => setPresentationMode(false)}
+              aria-label="Sair do modo apresentação"
+              className="absolute right-3 top-3 z-10 border border-[#79664c] bg-black/60 p-2 text-[#ead8b8] opacity-30 transition hover:opacity-100"
+              title="Sair do modo apresentação (P)"
+            >
+              <EyeOff size={16} />
+            </button>
+          )}
+          <div
+            className={
+              presentationMode
+                ? "hidden"
+                : "flex items-center justify-between gap-3 border-b border-[#4b4439] pb-3 text-[#ead8b8]"
+            }
+          >
             <div className="min-w-0">
               <p className="truncate font-display text-xl">{group.title}</p>
               <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
@@ -572,6 +592,15 @@ function DiaryImages({
               </button>
               <button
                 type="button"
+                onClick={() => setPresentationMode(true)}
+                aria-label="Ativar modo apresentação limpo"
+                className="viewer-control"
+                title="Modo apresentação (P)"
+              >
+                <EyeOff size={16} />
+              </button>
+              <button
+                type="button"
                 onClick={closeViewer}
                 aria-label="Fechar visualizador"
                 className="viewer-control"
@@ -581,7 +610,7 @@ function DiaryImages({
               </button>
             </div>
           </div>
-          {shortcutsOpen && (
+          {!presentationMode && shortcutsOpen && (
             <div className="border-b border-[#4b4439] bg-[#171512]/80 px-3 py-2 text-xs text-[#c9c1b5]">
               <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
                 Atalhos de navegação
@@ -608,7 +637,13 @@ function DiaryImages({
               </div>
             </div>
           )}
-          <div className="flex flex-wrap items-center gap-3 border-b border-[#4b4439] py-2 text-xs">
+          <div
+            className={
+              presentationMode
+                ? "hidden"
+                : "flex flex-wrap items-center gap-3 border-b border-[#4b4439] py-2 text-xs"
+            }
+          >
             <SlidersHorizontal size={15} aria-hidden="true" />
             <label className="flex items-center gap-2">
               Brilho
@@ -688,7 +723,7 @@ function DiaryImages({
               <ChevronRight size={22} />
             </button>
           </div>
-          <div className="border-t border-[#4b4439] pt-3">
+          <div className={presentationMode ? "hidden" : "border-t border-[#4b4439] pt-3"}>
             <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Miniaturas das páginas">
               {group.images.map((image, index) => (
                 <button
@@ -714,8 +749,8 @@ function DiaryImages({
               ))}
             </div>
             <p className="text-center font-mono text-[10px] text-[#81796d]">
-              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · pinça: ampliar ·
-              Esc: fechar
+              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · pinça: ampliar · P:
+              apresentação · Esc: fechar
             </p>
           </div>
         </div>
