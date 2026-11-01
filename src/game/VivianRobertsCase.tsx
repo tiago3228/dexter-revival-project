@@ -3,9 +3,21 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  EyeOff,
   FileSearch,
+  Keyboard,
+  Maximize2,
+  Minimize2,
   LockKeyhole,
   MapPin,
+  Minus,
+  Plus,
+  RotateCcw,
+  SlidersHorizontal,
+  SunMedium,
   Users,
   X,
   Volume2,
@@ -15,8 +27,8 @@ import {
   Clock3,
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
+import { PAINSCREEK_EVIDENCE_001_116 } from "./painscreekEvidence";
 import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
-import { PainscreekImageViewer } from "./PainscreekImageViewer";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -52,6 +64,47 @@ const DIARY_IMAGE_GROUP_IDS: Record<string, string> = {
   moss: "steven",
 };
 
+const DIARY_REFERENCE_TERMS: Record<string, string[]> = {
+  andrew: ["Andrew Reed"],
+  bernard: ["Bernard Hopkins"],
+  charles: ["Charles Roberts"],
+  derrick: ["Derrick Tyler"],
+  dorothy: ["Dorothy"],
+  james: ["James Howard"],
+  mary: ["Mary Martinez"],
+  matthew: ["Matthew Brooks"],
+  scott: ["Scott Brooks", "Scott"],
+  moss: ["Steven Moss"],
+  trisha: ["Trisha Roberts"],
+  vivian: ["Vivian Roberts"],
+  wanda: ["Wanda Tyler"],
+};
+
+const DIARY_CATALOG_PAGES: Record<string, number[]> = {
+  andrew: [1, 2],
+  bernard: [3, 4, 5],
+  charles: [6, 7],
+  derrick: [8, 9, 10, 11, 12, 8, 9, 10, 11, 12],
+  dorothy: [78, 78, 79, 79, 80, 81],
+  james: [18, 19, 20],
+  mary: [13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27],
+  matthew: [28, 29, 30, 31, 32, 33, 34],
+  scott: Array.from({ length: 23 }, (_, index) => index + 35),
+  moss: [58, 59, 60, 62, 62],
+  trisha: [63, 64, 65, 66, 67, 68, 69, 70, 71, 72],
+  vivian: [73, 74, 75, 76, 77],
+  wanda: [78, 79, 80, 81],
+};
+
+function getDiaryReferences(personId: string, catalogPage: number | undefined) {
+  const terms = DIARY_REFERENCE_TERMS[personId] ?? [];
+  return PAINSCREEK_EVIDENCE_001_116.filter(
+    (evidence) =>
+      terms.some((term) => evidence.title.includes(term)) &&
+      (catalogPage === undefined || evidence.pages.includes(catalogPage)),
+  ).slice(0, 4);
+}
+
 function readFoundVivianClues() {
   if (typeof window === "undefined") return [];
   try {
@@ -68,17 +121,250 @@ function DiaryImages({
   personId,
   personName,
   foundClues,
+  previousDiary,
+  nextDiary,
+  onNavigateDiary,
 }: {
   personId: string;
   personName: string;
   foundClues: string[];
+  previousDiary?: string | undefined;
+  nextDiary?: string | undefined;
+  onNavigateDiary?: ((personId: string) => void) | undefined;
 }) {
   const groupId = DIARY_IMAGE_GROUP_IDS[personId] ?? personId;
   const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === groupId);
-  if (!group) return null;
+  const imageCount = group?.images.length ?? 0;
 
   const requiredClue = DIARY_UNLOCK_CLUES[personId];
   const unlocked = requiredClue ? foundClues.includes(requiredClue) : false;
+
+  const progressKey = `vivian-diary-progress-v1:${groupId}`;
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const saved = Number(window.localStorage.getItem(progressKey));
+    return Number.isInteger(saved) && saved >= 0 && saved < imageCount ? saved : 0;
+  });
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [brightness, setBrightness] = useState(100);
+  const [contrast, setContrast] = useState(100);
+  const [readerTheme, setReaderTheme] = useState<"dark" | "light" | "sepia">("dark");
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [presentationMode, setPresentationMode] = useState(false);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const pinchDistanceRef = useRef<number | null>(null);
+  const pinchZoomRef = useRef(1);
+  const swipeRef = useRef<{
+    startX: number;
+    startY: number;
+    hadMultiTouch: boolean;
+  } | null>(null);
+  const panDragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = JSON.parse(
+        window.localStorage.getItem("vivian-diary-reader-settings-v1") || "null",
+      );
+      if (Number.isFinite(saved?.brightness))
+        setBrightness(Math.min(140, Math.max(70, saved.brightness)));
+      if (Number.isFinite(saved?.contrast))
+        setContrast(Math.min(160, Math.max(70, saved.contrast)));
+      if (["dark", "light", "sepia"].includes(saved?.readerTheme))
+        setReaderTheme(saved.readerTheme);
+    } catch {
+      // Ignora preferências corrompidas e mantém a leitura padrão.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        "vivian-diary-reader-settings-v1",
+        JSON.stringify({ brightness, contrast, readerTheme }),
+      );
+    }
+  }, [brightness, contrast, readerTheme]);
+
+  if (!group) return null;
+
+  const currentImage = group.images[currentIndex];
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < group.images.length - 1;
+  const currentCatalogPage = DIARY_CATALOG_PAGES[groupId]?.[currentIndex];
+  const diaryReferences = getDiaryReferences(personId, currentCatalogPage);
+
+  const saveProgress = (index: number) => {
+    setCurrentIndex(index);
+    if (typeof window !== "undefined") window.localStorage.setItem(progressKey, String(index));
+  };
+
+  const openViewer = (index: number) => {
+    saveProgress(index);
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+    setViewerOpen(true);
+  };
+
+  const closeViewer = () => {
+    if (document.fullscreenElement) void document.exitFullscreen();
+    setViewerOpen(false);
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  const changePage = (direction: -1 | 1) => {
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= group.images.length) return;
+    saveProgress(nextIndex);
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  const adjustZoom = (amount: number) =>
+    setZoom((value) => Math.min(6, Math.max(1, Number((value + amount).toFixed(2)))));
+
+  useEffect(() => {
+    if (zoom <= 1.05) setPan({ x: 0, y: 0 });
+  }, [zoom]);
+
+  const toggleFullscreen = async () => {
+    if (!viewerRef.current) return;
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await viewerRef.current.requestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () =>
+      setIsFullscreen(document.fullscreenElement === viewerRef.current);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!viewerOpen) return;
+      if (event.key === "Escape") {
+        if (document.fullscreenElement) void document.exitFullscreen();
+        else closeViewer();
+      }
+      if (event.key === "ArrowLeft") changePage(-1);
+      if (event.key === "ArrowRight") changePage(1);
+      if (event.key === "+" || event.key === "=") adjustZoom(0.25);
+      if (event.key === "-") adjustZoom(-0.25);
+      if (event.key === "0") {
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        saveProgress(0);
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        saveProgress(group.images.length - 1);
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+      if (event.key === "?") setShortcutsOpen((open) => !open);
+      if (event.key.toLowerCase() === "p") setPresentationMode((open) => !open);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [viewerOpen, currentIndex, group.images.length]);
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (typeof event.currentTarget.setPointerCapture === "function") {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 1) {
+      swipeRef.current = { startX: event.clientX, startY: event.clientY, hadMultiTouch: false };
+      if (zoom > 1.05) {
+        panDragRef.current = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          originX: pan.x,
+          originY: pan.y,
+        };
+        setIsPanning(true);
+      }
+    } else if (swipeRef.current) {
+      swipeRef.current.hadMultiTouch = true;
+      panDragRef.current = null;
+      setIsPanning(false);
+    }
+    if (pointersRef.current.size === 2) {
+      const points = [...pointersRef.current.values()] as [
+        { x: number; y: number },
+        { x: number; y: number },
+      ];
+      pinchDistanceRef.current = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      pinchZoomRef.current = zoom;
+    }
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointersRef.current.has(event.pointerId)) return;
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const panDrag = panDragRef.current;
+    if (pointersRef.current.size === 1 && panDrag?.pointerId === event.pointerId) {
+      setPan({
+        x: panDrag.originX + event.clientX - panDrag.startX,
+        y: panDrag.originY + event.clientY - panDrag.startY,
+      });
+      return;
+    }
+    if (pointersRef.current.size !== 2 || pinchDistanceRef.current === null) return;
+    const points = [...pointersRef.current.values()] as [
+      { x: number; y: number },
+      { x: number; y: number },
+    ];
+    const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+    setZoom(Math.min(6, Math.max(1, pinchZoomRef.current * (pinchDistanceRef.current / distance))));
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    panDragRef.current = null;
+    setIsPanning(false);
+    if (pointersRef.current.size < 2) pinchDistanceRef.current = null;
+    if (pointersRef.current.size > 0) return;
+
+    const swipe = swipeRef.current;
+    swipeRef.current = null;
+    if (!swipe || swipe.hadMultiTouch || zoom > 1.05) return;
+
+    const deltaX = event.clientX - swipe.startX;
+    const deltaY = event.clientY - swipe.startY;
+    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.25) return;
+    changePage(deltaX < 0 ? 1 : -1);
+  };
+
+  const handlePointerCancel = (event: React.PointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    panDragRef.current = null;
+    setIsPanning(false);
+    pinchDistanceRef.current = null;
+    swipeRef.current = null;
+  };
 
   return (
     <section
@@ -93,29 +379,54 @@ function DiaryImages({
           <h3 className="mt-1 font-display text-xl">{group.title}</h3>
           <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
             {unlocked
-              ? "Páginas liberadas. Clique em uma miniatura para visualizar e navegar pelas páginas."
+              ? `Páginas liberadas. ${group.images.length} páginas disponíveis para leitura.`
               : "Páginas bloqueadas. Avance na investigação para liberar este diário."}
           </p>
         </div>
         {unlocked ? (
-          <BookOpen size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+          <ExternalLink size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         ) : (
           <LockKeyhole size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         )}
       </div>
-      {unlocked ? (
-        <PainscreekImageViewer
-          images={group.images}
-          title={group.title}
-          getThumbnailLabel={(image) => `Abrir ${image.fileName} do diário de ${personName}`}
-          className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3"
-          thumbnailClassName="group overflow-hidden border border-[#4b4439] bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
-          thumbnailImageClassName="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
-          thumbnailCaptionClassName="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]"
-        />
-      ) : (
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {group.images.map((image, index) => (
+      {unlocked && (
+        <div className="mt-4 flex items-center justify-between gap-3 border border-[#4b4439] bg-[#171512] px-3 py-2">
+          <p className="text-xs text-[#c9c1b5]">
+            Última página: <strong className="text-[#ead8b8]">{currentIndex + 1}</strong> de{" "}
+            {group.images.length}
+          </p>
+          <button
+            type="button"
+            onClick={() => openViewer(currentIndex)}
+            className="min-h-9 border border-[#c4a779] px-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/10"
+          >
+            Retomar leitura
+          </button>
+        </div>
+      )}
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {group.images.map((image, index) =>
+          unlocked ? (
+            <button
+              key={image.fileName}
+              type="button"
+              onClick={() => openViewer(index)}
+              aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
+              className={`group overflow-hidden border bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e] ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={`${group.title}, imagem ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+              />
+              <span className="flex items-center justify-between gap-2 px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]">
+                <span className="truncate">{image.fileName}</span>
+                {currentIndex === index && <span className="shrink-0 text-[#c4a779]">atual</span>}
+              </span>
+            </button>
+          ) : (
             <div
               key={image.fileName}
               className="relative overflow-hidden border border-[#302b24] bg-[#171512]"
@@ -133,7 +444,319 @@ function DiaryImages({
                 <LockKeyhole size={19} className="text-[#ead8b8]" aria-hidden="true" />
               </div>
             </div>
-          ))}
+          ),
+        )}
+      </div>
+      {(previousDiary || nextDiary) && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#4b4439] pt-4">
+          <button
+            type="button"
+            onClick={() => previousDiary && onNavigateDiary?.(previousDiary)}
+            disabled={!previousDiary}
+            className="min-h-10 border border-[#79664c] px-3 font-mono text-[10px] uppercase tracking-wider text-[#c9c1b5] disabled:opacity-35"
+          >
+            ← Diário anterior
+          </button>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-[#81796d]">
+            Navegação entre diários
+          </p>
+          <button
+            type="button"
+            onClick={() => nextDiary && onNavigateDiary?.(nextDiary)}
+            disabled={!nextDiary}
+            className="min-h-10 border border-[#79664c] px-3 font-mono text-[10px] uppercase tracking-wider text-[#c9c1b5] disabled:opacity-35"
+          >
+            Diário próximo →
+          </button>
+        </div>
+      )}
+      <details className="mt-4 border border-[#79664c]/70 bg-[#171510] p-3">
+        <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+          Referências da página atual
+        </summary>
+        <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#c9c1b5]">
+          <p className="text-[#a9a092]">
+            Imagem {currentIndex + 1} · PDF p. {currentCatalogPage ?? "não mapeada"}
+          </p>
+          {diaryReferences.length > 0 ? (
+            diaryReferences.map((reference) => (
+              <div key={reference.id} className="border-l-2 border-[#79664c] pl-3">
+                <p className="text-[#ead8b8]">
+                  {reference.id} · {reference.title}
+                </p>
+                <p className="text-[#a9a092]">
+                  PDF pp. {reference.pages.join(", ")} · {reference.sourceType}
+                </p>
+                <p className="mt-1 text-[#bdb5a8]">{reference.documented}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-[#81796d]">
+              Nenhuma referência específica foi catalogada para esta página.
+            </p>
+          )}
+          <p className="border-t border-[#4b4439] pt-2 text-[#81796d]">
+            Relação por nome e referência de catálogo; o vínculo não é uma interpretação nem prova
+            independente.
+          </p>
+        </div>
+      </details>
+      {viewerOpen && currentImage && (
+        <div
+          ref={viewerRef}
+          className={`fixed inset-0 z-[80] flex flex-col ${readerTheme === "light" ? "bg-[#eee9df] text-[#211f1b]" : readerTheme === "sepia" ? "bg-[#33291e] text-[#f1dfbd]" : "bg-[#0d0c0b]/[.98] text-[#ead8b8]"} ${presentationMode ? "p-0" : isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label={group.title}
+        >
+          {presentationMode && (
+            <button
+              type="button"
+              onClick={() => setPresentationMode(false)}
+              aria-label="Sair do modo apresentação"
+              className="absolute right-14 top-3 z-10 border border-[#79664c] bg-black/60 p-2 text-[#ead8b8] opacity-30 transition hover:opacity-100"
+              title="Sair do modo apresentação (P)"
+            >
+              <EyeOff size={16} />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={closeViewer}
+            aria-label="Fechar visualizador"
+            className="absolute right-3 top-3 z-10 inline-flex min-h-10 min-w-10 items-center justify-center border border-[#c4a779] bg-black/75 text-[#ead8b8] shadow-lg transition hover:bg-black"
+            title="Fechar foto"
+          >
+            <X size={20} />
+          </button>
+          <div
+            className={
+              presentationMode
+                ? "hidden"
+                : "flex items-center justify-between gap-3 border-b border-[#4b4439] pb-3 text-[#ead8b8]"
+            }
+          >
+            <div className="min-w-0">
+              <p className="truncate font-display text-xl">{group.title}</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
+                Página {currentIndex + 1} de {group.images.length} · zoom {Math.round(zoom * 100)}%
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => adjustZoom(-0.25)}
+                disabled={zoom <= 1}
+                aria-label="Reduzir zoom"
+                className="viewer-control"
+                title="Reduzir zoom"
+              >
+                <Minus size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoom(1)}
+                aria-label="Resetar zoom"
+                className="viewer-control px-2 font-mono text-[10px]"
+              >
+                100%
+              </button>
+              <button
+                type="button"
+                onClick={() => adjustZoom(0.25)}
+                disabled={zoom >= 6}
+                aria-label="Aumentar zoom"
+                className="viewer-control"
+                title="Aumentar zoom"
+              >
+                <Plus size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? "Sair da tela cheia" : "Abrir em tela cheia"}
+                className="viewer-control"
+                title={isFullscreen ? "Sair da tela cheia" : "Tela cheia"}
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setReaderTheme((theme) =>
+                    theme === "dark" ? "sepia" : theme === "sepia" ? "light" : "dark",
+                  )
+                }
+                aria-label="Alternar tema de leitura"
+                className="viewer-control"
+                title="Alternar tema"
+              >
+                <SunMedium size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShortcutsOpen((open) => !open)}
+                aria-label="Mostrar atalhos de teclado"
+                aria-expanded={shortcutsOpen}
+                className="viewer-control"
+                title="Atalhos de teclado (?)"
+              >
+                <Keyboard size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPresentationMode(true)}
+                aria-label="Ativar modo apresentação limpo"
+                className="viewer-control"
+                title="Modo apresentação (P)"
+              >
+                <EyeOff size={16} />
+              </button>
+            </div>
+          </div>
+          {!presentationMode && shortcutsOpen && (
+            <div className="border-b border-[#4b4439] bg-[#171512]/80 px-3 py-2 text-xs text-[#c9c1b5]">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#c4a779]">
+                Atalhos de navegação
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-4">
+                <span>
+                  <kbd>←</kbd> <kbd>→</kbd> páginas
+                </span>
+                <span>
+                  <kbd>+</kbd> <kbd>-</kbd> zoom
+                </span>
+                <span>
+                  <kbd>0</kbd> resetar zoom
+                </span>
+                <span>
+                  <kbd>Home</kbd> / <kbd>End</kbd> início/fim
+                </span>
+                <span>
+                  <kbd>Esc</kbd> fechar
+                </span>
+                <span>
+                  <kbd>?</kbd> mostrar/ocultar ajuda
+                </span>
+              </div>
+            </div>
+          )}
+          <div
+            className={
+              presentationMode
+                ? "hidden"
+                : "flex flex-wrap items-center gap-3 border-b border-[#4b4439] py-2 text-xs"
+            }
+          >
+            <SlidersHorizontal size={15} aria-hidden="true" />
+            <label className="flex items-center gap-2">
+              Brilho
+              <input
+                type="range"
+                min="70"
+                max="140"
+                value={brightness}
+                onChange={(event) => setBrightness(Number(event.target.value))}
+                aria-label="Brilho da página"
+                className="w-24 accent-[#c4a779]"
+              />
+              <span className="font-mono text-[10px]">{brightness}%</span>
+            </label>
+            <label className="flex items-center gap-2">
+              Contraste
+              <input
+                type="range"
+                min="70"
+                max="160"
+                value={contrast}
+                onChange={(event) => setContrast(Number(event.target.value))}
+                aria-label="Contraste da página"
+                className="w-24 accent-[#c4a779]"
+              />
+              <span className="font-mono text-[10px]">{contrast}%</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                setBrightness(100);
+                setContrast(100);
+                setReaderTheme("dark");
+              }}
+              className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[#c4a779]"
+            >
+              <RotateCcw size={13} /> Resetar leitura
+            </button>
+          </div>
+          <div className="flex min-h-0 flex-1 items-center justify-center gap-2 py-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => changePage(-1)}
+              disabled={!hasPrevious}
+              aria-label="Imagem anterior"
+              className="viewer-nav"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <div
+              className={`flex h-full min-w-0 flex-1 touch-none items-center justify-center overflow-hidden overscroll-contain ${zoom > 1.05 ? (isPanning ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}`}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerCancel}
+              onDoubleClick={() => setZoom((value) => (value === 1 ? 2 : 1))}
+            >
+              <img
+                src={currentImage.originalUrl}
+                alt={`${group.title}: ${currentImage.fileName}`}
+                className="max-h-full max-w-full select-none object-contain transition-transform duration-100"
+                style={{
+                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                  transformOrigin: "center center",
+                  filter: `brightness(${brightness}%) contrast(${contrast}%)`,
+                }}
+                draggable={false}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => changePage(1)}
+              disabled={!hasNext}
+              aria-label="Próxima imagem"
+              className="viewer-nav"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
+          <div className={presentationMode ? "hidden" : "border-t border-[#4b4439] pt-3"}>
+            <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Miniaturas das páginas">
+              {group.images.map((image, index) => (
+                <button
+                  key={image.fileName}
+                  type="button"
+                  onClick={() => {
+                    saveProgress(index);
+                    setZoom(1);
+                    setPan({ x: 0, y: 0 });
+                  }}
+                  aria-label={`Ir para página ${index + 1}`}
+                  className={`w-16 shrink-0 border p-1 sm:w-20 ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
+                >
+                  <img
+                    src={image.thumbnailUrl}
+                    alt=""
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                  <span className="mt-1 block text-center font-mono text-[9px] text-[#a9a092]">
+                    {index + 1}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="text-center font-mono text-[10px] text-[#81796d]">
+              Setas ou deslize: navegar · +/-: zoom · mãozinha: puxar a página · aproxime os dedos:
+              ampliar · P: apresentação · Esc: fechar
+            </p>
+          </div>
         </div>
       )}
     </section>
@@ -1062,6 +1685,18 @@ export function VivianRobertsCase({
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<DocumentItem | null>(null);
   const [foundVivianClues, setFoundVivianClues] = useState<string[]>(readFoundVivianClues);
+  const diaryPeople = PEOPLE.filter((person) => {
+    const groupId = DIARY_IMAGE_GROUP_IDS[person.id] ?? person.id;
+    return PAINSCREEK_EVIDENCE_IMAGE_GROUPS.some((group) => group.id === groupId);
+  });
+  const selectedDiaryIndex = selectedPerson
+    ? diaryPeople.findIndex((person) => person.id === selectedPerson.id)
+    : -1;
+  const previousDiary = selectedDiaryIndex > 0 ? diaryPeople[selectedDiaryIndex - 1] : undefined;
+  const nextDiary =
+    selectedDiaryIndex >= 0 && selectedDiaryIndex < diaryPeople.length - 1
+      ? diaryPeople[selectedDiaryIndex + 1]
+      : undefined;
 
   useEffect(() => {
     const refreshDiaryUnlocks = () => setFoundVivianClues(readFoundVivianClues());
@@ -1073,6 +1708,7 @@ export function VivianRobertsCase({
     if (!ambientOn || typeof window === "undefined") return;
     const startAmbient = () => {
       if (!ambientOn || ambientRef.current) return;
+      if (typeof AudioContext === "undefined") return;
       const context = new AudioContext();
       const buffer = context.createBuffer(1, context.sampleRate * 3, context.sampleRate);
       const data = buffer.getChannelData(0);
@@ -1556,11 +2192,23 @@ export function VivianRobertsCase({
                   <>
                     <p className="text-[#c4a779]">{selectedPerson.role}</p>
                     <p>{selectedPerson.note}</p>
-                    <DiaryImages
-                      personId={selectedPerson.id}
-                      personName={selectedPerson.name}
-                      foundClues={foundVivianClues}
-                    />
+                    {PAINSCREEK_EVIDENCE_IMAGE_GROUPS.some(
+                      (group) =>
+                        group.id ===
+                        (DIARY_IMAGE_GROUP_IDS[selectedPerson.id] ?? selectedPerson.id),
+                    ) && (
+                      <DiaryImages
+                        personId={selectedPerson.id}
+                        personName={selectedPerson.name}
+                        foundClues={foundVivianClues}
+                        previousDiary={previousDiary?.id}
+                        nextDiary={nextDiary?.id}
+                        onNavigateDiary={(personId) => {
+                          const target = diaryPeople.find((person) => person.id === personId);
+                          if (target) setSelectedPerson(target);
+                        }}
+                      />
+                    )}
                     {selectedPerson.status !== "confirmado" && (
                       <StatusPill status={selectedPerson.status} />
                     )}
