@@ -3,9 +3,16 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
   FileSearch,
+  Maximize2,
+  Minimize2,
   LockKeyhole,
   MapPin,
+  Minus,
+  Plus,
   Users,
   X,
   Volume2,
@@ -16,7 +23,6 @@ import {
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
 import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
-import { PainscreekImageViewer } from "./PainscreekImageViewer";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -80,6 +86,111 @@ function DiaryImages({
   const requiredClue = DIARY_UNLOCK_CLUES[personId];
   const unlocked = requiredClue ? foundClues.includes(requiredClue) : false;
 
+  const progressKey = `vivian-diary-progress-v1:${groupId}`;
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const saved = Number(window.localStorage.getItem(progressKey));
+    return Number.isInteger(saved) && saved >= 0 && saved < group.images.length ? saved : 0;
+  });
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const pointersRef = useRef(new Map<number, { x: number; y: number }>());
+  const pinchDistanceRef = useRef<number | null>(null);
+
+  const currentImage = group.images[currentIndex];
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < group.images.length - 1;
+
+  const saveProgress = (index: number) => {
+    setCurrentIndex(index);
+    if (typeof window !== "undefined") window.localStorage.setItem(progressKey, String(index));
+  };
+
+  const openViewer = (index: number) => {
+    saveProgress(index);
+    setZoom(1);
+    setViewerOpen(true);
+  };
+
+  const closeViewer = () => {
+    if (document.fullscreenElement) void document.exitFullscreen();
+    setViewerOpen(false);
+    setZoom(1);
+  };
+
+  const changePage = (direction: -1 | 1) => {
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= group.images.length) return;
+    saveProgress(nextIndex);
+    setZoom(1);
+  };
+
+  const adjustZoom = (amount: number) =>
+    setZoom((value) => Math.min(3, Math.max(1, Number((value + amount).toFixed(2)))));
+
+  const toggleFullscreen = async () => {
+    if (!viewerRef.current) return;
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await viewerRef.current.requestFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () =>
+      setIsFullscreen(document.fullscreenElement === viewerRef.current);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!viewerOpen) return;
+      if (event.key === "Escape") {
+        if (document.fullscreenElement) void document.exitFullscreen();
+        else closeViewer();
+      }
+      if (event.key === "ArrowLeft") changePage(-1);
+      if (event.key === "ArrowRight") changePage(1);
+      if (event.key === "+" || event.key === "=") adjustZoom(0.25);
+      if (event.key === "-") adjustZoom(-0.25);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [viewerOpen, currentIndex, group.images.length]);
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size === 2) {
+      const points = [...pointersRef.current.values()] as [
+        { x: number; y: number },
+        { x: number; y: number },
+      ];
+      pinchDistanceRef.current = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+    }
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointersRef.current.has(event.pointerId)) return;
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointersRef.current.size !== 2 || pinchDistanceRef.current === null) return;
+    const points = [...pointersRef.current.values()] as [
+      { x: number; y: number },
+      { x: number; y: number },
+    ];
+    const distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+    setZoom((value) => Math.min(3, Math.max(1, value * (distance / pinchDistanceRef.current!))));
+    pinchDistanceRef.current = distance;
+  };
+
+  const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    pointersRef.current.delete(event.pointerId);
+    if (pointersRef.current.size < 2) pinchDistanceRef.current = null;
+  };
+
   return (
     <section
       className="border border-[#4b4439] bg-[#211f1b] p-4"
@@ -93,29 +204,59 @@ function DiaryImages({
           <h3 className="mt-1 font-display text-xl">{group.title}</h3>
           <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
             {unlocked
-              ? "Páginas liberadas. Clique em uma miniatura para visualizar e navegar pelas páginas."
+              ? `Páginas liberadas. ${group.images.length} páginas disponíveis para leitura.`
               : "Páginas bloqueadas. Avance na investigação para liberar este diário."}
           </p>
         </div>
         {unlocked ? (
-          <BookOpen size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+          <ExternalLink size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         ) : (
           <LockKeyhole size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         )}
       </div>
-      {unlocked ? (
-        <PainscreekImageViewer
-          images={group.images}
-          title={group.title}
-          getThumbnailLabel={(image) => `Abrir ${image.fileName} do diário de ${personName}`}
-          className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3"
-          thumbnailClassName="group overflow-hidden border border-[#4b4439] bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
-          thumbnailImageClassName="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
-          thumbnailCaptionClassName="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]"
-        />
-      ) : (
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {group.images.map((image, index) => (
+      {unlocked && (
+        <div className="mt-4 flex items-center justify-between gap-3 border border-[#4b4439] bg-[#171512] px-3 py-2">
+          <p className="text-xs text-[#c9c1b5]">
+            Última página: <strong className="text-[#ead8b8]">{currentIndex + 1}</strong> de{" "}
+            {group.images.length}
+          </p>
+          <button
+            type="button"
+            onClick={() => openViewer(currentIndex)}
+            className="min-h-9 border border-[#c4a779] px-3 font-mono text-[10px] uppercase tracking-wider text-[#ead8b8] hover:bg-[#c4a779]/10"
+          >
+            Retomar leitura
+          </button>
+        </div>
+      )}
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {group.images.map((image, index) =>
+          unlocked ? (
+            <a
+              key={image.fileName}
+              href={image.originalUrl}
+              onClick={(event) => {
+                event.preventDefault();
+                openViewer(index);
+              }}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
+              className={`group overflow-hidden border bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e] ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={`${group.title}, imagem ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+              />
+              <span className="flex items-center justify-between gap-2 px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]">
+                <span className="truncate">{image.fileName}</span>
+                {currentIndex === index && <span className="shrink-0 text-[#c4a779]">atual</span>}
+              </span>
+            </a>
+          ) : (
             <div
               key={image.fileName}
               className="relative overflow-hidden border border-[#302b24] bg-[#171512]"
@@ -133,7 +274,137 @@ function DiaryImages({
                 <LockKeyhole size={19} className="text-[#ead8b8]" aria-hidden="true" />
               </div>
             </div>
-          ))}
+          ),
+        )}
+      </div>
+      {viewerOpen && currentImage && (
+        <div
+          ref={viewerRef}
+          className={`fixed inset-0 z-[80] flex flex-col bg-[#0d0c0b]/[.98] ${isFullscreen ? "p-3 sm:p-5" : "p-3 sm:p-6"}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${group.title}, página ${currentIndex + 1}`}
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-[#4b4439] pb-3 text-[#ead8b8]">
+            <div className="min-w-0">
+              <p className="truncate font-display text-xl">{group.title}</p>
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
+                Página {currentIndex + 1} de {group.images.length} · zoom {Math.round(zoom * 100)}%
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => adjustZoom(-0.25)}
+                disabled={zoom <= 1}
+                aria-label="Reduzir zoom"
+                className="viewer-control"
+                title="Reduzir zoom"
+              >
+                <Minus size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoom(1)}
+                aria-label="Resetar zoom"
+                className="viewer-control px-2 font-mono text-[10px]"
+              >
+                100%
+              </button>
+              <button
+                type="button"
+                onClick={() => adjustZoom(0.25)}
+                disabled={zoom >= 3}
+                aria-label="Aumentar zoom"
+                className="viewer-control"
+                title="Aumentar zoom"
+              >
+                <Plus size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? "Sair da tela cheia" : "Abrir em tela cheia"}
+                className="viewer-control"
+                title={isFullscreen ? "Sair da tela cheia" : "Tela cheia"}
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+              <button
+                type="button"
+                onClick={closeViewer}
+                aria-label="Fechar visualizador"
+                className="viewer-control"
+                title="Fechar"
+              >
+                <X size={17} />
+              </button>
+            </div>
+          </div>
+          <div className="flex min-h-0 flex-1 items-center justify-center gap-2 py-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => changePage(-1)}
+              disabled={!hasPrevious}
+              aria-label="Página anterior"
+              className="viewer-nav"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <div
+              className="flex h-full min-w-0 flex-1 touch-none items-center justify-center overflow-auto overscroll-contain"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              onDoubleClick={() => setZoom((value) => (value === 1 ? 2 : 1))}
+            >
+              <img
+                src={currentImage.originalUrl}
+                alt={`${group.title}, página ${currentIndex + 1}`}
+                className="max-h-full max-w-full select-none object-contain transition-transform duration-100"
+                style={{ transform: `scale(${zoom})`, transformOrigin: "center center" }}
+                draggable={false}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => changePage(1)}
+              disabled={!hasNext}
+              aria-label="Próxima página"
+              className="viewer-nav"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
+          <div className="border-t border-[#4b4439] pt-3">
+            <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Miniaturas das páginas">
+              {group.images.map((image, index) => (
+                <button
+                  key={image.fileName}
+                  type="button"
+                  onClick={() => {
+                    saveProgress(index);
+                    setZoom(1);
+                  }}
+                  aria-label={`Ir para página ${index + 1}`}
+                  className={`w-16 shrink-0 border p-1 sm:w-20 ${currentIndex === index ? "border-[#c4a779]" : "border-[#4b4439]"}`}
+                >
+                  <img
+                    src={image.thumbnailUrl}
+                    alt=""
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                  <span className="mt-1 block text-center font-mono text-[9px] text-[#a9a092]">
+                    {index + 1}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="text-center font-mono text-[10px] text-[#81796d]">
+              Setas: navegar · +/-: zoom · pinça: ampliar · Esc: fechar
+            </p>
+          </div>
         </div>
       )}
     </section>

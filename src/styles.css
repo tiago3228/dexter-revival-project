@@ -20,6 +20,47 @@
   animation: investigation-guidance-pulse 1.6s ease-in-out infinite;
 }
 
+.viewer-control,
+.viewer-nav {
+  display: inline-flex;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #79664c;
+  color: #ead8b8;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.viewer-control:hover:not(:disabled),
+.viewer-nav:hover:not(:disabled) {
+  border-color: #c4a779;
+  background: rgb(196 167 121 / 0.12);
+}
+
+.viewer-control:disabled,
+.viewer-nav:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.viewer-control:focus-visible,
+.viewer-nav:focus-visible {
+  outline: 2px solid #d8b77e;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .viewer-control,
+  .viewer-nav {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .investigation-guidance-pulse {
     animation: none;
@@ -287,8 +328,7 @@
 
 .chapter-transition-overlay {
   background:
-    radial-gradient(circle at 50% 45%, rgb(116 22 27 / 18%), transparent 48%),
-    rgb(5 5 6 / 96%);
+    radial-gradient(circle at 50% 45%, rgb(116 22 27 / 18%), transparent 48%), rgb(5 5 6 / 96%);
   animation: chapter-overlay-in 240ms ease-out both;
 }
 
@@ -409,5 +449,15 @@
   }
 }
 
-@keyframes vivian-pulse { 0%,100% { box-shadow: 0 0 0 0 rgb(196 167 121 / 0); } 50% { box-shadow: 0 0 0 6px rgb(196 167 121 / 0.55); } }
-.vivian-pulse { animation: vivian-pulse 0.8s ease-in-out 3; }
+@keyframes vivian-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(196 167 121 / 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(196 167 121 / 0.55);
+  }
+}
+.vivian-pulse {
+  animation: vivian-pulse 0.8s ease-in-out 3;
+}
