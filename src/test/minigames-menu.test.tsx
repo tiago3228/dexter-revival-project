@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { CircuitPanelMinigame } from "@/game/CircuitPanelMinigame";
+import { CircuitPanelMinigame, getMasks, isSolved, rotateMask } from "@/game/CircuitPanelMinigame";
 import { MinigamesMenu } from "@/game/MinigamesMenu";
 
 describe("menu de minigames", () => {
@@ -18,6 +18,16 @@ describe("menu de minigames", () => {
     expect(screen.getByRole("heading", { name: "Painel Elétrico" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Mini Game de Bandeiras/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Painel Elétrico/ })).toBeInTheDocument();
+  });
+
+  it("mantém um caminho-base válido e reversível para qualquer embaralhamento", () => {
+    const rotations = [0, 1, 2, 3, 1, 3, 2, 1, 0, 2, 3, 1, 2, 0, 1, 3];
+    const inverseRotations = rotations.map((rotation) => (4 - rotation) % 4);
+
+    expect(isSolved(getMasks(Array.from({ length: 16 }, () => 0)))).toBe(true);
+    const scrambled = getMasks(rotations);
+    const restored = scrambled.map((mask, index) => rotateMask(mask, inverseRotations[index]!));
+    expect(isSolved(restored)).toBe(true);
   });
 
   it("abre o painel, inicia a análise e gira conectores com feedback de movimentos", () => {

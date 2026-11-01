@@ -20,26 +20,26 @@ const OPPOSITE: Record<Direction, Direction> = {
   west: "east",
 };
 
-const SOLUTION: readonly Mask[] = [
+export const SOLUTION: readonly Mask[] = [
   { north: false, east: true, south: false, west: false },
   { north: false, east: true, south: false, west: true },
   { north: false, east: true, south: false, west: true },
   { north: false, east: false, south: true, west: true },
-  { north: true, east: true, south: false, west: false },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: true, south: false, west: true },
-  { north: true, east: false, south: true, west: false },
   { north: false, east: true, south: true, west: false },
   { north: false, east: true, south: false, west: true },
   { north: false, east: true, south: false, west: true },
-  { north: false, east: false, south: true, west: true },
+  { north: true, east: false, south: false, west: true },
   { north: true, east: true, south: false, west: false },
   { north: false, east: true, south: false, west: true },
   { north: false, east: true, south: false, west: true },
-  { north: true, east: false, south: false, west: false },
+  { north: false, east: false, south: true, west: true },
+  { north: false, east: true, south: false, west: false },
+  { north: false, east: true, south: false, west: true },
+  { north: false, east: true, south: false, west: true },
+  { north: true, east: false, south: false, west: true },
 ];
 
-function rotateMask(mask: Mask, turns: number): Mask {
+export function rotateMask(mask: Mask, turns: number): Mask {
   let current = mask;
   for (let turn = 0; turn < turns % 4; turn += 1) {
     current = {
@@ -52,7 +52,7 @@ function rotateMask(mask: Mask, turns: number): Mask {
   return current;
 }
 
-function getMasks(rotations: readonly number[]): Mask[] {
+export function getMasks(rotations: readonly number[]): Mask[] {
   return SOLUTION.map((mask, index) => rotateMask(mask, rotations[index] ?? 0));
 }
 
@@ -80,7 +80,7 @@ function getEnergized(masks: readonly Mask[]): Set<number> {
   return energized;
 }
 
-function isSolved(masks: readonly Mask[]): boolean {
+export function isSolved(masks: readonly Mask[]): boolean {
   for (let index = 0; index < masks.length; index += 1) {
     const row = Math.floor(index / SIZE);
     const column = index % SIZE;
