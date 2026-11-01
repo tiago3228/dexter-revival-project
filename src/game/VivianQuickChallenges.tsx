@@ -239,6 +239,36 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
                     )}
                   </aside>
                 )}
+                {activeCase.audioSources && (
+                  <section
+                    className="mt-3 space-y-3 border border-border bg-muted/20 p-3"
+                    aria-label="Resumos em áudio das fontes"
+                  >
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                        Comparação em áudio
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        São resumos narrados das fontes, não gravações originais de interrogatório.
+                      </p>
+                    </div>
+                    {activeCase.audioSources.map((audioSource) => (
+                      <div key={audioSource.id} className="space-y-1 border-t border-border pt-3">
+                        <p className="text-sm">{audioSource.title}</p>
+                        <p className="font-mono text-[10px] text-muted-foreground">
+                          {audioSource.reference}
+                        </p>
+                        <audio
+                          className="h-9 w-full"
+                          controls
+                          preload="none"
+                          src={audioSource.audioSrc}
+                          aria-label={`Ouvir resumo narrado: ${audioSource.title}`}
+                        />
+                      </div>
+                    ))}
+                  </section>
+                )}
                 {completed.includes(activeCase.id) ? (
                   <div className="mt-3 space-y-2 border-l-2 border-primary pl-3 text-sm leading-relaxed">
                     {activeCase.steps.map((step) => (

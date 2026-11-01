@@ -6,6 +6,12 @@ export type QuickCaseStep = {
   answer: string;
   explanation: string;
 };
+export type QuickCaseAudioSource = {
+  id: string;
+  title: string;
+  reference: string;
+  audioSrc: string;
+};
 export type QuickCase = {
   id: string;
   title: string;
@@ -14,6 +20,7 @@ export type QuickCase = {
   sourceReference?: string;
   briefing?: string;
   objective?: string;
+  audioSources?: readonly QuickCaseAudioSource[];
   steps: readonly QuickCaseStep[];
 };
 
@@ -175,6 +182,84 @@ export const VIVIAN_QUICK_CASES: readonly QuickCase[] = [
         answer: "cause-open",
         explanation:
           "O catálogo registra que a notícia foi conferida, mas aponta causa e circunstâncias como questões a verificar em fontes oficiais.",
+      },
+    ],
+  },
+  {
+    id: "scott-hunters-audio",
+    title: "Confronto em áudio: Scott e os caçadores",
+    summary:
+      "Compare duas versões e identifique o que coincide — e o que continua sem verificação.",
+    requiredRecords: ["scott-denial", "police-report"],
+    sourceReference: "Notícia · PDF p. 88 + relatório policial · PDF p. 90",
+    briefing:
+      "A p. 88 registra a versão de Scott: ele afirma ter encontrado Vivian na floresta, voltado à cabana e permanecido ali por dias. A p. 90 relata que dois caçadores viram Scott e Vivian discutindo e ouviram gritos, mas não conseguiram ouvir a conversa.",
+    objective:
+      "Ouça os resumos narrados e, em três etapas, separe o ponto em comum, o alcance da observação dos caçadores e o que nenhuma das fontes confirma independentemente.",
+    audioSources: [
+      {
+        id: "scott-denial-audio",
+        title: "Versão de Scott · resumo narrado",
+        reference: "Notícia · PDF p. 88",
+        audioSrc: "/audio/painscreek/clues/scott-denial.wav",
+      },
+      {
+        id: "police-report-audio",
+        title: "Relatório dos caçadores · resumo narrado",
+        reference: "Relatório policial · PDF p. 90",
+        audioSrc: "/audio/painscreek/clues/police-report.wav",
+      },
+    ],
+    steps: [
+      {
+        id: "shared-location",
+        question: "Qual ponto aparece nas duas fontes?",
+        options: [
+          {
+            id: "forest-encounter",
+            label:
+              "Ambas situam Scott e Vivian na floresta: Scott relata que a encontrou; os caçadores dizem tê-los visto discutindo.",
+          },
+          {
+            id: "cabin-confirmed",
+            label: "Os caçadores confirmam que Scott voltou à cabana e ficou lá por dias.",
+          },
+          {
+            id: "dialogue-confirmed",
+            label: "As duas fontes transcrevem as palavras da conversa.",
+          },
+        ],
+        answer: "forest-encounter",
+        explanation:
+          "A versão de Scott e o relatório dos caçadores situam os dois na floresta, mas isso não confirma os detalhes posteriores narrados por Scott.",
+      },
+      {
+        id: "hunter-hearing",
+        question: "O que os caçadores dizem ter ouvido?",
+        options: [
+          { id: "screams-only", label: "Gritos; estavam longe demais para ouvir a conversa." },
+          { id: "full-dialogue", label: "Toda a conversa entre Scott e Vivian." },
+          { id: "confession", label: "Uma confissão de Scott sobre o assassinato." },
+        ],
+        answer: "screams-only",
+        explanation:
+          "O relatório registra gritos e uma discussão observada, mas diz que os caçadores não conseguiam ouvir o diálogo.",
+      },
+      {
+        id: "unverified-timeline",
+        question: "Qual detalhe permanece sem corroboração independente nesses dois registros?",
+        options: [
+          {
+            id: "afterward",
+            label:
+              "Se Scott voltou à cabana e permaneceu lá por dias; esse trecho é a versão dele, não algo confirmado pelos caçadores.",
+          },
+          { id: "meeting", label: "Se Scott e Vivian estiveram juntos na floresta." },
+          { id: "screams", label: "Se o relatório dos caçadores menciona gritos." },
+        ],
+        answer: "afterward",
+        explanation:
+          "A p. 88 registra a declaração de Scott sobre voltar à cabana; a p. 90 não acompanha seus movimentos depois do encontro. Nenhuma delas estabelece autoria do crime.",
       },
     ],
   },

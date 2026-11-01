@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -198,18 +198,13 @@ function DiaryImages({
     }
   }, [brightness, contrast, readerTheme]);
 
-  if (!group) return null;
-
-  const currentImage = group.images[currentIndex];
-  const hasPrevious = currentIndex > 0;
-  const hasNext = currentIndex < group.images.length - 1;
-  const currentCatalogPage = DIARY_CATALOG_PAGES[groupId]?.[currentIndex];
-  const diaryReferences = getDiaryReferences(personId, currentCatalogPage);
-
-  const saveProgress = (index: number) => {
-    setCurrentIndex(index);
-    if (typeof window !== "undefined") window.localStorage.setItem(progressKey, String(index));
-  };
+  const saveProgress = useCallback(
+    (index: number) => {
+      setCurrentIndex(index);
+      if (typeof window !== "undefined") window.localStorage.setItem(progressKey, String(index));
+    },
+    [progressKey],
+  );
 
   const openViewer = (index: number) => {
     saveProgress(index);
@@ -218,38 +213,46 @@ function DiaryImages({
     setViewerOpen(true);
   };
 
-  const closeViewer = () => {
+  const closeViewer = useCallback(() => {
     if (document.fullscreenElement) void document.exitFullscreen();
     setViewerOpen(false);
     setZoom(1);
     setPan({ x: 0, y: 0 });
-  };
+  }, []);
 
-  const changePage = (direction: -1 | 1) => {
-    const nextIndex = currentIndex + direction;
-    if (nextIndex < 0 || nextIndex >= group.images.length) return;
-    saveProgress(nextIndex);
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
-  };
+  const changePage = useCallback(
+    (direction: -1 | 1) => {
+      if (!group) return;
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex >= group.images.length) return;
+      saveProgress(nextIndex);
+      setZoom(1);
+      setPan({ x: 0, y: 0 });
+    },
+    [currentIndex, group, saveProgress],
+  );
 
-  const adjustZoom = (amount: number) =>
-    setZoom((value) => Math.min(6, Math.max(1, Number((value + amount).toFixed(2)))));
+  const adjustZoom = useCallback(
+    (amount: number) =>
+      setZoom((value) => Math.min(6, Math.max(1, Number((value + amount).toFixed(2))))),
+    [],
+  );
 
   useEffect(() => {
     if (zoom <= 1.05) setPan({ x: 0, y: 0 });
   }, [zoom]);
 
-  const toggleFullscreen = async () => {
+  const toggleFullscreen = useCallback(async () => {
     if (!viewerRef.current) return;
     if (document.fullscreenElement) {
       await document.exitFullscreen();
     } else {
       await viewerRef.current.requestFullscreen();
     }
-  };
+  }, []);
 
   useEffect(() => {
+    if (!group) return;
     const handleFullscreenChange = () =>
       setIsFullscreen(document.fullscreenElement === viewerRef.current);
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -287,7 +290,15 @@ function DiaryImages({
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [viewerOpen, currentIndex, group.images.length]);
+  }, [viewerOpen, currentIndex, group, closeViewer, changePage, adjustZoom, saveProgress]);
+
+  if (!group) return null;
+
+  const currentImage = group.images[currentIndex];
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < group.images.length - 1;
+  const currentCatalogPage = DIARY_CATALOG_PAGES[groupId]?.[currentIndex];
+  const diaryReferences = getDiaryReferences(personId, currentCatalogPage);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (typeof event.currentTarget.setPointerCapture === "function") {

@@ -81,4 +81,54 @@ describe("desafios rápidos no mapa de transição", () => {
     expect(saved.mistakes).toBe(2);
     expect(saved.investigationNotes).toBe("Localizar registro oficial sobre a causa da morte.");
   });
+
+  it("compara os resumos em áudio de Scott e dos caçadores sem inventar uma contradição", () => {
+    const audioCase = VIVIAN_QUICK_CASES.find(
+      (quickCase) => quickCase.id === "scott-hunters-audio",
+    );
+    expect(audioCase).toBeDefined();
+    if (!audioCase) throw new Error("Scott and hunters audio case is missing");
+    expect(audioCase.requiredRecords).toEqual(["scott-denial", "police-report"]);
+
+    window.localStorage.setItem(
+      SAVE_KEY,
+      JSON.stringify({
+        version: 6,
+        found: ["scott-denial", "police-report"],
+        completedQuickCases: [],
+        mistakes: 4,
+        investigationNotes: "A conversa não foi ouvida pelos caçadores.",
+      }),
+    );
+    render(<VivianMapQuickChallenges />);
+    fireEvent.click(screen.getByRole("button", { name: /Entre um local e outro/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Confronto em áudio: Scott e os caçadores/ }),
+    );
+
+    const challenge = screen.getByRole("article", { name: audioCase.title });
+    expect(
+      within(challenge).getByText(/não gravações originais de interrogatório/),
+    ).toBeInTheDocument();
+    expect(within(challenge).getAllByLabelText(/Ouvir resumo narrado/)).toHaveLength(2);
+    expect(within(challenge).getByLabelText(/Versão de Scott/)).toHaveAttribute(
+      "src",
+      "/audio/painscreek/clues/scott-denial.wav",
+    );
+    expect(within(challenge).getByLabelText(/Relatório dos caçadores/)).toHaveAttribute(
+      "src",
+      "/audio/painscreek/clues/police-report.wav",
+    );
+
+    for (const step of audioCase.steps) {
+      const correctOption = step.options.find((option) => option.id === step.answer)!;
+      fireEvent.click(within(challenge).getByRole("radio", { name: correctOption.label }));
+    }
+    fireEvent.click(within(challenge).getByRole("button", { name: "Conferir caso" }));
+
+    const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) ?? "{}");
+    expect(saved.completedQuickCases).toEqual(["scott-hunters-audio"]);
+    expect(saved.mistakes).toBe(4);
+    expect(saved.investigationNotes).toBe("A conversa não foi ouvida pelos caçadores.");
+  });
 });
