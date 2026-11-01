@@ -1,6 +1,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { CircuitPanelMinigame, getMasks, isSolved, rotateMask } from "@/game/CircuitPanelMinigame";
+import {
+  CircuitPanelMinigame,
+  getMasks,
+  isSolved,
+  LEVELS,
+  rotateMask,
+} from "@/game/CircuitPanelMinigame";
 import { MinigamesMenu } from "@/game/MinigamesMenu";
 
 describe("menu de minigames", () => {
@@ -28,6 +34,16 @@ describe("menu de minigames", () => {
     const scrambled = getMasks(rotations);
     const restored = scrambled.map((mask, index) => rotateMask(mask, inverseRotations[index]!));
     expect(isSolved(restored)).toBe(true);
+    for (const level of LEVELS) {
+      expect(
+        isSolved(
+          getMasks(
+            Array.from({ length: level.size * level.size }, () => 0),
+            level.solution,
+          ),
+        ),
+      ).toBe(true);
+    }
   });
 
   it("abre o painel, inicia a análise e gira conectores com feedback de movimentos", () => {

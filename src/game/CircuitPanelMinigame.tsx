@@ -4,8 +4,9 @@ import { CheckCircle2, CircuitBoard, RotateCw, X, Zap } from "lucide-react";
 type Direction = "north" | "east" | "south" | "west";
 type Mask = Record<Direction, boolean>;
 
-const SIZE = 4;
+const DEFAULT_SIZE = 4;
 const CIRCUIT_SAVE_KEY = "dexter-circuit-panel-completed-v1";
+const CIRCUIT_LEVEL_KEY = "dexter-circuit-panel-level-v1";
 const DIRECTIONS: readonly Direction[] = ["north", "east", "south", "west"];
 const DELTAS: Record<Direction, readonly [number, number]> = {
   north: [-1, 0],
@@ -20,23 +21,67 @@ const OPPOSITE: Record<Direction, Direction> = {
   west: "east",
 };
 
-export const SOLUTION: readonly Mask[] = [
-  { north: false, east: true, south: false, west: false },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: false, south: true, west: true },
-  { north: false, east: true, south: true, west: false },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: true, south: false, west: true },
-  { north: true, east: false, south: false, west: true },
-  { north: true, east: true, south: false, west: false },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: false, south: true, west: true },
-  { north: false, east: true, south: false, west: false },
-  { north: false, east: true, south: false, west: true },
-  { north: false, east: true, south: false, west: true },
-  { north: true, east: false, south: false, west: true },
+function createSnakeSolution(size: number): Mask[] {
+  const path = Array.from({ length: size * size }, (_, index) => {
+    const row = Math.floor(index / size);
+    const column = index % size;
+    return [row, row % 2 === 0 ? column : size - 1 - column] as const;
+  });
+  const masks = path.map(() => ({ north: false, east: false, south: false, west: false }));
+  path.forEach(([row, column], index) => {
+    const cellIndex = row * size + column;
+    const connect = (direction: Direction) => {
+      masks[cellIndex]![direction] = true;
+    };
+    const previous = path[index - 1];
+    const next = path[index + 1];
+    if (previous) {
+      if (previous[0] < row) connect("north");
+      if (previous[0] > row) connect("south");
+      if (previous[1] < column) connect("west");
+      if (previous[1] > column) connect("east");
+    }
+    if (next) {
+      if (next[0] > row) connect("south");
+      if (next[0] < row) connect("north");
+      if (next[1] > column) connect("east");
+      if (next[1] < column) connect("west");
+    }
+  });
+  return masks;
+}
+
+export const SOLUTION: readonly Mask[] = createSnakeSolution(DEFAULT_SIZE);
+type LevelId = "easy" | "medium" | "complex";
+type Level = {
+  id: LevelId;
+  label: string;
+  description: string;
+  size: number;
+  solution: readonly Mask[];
+};
+export const LEVELS: readonly Level[] = [
+  {
+    id: "easy",
+    label: "Fácil · 4×4",
+    description: "16 nós · introdução",
+    size: 4,
+    solution: SOLUTION,
+  },
+  {
+    id: "medium",
+    label: "Médio · 5×5",
+    description: "25 nós · mais curvas",
+    size: 5,
+    solution: createSnakeSolution(5),
+  },
+  {
+    id: "complex",
+    label: "Complexo · 6×6",
+    description: "36 nós · rede extensa",
+    size: 6,
+    solution: createSnakeSolution(6),
+  },
 ];
 
 export function rotateMask(mask: Mask, turns: number): Mask {
@@ -52,24 +97,28 @@ export function rotateMask(mask: Mask, turns: number): Mask {
   return current;
 }
 
-export function getMasks(rotations: readonly number[]): Mask[] {
-  return SOLUTION.map((mask, index) => rotateMask(mask, rotations[index] ?? 0));
+export function getMasks(
+  rotations: readonly number[],
+  solution: readonly Mask[] = SOLUTION,
+): Mask[] {
+  return solution.map((mask, index) => rotateMask(mask, rotations[index] ?? 0));
 }
 
 function getEnergized(masks: readonly Mask[]): Set<number> {
+  const size = Math.sqrt(masks.length);
   const energized = new Set<number>([0]);
   const queue = [0];
   while (queue.length) {
     const index = queue.shift()!;
-    const row = Math.floor(index / SIZE);
-    const column = index % SIZE;
+    const row = Math.floor(index / size);
+    const column = index % size;
     for (const direction of DIRECTIONS) {
       if (!masks[index]?.[direction]) continue;
       const [rowDelta, columnDelta] = DELTAS[direction];
       const nextRow = row + rowDelta;
       const nextColumn = column + columnDelta;
-      if (nextRow < 0 || nextRow >= SIZE || nextColumn < 0 || nextColumn >= SIZE) continue;
-      const nextIndex = nextRow * SIZE + nextColumn;
+      if (nextRow < 0 || nextRow >= size || nextColumn < 0 || nextColumn >= size) continue;
+      const nextIndex = nextRow * size + nextColumn;
       if (!masks[nextIndex]?.[OPPOSITE[direction]]) continue;
       if (!energized.has(nextIndex)) {
         energized.add(nextIndex);
@@ -81,27 +130,28 @@ function getEnergized(masks: readonly Mask[]): Set<number> {
 }
 
 export function isSolved(masks: readonly Mask[]): boolean {
+  const size = Math.sqrt(masks.length);
   for (let index = 0; index < masks.length; index += 1) {
-    const row = Math.floor(index / SIZE);
-    const column = index % SIZE;
+    const row = Math.floor(index / size);
+    const column = index % size;
     for (const direction of DIRECTIONS) {
       if (!masks[index]?.[direction]) continue;
       const [rowDelta, columnDelta] = DELTAS[direction];
       const nextRow = row + rowDelta;
       const nextColumn = column + columnDelta;
-      if (nextRow < 0 || nextRow >= SIZE || nextColumn < 0 || nextColumn >= SIZE) return false;
-      const nextIndex = nextRow * SIZE + nextColumn;
+      if (nextRow < 0 || nextRow >= size || nextColumn < 0 || nextColumn >= size) return false;
+      const nextIndex = nextRow * size + nextColumn;
       if (!masks[nextIndex]?.[OPPOSITE[direction]]) return false;
     }
   }
   return getEnergized(masks).size === masks.length;
 }
 
-function createPuzzle(): number[] {
+function createPuzzle(solution: readonly Mask[]): number[] {
   let rotations: number[] = [];
   do {
-    rotations = SOLUTION.map(() => Math.floor(Math.random() * 4));
-  } while (isSolved(getMasks(rotations)));
+    rotations = solution.map(() => Math.floor(Math.random() * 4));
+  } while (isSolved(getMasks(rotations, solution)));
   return rotations;
 }
 
@@ -166,19 +216,28 @@ export function CircuitPanelMinigame({
 }: CircuitPanelMinigameProps = {}) {
   const [open, setOpen] = useState(false);
   const [started, setStarted] = useState(false);
-  const [rotations, setRotations] = useState<number[]>(() => createPuzzle());
+  const [completedLevelIndex, setCompletedLevelIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    return Math.min(LEVELS.length - 1, Number(window.localStorage.getItem(CIRCUIT_LEVEL_KEY)) || 0);
+  });
+  const [levelIndex, setLevelIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    return Math.min(LEVELS.length - 1, Number(window.localStorage.getItem(CIRCUIT_LEVEL_KEY)) || 0);
+  });
+  const level = LEVELS[levelIndex] ?? LEVELS[0]!;
+  const [rotations, setRotations] = useState<number[]>(() => createPuzzle(level.solution));
   const [moves, setMoves] = useState(0);
   const [solved, setSolved] = useState(false);
   const [completedBefore, setCompletedBefore] = useState(() => {
     if (typeof window === "undefined") return false;
     return window.localStorage.getItem(CIRCUIT_SAVE_KEY) === "true";
   });
-  const masks = useMemo(() => getMasks(rotations), [rotations]);
+  const masks = useMemo(() => getMasks(rotations, level.solution), [level.solution, rotations]);
   const energized = useMemo(() => getEnergized(masks), [masks]);
   const litCount = energized.size;
 
   const start = () => {
-    setRotations(createPuzzle());
+    setRotations(createPuzzle(level.solution));
     setMoves(0);
     setSolved(false);
     setStarted(true);
@@ -195,17 +254,33 @@ export function CircuitPanelMinigame({
     const nextRotations = rotations.map((rotation, tileIndex) =>
       tileIndex === index ? (rotation + 1) % 4 : rotation,
     );
-    const nextMasks = getMasks(nextRotations);
+    const nextMasks = getMasks(nextRotations, level.solution);
     const nextSolved = isSolved(nextMasks);
     setRotations(nextRotations);
     setMoves((value) => value + 1);
     playTone(nextSolved ? "success" : "rotate");
     if (nextSolved) {
       setSolved(true);
-      setCompletedBefore(true);
-      window.localStorage.setItem(CIRCUIT_SAVE_KEY, "true");
-      onSolved?.();
+      setCompletedLevelIndex((current) => {
+        const next = Math.max(current, levelIndex);
+        window.localStorage.setItem(CIRCUIT_LEVEL_KEY, String(next));
+        return next;
+      });
+      if (levelIndex === LEVELS.length - 1) {
+        setCompletedBefore(true);
+        window.localStorage.setItem(CIRCUIT_SAVE_KEY, "true");
+        onSolved?.();
+      }
     }
+  };
+
+  const nextLevel = () => {
+    if (levelIndex >= LEVELS.length - 1) return;
+    const nextIndex = levelIndex + 1;
+    setLevelIndex(nextIndex);
+    setRotations(createPuzzle(LEVELS[nextIndex]!.solution));
+    setMoves(0);
+    setSolved(false);
   };
 
   return (
@@ -253,17 +328,43 @@ export function CircuitPanelMinigame({
                       <Zap size={21} />
                     </div>
                     <div>
-                      <h3 className="font-display text-2xl">Inserir fusível</h3>
+                      <h3 className="font-display text-2xl">
+                        Inserir fusível · Painel {levelIndex + 1}/3
+                      </h3>
                       <p className="mt-2 text-sm leading-relaxed text-[#b9ae9b]">
                         A rede está interrompida. Analise a matriz de conectores e gire cada peça em
                         90° até acender todos os nós.
                       </p>
                     </div>
                   </div>
+                  <div className="mt-5 grid gap-2 sm:grid-cols-3" aria-label="Níveis do painel">
+                    {LEVELS.map((item, index) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        disabled={index > completedLevelIndex}
+                        onClick={() => {
+                          setLevelIndex(index);
+                          setRotations(createPuzzle(item.solution));
+                        }}
+                        className={`min-h-16 border p-3 text-left font-mono text-[10px] transition ${index === levelIndex ? "border-[#e1c078] bg-[#d3a74e]/15 text-[#f1d58e]" : index < levelIndex ? "border-emerald-800/70 text-emerald-200" : "cursor-not-allowed border-[#4b4031] text-[#665b4b]"}`}
+                      >
+                        <strong className="block">
+                          {index < levelIndex ? "✓ " : ""}
+                          {item.label}
+                        </strong>
+                        <span className="mt-1 block opacity-75">{item.description}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-xs leading-relaxed text-[#9f917b]">
+                    Os três painéis são progressivos. Complete o painel atual para liberar o
+                    seguinte.
+                  </p>
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-[#8f826d]">
                       {completedBefore
-                        ? "Registro anterior: painel restaurado"
+                        ? "Registro anterior: desafio completo"
                         : "Sem cronômetro · sem pontuação"}
                     </span>
                     <button
@@ -282,7 +383,7 @@ export function CircuitPanelMinigame({
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${solved ? "bg-[#f8e7a7] shadow-[0_0_12px_#fff4b0]" : "bg-[#8a6b37]"}`}
                       />
-                      Energia: {litCount}/{SIZE * SIZE} nós
+                      Painel {levelIndex + 1}/3 · Energia: {litCount}/{level.size * level.size} nós
                     </div>
                     <span className="font-mono text-xs text-[#9c8e79]">Giros: {moves}</span>
                   </div>
@@ -294,11 +395,14 @@ export function CircuitPanelMinigame({
                       {Array.from({ length: 6 }, (_, index) => (
                         <span
                           key={index}
-                          className={`h-2.5 rounded-full border border-[#8c7958] transition ${index < Math.ceil((litCount / 16) * 6) ? "bg-[#fff0b0] shadow-[0_0_12px_#fff0b0]" : "bg-[#4b3c2b]"}`}
+                          className={`h-2.5 rounded-full border border-[#8c7958] transition ${index < Math.ceil((litCount / (level.size * level.size)) * 6) ? "bg-[#fff0b0] shadow-[0_0_12px_#fff0b0]" : "bg-[#4b3c2b]"}`}
                         />
                       ))}
                     </div>
-                    <div className="grid aspect-square grid-cols-4 gap-1.5 border-4 border-[#554536] bg-[#191612] p-1.5 sm:gap-2 sm:p-2">
+                    <div
+                      className="grid aspect-square gap-1.5 border-4 border-[#554536] bg-[#191612] p-1.5 sm:gap-2 sm:p-2"
+                      style={{ gridTemplateColumns: `repeat(${level.size}, minmax(0, 1fr))` }}
+                    >
                       {masks.map((mask, index) => (
                         <button
                           key={index}
@@ -322,12 +426,23 @@ export function CircuitPanelMinigame({
                       role="status"
                     >
                       <CheckCircle2 className="mt-0.5 shrink-0" size={20} />
-                      <div>
+                      <div className="min-w-0">
                         <strong className="font-display text-xl">Circuito completo</strong>
                         <p className="mt-1 text-sm leading-relaxed text-[#d7c9a8]">
-                          Todos os nós estão energizados. O sistema auxiliar foi restaurado; você
-                          pode voltar ao menu e seguir para a próxima etapa.
+                          Todos os {level.size * level.size} nós estão energizados.{" "}
+                          {levelIndex < LEVELS.length - 1
+                            ? "O próximo painel foi liberado."
+                            : "O sistema auxiliar foi restaurado por completo."}
                         </p>
+                        {levelIndex < LEVELS.length - 1 && (
+                          <button
+                            type="button"
+                            onClick={nextLevel}
+                            className="mt-4 min-h-10 border border-[#e1c078] px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#f1d58e] hover:bg-[#d3a74e]/15"
+                          >
+                            Continuar para {LEVELS[levelIndex + 1]!.label} →
+                          </button>
+                        )}
                       </div>
                     </div>
                   ) : (
