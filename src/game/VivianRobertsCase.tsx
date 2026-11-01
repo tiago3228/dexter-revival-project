@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   BookOpen,
-  ExternalLink,
   FileSearch,
   LockKeyhole,
   MapPin,
@@ -17,6 +16,7 @@ import {
 } from "lucide-react";
 import { VivianInvestigationGame } from "./VivianInvestigationGame";
 import { PAINSCREEK_EVIDENCE_IMAGE_GROUPS } from "./painscreekEvidenceImages";
+import { PainscreekImageViewer } from "./PainscreekImageViewer";
 
 type ReviewStatus = "pendente" | "confirmado" | "contradicao";
 type Person = { id: string; name: string; role: string; note: string; status: ReviewStatus };
@@ -93,39 +93,29 @@ function DiaryImages({
           <h3 className="mt-1 font-display text-xl">{group.title}</h3>
           <p className="mt-2 text-xs leading-relaxed text-[#a9a092]">
             {unlocked
-              ? "Páginas liberadas. Clique em uma miniatura para abrir a imagem original."
+              ? "Páginas liberadas. Clique em uma miniatura para visualizar e navegar pelas páginas."
               : "Páginas bloqueadas. Avance na investigação para liberar este diário."}
           </p>
         </div>
         {unlocked ? (
-          <ExternalLink size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
+          <BookOpen size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         ) : (
           <LockKeyhole size={17} className="shrink-0 text-[#c4a779]" aria-hidden="true" />
         )}
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {group.images.map((image, index) =>
-          unlocked ? (
-            <a
-              key={image.fileName}
-              href={image.originalUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`Abrir ${image.fileName} do diário de ${personName}`}
-              className="group overflow-hidden border border-[#4b4439] bg-[#171512] transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
-            >
-              <img
-                src={image.thumbnailUrl}
-                alt={`${group.title}, imagem ${index + 1}`}
-                loading="lazy"
-                decoding="async"
-                className="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
-              />
-              <span className="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]">
-                {image.fileName}
-              </span>
-            </a>
-          ) : (
+      {unlocked ? (
+        <PainscreekImageViewer
+          images={group.images}
+          title={group.title}
+          getThumbnailLabel={(image) => `Abrir ${image.fileName} do diário de ${personName}`}
+          className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3"
+          thumbnailClassName="group overflow-hidden border border-[#4b4439] bg-[#171512] text-left transition hover:border-[#c4a779] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b77e]"
+          thumbnailImageClassName="aspect-[4/3] w-full object-cover transition group-hover:scale-[1.02]"
+          thumbnailCaptionClassName="block truncate px-2 py-1 text-[10px] text-[#a9a092] group-hover:text-[#eee9df]"
+        />
+      ) : (
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {group.images.map((image, index) => (
             <div
               key={image.fileName}
               className="relative overflow-hidden border border-[#302b24] bg-[#171512]"
@@ -143,9 +133,9 @@ function DiaryImages({
                 <LockKeyhole size={19} className="text-[#ead8b8]" aria-hidden="true" />
               </div>
             </div>
-          ),
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

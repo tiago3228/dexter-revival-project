@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -96,14 +97,46 @@ describe("Painscreek evidence catalog", () => {
     expect(PAINSCREEK_EVIDENCE_IMAGE_COUNT).toBe(116);
     expect(images).toHaveLength(116);
     expect(markup).toContain("Galeria de imagens das fontes");
-    expect(markup).toContain('target="_blank"');
     expect(markup).toContain("Recortes de jornal — série jornal");
     expect(markup).toContain("Outros — série de imagens");
+    expect(markup.match(/aria-label="Abrir imagem [^"]+ no visualizador"/g) ?? []).toHaveLength(
+      116,
+    );
 
     for (const image of images) {
       expect(existsSync(join(process.cwd(), "public", image.originalUrl.slice(1)))).toBe(true);
       expect(existsSync(join(process.cwd(), "public", image.thumbnailUrl.slice(1)))).toBe(true);
-      expect(markup).toContain(`href="${image.originalUrl}"`);
+      expect(markup).toContain(`src="${image.thumbnailUrl}"`);
     }
+  });
+
+  it("opens a source image in a floating viewer with arrow navigation and original link", () => {
+    const group = PAINSCREEK_EVIDENCE_IMAGE_GROUPS.find((item) => item.id === "andrew");
+    expect(group).toBeDefined();
+    if (!group) throw new Error("Andrew image group is missing");
+
+    const firstImage = group.images[0]!;
+    const secondImage = group.images[1]!;
+    render(createElement(PainscreekEvidenceGallery));
+    fireEvent.click(screen.getByText(group.title));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: `Abrir imagem ${firstImage.fileName} no visualizador`,
+      }),
+    );
+
+    const viewer = screen.getByRole("dialog", { name: group.title });
+    expect(within(viewer).getByRole("img")).toHaveAttribute("src", firstImage.originalUrl);
+    expect(within(viewer).getByRole("link", { name: "Abrir imagem original" })).toHaveAttribute(
+      "href",
+      firstImage.originalUrl,
+    );
+
+    fireEvent.click(within(viewer).getByRole("button", { name: "Próxima imagem" }));
+    expect(within(viewer).getByRole("img")).toHaveAttribute("src", secondImage.originalUrl);
+    fireEvent.keyDown(viewer, { key: "ArrowLeft" });
+    expect(within(viewer).getByRole("img")).toHaveAttribute("src", firstImage.originalUrl);
+    fireEvent.keyDown(viewer, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: group.title })).not.toBeInTheDocument();
   });
 });

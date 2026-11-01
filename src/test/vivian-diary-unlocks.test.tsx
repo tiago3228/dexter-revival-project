@@ -55,7 +55,9 @@ describe("diary image unlocks", () => {
     });
 
     expect(within(diary).getAllByLabelText(/Imagem bloqueada/)).toHaveLength(5);
-    expect(within(diary).queryByRole("link")).not.toBeInTheDocument();
+    expect(
+      within(diary).queryByRole("button", { name: /Abrir .* do diário de Vivian Roberts/ }),
+    ).not.toBeInTheDocument();
 
     saveFoundClues(["police-report", "vivian-medical"]);
     await act(async () => {
@@ -64,12 +66,24 @@ describe("diary image unlocks", () => {
 
     expect(within(diary).getByText(/Páginas liberadas/)).toBeInTheDocument();
     expect(within(diary).queryAllByLabelText(/Imagem bloqueada/)).toHaveLength(0);
-    const links = within(diary).getAllByRole("link", {
+    const thumbnails = within(diary).getAllByRole("button", {
       name: /Abrir .* do diário de Vivian Roberts/,
     });
-    expect(links).toHaveLength(5);
-    expect(links[0]).toHaveAttribute("href", "/images/painscreek-evidence/vivian.png");
-    expect(links[0]).toHaveAttribute("target", "_blank");
+    expect(thumbnails).toHaveLength(5);
+    fireEvent.click(thumbnails[0]!);
+
+    const viewer = screen.getByRole("dialog", { name: "Diário — Vivian Roberts" });
+    expect(
+      within(viewer).getByRole("img", { name: "Diário — Vivian Roberts: vivian.png" }),
+    ).toHaveAttribute("src", "/images/painscreek-evidence/vivian.png");
+    fireEvent.keyDown(viewer, { key: "ArrowRight" });
+    expect(
+      within(viewer).getByRole("img", { name: "Diário — Vivian Roberts: vivian1.png" }),
+    ).toHaveAttribute("src", "/images/painscreek-evidence/vivian1.png");
+    fireEvent.keyDown(viewer, { key: "Escape" });
+    expect(
+      screen.queryByRole("dialog", { name: "Diário — Vivian Roberts" }),
+    ).not.toBeInTheDocument();
   });
 
   it.each([
@@ -97,7 +111,9 @@ describe("diary image unlocks", () => {
     await act(async () => {
       window.dispatchEvent(new Event("vivian-investigation-progress"));
     });
-    expect(within(diary).queryAllByRole("link")).toHaveLength(0);
+    expect(within(diary).queryAllByRole("button", { name: /Abrir .* do diário de/ })).toHaveLength(
+      0,
+    );
 
     saveFoundClues([requiredClue]);
     await act(async () => {
@@ -105,11 +121,17 @@ describe("diary image unlocks", () => {
     });
 
     expect(within(diary).queryAllByLabelText(/Imagem bloqueada/)).toHaveLength(0);
-    expect(
-      within(diary).getAllByRole("link", {
-        name: new RegExp(`Abrir .* do diário de ${personName}`),
-      }),
-    ).toHaveLength(group!.images.length);
+    const thumbnails = within(diary).getAllByRole("button", {
+      name: new RegExp(`Abrir .* do diário de ${personName}`),
+    });
+    expect(thumbnails).toHaveLength(group!.images.length);
+    fireEvent.click(thumbnails[0]!);
+    const viewer = screen.getByRole("dialog", { name: group!.title });
+    expect(within(viewer).getByRole("img")).toHaveAttribute("src", group!.images[0]!.originalUrl);
+    if (group!.images.length > 1) {
+      fireEvent.click(within(viewer).getByRole("button", { name: "Próxima imagem" }));
+      expect(within(viewer).getByRole("img")).toHaveAttribute("src", group!.images[1]!.originalUrl);
+    }
     cleanup();
     window.localStorage.clear();
   });
