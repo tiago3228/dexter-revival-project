@@ -53,3 +53,11 @@ describe("optional source-driven Vivian deductions", () => {
     expect(saved.mistakes).toBe(0);
   });
 });
+import { checkGrid, GRID_SOLUTION } from "@/game/vivianLogicGrid";
+describe("grade de dedução", () => {
+  it("aceita só a solução correta", () => {
+    const ok = Object.fromEntries(Object.entries(GRID_SOLUTION).map(([p, r]) => [`${p}|${r}`, "o" as const]));
+    expect(checkGrid(ok)).toBe(true);
+    expect(checkGrid({ ...ok, "Scott|police-report": "x" })).toBe(false);
+  });
+});
