@@ -3,6 +3,7 @@ import { CheckCircle2, CircuitBoard, RotateCw, X, Zap } from "lucide-react";
 
 type Direction = "north" | "east" | "south" | "west";
 type Mask = Record<Direction, boolean>;
+type Layout = "horizontal" | "vertical" | "spiral";
 
 const DEFAULT_SIZE = 4;
 const CIRCUIT_SAVE_KEY = "dexter-circuit-panel-completed-v1";
@@ -21,68 +22,111 @@ const OPPOSITE: Record<Direction, Direction> = {
   west: "east",
 };
 
-function createSnakeSolution(size: number): Mask[] {
-  const path = Array.from({ length: size * size }, (_, index) => {
-    const row = Math.floor(index / size);
-    const column = index % size;
-    return [row, row % 2 === 0 ? column : size - 1 - column] as const;
-  });
-  const masks = path.map(() => ({ north: false, east: false, south: false, west: false }));
-  path.forEach(([row, column], index) => {
-    const cellIndex = row * size + column;
-    const connect = (direction: Direction) => {
-      masks[cellIndex]![direction] = true;
-    };
-    const previous = path[index - 1];
-    const next = path[index + 1];
-    if (previous) {
-      if (previous[0] < row) connect("north");
-      if (previous[0] > row) connect("south");
-      if (previous[1] < column) connect("west");
-      if (previous[1] > column) connect("east");
-    }
-    if (next) {
-      if (next[0] > row) connect("south");
-      if (next[0] < row) connect("north");
-      if (next[1] > column) connect("east");
-      if (next[1] < column) connect("west");
-    }
-  });
+type Edge = readonly [number, number];
+
+function createMasksFromEdges(size: number, edges: readonly Edge[]): Mask[] {
+  const masks = Array.from({ length: size * size }, () => ({
+    north: false,
+    east: false,
+    south: false,
+    west: false,
+  }));
+  for (const [from, to] of edges) {
+    const fromRow = Math.floor(from / size);
+    const fromColumn = from % size;
+    const toRow = Math.floor(to / size);
+    const toColumn = to % size;
+    const direction = DIRECTIONS.find(
+      (candidate) =>
+        fromRow + DELTAS[candidate][0] === toRow && fromColumn + DELTAS[candidate][1] === toColumn,
+    );
+    if (!direction) throw new Error(`A conexão ${from}–${to} não é entre células adjacentes.`);
+    masks[from]![direction] = true;
+    masks[to]![OPPOSITE[direction]] = true;
+  }
   return masks;
 }
 
-export const SOLUTION: readonly Mask[] = createSnakeSolution(DEFAULT_SIZE);
 type LevelId = "easy" | "medium" | "complex";
 type Level = {
   id: LevelId;
   label: string;
   description: string;
   size: number;
+  layout: Layout;
+  sourceIndex: number;
+  targetIndices: readonly number[];
   solution: readonly Mask[];
 };
+
 export const LEVELS: readonly Level[] = [
   {
     id: "easy",
     label: "Fácil · 4×4",
-    description: "16 nós · introdução",
+    description: "Ramificação curta · 3 alvos",
     size: 4,
-    solution: SOLUTION,
+    layout: "horizontal",
+    sourceIndex: 0,
+    targetIndices: [5, 7, 10],
+    solution: createMasksFromEdges(4, [
+      [0, 1],
+      [1, 2],
+      [2, 6],
+      [6, 5],
+      [6, 7],
+      [6, 10],
+    ]),
   },
   {
     id: "medium",
     label: "Médio · 5×5",
-    description: "25 nós · mais curvas",
+    description: "Tronco vertical com dois ramos · 3 alvos",
     size: 5,
-    solution: createSnakeSolution(5),
+    layout: "vertical",
+    sourceIndex: 2,
+    targetIndices: [12, 20, 24],
+    solution: createMasksFromEdges(5, [
+      [2, 7],
+      [7, 12],
+      [12, 17],
+      [17, 18],
+      [18, 19],
+      [19, 24],
+      [17, 22],
+      [22, 21],
+      [21, 20],
+    ]),
   },
   {
     id: "complex",
     label: "Complexo · 6×6",
-    description: "36 nós · rede extensa",
+    description: "Ramificações em cotovelo · 4 alvos",
     size: 6,
-    solution: createSnakeSolution(6),
+    layout: "spiral",
+    sourceIndex: 5,
+    targetIndices: [0, 21, 23, 34],
+    solution: createMasksFromEdges(6, [
+      [5, 4],
+      [4, 3],
+      [3, 2],
+      [2, 1],
+      [1, 0],
+      [3, 9],
+      [9, 15],
+      [15, 21],
+      [15, 16],
+      [16, 22],
+      [22, 28],
+      [28, 34],
+      [9, 10],
+      [10, 11],
+      [11, 17],
+      [17, 23],
+    ]),
   },
 ];
+
+export const SOLUTION: readonly Mask[] = LEVELS[0]!.solution;
 
 export function rotateMask(mask: Mask, turns: number): Mask {
   let current = mask;
@@ -104,10 +148,10 @@ export function getMasks(
   return solution.map((mask, index) => rotateMask(mask, rotations[index] ?? 0));
 }
 
-function getEnergized(masks: readonly Mask[]): Set<number> {
+export function getEnergized(masks: readonly Mask[], sourceIndex = 0): Set<number> {
   const size = Math.sqrt(masks.length);
-  const energized = new Set<number>([0]);
-  const queue = [0];
+  const energized = new Set<number>([sourceIndex]);
+  const queue = [sourceIndex];
   while (queue.length) {
     const index = queue.shift()!;
     const row = Math.floor(index / size);
@@ -129,8 +173,13 @@ function getEnergized(masks: readonly Mask[]): Set<number> {
   return energized;
 }
 
-export function isSolved(masks: readonly Mask[]): boolean {
+export function isSolved(
+  masks: readonly Mask[],
+  sourceIndex = LEVELS[0]!.sourceIndex,
+  targetIndices: readonly number[] = LEVELS[0]!.targetIndices,
+): boolean {
   const size = Math.sqrt(masks.length);
+  if (!Number.isInteger(size) || sourceIndex < 0 || sourceIndex >= masks.length) return false;
   for (let index = 0; index < masks.length; index += 1) {
     const row = Math.floor(index / size);
     const column = index % size;
@@ -144,14 +193,19 @@ export function isSolved(masks: readonly Mask[]): boolean {
       if (!masks[nextIndex]?.[OPPOSITE[direction]]) return false;
     }
   }
-  return getEnergized(masks).size === masks.length;
+  const energized = getEnergized(masks, sourceIndex);
+  return targetIndices.length > 0 && targetIndices.every((target) => energized.has(target));
 }
 
-function createPuzzle(solution: readonly Mask[]): number[] {
+function createPuzzle(
+  solution: readonly Mask[],
+  sourceIndex: number,
+  targetIndices: readonly number[],
+): number[] {
   let rotations: number[] = [];
   do {
     rotations = solution.map(() => Math.floor(Math.random() * 4));
-  } while (isSolved(getMasks(rotations, solution)));
+  } while (isSolved(getMasks(rotations, solution), sourceIndex, targetIndices));
   return rotations;
 }
 
@@ -183,7 +237,17 @@ function playTone(type: "rotate" | "success") {
   }
 }
 
-function TileShape({ mask, energized }: { mask: Mask; energized: boolean }) {
+function TileShape({
+  mask,
+  energized,
+  isSource,
+  isTarget,
+}: {
+  mask: Mask;
+  energized: boolean;
+  isSource: boolean;
+  isTarget: boolean;
+}) {
   const stroke = energized ? "#f9f4dd" : "#82694a";
   const glow = energized ? "drop-shadow(0 0 5px rgba(255,244,190,.95))" : "none";
   return (
@@ -193,12 +257,25 @@ function TileShape({ mask, energized }: { mask: Mask; energized: boolean }) {
       style={{ filter: glow }}
       aria-hidden="true"
     >
-      <circle cx="50" cy="50" r="9" fill={energized ? "#fff5c4" : "#5e4938"} />
+      {isSource && (
+        <circle cx="50" cy="50" r="16" fill="#57c6de" stroke="#d5fbff" strokeWidth="4" />
+      )}
+      {isTarget && (
+        <>
+          <circle cx="50" cy="50" r="15" fill={energized ? "#ffbf43" : "#b95419"} />
+          <circle cx="50" cy="50" r="10" fill={energized ? "#fff2a8" : "#f28a32"} />
+        </>
+      )}
+      {!isSource && !isTarget && (
+        <circle cx="50" cy="50" r="9" fill={energized ? "#fff5c4" : "#5e4938"} />
+      )}
       {mask.north && <path d="M50 50V7" stroke={stroke} strokeWidth="13" strokeLinecap="round" />}
       {mask.east && <path d="M50 50H93" stroke={stroke} strokeWidth="13" strokeLinecap="round" />}
       {mask.south && <path d="M50 50V93" stroke={stroke} strokeWidth="13" strokeLinecap="round" />}
       {mask.west && <path d="M50 50H7" stroke={stroke} strokeWidth="13" strokeLinecap="round" />}
-      <circle cx="50" cy="50" r="5" fill={energized ? "#fffbe4" : "#382c25"} />
+      {!isSource && !isTarget && (
+        <circle cx="50" cy="50" r="5" fill={energized ? "#fffbe4" : "#382c25"} />
+      )}
     </svg>
   );
 }
@@ -225,7 +302,9 @@ export function CircuitPanelMinigame({
     return Math.min(LEVELS.length - 1, Number(window.localStorage.getItem(CIRCUIT_LEVEL_KEY)) || 0);
   });
   const level = LEVELS[levelIndex] ?? LEVELS[0]!;
-  const [rotations, setRotations] = useState<number[]>(() => createPuzzle(level.solution));
+  const [rotations, setRotations] = useState<number[]>(() =>
+    createPuzzle(level.solution, level.sourceIndex, level.targetIndices),
+  );
   const [moves, setMoves] = useState(0);
   const [solved, setSolved] = useState(false);
   const [completedBefore, setCompletedBefore] = useState(() => {
@@ -233,11 +312,14 @@ export function CircuitPanelMinigame({
     return window.localStorage.getItem(CIRCUIT_SAVE_KEY) === "true";
   });
   const masks = useMemo(() => getMasks(rotations, level.solution), [level.solution, rotations]);
-  const energized = useMemo(() => getEnergized(masks), [masks]);
-  const litCount = energized.size;
+  const energized = useMemo(
+    () => getEnergized(masks, level.sourceIndex),
+    [level.sourceIndex, masks],
+  );
+  const litTargetCount = level.targetIndices.filter((index) => energized.has(index)).length;
 
   const start = () => {
-    setRotations(createPuzzle(level.solution));
+    setRotations(createPuzzle(level.solution, level.sourceIndex, level.targetIndices));
     setMoves(0);
     setSolved(false);
     setStarted(true);
@@ -255,7 +337,7 @@ export function CircuitPanelMinigame({
       tileIndex === index ? (rotation + 1) % 4 : rotation,
     );
     const nextMasks = getMasks(nextRotations, level.solution);
-    const nextSolved = isSolved(nextMasks);
+    const nextSolved = isSolved(nextMasks, level.sourceIndex, level.targetIndices);
     setRotations(nextRotations);
     setMoves((value) => value + 1);
     playTone(nextSolved ? "success" : "rotate");
@@ -278,7 +360,13 @@ export function CircuitPanelMinigame({
     if (levelIndex >= LEVELS.length - 1) return;
     const nextIndex = levelIndex + 1;
     setLevelIndex(nextIndex);
-    setRotations(createPuzzle(LEVELS[nextIndex]!.solution));
+    setRotations(
+      createPuzzle(
+        LEVELS[nextIndex]!.solution,
+        LEVELS[nextIndex]!.sourceIndex,
+        LEVELS[nextIndex]!.targetIndices,
+      ),
+    );
     setMoves(0);
     setSolved(false);
   };
@@ -316,8 +404,8 @@ export function CircuitPanelMinigame({
               </p>
               <h2 className="mt-2 font-display text-3xl sm:text-4xl">Painel Elétrico</h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#b9ae9b]">
-                Gire os módulos até formar um circuito contínuo. Quando toda a grade receber
-                energia, o painel estará restaurado.
+                Gire os módulos para conduzir energia da fonte até todas as esferas-alvo laranja.
+                Não é necessário energizar cada peça da grade.
               </p>
             </div>
             <div className="p-5 sm:p-8">
@@ -332,8 +420,8 @@ export function CircuitPanelMinigame({
                         Inserir fusível · Painel {levelIndex + 1}/3
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-[#b9ae9b]">
-                        A rede está interrompida. Analise a matriz de conectores e gire cada peça em
-                        90° até acender todos os nós.
+                        A rede está interrompida. Gire os conectores em 90° para levar energia da
+                        fonte até todos os alvos laranja.
                       </p>
                     </div>
                   </div>
@@ -345,7 +433,9 @@ export function CircuitPanelMinigame({
                         disabled={index > completedLevelIndex}
                         onClick={() => {
                           setLevelIndex(index);
-                          setRotations(createPuzzle(item.solution));
+                          setRotations(
+                            createPuzzle(item.solution, item.sourceIndex, item.targetIndices),
+                          );
                         }}
                         className={`min-h-16 border p-3 text-left font-mono text-[10px] transition ${index === levelIndex ? "border-[#e1c078] bg-[#d3a74e]/15 text-[#f1d58e]" : index < levelIndex ? "border-emerald-800/70 text-emerald-200" : "cursor-not-allowed border-[#4b4031] text-[#665b4b]"}`}
                       >
@@ -383,22 +473,30 @@ export function CircuitPanelMinigame({
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${solved ? "bg-[#f8e7a7] shadow-[0_0_12px_#fff4b0]" : "bg-[#8a6b37]"}`}
                       />
-                      Painel {levelIndex + 1}/3 · Energia: {litCount}/{level.size * level.size} nós
+                      Painel {levelIndex + 1}/3 · Alvos alimentados: {litTargetCount}/
+                      {level.targetIndices.length}
                     </div>
                     <span className="font-mono text-xs text-[#9c8e79]">Giros: {moves}</span>
                   </div>
                   <div className="mt-4 border border-[#5d4b35] bg-[#30271e] p-3 shadow-inner sm:p-5">
                     <div
-                      className="mb-4 grid grid-cols-6 gap-2 px-3"
-                      aria-label="Indicadores de energia"
+                      className="mb-4 grid gap-2 px-3"
+                      style={{
+                        gridTemplateColumns: `repeat(${level.targetIndices.length}, minmax(0, 1fr))`,
+                      }}
+                      aria-label={`Alvos alimentados: ${litTargetCount} de ${level.targetIndices.length}`}
                     >
-                      {Array.from({ length: 6 }, (_, index) => (
+                      {level.targetIndices.map((targetIndex) => (
                         <span
-                          key={index}
-                          className={`h-2.5 rounded-full border border-[#8c7958] transition ${index < Math.ceil((litCount / (level.size * level.size)) * 6) ? "bg-[#fff0b0] shadow-[0_0_12px_#fff0b0]" : "bg-[#4b3c2b]"}`}
+                          key={targetIndex}
+                          className={`h-2.5 rounded-full border border-[#8c7958] transition ${energized.has(targetIndex) ? "bg-[#ffbd4a] shadow-[0_0_12px_#ffbd4a]" : "bg-[#4b3c2b]"}`}
                         />
                       ))}
                     </div>
+                    <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-wider text-[#aa9d89]">
+                      Fonte azul · alvos laranja · alcance {litTargetCount}/
+                      {level.targetIndices.length}
+                    </p>
                     <div
                       className="grid aspect-square gap-1.5 border-4 border-[#554536] bg-[#191612] p-1.5 sm:gap-2 sm:p-2"
                       style={{ gridTemplateColumns: `repeat(${level.size}, minmax(0, 1fr))` }}
@@ -409,10 +507,15 @@ export function CircuitPanelMinigame({
                           type="button"
                           onClick={() => rotateTile(index)}
                           disabled={solved}
-                          aria-label={`Girar conector ${index + 1}. ${energized.has(index) ? "Energizado" : "Sem energia"}`}
-                          className={`relative aspect-square overflow-hidden rounded-[22%] border transition focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fff0b0] ${energized.has(index) ? "border-[#d8c18a] bg-[#756044]/35" : "border-[#624f39] bg-[#3a3026]"} ${solved ? "cursor-default" : "hover:border-[#e1c078] hover:bg-[#51412f]"}`}
+                          aria-label={`Girar ${index === level.sourceIndex ? "fonte" : level.targetIndices.includes(index) ? `alvo ${level.targetIndices.indexOf(index) + 1}` : "peça"} ${index + 1}. ${energized.has(index) ? "Energizado" : "Sem energia"}`}
+                          className={`relative aspect-square overflow-hidden rounded-[22%] border transition focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fff0b0] ${index === level.sourceIndex ? "border-cyan-200 bg-cyan-950/60" : level.targetIndices.includes(index) ? "border-orange-400 bg-orange-950/40" : energized.has(index) ? "border-[#d8c18a] bg-[#756044]/35" : "border-[#624f39] bg-[#3a3026]"} ${solved ? "cursor-default" : "hover:border-[#e1c078] hover:bg-[#51412f]"}`}
                         >
-                          <TileShape mask={mask} energized={energized.has(index)} />
+                          <TileShape
+                            mask={mask}
+                            energized={energized.has(index)}
+                            isSource={index === level.sourceIndex}
+                            isTarget={level.targetIndices.includes(index)}
+                          />
                         </button>
                       ))}
                     </div>
@@ -429,7 +532,7 @@ export function CircuitPanelMinigame({
                       <div className="min-w-0">
                         <strong className="font-display text-xl">Circuito completo</strong>
                         <p className="mt-1 text-sm leading-relaxed text-[#d7c9a8]">
-                          Todos os {level.size * level.size} nós estão energizados.{" "}
+                          Todos os {level.targetIndices.length} alvos estão alimentados.{" "}
                           {levelIndex < LEVELS.length - 1
                             ? "O próximo painel foi liberado."
                             : "O sistema auxiliar foi restaurado por completo."}
@@ -448,8 +551,8 @@ export function CircuitPanelMinigame({
                   ) : (
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                       <p className="text-sm text-[#aa9d89]">
-                        A fonte começa no canto superior esquerdo. Conexões incompatíveis não
-                        conduzem energia.
+                        A fonte está na posição {level.sourceIndex + 1}. Alvos apagados são esferas
+                        laranja; conectores abertos ou incompatíveis não conduzem energia.
                       </p>
                       <button
                         type="button"

@@ -5,7 +5,7 @@ import {
   DOT_COMPLETE_KEY,
   DOT_LEVELS,
   DOT_UNLOCK_KEY,
-  isSolvedDotPath,
+  isSolvedDotLevelPath,
 } from "./dotConnectionPuzzle";
 import { playMinigameVictorySound } from "./minigameVictoryEffects";
 
@@ -48,6 +48,7 @@ export function DotConnectionMinigame() {
   const [completedBefore, setCompletedBefore] = useState(readCompleted);
   const level = DOT_LEVELS[levelIndex] ?? DOT_LEVELS[0]!;
   const pointCount = level.size * level.size;
+  const checkpointProgress = level.checkpoints.filter((point) => path.includes(point)).length;
 
   const start = () => {
     setPath([]);
@@ -67,7 +68,7 @@ export function DotConnectionMinigame() {
     playMinigameVictorySound();
     setSolved(true);
     setFeedback(
-      `Caminho válido: as ${pointCount} bolinhas foram conectadas uma vez, sem cruzamentos.`,
+      `Caminho válido: ${pointCount} pontos, início e fim corretos e ${level.checkpoints.length} checkpoints na ordem.`,
     );
     const nextUnlockedLevel = Math.max(
       unlockedLevelIndex,
@@ -93,6 +94,10 @@ export function DotConnectionMinigame() {
     if (solved) return;
     setFeedback("");
     if (path.length === 0) {
+      if (point !== level.start) {
+        setFeedback("Início incorreto: comece pela bolinha marcada como início (I).");
+        return;
+      }
       setPath([point]);
       return;
     }
@@ -101,6 +106,12 @@ export function DotConnectionMinigame() {
     if (point === last) return;
     if (path.length > 1 && point === path[path.length - 2]) {
       setPath((current) => current.slice(0, -1));
+      return;
+    }
+    if (path.length === pointCount - 1 && point !== level.end) {
+      setFeedback(
+        "Ponto final incorreto: termine na bolinha marcada como fim (F), sem repetir pontos.",
+      );
       return;
     }
     if (path.includes(point)) {
@@ -112,9 +123,43 @@ export function DotConnectionMinigame() {
       return;
     }
 
+    const nextCheckpoint = level.checkpoints.find((checkpoint) => !path.includes(checkpoint));
+    const attemptedCheckpointIndex = level.checkpoints.indexOf(point);
+    if (attemptedCheckpointIndex >= 0 && point !== nextCheckpoint) {
+      const nextIndex =
+        nextCheckpoint === undefined ? -1 : level.checkpoints.indexOf(nextCheckpoint);
+      setFeedback(
+        nextIndex >= 0
+          ? `Checkpoint fora de ordem: visite o checkpoint ${nextIndex + 1} antes deste.`
+          : "Todos os checkpoints já foram cumpridos; siga até o ponto final marcado (F).",
+      );
+      return;
+    }
+    if (point === level.end && path.length !== pointCount - 1) {
+      setFeedback(
+        "Fim antecipado: a bolinha final (F) só pode ser ligada depois de todos os outros pontos.",
+      );
+      return;
+    }
+
     const nextPath = [...path, point];
     setPath(nextPath);
-    if (isSolvedDotPath(nextPath, level.size)) finishLevel();
+    if (nextPath.length === pointCount) {
+      const completedCheckpoints = level.checkpoints.filter((checkpoint) =>
+        nextPath.includes(checkpoint),
+      ).length;
+      if (completedCheckpoints < level.checkpoints.length) {
+        setFeedback(
+          "Caminho incompleto: todos os checkpoints numerados precisam ser visitados na ordem.",
+        );
+      } else if (point !== level.end) {
+        setFeedback(
+          "Ponto final incorreto: o último ponto precisa ser a bolinha marcada como fim (F).",
+        );
+      } else if (isSolvedDotLevelPath(nextPath, level)) {
+        finishLevel();
+      }
+    }
   };
 
   const undo = () => {
@@ -169,8 +214,8 @@ export function DotConnectionMinigame() {
               </p>
               <h2 className="mt-2 font-display text-3xl sm:text-4xl">Conexão de Pontos</h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#b9a9aa]">
-                Ligue todas as bolinhas em um único caminho. Cada bolinha só pode ser visitada uma
-                vez e as linhas não podem se cruzar.
+                Ligue todas as bolinhas uma vez, sem cruzamentos e apenas por vizinhos ortogonais.
+                Cada nível tem um padrão, início, fim e checkpoints próprios.
               </p>
             </div>
             <div className="p-5 sm:p-8">
@@ -182,12 +227,13 @@ export function DotConnectionMinigame() {
                     </div>
                     <div>
                       <h3 className="font-display text-2xl">
-                        Traçar rota · Nível {levelIndex + 1}/3
+                        Traçar rota · Nível {levelIndex + 1}/3 — {level.pattern}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-[#b9a9aa]">
-                        Comece em qualquer ponto e avance apenas para uma bolinha vizinha na
-                        horizontal ou vertical. Não repita pontos; conexões diagonais não são
-                        permitidas.
+                        Comece em I (bolinha {level.start + 1}), visite os checkpoints numerados na
+                        ordem ({level.checkpoints.length}) e termine em F (bolinha {level.end + 1}).
+                        Use cada ponto exatamente uma vez; só valem vizinhos horizontais/verticais,
+                        sem diagonais ou cruzamentos.
                       </p>
                     </div>
                   </div>
@@ -213,8 +259,9 @@ export function DotConnectionMinigame() {
                     ))}
                   </div>
                   <p className="mt-3 text-xs leading-relaxed text-[#a69093]">
-                    Complete cada nível para liberar o próximo. Cada trecho liga pontos adjacentes,
-                    então não há cruzamentos.
+                    Os desenhos mudam entre serpentina, espiral e espiral reversa; os endpoints e a
+                    quantidade de checkpoints também variam. Complete cada padrão para liberar o
+                    próximo.
                   </p>
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-[#9b8588]">
@@ -238,7 +285,8 @@ export function DotConnectionMinigame() {
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${solved ? "bg-[#ffc4c9] shadow-[0_0_12px_#ffc4c9]" : "bg-[#8a4f58]"}`}
                       />
-                      Nível {levelIndex + 1}/3 · Pontos: {path.length}/{pointCount}
+                      Nível {levelIndex + 1}/3 · {level.pattern} · Pontos: {path.length}/
+                      {pointCount} · Checkpoints: {checkpointProgress}/{level.checkpoints.length}
                     </div>
                     <div className="flex items-center gap-2">
                       <button
@@ -296,19 +344,40 @@ export function DotConnectionMinigame() {
                           const pathPosition = path.indexOf(index);
                           const isFirst = pathPosition === 0;
                           const isLast = pathPosition === path.length - 1;
+                          const checkpointNumber = level.checkpoints.indexOf(index);
+                          const pointMarker =
+                            index === level.start
+                              ? "Início"
+                              : index === level.end
+                                ? "Fim"
+                                : checkpointNumber >= 0
+                                  ? `Checkpoint ${checkpointNumber + 1}`
+                                  : "";
                           return (
                             <button
                               key={index}
                               type="button"
                               onClick={() => connectPoint(index)}
                               disabled={solved}
-                              aria-label={`Bolinha ${index + 1}`}
+                              aria-label={`Bolinha ${index + 1}${pointMarker ? ` — ${pointMarker}` : ""}`}
                               aria-pressed={pathPosition >= 0}
                               className="flex aspect-square min-h-0 min-w-0 items-center justify-center rounded-full focus-visible:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#ffc4c9] disabled:cursor-default"
                             >
                               <span
-                                className={`block h-[58%] w-[58%] rounded-full border shadow-[0_2px_5px_rgba(0,0,0,.45)] transition ${pathPosition >= 0 ? "border-[#f8c6ca] bg-[#e7aeb4] shadow-[0_0_14px_rgba(255,196,201,.55)]" : "border-[#d9d5d1] bg-[#f2f0ed] hover:border-rose-200 hover:bg-rose-100"} ${isFirst ? "ring-2 ring-[#b69be8] ring-offset-1 ring-offset-[#191516]" : ""} ${isLast && path.length > 1 ? "scale-110" : ""}`}
+                                className={`relative block h-[58%] w-[58%] rounded-full border shadow-[0_2px_5px_rgba(0,0,0,.45)] transition ${pathPosition >= 0 ? "border-[#f8c6ca] bg-[#e7aeb4] shadow-[0_0_14px_rgba(255,196,201,.55)]" : "border-[#d9d5d1] bg-[#f2f0ed] hover:border-rose-200 hover:bg-rose-100"} ${isFirst ? "ring-2 ring-[#b69be8] ring-offset-1 ring-offset-[#191516]" : ""} ${isLast && path.length > 1 ? "scale-110" : ""}`}
                               />
+                              {pointMarker && (
+                                <span
+                                  aria-hidden="true"
+                                  className={`pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-sm border px-0.5 font-mono text-[7px] font-bold leading-tight shadow ${index === level.start ? "border-violet-300 bg-violet-950 text-violet-100" : index === level.end ? "border-rose-200 bg-rose-950 text-rose-100" : "border-amber-200 bg-amber-950 text-amber-100"}`}
+                                >
+                                  {index === level.start
+                                    ? "I"
+                                    : index === level.end
+                                      ? "F"
+                                      : checkpointNumber + 1}
+                                </span>
+                              )}
                             </button>
                           );
                         })}
@@ -353,8 +422,10 @@ export function DotConnectionMinigame() {
                     </div>
                   ) : (
                     <p className="mt-4 text-sm text-[#aa9d89]">
-                      Comece em qualquer bolinha. Selecione a bolinha anterior para desfazer o
-                      último trecho; pontos já usados não podem ser visitados de novo.
+                      Objetivo: iniciar em I, cumprir os {level.checkpoints.length} checkpoints na
+                      ordem e terminar em F ({path.length}/{pointCount} pontos; {checkpointProgress}
+                      /{level.checkpoints.length} checkpoints). Selecione a bolinha anterior ou use
+                      Desfazer para voltar; Limpar reinicia o trajeto.
                     </p>
                   )}
                 </>
