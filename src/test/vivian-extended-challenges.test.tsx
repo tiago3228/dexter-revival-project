@@ -139,6 +139,23 @@ describe("depoimento incompatível e casos curtos", () => {
     expect(onComplete).toHaveBeenCalledWith(forestCase.id);
   });
 
+  it("notifica quando a interface de desafios rápidos é aberta ou fechada", () => {
+    const onExpandedChange = vi.fn();
+    render(
+      <VivianQuickChallenges
+        found={[]}
+        completed={[]}
+        onComplete={() => {}}
+        onExpandedChange={onExpandedChange}
+      />,
+    );
+    const toggle = screen.getByRole("button", { name: /Entre um local e outro/ });
+    fireEvent.click(toggle);
+    fireEvent.click(toggle);
+
+    expect(onExpandedChange.mock.calls).toEqual([[true], [false]]);
+  });
+
   it("só mostra resposta do depoimento após selecionar uma versão e preserva o enunciado simulado", () => {
     const onComplete = vi.fn();
     render(

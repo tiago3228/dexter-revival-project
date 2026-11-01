@@ -108,6 +108,77 @@ export const VIVIAN_QUICK_CASES: readonly QuickCase[] = [
     ],
   },
   {
+    id: "lake-car",
+    title: "O carro submerso de Cherry Creek",
+    summary: "Analise a descoberta do veículo e os limites da estimativa de tempo na água.",
+    requiredRecords: ["henry-death"],
+    sourceReference: "Notícia de jornal · PDF p. 85 · 13 de julho de 1995",
+    briefing:
+      "A notícia relata que Henry Johnson foi encontrado morto dentro de um veículo submerso no Lago Cherry Creek. O texto estima que o corpo permaneceu na água entre dez e quinze dias e informa que o hospital o viu pela última vez em 28 de junho.",
+    objective:
+      "Em três passos, identifique o achado físico, interprete com cuidado a estimativa temporal e separe o que a notícia não esclarece.",
+    steps: [
+      {
+        id: "physical-finding",
+        question: "Qual é o achado físico descrito na notícia?",
+        options: [
+          {
+            id: "submerged-car",
+            label:
+              "Henry Johnson foi encontrado morto dentro de um carro submerso no Lago Cherry Creek.",
+          },
+          {
+            id: "empty-car",
+            label: "Um carro vazio foi encontrado no estacionamento do hospital.",
+          },
+          { id: "weapon", label: "A notícia registra a recuperação de uma arma no lago." },
+        ],
+        answer: "submerged-car",
+        explanation:
+          "A p. 85 relata a descoberta de Henry no interior de um veículo submerso; a notícia não menciona a recuperação de uma arma.",
+      },
+      {
+        id: "time-estimate",
+        question: "O que a estimativa de dez a quinze dias na água permite afirmar?",
+        options: [
+          {
+            id: "range",
+            label:
+              "A notícia apresenta uma faixa aproximada, não um horário exato da morte ou da entrada do carro no lago.",
+          },
+          {
+            id: "exact-date",
+            label:
+              "Henry morreu com certeza em 28 de junho, no mesmo dia em que foi visto no hospital.",
+          },
+          {
+            id: "exact-entry",
+            label: "O carro foi colocado no lago exatamente dez dias antes da descoberta.",
+          },
+        ],
+        answer: "range",
+        explanation:
+          "A notícia fornece uma estimativa de permanência na água. Ela não fixa o momento exato da morte nem quando o veículo entrou no lago.",
+      },
+      {
+        id: "open-questions",
+        question: "Qual questão permanece sem resposta nessa notícia?",
+        options: [
+          {
+            id: "cause-open",
+            label:
+              "A causa e as circunstâncias da morte; a notícia registra a descoberta, não uma conclusão oficial.",
+          },
+          { id: "place-open", label: "O nome do lago onde o carro foi encontrado." },
+          { id: "body-open", label: "Se Henry foi encontrado em um veículo." },
+        ],
+        answer: "cause-open",
+        explanation:
+          "O catálogo registra que a notícia foi conferida, mas aponta causa e circunstâncias como questões a verificar em fontes oficiais.",
+      },
+    ],
+  },
+  {
     id: "funds-report",
     title: "Acusação ou conclusão judicial?",
     summary: "Leia a natureza e o limite do relatório sobre a Roberts Relief.",

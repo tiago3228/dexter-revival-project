@@ -14,9 +14,10 @@ type Props = {
   found: string[];
   completed: string[];
   onComplete: (id: string) => void;
+  onExpandedChange?: (expanded: boolean) => void;
 };
 
-export function VivianQuickChallenges({ found, completed, onComplete }: Props) {
+export function VivianQuickChallenges({ found, completed, onComplete, onExpandedChange }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [selectedWitness, setSelectedWitness] = useState("");
   const [witnessFeedback, setWitnessFeedback] = useState("");
@@ -63,7 +64,11 @@ export function VivianQuickChallenges({ found, completed, onComplete }: Props) {
       <button
         type="button"
         aria-expanded={expanded}
-        onClick={() => setExpanded((current) => !current)}
+        onClick={() => {
+          const nextExpanded = !expanded;
+          setExpanded(nextExpanded);
+          onExpandedChange?.(nextExpanded);
+        }}
         className="flex w-full flex-wrap items-center justify-between gap-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
       >
         <span>
