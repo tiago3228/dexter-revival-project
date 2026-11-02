@@ -17,7 +17,7 @@ describe("menu de minigames", () => {
     window.localStorage.clear();
   });
 
-  it("apresenta os quatro minigames no mesmo menu", () => {
+  it("apresenta os minigames globais e os exercícios que também vivem dentro do caso", () => {
     render(<MinigamesMenu />);
 
     expect(screen.getByRole("region", { name: "Menu de minigames" })).toBeInTheDocument();
@@ -25,6 +25,11 @@ describe("menu de minigames", () => {
     expect(screen.getByRole("heading", { name: "Painel Elétrico" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Conexão de Pontos" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Código do Lacre" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Grade de Dedução" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Dossiê de relações" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "A rota da fita" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "O anel do detetive" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Depoimentos e casos curtos" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Mini Game de Bandeiras/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Painel Elétrico/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Conexão de Pontos/ })).toBeInTheDocument();

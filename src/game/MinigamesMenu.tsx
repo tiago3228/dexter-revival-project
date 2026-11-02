@@ -1,10 +1,22 @@
-import { CircuitBoard, Flag, Gamepad2, LockKeyhole, Route } from "lucide-react";
+import { useState } from "react";
+import { CircuitBoard, Flag, Gamepad2, Grid3X3, KeyRound, LockKeyhole, Route } from "lucide-react";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { DotConnectionMinigame } from "./DotConnectionMinigame";
 import { FlagMinigame } from "./FlagMinigame";
 import { SealCodeMinigame } from "./SealCodeMinigame";
+import { VivianLogicGrid } from "./VivianLogicGrid";
+import { VivianMurdleCipherDecoder } from "./VivianMurdleCipherDecoder";
+import { VivianMurdleDeduction } from "./VivianMurdleDeduction";
+import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
+import { VivianQuickChallenges } from "./VivianQuickChallenges";
+import { GRID_RECORDS } from "./vivianLogicGrid";
+
+const CASE_RECORD_IDS = GRID_RECORDS.map((record) => record.id);
 
 export function MinigamesMenu() {
+  const [solvedGridLevels, setSolvedGridLevels] = useState<string[]>([]);
+  const [completedQuickCases, setCompletedQuickCases] = useState<string[]>([]);
+
   return (
     <section
       className="mt-8 border border-primary/60 bg-[#171516] p-4 sm:p-6"
@@ -22,7 +34,7 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          04 disponíveis
+          09 disponíveis
         </span>
       </div>
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -94,6 +106,65 @@ export function MinigamesMenu() {
             </div>
           </div>
           <SealCodeMinigame />
+        </article>
+        <article className="border border-[#c4a779]/40 bg-[#1c1a17]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#c4a779]/60 bg-[#c4a779]/10 p-2 text-[#ead8b8]">
+              <Grid3X3 size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e1c18d]">
+                Exercício documental · 3 níveis
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#f0dfbd]">Grade de Dedução</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#c7bba8]">
+                Organize relações entre pessoas, registros, locais e períodos usando as pistas do
+                caso.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <VivianLogicGrid
+              found={CASE_RECORD_IDS}
+              solvedLevels={solvedGridLevels}
+              onSolve={(levelId) =>
+                setSolvedGridLevels((current) =>
+                  current.includes(levelId) ? current : [...current, levelId],
+                )
+              }
+            />
+          </div>
+        </article>
+        <article className="border border-[#c4a779]/40 bg-[#1c1a17]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#c4a779]/60 bg-[#c4a779]/10 p-2 text-[#ead8b8]">
+              <KeyRound size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e1c18d]">
+                Arquivo Vivian · dedução e relações
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#f0dfbd]">Minigames do caso</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#c7bba8]">
+                Os mesmos exercícios que aparecem durante a investigação, disponíveis aqui para
+                jogar novamente fora do fluxo do caso.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 space-y-5">
+            <VivianMurdleDeduction onSolved={() => undefined} />
+            <VivianMurdleWitnessRoute onSolved={() => undefined} />
+            <VivianMurdleCipherDecoder onSolved={() => undefined} />
+            <VivianQuickChallenges
+              found={CASE_RECORD_IDS}
+              completed={completedQuickCases}
+              onComplete={(id) =>
+                setCompletedQuickCases((current) =>
+                  current.includes(id) ? current : [...current, id],
+                )
+              }
+            />
+          </div>
         </article>
       </div>
     </section>
