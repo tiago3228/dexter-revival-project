@@ -7,6 +7,7 @@ export const CASE_IDS = [
   "mentalist",
   "winchester",
   "vivian",
+  "blackpine",
 ] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
@@ -56,14 +57,14 @@ export const ACHIEVEMENTS = [
   {
     id: "all-cases",
     title: "Arquivo completo",
-    description: "Conclua os seis capítulos disponíveis.",
+    description: "Conclua os sete capítulos disponíveis.",
     tier: "Ouro",
   },
   {
     id: "blood-slide-box",
     title: "Caixa de lâminas de sangue",
     description:
-      "Conclua os seis capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
+      "Conclua os sete capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
     tier: "Lendário",
   },
 ] as const;

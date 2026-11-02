@@ -18,6 +18,7 @@ import { DexterCase } from "./DexterCase";
 import { MentalistCase } from "./MentalistCase";
 import { WinchesterCase } from "./WinchesterCase";
 import { VivianRobertsCase } from "./VivianRobertsCase";
+import { BlackPineCase } from "./BlackPineCase";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -209,7 +210,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
   const [caseMode, setCaseMode] = useState<
-    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian"
+    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian" | "blackpine"
   >(() => (resumePainscreekCase ? "vivian" : "ortega"));
   const [showMenu, setShowMenu] = useState(() => !resumePainscreekCase);
   const [showIntro, setShowIntro] = useState(() => !resumePainscreekCase);
@@ -515,6 +516,16 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
         onToggleSound={toggleSound}
         musicVolume={musicVolume}
         onMusicVolumeChange={setMusicVolume}
+      />
+    );
+  }
+
+  if (caseMode === "blackpine") {
+    return (
+      <BlackPineCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
       />
     );
   }
@@ -2039,7 +2050,8 @@ function MainMenu({
   onReflectionModalOpenChange,
 }: {
   onSelect: (
-    nextCase: "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian",
+    nextCase:
+      "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian" | "blackpine",
   ) => void;
   playerName: string;
   musicVolume: number;
@@ -2095,6 +2107,11 @@ function MainMenu({
       title: "The Painscreek Case",
       detail: "Abrindo o arquivo investigativo e o catálogo inicial de evidências.",
     },
+    blackpine: {
+      index: "CAPÍTULO 07 · BLACK PINE, MAINE",
+      title: "O Quarto 17",
+      detail: "Reconstruindo o desaparecimento de Whitmore sem confundir fatos com lendas.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -2109,6 +2126,7 @@ function MainMenu({
     mentalist: "O Mentalista: O Caso Red John",
     winchester: "O Sangue dos Condenados",
     vivian: "The Painscreek Case",
+    blackpine: "Black Pine · O Quarto 17",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2595,7 +2613,7 @@ function MainMenu({
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
                   {bloodSlideUnlocked
                     ? "Conquistado"
-                    : "Bloqueado · requer excelência nos cinco capítulos e interrogatórios perfeitos"}
+                    : "Bloqueado · requer excelência nos sete capítulos e interrogatórios perfeitos"}
                 </p>
               </div>
             </section>
@@ -2763,9 +2781,30 @@ function MainMenu({
               {chapterStatus("vivian")}
             </span>
           </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("blackpine")}
+            className="group border border-slate-500/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-slate-300 hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-slate-300">
+              Capítulo 07 · Black Pine, Maine
+            </p>
+            <h2 className="mt-3 font-display text-3xl">O Quarto 17</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Dezessete moedas, uma porta aberta e um homem desaparecido. Use a grade lógica para
+              reconstruir a última localização comprovável de Whitmore.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-slate-300 group-hover:underline">
+              Abrir dossiê →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("blackpine")}
+            </span>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 06</p>
+          <p>ARQUIVOS DISPONÍVEIS: 07</p>
           <p className="mt-2">
             CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
           </p>
