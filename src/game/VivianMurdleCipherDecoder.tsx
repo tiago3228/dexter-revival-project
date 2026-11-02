@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, KeyRound, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Stage = {
   title: string;
@@ -136,6 +137,7 @@ export function VivianMurdleCipherDecoder({ completedLevel, solved = false, onSo
         ? "Nível básico concluído. A cifra avançada foi liberada."
         : "Código completo. As seis mensagens foram decifradas como exercício editorial.",
     );
+    recordMinigameProgress("detective-ring", `level-${activeLevel + 1}`);
     onSolved(activeLevel + 1);
   };
 

@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DotConnectionMinigame } from "@/game/DotConnectionMinigame";
+import { MINIGAME_PROGRESS_EVENT, MINIGAME_PROGRESS_STORAGE_KEY } from "@/game/minigameProgress";
 import {
   createDotLevelBasePath,
   createSnakePath,
@@ -46,6 +47,7 @@ describe("minigame Conexão de Pontos", () => {
   beforeEach(() => {
     window.localStorage.clear();
     playVictory.mockClear();
+    window.localStorage.removeItem(MINIGAME_PROGRESS_STORAGE_KEY);
   });
   afterEach(() => {
     cleanup();
@@ -108,6 +110,11 @@ describe("minigame Conexão de Pontos", () => {
     startGame();
     clickPoint(1);
     expect(screen.getByRole("status")).toHaveTextContent("Início incorreto");
+    expect(
+      JSON.parse(window.localStorage.getItem(MINIGAME_PROGRESS_STORAGE_KEY) ?? "{}")?.completed?.[
+        "dot-connection"
+      ] ?? [],
+    ).toEqual([]);
     expectProgress("Pontos: 0/16");
 
     clickPoint(0);
@@ -195,5 +202,14 @@ describe("minigame Conexão de Pontos", () => {
     expect(document.querySelectorAll(".dot-connection-reveal-line")).toHaveLength(48);
     expect(screen.getByText(/Todas as quatro dificuldades foram concluídas/)).toBeInTheDocument();
     expect(playVictory).toHaveBeenCalledTimes(4);
+    const progress = JSON.parse(window.localStorage.getItem(MINIGAME_PROGRESS_STORAGE_KEY)!);
+    expect(progress.completed["dot-connection"]).toEqual([
+      "level-1",
+      "level-2",
+      "level-3",
+      "level-4",
+    ]);
+    expect(progress.completed["dot-connection"]).toHaveLength(4);
+    expect(MINIGAME_PROGRESS_EVENT).toBe("dexter-minigame-progress");
   }, 30_000);
 });

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Calculator,
   CircuitBoard,
   FileText,
   Flag,
+  FileSearch,
   Gamepad2,
   Grid3X3,
   KeyRound,
@@ -24,12 +25,35 @@ import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMiniga
 import { PainscreekMineSettlementMinigame } from "./PainscreekMineSettlementMinigame";
 import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
 import { PainscreekSheriffTransferMinigame } from "./PainscreekSheriffTransferMinigame";
+import { PainscreekImpossibleWindowMinigame } from "./PainscreekImpossibleWindowMinigame";
+import { MinigameProgressDashboard } from "./MinigameProgressDashboard";
+import {
+  MINIGAME_CATALOG,
+  MINIGAME_PROGRESS_EVENT,
+  readMinigameProgress,
+} from "./minigameProgress";
+import { saveQuickCaseCompletion } from "./vivianQuickCaseProgress";
 
 const CASE_RECORD_IDS = GRID_RECORDS.map((record) => record.id);
 
 export function MinigamesMenu() {
-  const [solvedGridLevels, setSolvedGridLevels] = useState<string[]>([]);
-  const [completedQuickCases, setCompletedQuickCases] = useState<string[]>([]);
+  const [progress, setProgress] = useState(() => readMinigameProgress());
+
+  useEffect(() => {
+    const refresh = () => setProgress(readMinigameProgress());
+    window.addEventListener(MINIGAME_PROGRESS_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    window.addEventListener("vivian-investigation-progress", refresh);
+    return () => {
+      window.removeEventListener(MINIGAME_PROGRESS_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("vivian-investigation-progress", refresh);
+    };
+  }, []);
+
+  const refreshProgress = () => setProgress(readMinigameProgress());
+  const solvedGridLevels = progress.completed["deduction-grid"];
+  const completedQuickCases = progress.completed["quick-challenges"];
 
   return (
     <section
@@ -48,11 +72,17 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          13 disponíveis
+          {MINIGAME_CATALOG.length} disponíveis
         </span>
       </div>
+      <div className="mt-5">
+        <MinigameProgressDashboard />
+      </div>
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <article className="border border-cyan-300/30 bg-[#11182a]/70 p-4 sm:p-5">
+        <article
+          id="minigame-flag-game"
+          className="border border-cyan-300/30 bg-[#11182a]/70 p-4 sm:p-5"
+        >
           <div className="flex items-start gap-3">
             <div className="border border-cyan-300/50 bg-cyan-300/10 p-2 text-cyan-200">
               <Flag size={20} aria-hidden="true" />
@@ -69,7 +99,10 @@ export function MinigamesMenu() {
           </div>
           <FlagMinigame />
         </article>
-        <article className="border border-amber-300/30 bg-[#201b16]/80 p-4 sm:p-5">
+        <article
+          id="minigame-circuit-panel"
+          className="border border-amber-300/30 bg-[#201b16]/80 p-4 sm:p-5"
+        >
           <div className="flex items-start gap-3">
             <div className="border border-amber-300/50 bg-amber-300/10 p-2 text-amber-100">
               <CircuitBoard size={20} aria-hidden="true" />
@@ -86,7 +119,10 @@ export function MinigamesMenu() {
           </div>
           <CircuitPanelMinigame />
         </article>
-        <article className="border border-rose-300/30 bg-[#251518]/80 p-4 sm:p-5">
+        <article
+          id="minigame-dot-connection"
+          className="border border-rose-300/30 bg-[#251518]/80 p-4 sm:p-5"
+        >
           <div className="flex items-start gap-3">
             <div className="border border-rose-300/50 bg-rose-300/10 p-2 text-rose-200">
               <Route size={20} aria-hidden="true" />
@@ -104,7 +140,10 @@ export function MinigamesMenu() {
           </div>
           <DotConnectionMinigame />
         </article>
-        <article className="border border-violet-300/30 bg-[#1d1824]/80 p-4 sm:p-5">
+        <article
+          id="minigame-seal-code"
+          className="border border-violet-300/30 bg-[#1d1824]/80 p-4 sm:p-5"
+        >
           <div className="flex items-start gap-3">
             <div className="border border-violet-300/50 bg-violet-300/10 p-2 text-violet-200">
               <LockKeyhole size={20} aria-hidden="true" />
@@ -121,7 +160,10 @@ export function MinigamesMenu() {
           </div>
           <SealCodeMinigame />
         </article>
-        <article className="border border-[#c4a779]/40 bg-[#1c1a17]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+        <article
+          id="minigame-deduction-grid"
+          className="border border-[#c4a779]/40 bg-[#1c1a17]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2"
+        >
           <div className="flex items-start gap-3">
             <div className="border border-[#c4a779]/60 bg-[#c4a779]/10 p-2 text-[#ead8b8]">
               <Grid3X3 size={20} aria-hidden="true" />
@@ -141,11 +183,7 @@ export function MinigamesMenu() {
             <VivianLogicGrid
               found={CASE_RECORD_IDS}
               solvedLevels={solvedGridLevels}
-              onSolve={(levelId) =>
-                setSolvedGridLevels((current) =>
-                  current.includes(levelId) ? current : [...current, levelId],
-                )
-              }
+              onSolve={refreshProgress}
             />
           </div>
         </article>
@@ -166,18 +204,34 @@ export function MinigamesMenu() {
             </div>
           </div>
           <div className="mt-4 space-y-5">
-            <VivianMurdleDeduction onSolved={() => undefined} />
-            <VivianMurdleWitnessRoute onSolved={() => undefined} />
-            <VivianMurdleCipherDecoder onSolved={() => undefined} />
-            <VivianQuickChallenges
-              found={CASE_RECORD_IDS}
-              completed={completedQuickCases}
-              onComplete={(id) =>
-                setCompletedQuickCases((current) =>
-                  current.includes(id) ? current : [...current, id],
-                )
-              }
-            />
+            <div id="minigame-relations-dossier">
+              <VivianMurdleDeduction
+                solved={progress.completed["relations-dossier"].includes("solved")}
+                onSolved={refreshProgress}
+              />
+            </div>
+            <div id="minigame-witness-route">
+              <VivianMurdleWitnessRoute
+                completedLevel={progress.completed["witness-route"].length}
+                onSolved={refreshProgress}
+              />
+            </div>
+            <div id="minigame-detective-ring">
+              <VivianMurdleCipherDecoder
+                completedLevel={progress.completed["detective-ring"].length}
+                onSolved={refreshProgress}
+              />
+            </div>
+            <div id="minigame-quick-challenges">
+              <VivianQuickChallenges
+                found={CASE_RECORD_IDS}
+                completed={completedQuickCases}
+                onComplete={(id) => {
+                  saveQuickCaseCompletion(id);
+                  refreshProgress();
+                }}
+              />
+            </div>
           </div>
         </article>
         <article className="border border-[#8e7a4e]/40 bg-[#1d1a15]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
@@ -196,7 +250,7 @@ export function MinigamesMenu() {
               </p>
             </div>
           </div>
-          <div className="mt-4">
+          <div id="minigame-painscreek-murdle-grid" className="mt-4">
             <PainscreekMurdleGrid />
           </div>
         </article>
@@ -215,7 +269,7 @@ export function MinigamesMenu() {
               </p>
             </div>
           </div>
-          <div className="mt-4">
+          <div id="minigame-evidence-chain" className="mt-4">
             <PainscreekEvidenceChainMinigame />
           </div>
         </article>
@@ -237,7 +291,7 @@ export function MinigamesMenu() {
               </p>
             </div>
           </div>
-          <div className="mt-4">
+          <div id="minigame-mine-settlement" className="mt-4">
             <PainscreekMineSettlementMinigame />
           </div>
         </article>
@@ -257,8 +311,33 @@ export function MinigamesMenu() {
               </p>
             </div>
           </div>
-          <div className="mt-4">
+          <div id="minigame-sheriff-transfer" className="mt-4">
             <PainscreekSheriffTransferMinigame />
+          </div>
+        </article>
+        <article
+          id="minigame-impossible-window"
+          className="border border-[#527078]/40 bg-[#151a1c]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2"
+        >
+          <div className="flex items-start gap-3">
+            <div className="border border-[#9fd1d5]/60 bg-[#9fd1d5]/10 p-2 text-[#c5e4e4]">
+              <FileSearch size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#9fd1d5]">
+                Dedução cronológica · P-015 / P-034
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#d8eeee]">
+                Janela impossível — Andrew
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#abc0c2]">
+                Compare duas datas documentais e elimine uma leitura incompatível sem inventar
+                causa, autoria ou culpado.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <PainscreekImpossibleWindowMinigame onSolved={refreshProgress} />
           </div>
         </article>
       </div>

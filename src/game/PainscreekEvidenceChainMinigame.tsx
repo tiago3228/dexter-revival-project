@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, FileSearch, RotateCcw } from "lucide-react";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type StepId = "evidence" | "observation" | "hypothesis" | "comparison" | "conclusion";
 
@@ -84,6 +85,7 @@ export function PainscreekEvidenceChainMinigame({ onSolved }: Props) {
       setFeedback(
         "Cadeia rastreável. A conclusão permanece aberta: a hipótese ganhou um caminho de verificação, não um veredito automático.",
       );
+      recordMinigameProgress("evidence-chain", "solved");
       onSolved?.();
     } else {
       setFeedback(

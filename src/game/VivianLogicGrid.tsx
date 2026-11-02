@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Check, Grid3x3, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { recordMinigameProgress } from "./minigameProgress";
 import {
   GRID_LEVELS,
   GRID_LEVEL_IDS,
@@ -165,6 +166,7 @@ export function VivianLogicGrid({ found, solvedLevels, onSolve }: Props) {
               variant="outline"
               onClick={() => {
                 if (checkGrid(marks, activeLevel.id)) {
+                  recordMinigameProgress("deduction-grid", activeLevel.id);
                   onSolve(activeLevel.id);
                   setFeedback("");
                 } else {

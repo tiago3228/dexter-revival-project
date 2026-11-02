@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, FileSearch, RotateCcw } from "lucide-react";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Props = {
   onSolved?: () => void;
@@ -94,6 +95,7 @@ export function PainscreekMineSettlementMinigame({ onSolved }: Props) {
     setFeedback(step.success);
     if (stepIndex === STEPS.length - 1) {
       setSolved(true);
+      recordMinigameProgress("mine-settlement", "solved");
       onSolved?.();
       return;
     }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Flag, Music, X } from "lucide-react";
+import { markMinigameStarted, recordMinigameProgress } from "./minigameProgress";
 
 type Country = { name: string; code: string };
 type Mode = "free" | "timed" | "challenge";
@@ -701,6 +702,7 @@ function playTone(correct: boolean) {
 export function FlagMinigame() {
   const [open, setOpen] = useState(false);
   const [started, setStarted] = useState(false);
+  const [progressRecorded, setProgressRecorded] = useState(false);
   const [mode, setMode] = useState<Mode>("free");
   const [theme, setTheme] = useState<Theme>("neon");
   const [question, setQuestion] = useState<Question | null>(null);
@@ -769,6 +771,8 @@ export function FlagMinigame() {
   }, [answered, correctAnswers, mode, score, wrongAnswers]);
 
   const start = (nextMode: Mode) => {
+    markMinigameStarted("flag-game");
+    setProgressRecorded(false);
     const nextUsed = new Set<string>();
     setMode(nextMode);
     setUsed(nextUsed);
@@ -791,6 +795,10 @@ export function FlagMinigame() {
     (country: Country | null, timedOut = false) => {
       if (!question || selected) return;
       const isCorrect = !timedOut && country?.code === question.answer.code;
+      if (!progressRecorded) {
+        recordMinigameProgress("flag-game", "played");
+        setProgressRecorded(true);
+      }
       setSelected(timedOut ? "timeout" : (country?.code ?? null));
       setCorrect(isCorrect);
       playTone(isCorrect);
@@ -814,7 +822,7 @@ export function FlagMinigame() {
         setNotice(timedOut ? "Tempo esgotado" : "Resposta incorreta");
       }
     },
-    [mode, question, selected],
+    [mode, progressRecorded, question, selected],
   );
 
   useEffect(() => {

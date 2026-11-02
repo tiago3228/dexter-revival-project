@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, ChevronDown, Clock3, FileSearch, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { recordMinigameProgress } from "./minigameProgress";
 import { VivianQuickCaseRunner } from "./VivianQuickCaseRunner";
 import { VivianQuickCaseStats } from "./VivianQuickCaseStats";
 import {
@@ -30,6 +31,7 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
   const completeWitness = () => {
     const result = evaluateWitnessClaim(selectedWitness, found);
     if (result === "supported") {
+      recordMinigameProgress("quick-challenges", WITNESS_CASE_ID);
       onComplete(WITNESS_CASE_ID);
       setWitnessFeedback("");
     } else {
@@ -39,6 +41,11 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
           : "Essa versão não é a incompatível. Volte ao relatório e confira o que as testemunhas puderam ouvir.",
       );
     }
+  };
+
+  const completeQuickCase = (id: string) => {
+    recordMinigameProgress("quick-challenges", id);
+    onComplete(id);
   };
 
   return (
@@ -200,7 +207,7 @@ export function VivianQuickChallenges({ found, completed, onComplete, onExpanded
                 quickCase={activeCase}
                 found={found}
                 completed={completed.includes(activeCase.id)}
-                onComplete={onComplete}
+                onComplete={completeQuickCase}
               />
             )}
           </div>

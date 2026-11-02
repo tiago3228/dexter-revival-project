@@ -33,6 +33,7 @@ import {
 import { HarryCodePanel } from "./HarryCodePanel";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { MinigamesMenu } from "./MinigamesMenu";
+import { MINIGAME_CATALOG } from "./minigameProgress";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import {
   loadCurrentPlayerName,
@@ -2394,7 +2395,8 @@ function MainMenu({
           aria-expanded={showMinigames}
           className="mt-6 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
         >
-          {showMinigames ? "Fechar menu de minigames" : "Menu de minigames"} · 13 disponíveis
+          {showMinigames ? "Fechar menu de minigames" : "Menu de minigames"} ·{" "}
+          {MINIGAME_CATALOG.length} disponíveis
         </button>
         {showMinigames && <MinigamesMenu />}
         <button

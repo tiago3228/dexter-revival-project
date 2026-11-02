@@ -9,6 +9,7 @@ import {
   isSolvedDotLevelPath,
 } from "./dotConnectionPuzzle";
 import { playMinigameVictorySound } from "./minigameVictoryEffects";
+import { recordMinigameProgress } from "./minigameProgress";
 
 function readUnlockedLevel(): number {
   if (typeof window === "undefined") return 0;
@@ -66,6 +67,7 @@ export function DotConnectionMinigame() {
   };
 
   const finishLevel = () => {
+    recordMinigameProgress("dot-connection", `level-${levelIndex + 1}`);
     playMinigameVictorySound();
     setSolved(true);
     setFeedback(

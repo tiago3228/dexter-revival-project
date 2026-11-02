@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, Grid3X3, RotateCcw } from "lucide-react";
+import { recordMinigameProgress } from "./minigameProgress";
 
 const PEOPLE = ["Scott", "Henry", "Dorothy"] as const;
 const SOURCES = ["Relatório policial", "Diário", "Carta"] as const;
@@ -67,6 +68,7 @@ export function PainscreekMurdleGrid({ onSolved }: Props) {
       setFeedback(
         "Grade fechada. As associações organizam o exercício; não transformam uma fonte em prova definitiva.",
       );
+      recordMinigameProgress("painscreek-murdle-grid", "solved");
       onSolved?.();
     } else {
       setFeedback(

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, FileQuestion, Grid3X3, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Mark = "" | "x" | "o";
 type PairKey = `${string}|${string}`;
@@ -172,6 +173,7 @@ export function VivianMurdleWitnessRoute({ completedLevel = 0, onSolved }: Props
       setFeedback(
         `Nível ${activeLevel + 1} concluído. A grade organiza hipóteses e não confirma autoria, localização ou conteúdo das fontes.`,
       );
+      recordMinigameProgress("witness-route", `level-${activeLevel + 1}`);
       onSolved(activeLevel + 1);
       return;
     }

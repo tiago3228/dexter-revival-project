@@ -9,6 +9,7 @@ import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMiniga
 import { PainscreekMineSettlementMinigame } from "./PainscreekMineSettlementMinigame";
 import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
 import { PainscreekSheriffTransferMinigame } from "./PainscreekSheriffTransferMinigame";
+import { PainscreekImpossibleWindowMinigame } from "./PainscreekImpossibleWindowMinigame";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
   getVivianVerdictReadiness,
@@ -2356,6 +2357,16 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
             onSolved={() => {
               setNotice(
                 "Despacho conferido. A carta registra datas e destino; não associa a realocação a punição ou ao caso Vivian.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <PainscreekImpossibleWindowMinigame
+            onSolved={() => {
+              setNotice(
+                "Divergência de datas registrada como inconsistência documental; nenhuma conclusão de autoria foi assumida.",
               );
             }}
           />

@@ -1,8 +1,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PainscreekMineSettlementMinigame } from "@/game/PainscreekMineSettlementMinigame";
+import * as minigameProgress from "@/game/minigameProgress";
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 function answer(label: string) {
   fireEvent.click(screen.getByLabelText(label));
@@ -12,6 +16,7 @@ function answer(label: string) {
 describe("Fechamento de contas: a mina", () => {
   it("resolve as três etapas e chama onSolved uma única vez até reiniciar", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekMineSettlementMinigame onSolved={onSolved} />);
 
     expect(
@@ -26,11 +31,13 @@ describe("Fechamento de contas: a mina", () => {
     answer("Informa somente um total agregado; não especifica a distribuição entre as famílias.");
     expect(screen.getByRole("status")).toHaveTextContent("Exercício concluído");
     expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(recordProgress).toHaveBeenCalledWith("mine-settlement", "solved");
     expect(screen.queryByRole("button", { name: "Conferir etapa" })).not.toBeInTheDocument();
   });
 
   it("rejeita a alternativa que presume divisão igual sem apoio no texto", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekMineSettlementMinigame onSolved={onSolved} />);
     answer("19 trabalhadores (6 + 13)");
     answer("US$ 120.000 (US$ 96.000 + US$ 24.000)");
@@ -40,6 +47,7 @@ describe("Fechamento de contas: a mina", () => {
 
     expect(screen.getByRole("status")).toHaveTextContent(/não descreve valores individuais/);
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordProgress).not.toHaveBeenCalled();
     expect(screen.getByText(/Etapa 3 de 3/)).toBeInTheDocument();
   });
 

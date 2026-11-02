@@ -1,6 +1,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { VivianMurdleWitnessRoute } from "@/game/VivianMurdleWitnessRoute";
+import { recordMinigameProgress } from "@/game/minigameProgress";
+
+vi.mock("@/game/minigameProgress", () => ({ recordMinigameProgress: vi.fn() }));
 
 describe("puzzle de rota dos depoimentos", () => {
   afterEach(cleanup);
@@ -17,6 +20,7 @@ describe("puzzle de rota dos depoimentos", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Conferir rota" }));
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordMinigameProgress).not.toHaveBeenCalled();
     expect(screen.getByRole("status")).toHaveTextContent("ainda não fecha");
 
     const correctPairs = [
@@ -35,6 +39,7 @@ describe("puzzle de rota dos depoimentos", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Conferir rota" }));
     expect(onSolved).toHaveBeenCalledWith(1);
+    expect(recordMinigameProgress).toHaveBeenCalledWith("witness-route", "level-1");
     expect(screen.getByRole("status")).toHaveTextContent("Nível 1 concluído");
   });
 
@@ -65,6 +70,7 @@ describe("puzzle de rota dos depoimentos", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Conferir rota" }));
     expect(onSolved).toHaveBeenCalledWith(2);
+    expect(recordMinigameProgress).toHaveBeenCalledWith("witness-route", "level-2");
     expect(screen.getByRole("status")).toHaveTextContent("Nível 2 concluído");
     expect(screen.getByText("Conferido")).toBeInTheDocument();
   });

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   CircuitPanelMinigame,
@@ -21,22 +21,32 @@ describe("menu de minigames", () => {
     render(<MinigamesMenu />);
 
     expect(screen.getByRole("region", { name: "Menu de minigames" })).toBeInTheDocument();
-    expect(screen.getByText("13 disponíveis")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Mini Game de Bandeiras" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Painel Elétrico" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Conexão de Pontos" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Código do Lacre" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Grade de Dedução" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Dossiê de relações" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "A rota da fita" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "O anel do detetive" })).toBeInTheDocument();
+    expect(screen.getByText("14 disponíveis")).toBeInTheDocument();
+    const dashboard = screen.getByRole("region", { name: "Progresso dos minigames" });
+    expect(dashboard).toBeInTheDocument();
+    expect(within(dashboard).getAllByRole("progressbar")).toHaveLength(14);
+    for (const title of [
+      "Mini Game de Bandeiras",
+      "Painel Elétrico",
+      "Conexão de Pontos",
+      "Código do Lacre",
+      "Grade de Dedução",
+      "Dossiê de relações",
+      "A rota da fita",
+      "O anel do detetive",
+    ]) {
+      expect(screen.getAllByRole("heading", { name: title }).length).toBeGreaterThan(0);
+    }
     expect(screen.getByRole("region", { name: "Depoimentos e casos curtos" })).toBeInTheDocument();
-    expect(screen.getAllByRole("heading", { name: "Murdle de Painscreek" })).toHaveLength(2);
-    expect(screen.getAllByRole("heading", { name: "Cadeia de Evidência" })).toHaveLength(2);
+    expect(screen.getAllByRole("heading", { name: "Murdle de Painscreek" })).toHaveLength(3);
+    expect(screen.getAllByRole("heading", { name: "Cadeia de Evidência" })).toHaveLength(3);
     expect(screen.getAllByRole("heading", { name: "Fechamento de contas: a mina" })).toHaveLength(
-      2,
+      3,
     );
-    expect(screen.getAllByRole("heading", { name: "Despacho do xerife" })).toHaveLength(2);
+    expect(screen.getAllByRole("heading", { name: "Despacho do xerife" })).toHaveLength(3);
+    expect(
+      screen.getByRole("region", { name: "Exercício editorial sobre a cronologia de Andrew Reed" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Mini Game de Bandeiras/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Painel Elétrico/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Conexão de Pontos/ })).toBeInTheDocument();

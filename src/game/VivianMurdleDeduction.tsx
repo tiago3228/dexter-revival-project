@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, FileQuestion, Grid3X3, LockKeyhole, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Mark = "" | "x" | "o";
 type PairKey = `${string}|${string}`;
@@ -120,6 +121,7 @@ export function VivianMurdleDeduction({ solved = false, onSolved }: Props) {
   const check = () => {
     if (isCorrect(marks)) {
       setComplete(true);
+      recordMinigameProgress("relations-dossier", "solved");
       setFeedback(
         "Dedução completa. A grade organiza hipóteses e não confirma autoria, localização ou conteúdo das fontes.",
       );

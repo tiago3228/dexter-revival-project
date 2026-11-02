@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SealCodeMinigame } from "../game/SealCodeMinigame";
+import { MINIGAME_PROGRESS_STORAGE_KEY } from "../game/minigameProgress";
 import {
   generateSecretCode,
   getCodeFeedback,
@@ -34,6 +35,7 @@ function findDistinctGuesses(excluded: readonly SealSymbolId[], count: number): 
 
 afterEach(() => {
   cleanup();
+  window.localStorage.clear();
   vi.restoreAllMocks();
 });
 
@@ -87,6 +89,11 @@ describe("interação do minigame Código do Lacre", () => {
 
     expect(within(dialog).getByRole("status")).toHaveTextContent("Lacre aberto");
     expect(within(dialog).getByRole("status")).toHaveClass("seal-code-victory-notice");
+    expect(
+      JSON.parse(window.localStorage.getItem(MINIGAME_PROGRESS_STORAGE_KEY)!).completed[
+        "seal-code"
+      ],
+    ).toEqual(["solved"]);
     expect(within(dialog).getByText("Tentativas: 1/8")).toBeInTheDocument();
     expect(
       within(dialog).getByText("4 na posição certa · 0 na posição errada"),
@@ -115,6 +122,11 @@ describe("interação do minigame Código do Lacre", () => {
       within(dialog).getByText(`Tentativas: ${MAX_ATTEMPTS}/${MAX_ATTEMPTS}`),
     ).toBeInTheDocument();
     expect(within(dialog).getByText(/Tentativas esgotadas/)).toBeInTheDocument();
+    expect(
+      JSON.parse(window.localStorage.getItem(MINIGAME_PROGRESS_STORAGE_KEY) ?? "null")?.completed?.[
+        "seal-code"
+      ] ?? [],
+    ).toEqual([]);
     expect(within(dialog).getByLabelText("Código secreto revelado")).toBeInTheDocument();
 
     fireEvent.click(within(dialog).getByRole("button", { name: "Tentar de novo" }));

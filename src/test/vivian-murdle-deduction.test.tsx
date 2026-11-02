@@ -1,6 +1,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { VivianMurdleDeduction } from "@/game/VivianMurdleDeduction";
+import { recordMinigameProgress } from "@/game/minigameProgress";
+
+vi.mock("@/game/minigameProgress", () => ({ recordMinigameProgress: vi.fn() }));
 
 describe("minigame de dedução estilo Murdle", () => {
   afterEach(cleanup);
@@ -16,6 +19,7 @@ describe("minigame de dedução estilo Murdle", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Conferir dedução" }));
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordMinigameProgress).not.toHaveBeenCalled();
 
     const correctPairs = [
       "Scott e Cabana",
@@ -33,6 +37,7 @@ describe("minigame de dedução estilo Murdle", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Conferir dedução" }));
     expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(recordMinigameProgress).toHaveBeenCalledWith("relations-dossier", "solved");
     expect(screen.getByRole("status")).toHaveTextContent("Dedução completa");
   });
 });

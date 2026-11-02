@@ -1,9 +1,15 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { VivianMurdleCipherDecoder } from "@/game/VivianMurdleCipherDecoder";
+import { recordMinigameProgress } from "@/game/minigameProgress";
+
+vi.mock("@/game/minigameProgress", () => ({ recordMinigameProgress: vi.fn() }));
 
 describe("minigame do decodificador Murdle", () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    vi.clearAllMocks();
+  });
 
   it("rejeita a chave incorreta e decifra os três bilhetes básicos em sequência", () => {
     const onSolved = vi.fn();
@@ -22,6 +28,7 @@ describe("minigame do decodificador Murdle", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Decifrar bilhete" }));
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordMinigameProgress).not.toHaveBeenCalled();
     expect(screen.getByRole("status")).toHaveTextContent("chave ou a resposta");
 
     const solveStage = (shift: string, answer: string) => {
@@ -41,6 +48,7 @@ describe("minigame do decodificador Murdle", () => {
     solveStage("2", "HOSPITAL");
 
     expect(onSolved).toHaveBeenCalledWith(1);
+    expect(recordMinigameProgress).toHaveBeenCalledWith("detective-ring", "level-1");
     expect(screen.getByText("Conferido")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Avançar para a cifra avançada" }),
@@ -72,6 +80,7 @@ describe("minigame do decodificador Murdle", () => {
     solveStage("4", "A FOTOGRAFIA SEGUE PARA O HOSPITAL");
 
     expect(onSolved).toHaveBeenCalledWith(2);
+    expect(recordMinigameProgress).toHaveBeenCalledWith("detective-ring", "level-2");
     expect(screen.getByRole("status")).toHaveTextContent("Código completo");
   });
 
@@ -82,5 +91,6 @@ describe("minigame do decodificador Murdle", () => {
     expect(screen.getByText("Conferido")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Decifrar bilhete" })).not.toBeInTheDocument();
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordMinigameProgress).not.toHaveBeenCalled();
   });
 });

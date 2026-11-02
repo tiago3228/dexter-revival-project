@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, FileSearch, RotateCcw } from "lucide-react";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Props = { onSolved?: () => void };
 type Field = "reportBy" | "effectiveDate" | "destination" | "reason";
@@ -84,6 +85,7 @@ export function PainscreekSheriffTransferMinigame({ onSolved }: Props) {
     setFeedback(
       "Ficha conferida. A carta registra o contexto populacional e a realocação; não estabelece punição nem relação com Vivian.",
     );
+    recordMinigameProgress("sheriff-transfer", "solved");
     onSolved?.();
   };
   const reset = () => {

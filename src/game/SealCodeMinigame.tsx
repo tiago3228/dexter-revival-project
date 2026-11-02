@@ -11,6 +11,7 @@ import {
   type SealSymbolId,
 } from "./sealCodePuzzle";
 import { playMinigameVictorySound } from "./minigameVictoryEffects";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Attempt = {
   guess: SealCode;
@@ -74,6 +75,7 @@ export function SealCodeMinigame() {
     setActivePosition(0);
 
     if (feedback.correctPosition === CODE_LENGTH) {
+      recordMinigameProgress("seal-code", "solved");
       playMinigameVictorySound();
       setOutcome("won");
     } else if (nextAttempts.length >= MAX_ATTEMPTS) {

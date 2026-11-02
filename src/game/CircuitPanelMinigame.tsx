@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { CheckCircle2, CircuitBoard, RotateCw, X, Zap } from "lucide-react";
+import { recordMinigameProgress } from "./minigameProgress";
 
 type Direction = "north" | "east" | "south" | "west";
 type Mask = Record<Direction, boolean>;
@@ -342,6 +343,7 @@ export function CircuitPanelMinigame({
     setMoves((value) => value + 1);
     playTone(nextSolved ? "success" : "rotate");
     if (nextSolved) {
+      recordMinigameProgress("circuit-panel", `level-${levelIndex + 1}`);
       setSolved(true);
       setCompletedLevelIndex((current) => {
         const next = Math.max(current, levelIndex);

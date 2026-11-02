@@ -1,8 +1,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PainscreekSheriffTransferMinigame } from "@/game/PainscreekSheriffTransferMinigame";
+import * as minigameProgress from "@/game/minigameProgress";
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 const answers = {
   "Até quando deveria apresentar-se?": "1998-05-12",
@@ -22,6 +26,7 @@ function fillCorrectFacts() {
 describe("Despacho do xerife", () => {
   it("aceita os fatos documentados e chama onSolved uma vez até reiniciar", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekSheriffTransferMinigame onSolved={onSolved} />);
     fillCorrectFacts();
 
@@ -30,12 +35,14 @@ describe("Despacho do xerife", () => {
       /não estabelece punição nem relação com Vivian/i,
     );
     expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(recordProgress).toHaveBeenCalledWith("sheriff-transfer", "solved");
 
     fireEvent.click(screen.getByRole("button", { name: "Ficha validada" }));
     expect(onSolved).toHaveBeenCalledTimes(1);
   });
 
   it("rejeita uma inferência de punição sem apoio documental", () => {
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekSheriffTransferMinigame />);
     fillCorrectFacts();
     choose("O que a carta permite concluir sobre o motivo?", "punishment");
@@ -44,6 +51,7 @@ describe("Despacho do xerife", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       /não afirma punição nem relaciona a transferência a Vivian/i,
     );
+    expect(recordProgress).not.toHaveBeenCalled();
   });
 
   it.each([

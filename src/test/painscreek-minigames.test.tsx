@@ -2,12 +2,17 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PainscreekEvidenceChainMinigame } from "@/game/PainscreekEvidenceChainMinigame";
 import { PainscreekMurdleGrid } from "@/game/PainscreekMurdleGrid";
+import * as minigameProgress from "@/game/minigameProgress";
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 describe("minigames de Painscreek", () => {
   it("resolve a grade Murdle apenas com as seis associações corretas", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekMurdleGrid onSolved={onSolved} />);
 
     fireEvent.change(screen.getByLabelText("Fonte de Scott"), { target: { value: "Diário" } });
@@ -23,10 +28,12 @@ describe("minigames de Painscreek", () => {
 
     expect(screen.getByText(/Grade fechada/)).toBeInTheDocument();
     expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(recordProgress).toHaveBeenCalledWith("painscreek-murdle-grid", "solved");
   });
 
   it("recusa uma cadeia incompleta ou com camadas trocadas", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekEvidenceChainMinigame onSolved={onSolved} />);
 
     const selects = screen.getAllByRole("combobox");
@@ -47,10 +54,12 @@ describe("minigames de Painscreek", () => {
 
     expect(screen.getByText(/A cadeia não fecha/)).toBeInTheDocument();
     expect(onSolved).not.toHaveBeenCalled();
+    expect(recordProgress).not.toHaveBeenCalled();
   });
 
   it("confere a sequência fonte, observação, hipótese, confronto e conclusão aberta", () => {
     const onSolved = vi.fn();
+    const recordProgress = vi.spyOn(minigameProgress, "recordMinigameProgress");
     render(<PainscreekEvidenceChainMinigame onSolved={onSolved} />);
 
     const values = [
@@ -67,5 +76,6 @@ describe("minigames de Painscreek", () => {
 
     expect(screen.getByText(/Cadeia rastreável/)).toBeInTheDocument();
     expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(recordProgress).toHaveBeenCalledWith("evidence-chain", "solved");
   });
 });
