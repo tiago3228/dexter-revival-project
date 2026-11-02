@@ -5,7 +5,7 @@ import { VivianMurdleCipherDecoder } from "@/game/VivianMurdleCipherDecoder";
 describe("minigame do decodificador Murdle", () => {
   afterEach(cleanup);
 
-  it("rejeita a chave incorreta e decifra as três mensagens em sequência", () => {
+  it("rejeita a chave incorreta e decifra os três bilhetes básicos em sequência", () => {
     const onSolved = vi.fn();
     render(<VivianMurdleCipherDecoder onSolved={onSolved} />);
 
@@ -14,16 +14,20 @@ describe("minigame do decodificador Murdle", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("D ILWD SDVVD SHOR ODJR")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Chave 1" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Chave do anel" }), {
+      target: { value: "1" },
+    });
     fireEvent.change(screen.getByRole("textbox", { name: "Resposta do bilhete" }), {
       target: { value: "LAGO" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Decifrar bilhete" }));
     expect(onSolved).not.toHaveBeenCalled();
-    expect(screen.getByRole("status")).toHaveTextContent("chave ou a palavra");
+    expect(screen.getByRole("status")).toHaveTextContent("chave ou a resposta");
 
     const solveStage = (shift: string, answer: string) => {
-      fireEvent.click(screen.getByRole("button", { name: `Chave ${shift}` }));
+      fireEvent.change(screen.getByRole("combobox", { name: "Chave do anel" }), {
+        target: { value: shift },
+      });
       fireEvent.change(screen.getByRole("textbox", { name: "Resposta do bilhete" }), {
         target: { value: answer },
       });
@@ -36,14 +40,44 @@ describe("minigame do decodificador Murdle", () => {
     expect(screen.getByText("C HQVQ UGIWG RCTC Q JQURKVCN")).toBeInTheDocument();
     solveStage("2", "HOSPITAL");
 
-    expect(onSolved).toHaveBeenCalledTimes(1);
+    expect(onSolved).toHaveBeenCalledWith(1);
     expect(screen.getByText("Conferido")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Avançar para a cifra avançada" }),
+    ).toBeInTheDocument();
+  });
+
+  it("libera o nível avançado e exige chaves dinâmicas e frases completas", () => {
+    const onSolved = vi.fn();
+    render(<VivianMurdleCipherDecoder completedLevel={1} onSolved={onSolved} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Nível 2 · Cifra avançada/ }));
+    expect(screen.getByText("H MPAH MVP LZJVUKPKH UV SHNV")).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Chave dinâmica do anel" })).toBeInTheDocument();
+
+    const solveStage = (shift: string, answer: string) => {
+      fireEvent.change(screen.getByRole("combobox", { name: "Chave dinâmica do anel" }), {
+        target: { value: shift },
+      });
+      fireEvent.change(screen.getByRole("textbox", { name: "Frase completa do bilhete" }), {
+        target: { value: answer },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Decifrar bilhete" }));
+    };
+
+    solveStage("7", "A FITA FOI ESCONDIDA NO LAGO");
+    expect(screen.getByText("L NLCEL OPGP GZWELC LZ LCBFTGZ")).toBeInTheDocument();
+    solveStage("11", "A CARTA DEVE VOLTAR AO ARQUIVO");
+    expect(screen.getByText("E JSXSKVEJME WIKYI TEVE S LSWTMXEP")).toBeInTheDocument();
+    solveStage("4", "A FOTOGRAFIA SEGUE PARA O HOSPITAL");
+
+    expect(onSolved).toHaveBeenCalledWith(2);
     expect(screen.getByRole("status")).toHaveTextContent("Código completo");
   });
 
-  it("respeita um puzzle previamente concluído", () => {
+  it("respeita um puzzle previamente concluído no nível avançado", () => {
     const onSolved = vi.fn();
-    render(<VivianMurdleCipherDecoder solved onSolved={onSolved} />);
+    render(<VivianMurdleCipherDecoder completedLevel={2} onSolved={onSolved} />);
 
     expect(screen.getByText("Conferido")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Decifrar bilhete" })).not.toBeInTheDocument();

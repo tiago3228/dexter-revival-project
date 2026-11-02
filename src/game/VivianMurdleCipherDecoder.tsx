@@ -8,20 +8,23 @@ type Stage = {
   message: string;
   shift: number;
   answer: string;
+  answerLabel: string;
 };
 
 type Props = {
+  completedLevel?: number;
   solved?: boolean;
-  onSolved: () => void;
+  onSolved: (level: number) => void;
 };
 
-const STAGES: readonly Stage[] = [
+const BASIC_STAGES: readonly Stage[] = [
   {
     title: "O destino da fita",
     source: "Bilhete sem assinatura · margem do arquivo",
     message: "D ILWD  SDVVD  SHOR  ODJR",
     shift: 3,
     answer: "LAGO",
+    answerLabel: "Qual local aparece na mensagem?",
   },
   {
     title: "A testemunha da carta",
@@ -29,6 +32,7 @@ const STAGES: readonly Stage[] = [
     message: "F HFWYF  KNHF  ST  FWVZNAT",
     shift: 5,
     answer: "ARQUIVO",
+    answerLabel: "Qual local aparece na mensagem?",
   },
   {
     title: "A última indicação",
@@ -36,8 +40,45 @@ const STAGES: readonly Stage[] = [
     message: "C HQVQ  UGIWG  RCTC  Q  JQURKVCN",
     shift: 2,
     answer: "HOSPITAL",
+    answerLabel: "Qual local aparece na mensagem?",
   },
 ];
+
+const ADVANCED_STAGES: readonly Stage[] = [
+  {
+    title: "A fita escondida",
+    source: "Folha de transferência · nível avançado",
+    message: "H MPAH MVP LZJVUKPKH UV SHNV",
+    shift: 7,
+    answer: "A FITA FOI ESCONDIDA NO LAGO",
+    answerLabel: "Transcreva a frase completa decifrada",
+  },
+  {
+    title: "A carta devolvida",
+    source: "Envelope sem remetente · nível avançado",
+    message: "L NLCEL OPGP GZWELC LZ LCBFTGZ",
+    shift: 11,
+    answer: "A CARTA DEVE VOLTAR AO ARQUIVO",
+    answerLabel: "Transcreva a frase completa decifrada",
+  },
+  {
+    title: "A fotografia encaminhada",
+    source: "Etiqueta de caixa · nível avançado",
+    message: "E JSXSKVEJME WIKYI TEVE S LSWTMXEP",
+    shift: 4,
+    answer: "A FOTOGRAFIA SEGUE PARA O HOSPITAL",
+    answerLabel: "Transcreva a frase completa decifrada",
+  },
+];
+
+const LEVELS = [
+  { label: "Nível 1 · Anotações", description: "3 locais · chaves curtas", stages: BASIC_STAGES },
+  {
+    label: "Nível 2 · Cifra avançada",
+    description: "3 frases completas · chaves dinâmicas",
+    stages: ADVANCED_STAGES,
+  },
+] as const;
 
 function decode(message: string, shift: number) {
   return message.replace(/[A-Z]/g, (letter) => {
@@ -46,32 +87,56 @@ function decode(message: string, shift: number) {
   });
 }
 
-export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
+function normalizeAnswer(value: string) {
+  return value.trim().replace(/\s+/g, " ").toUpperCase();
+}
+
+export function VivianMurdleCipherDecoder({ completedLevel, solved = false, onSolved }: Props) {
+  const initialCompletedLevel = completedLevel ?? (solved ? 1 : 0);
+  const [activeLevel, setActiveLevel] = useState(
+    Math.min(initialCompletedLevel, LEVELS.length - 1),
+  );
   const [stageIndex, setStageIndex] = useState(0);
   const [shift, setShift] = useState(1);
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
-  const [complete, setComplete] = useState(solved);
-  const stage = STAGES[stageIndex]!;
+  const [completedThisLevel, setCompletedThisLevel] = useState<number | null>(null);
+  const stages = LEVELS[Math.min(activeLevel, LEVELS.length - 1)]!.stages;
+  const stage = stages[stageIndex]!;
+  const levelComplete = initialCompletedLevel > activeLevel || completedThisLevel === activeLevel;
   const decoded = useMemo(() => decode(stage.message, shift), [stage.message, shift]);
 
+  const selectLevel = (level: number) => {
+    if (level > initialCompletedLevel) return;
+    setActiveLevel(level);
+    setStageIndex(0);
+    setShift(1);
+    setAnswer("");
+    setFeedback("");
+    setCompletedThisLevel(null);
+  };
+
   const submit = () => {
-    if (shift !== stage.shift || answer.trim().toUpperCase() !== stage.answer) {
+    if (shift !== stage.shift || normalizeAnswer(answer) !== stage.answer) {
       setFeedback(
-        "A chave ou a palavra ainda não confere. Gire o anel até a mensagem formar uma frase legível e responda com o local indicado.",
+        "A chave ou a resposta ainda não confere. Ajuste o deslocamento e leia a mensagem completa antes de tentar novamente.",
       );
       return;
     }
-    if (stageIndex === STAGES.length - 1) {
-      setComplete(true);
-      setFeedback("Código completo. As três mensagens foram decifradas como exercício editorial.");
-      onSolved();
+    if (stageIndex < stages.length - 1) {
+      setFeedback(`Bilhete ${stageIndex + 1} decifrado. A próxima anotação foi liberada.`);
+      setStageIndex((current) => current + 1);
+      setShift(1);
+      setAnswer("");
       return;
     }
-    setFeedback(`Mensagem ${stageIndex + 1} decifrada. A próxima anotação foi liberada.`);
-    setStageIndex((current) => current + 1);
-    setShift(1);
-    setAnswer("");
+    setCompletedThisLevel(activeLevel);
+    setFeedback(
+      activeLevel === 0
+        ? "Nível básico concluído. A cifra avançada foi liberada."
+        : "Código completo. As seis mensagens foram decifradas como exercício editorial.",
+    );
+    onSolved(activeLevel + 1);
   };
 
   const reset = () => {
@@ -79,7 +144,7 @@ export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
     setShift(1);
     setAnswer("");
     setFeedback("");
-    setComplete(false);
+    setCompletedThisLevel(null);
   };
 
   return (
@@ -94,40 +159,64 @@ export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
           </p>
           <h3 className="mt-1 font-display text-2xl text-[#ead8b8]">O anel do detetive</h3>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#bdb5a8]">
-            Use uma chave de deslocamento para decifrar três mensagens originais. A resposta de cada
-            bilhete é um local; não trate o exercício como uma prova documental do caso.
+            Use uma chave de deslocamento para decifrar mensagens originais. O nível avançado troca
+            a chave em cada bilhete e exige a transcrição de frases completas.
           </p>
         </div>
-        {complete ? (
+        {levelComplete ? (
           <span className="flex items-center gap-1 font-mono text-xs text-emerald-200">
             <Check size={15} /> Conferido
           </span>
         ) : (
           <span className="font-mono text-xs text-[#a9a092]">
-            Mensagem {stageIndex + 1}/{STAGES.length}
+            Bilhete {stageIndex + 1}/{stages.length}
           </span>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2" aria-label="Mensagens decifradas">
-        {STAGES.map((item, index) => (
-          <span
-            key={item.title}
-            className={`border px-3 py-2 font-mono text-[10px] ${
-              index < stageIndex || complete
-                ? "border-emerald-800/70 text-emerald-200"
-                : index === stageIndex
-                  ? "border-[#e1c18d] text-[#ead8b8]"
-                  : "border-[#4b4031] text-[#665b4b]"
+      <div className="grid gap-2 sm:grid-cols-2" aria-label="Níveis do anel do detetive">
+        {LEVELS.map((item, index) => (
+          <button
+            key={item.label}
+            type="button"
+            disabled={index > initialCompletedLevel}
+            onClick={() => selectLevel(index)}
+            className={`min-h-14 border p-3 text-left font-mono text-[10px] transition ${
+              index === activeLevel
+                ? "border-[#e1c18d] bg-[#c4a779]/15 text-[#ead8b8]"
+                : index < initialCompletedLevel
+                  ? "border-emerald-800/70 text-emerald-200"
+                  : "cursor-not-allowed border-[#4b4031] text-[#665b4b]"
             }`}
           >
-            {index < stageIndex || complete ? "✓ " : ""}Bilhete {index + 1}
-          </span>
+            <strong className="block">
+              {index < initialCompletedLevel ? "✓ " : ""}
+              {item.label}
+            </strong>
+            <span className="mt-1 block opacity-75">{item.description}</span>
+          </button>
         ))}
       </div>
 
-      {!complete && (
+      {!levelComplete && (
         <>
+          <div className="flex flex-wrap gap-2" aria-label="Bilhetes do nível atual">
+            {stages.map((item, index) => (
+              <span
+                key={item.title}
+                className={`border px-3 py-2 font-mono text-[10px] ${
+                  index < stageIndex
+                    ? "border-emerald-800/70 text-emerald-200"
+                    : index === stageIndex
+                      ? "border-[#e1c18d] text-[#ead8b8]"
+                      : "border-[#4b4031] text-[#665b4b]"
+                }`}
+              >
+                {index < stageIndex ? "✓ " : ""}Bilhete {index + 1}
+              </span>
+            ))}
+          </div>
+
           <article className="border border-[#4b4439] bg-[#191714] p-4" aria-label={stage.title}>
             <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
               {stage.source}
@@ -137,32 +226,34 @@ export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
               {stage.message}
             </p>
             <p className="mt-3 text-xs leading-relaxed text-[#a9a092]">
-              A chave é o número de casas que cada letra recua no alfabeto. Teste de 1 a 10.
+              {activeLevel === 0
+                ? "A chave recua cada letra no alfabeto. Teste de 1 a 10."
+                : "A chave muda neste bilhete. Use o seletor de 1 a 25 e transcreva a frase completa."}
             </p>
           </article>
 
           <div className="space-y-2">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]">
-              Chave do anel
-            </p>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Chaves de deslocamento">
-              {Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-label={`Chave ${value}`}
-                  aria-pressed={shift === value}
-                  onClick={() => setShift(value)}
-                  className={`h-10 w-10 border font-mono text-sm transition ${
-                    shift === value
-                      ? "border-[#e1c18d] bg-[#c4a779]/15 text-[#ead8b8]"
-                      : "border-[#4b4439] text-[#a9a092] hover:border-[#c4a779]"
-                  }`}
-                >
-                  {value}
-                </button>
-              ))}
-            </div>
+            <label
+              htmlFor="cipher-shift"
+              className="font-mono text-[10px] uppercase tracking-wider text-[#a9a092]"
+            >
+              {activeLevel === 0 ? "Chave do anel" : "Chave dinâmica do anel"}
+            </label>
+            <select
+              id="cipher-shift"
+              aria-label={activeLevel === 0 ? "Chave do anel" : "Chave dinâmica do anel"}
+              value={shift}
+              onChange={(event) => setShift(Number(event.target.value))}
+              className="block border border-[#4b4439] bg-[#11110f] px-3 py-3 font-mono text-sm text-[#ead8b8] outline-none focus:border-[#c4a779]"
+            >
+              {Array.from({ length: activeLevel === 0 ? 10 : 25 }, (_, index) => index + 1).map(
+                (value) => (
+                  <option key={value} value={value}>
+                    Deslocamento {value}
+                  </option>
+                ),
+              )}
+            </select>
           </div>
 
           <div className="border-l border-[#79664c] pl-3">
@@ -175,13 +266,13 @@ export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
           </div>
 
           <label className="block text-xs text-[#d5c9b5]">
-            Qual local aparece na mensagem?
+            {stage.answerLabel}
             <input
               value={answer}
               onChange={(event) => setAnswer(event.target.value)}
-              aria-label="Resposta do bilhete"
+              aria-label={activeLevel === 0 ? "Resposta do bilhete" : "Frase completa do bilhete"}
               className="mt-2 block w-full border border-[#4b4439] bg-[#11110f] px-3 py-3 font-mono text-sm uppercase text-[#ead8b8] outline-none focus:border-[#c4a779]"
-              placeholder="Digite o local"
+              placeholder={activeLevel === 0 ? "Digite o local" : "Digite a frase completa"}
             />
           </label>
 
@@ -190,16 +281,22 @@ export function VivianMurdleCipherDecoder({ solved = false, onSolved }: Props) {
               Decifrar bilhete
             </Button>
             <Button type="button" variant="ghost" onClick={reset}>
-              <RotateCcw /> Reiniciar código
+              <RotateCcw /> Reiniciar nível
             </Button>
           </div>
         </>
       )}
 
+      {levelComplete && activeLevel === 0 && (
+        <Button type="button" onClick={() => selectLevel(1)}>
+          Avançar para a cifra avançada
+        </Button>
+      )}
+
       {feedback && (
         <p
           role="status"
-          className={`text-sm leading-relaxed ${complete ? "text-emerald-200" : "text-[#d5c9b5]"}`}
+          className={`text-sm leading-relaxed ${levelComplete ? "text-emerald-200" : "text-[#d5c9b5]"}`}
         >
           {feedback}
         </p>

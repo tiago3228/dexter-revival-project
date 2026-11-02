@@ -114,7 +114,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 10;
+  version: 11;
   found: ClueId[];
   readClues: ClueId[];
   solvedRiddles: RiddleId[];
@@ -138,6 +138,7 @@ type SaveData = {
   murdleWitnessRouteSolved: boolean;
   murdleWitnessRouteLevel: number;
   murdleCipherSolved: boolean;
+  murdleCipherLevel: number;
   caseCompleted: boolean;
   accusation: { suspect: string; weapon: string; motive: string };
 };
@@ -850,15 +851,15 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
     };
-    if (![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(value.version ?? 0)) return null;
+    if (![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 10,
+      version: 11,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -923,6 +924,12 @@ function readSave(): SaveData | null {
             ? 1
             : 0,
       murdleCipherSolved: value.murdleCipherSolved === true,
+      murdleCipherLevel:
+        typeof value.murdleCipherLevel === "number"
+          ? Math.max(0, Math.min(2, Math.floor(value.murdleCipherLevel)))
+          : value.murdleCipherSolved === true
+            ? 1
+            : 0,
       caseCompleted: value.caseCompleted === true,
       accusation: {
         suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
@@ -1010,6 +1017,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     saved?.murdleWitnessRouteLevel ?? (saved?.murdleWitnessRouteSolved ? 1 : 0),
   );
   const [murdleCipherSolved, setMurdleCipherSolved] = useState(saved?.murdleCipherSolved ?? false);
+  const [murdleCipherLevel, setMurdleCipherLevel] = useState(
+    saved?.murdleCipherLevel ?? (saved?.murdleCipherSolved ? 1 : 0),
+  );
   const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
   const [accusation, setAccusation] = useState(
     saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
@@ -1030,7 +1040,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 10,
+      version: 11,
       found,
       readClues,
       solvedRiddles,
@@ -1054,6 +1064,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       murdleWitnessRouteSolved,
       murdleWitnessRouteLevel,
       murdleCipherSolved,
+      murdleCipherLevel,
       caseCompleted,
       accusation,
     };
@@ -1083,6 +1094,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     murdleWitnessRouteSolved,
     murdleWitnessRouteLevel,
     murdleCipherSolved,
+    murdleCipherLevel,
     caseCompleted,
     accusation,
   ]);
@@ -1487,6 +1499,7 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
     setMurdleWitnessRouteSolved(false);
     setMurdleWitnessRouteLevel(0);
     setMurdleCipherSolved(false);
+    setMurdleCipherLevel(0);
     setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
@@ -2287,13 +2300,14 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
 
         {(phase === "explore" || phase === "board") && (
           <VivianMurdleCipherDecoder
-            solved={murdleCipherSolved}
-            onSolved={() => {
-              setMurdleCipherSolved(true);
+            completedLevel={murdleCipherLevel}
+            onSolved={(level) => {
+              setMurdleCipherLevel((current) => Math.max(current, level));
+              if (level >= 2) setMurdleCipherSolved(true);
               setInvestigationNotes((current) => {
                 const marker = "[EXERCÍCIO DE CÓDIGO · O ANEL DO DETETIVE]";
                 if (current.includes(marker)) return current;
-                const entry = `${marker}\nTrês mensagens foram decifradas como exercício editorial de chave e deslocamento.\nEstado editorial: código original de puzzle, não prova canônica nem transcrição documental.`;
+                const entry = `${marker}\nNíveis básico e avançado foram decifrados como exercício editorial de chave e deslocamento.\nEstado editorial: código original de puzzle, não prova canônica nem transcrição documental.`;
                 return current.trim() ? `${current.trim()}\n\n${entry}` : entry;
               });
               setNotice(
