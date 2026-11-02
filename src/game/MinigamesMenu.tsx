@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { CircuitBoard, Flag, Gamepad2, Grid3X3, KeyRound, LockKeyhole, Route } from "lucide-react";
+import {
+  Calculator,
+  CircuitBoard,
+  FileText,
+  Flag,
+  Gamepad2,
+  Grid3X3,
+  KeyRound,
+  LockKeyhole,
+  Route,
+} from "lucide-react";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { DotConnectionMinigame } from "./DotConnectionMinigame";
 import { FlagMinigame } from "./FlagMinigame";
@@ -11,7 +21,9 @@ import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
 import { VivianQuickChallenges } from "./VivianQuickChallenges";
 import { GRID_RECORDS } from "./vivianLogicGrid";
 import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMinigame";
+import { PainscreekMineSettlementMinigame } from "./PainscreekMineSettlementMinigame";
 import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
+import { PainscreekSheriffTransferMinigame } from "./PainscreekSheriffTransferMinigame";
 
 const CASE_RECORD_IDS = GRID_RECORDS.map((record) => record.id);
 
@@ -36,7 +48,7 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          11 disponíveis
+          13 disponíveis
         </span>
       </div>
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -205,6 +217,48 @@ export function MinigamesMenu() {
           </div>
           <div className="mt-4">
             <PainscreekEvidenceChainMinigame />
+          </div>
+        </article>
+        <article className="border border-[#9a7441]/40 bg-[#211b14]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#d8bd7d]/60 bg-[#d8bd7d]/10 p-2 text-[#ead8b8]">
+              <Calculator size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e1c18d]">
+                Auditoria numérica · notícia p. 86
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#f0dfbd]">
+                Fechamento de contas: a mina
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#c7bba8]">
+                Confira as somas publicadas e separe o total agregado de uma divisão por família que
+                a notícia não informa.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <PainscreekMineSettlementMinigame />
+          </div>
+        </article>
+        <article className="border border-[#527078]/40 bg-[#151a1c]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#9fd1d5]/60 bg-[#9fd1d5]/10 p-2 text-[#c5e4e4]">
+              <FileText size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#9fd1d5]">
+                Leitura documental · carta p. 89
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#d8eeee]">Despacho do xerife</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#abc0c2]">
+                Reconstrua prazo, vigência e destino da transferência sem inferir punição ou ligação
+                com a investigação.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <PainscreekSheriffTransferMinigame />
           </div>
         </article>
       </div>

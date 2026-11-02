@@ -6,7 +6,9 @@ import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
 import { VivianMurdleCipherDecoder } from "./VivianMurdleCipherDecoder";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
 import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMinigame";
+import { PainscreekMineSettlementMinigame } from "./PainscreekMineSettlementMinigame";
 import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
+import { PainscreekSheriffTransferMinigame } from "./PainscreekSheriffTransferMinigame";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
   getVivianVerdictReadiness,
@@ -2334,6 +2336,26 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
             onSolved={() => {
               setNotice(
                 "Cadeia de evidência conferida. A próxima diligência foi definida sem transformar hipótese em fato.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <PainscreekMineSettlementMinigame
+            onSolved={() => {
+              setNotice(
+                "Contas da notícia da mina conferidas. O total agregado está registrado; a divisão individual permanece desconhecida.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <PainscreekSheriffTransferMinigame
+            onSolved={() => {
+              setNotice(
+                "Despacho conferido. A carta registra datas e destino; não associa a realocação a punição ou ao caso Vivian.",
               );
             }}
           />

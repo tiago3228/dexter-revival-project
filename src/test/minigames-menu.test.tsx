@@ -21,6 +21,7 @@ describe("menu de minigames", () => {
     render(<MinigamesMenu />);
 
     expect(screen.getByRole("region", { name: "Menu de minigames" })).toBeInTheDocument();
+    expect(screen.getByText("13 disponíveis")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Mini Game de Bandeiras" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Painel Elétrico" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Conexão de Pontos" })).toBeInTheDocument();
@@ -32,6 +33,10 @@ describe("menu de minigames", () => {
     expect(screen.getByRole("region", { name: "Depoimentos e casos curtos" })).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { name: "Murdle de Painscreek" })).toHaveLength(2);
     expect(screen.getAllByRole("heading", { name: "Cadeia de Evidência" })).toHaveLength(2);
+    expect(screen.getAllByRole("heading", { name: "Fechamento de contas: a mina" })).toHaveLength(
+      2,
+    );
+    expect(screen.getAllByRole("heading", { name: "Despacho do xerife" })).toHaveLength(2);
     expect(screen.getByRole("button", { name: /Mini Game de Bandeiras/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Painel Elétrico/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Conexão de Pontos/ })).toBeInTheDocument();
