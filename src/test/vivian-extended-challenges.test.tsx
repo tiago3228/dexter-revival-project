@@ -188,7 +188,7 @@ describe("depoimento incompatível e casos curtos", () => {
     fireEvent.click(desk.getByRole("button", { name: "Conferir depoimentos" }));
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) ?? "{}");
-    expect(saved.version).toBe(9);
+    expect(saved.version).toBe(10);
     expect(saved.found).toEqual(ALL_RECORDS);
     expect(saved.readClues).toEqual(["police-report"]);
     expect(saved.mistakes).toBe(2);
