@@ -10,6 +10,8 @@ import { VivianMurdleDeduction } from "./VivianMurdleDeduction";
 import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
 import { VivianQuickChallenges } from "./VivianQuickChallenges";
 import { GRID_RECORDS } from "./vivianLogicGrid";
+import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMinigame";
+import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
 
 const CASE_RECORD_IDS = GRID_RECORDS.map((record) => record.id);
 
@@ -34,7 +36,7 @@ export function MinigamesMenu() {
           </p>
         </div>
         <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
-          09 disponíveis
+          11 disponíveis
         </span>
       </div>
       <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -164,6 +166,45 @@ export function MinigamesMenu() {
                 )
               }
             />
+          </div>
+        </article>
+        <article className="border border-[#8e7a4e]/40 bg-[#1d1a15]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#c4a779]/60 bg-[#c4a779]/10 p-2 text-[#ead8b8]">
+              <Grid3X3 size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#e1c18d]">
+                Painscreek · grade de relações
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#f0dfbd]">Murdle de Painscreek</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#c7bba8]">
+                Uma grade original de associação inspirada no método de dedução do livro, usando
+                pessoas, fontes e locais do arquivo.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <PainscreekMurdleGrid />
+          </div>
+        </article>
+        <article className="border border-[#527078]/40 bg-[#151a1c]/80 p-4 sm:p-5 md:col-span-2 xl:col-span-2">
+          <div className="flex items-start gap-3">
+            <div className="border border-[#9fd1d5]/60 bg-[#9fd1d5]/10 p-2 text-[#c5e4e4]">
+              <KeyRound size={20} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#9fd1d5]">
+                Painscreek · fonte → teste → estado
+              </p>
+              <h3 className="mt-1 font-display text-2xl text-[#d8eeee]">Cadeia de Evidência</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#abc0c2]">
+                Organize uma diligência rastreável sem converter uma hipótese em fato narrativo.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <PainscreekEvidenceChainMinigame />
           </div>
         </article>
       </div>

@@ -5,6 +5,8 @@ import { VivianMurdleDeduction } from "./VivianMurdleDeduction";
 import { VivianMurdleWitnessRoute } from "./VivianMurdleWitnessRoute";
 import { VivianMurdleCipherDecoder } from "./VivianMurdleCipherDecoder";
 import { CircuitPanelMinigame } from "./CircuitPanelMinigame";
+import { PainscreekEvidenceChainMinigame } from "./PainscreekEvidenceChainMinigame";
+import { PainscreekMurdleGrid } from "./PainscreekMurdleGrid";
 import { VivianFinalReveal } from "./VivianFinalReveal";
 import {
   getVivianVerdictReadiness,
@@ -2312,6 +2314,26 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
               });
               setNotice(
                 "Código conferido. As mensagens foram registradas no caderno sem alterar a acusação ou o veredito.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <PainscreekMurdleGrid
+            onSolved={() => {
+              setNotice(
+                "Grade de Painscreek conferida. As relações foram organizadas como exercício editorial, sem fechar hipóteses narrativas.",
+              );
+            }}
+          />
+        )}
+
+        {(phase === "explore" || phase === "board") && (
+          <PainscreekEvidenceChainMinigame
+            onSolved={() => {
+              setNotice(
+                "Cadeia de evidência conferida. A próxima diligência foi definida sem transformar hipótese em fato.",
               );
             }}
           />
