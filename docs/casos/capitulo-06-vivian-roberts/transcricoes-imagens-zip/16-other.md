@@ -90,7 +90,7 @@ Um novo segurança vai chegar hoje. O nome dele é Samuel Green. Tom Parker vai 
 
 ## Manuscritos / anotações
 
-6 de abril: manuscrito em inglês parcialmente encoberto. Legível: “... missing security tape dated June 28,”; “It seems the tape was never found.” Demais palavras: [ilegível].
+6 de abril: manuscrito em inglês parcialmente encoberto. Fragmento integralmente legível: **“a missing security tape dated June 28,”**. As palavras anteriores estão encobertas. Também legível: “It seems the tape was never found.” Demais palavras: [ilegível].
 
 28 de maio: “Parker will be his mentor to get him up to speed.”
 
@@ -239,7 +239,7 @@ Outras opções visíveis na sidebar: Desvio de fundos; Conselho de Henry para V
 |---|---|---|
 | outros1.png | parcial | Manuscritos ingleses pequenos e parcialmente sobrepostos ao texto impresso; alguns segmentos [ilegível]. |
 | outros2.png | parcial | Nota manuscrita da página esquerda coberta pelo impresso; [ilegível]. |
-| outros3.png | parcial | Nota manuscrita da página esquerda encoberta; [ilegível]. |
+| outros3.png | parcial | O fragmento inglês `a missing security tape dated June 28,` está confirmado; as palavras anteriores e outras partes da nota continuam encobertas/[ilegível]. Ver sexta conferência. |
 | outros4.png | parcial | Manuscrito sobreposto à entrada de 12 de agosto; parte [ilegível]. |
 | outros5.png | parcial | Nota manuscrita sob o corpo esquerdo e texto sobreposto; partes [ilegível]. |
 | outros6.png | parcial | Anotações manuscritas encobertas pelas linhas impressas; pequena alternativa incerta. |

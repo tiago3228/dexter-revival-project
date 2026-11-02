@@ -30,7 +30,7 @@ As páginas abaixo são os números de referência usados nos OCRs/transcriçõe
 | `outros1.png`–`outros7.png` | 105–111 | Registros adicionais, formulários e livro de segurança. |
 | `Dorothy.png`, `Dorothy1.png`–`Dorothy4.png` | 112–116 | Diário de Dorothy; correspondência feita pelas datas e conteúdo de cada captura. |
 
-A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [crosswalk individual (CSV)](./mapeamento-imagens-paginas.csv) registra cada par arquivo–página. Os relatórios da segunda, terceira e quarta conferências documentam verificações integrais; a [quinta conferência focalizada nas páginas 70–116](./quinta-conferencia-paginas-070-116.md) registra uma etapa adicional de 47 imagens. As auditorias não substituem a transcrição diplomática dos manuscritos encobertos/cortados nem confirmam interpretações narrativas.
+A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [crosswalk individual (CSV)](./mapeamento-imagens-paginas.csv) registra cada par arquivo–página. Os relatórios da segunda, terceira e quarta conferências documentam verificações integrais; a [quinta conferência focalizada nas páginas 70–116](./quinta-conferencia-paginas-070-116.md) e a [sexta conferência focalizada nas mesmas páginas](./sexta-conferencia-paginas-070-116.md) registram cotejos adicionais das 47 capturas. As auditorias não substituem a transcrição diplomática dos manuscritos encobertos/cortados nem confirmam interpretações narrativas.
 
 ## Divergências verificadas nesta etapa
 
@@ -64,7 +64,7 @@ A soma dos intervalos cobre as 116 páginas de referência sem lacunas. O [cross
 
 ## Limites e próxima etapa
 
-1. A segunda passada comparou palavra por palavra o conteúdo transcrito com as 116 imagens; a terceira e a quarta procuraram omissões residuais de forma independente; a quinta focou as páginas 70–116. As inclusões e sugestões não confirmadas estão registradas nos respectivos relatórios. Nenhuma página é marcada como revisão diplomática integral apenas por ter sido aberta e cotejada.
+1. A segunda passada comparou palavra por palavra o conteúdo transcrito com as 116 imagens; a terceira e a quarta procuraram omissões residuais de forma independente; a quinta e a sexta focaram as páginas 70–116. As inclusões e sugestões não confirmadas estão registradas nos respectivos relatórios. Nenhuma página é marcada como revisão diplomática integral apenas por ter sido aberta e cotejada.
 2. As anotações manuscritas em inglês aparecem frequentemente sob/por trás do texto impresso em português. Trechos encobertos, cortados ou ambíguos permanecem assinalados como incertos ou ilegíveis; não foram completados por contexto.
 3. A próxima etapa é prosseguir a transcrição das camadas manuscritas residuais e a harmonização nos registros página-a-página, inventários e contradições, priorizando os trechos ainda parciais — sem atribuir paginação pela ordem do ZIP.
 4. Manter o estado **EM REVISÃO** para trechos incompletos; não promover hipóteses, relatos de personagens ou interpretações a fatos canônicos nem alterar a narrativa do jogo com base apenas em OCR ou inferência.

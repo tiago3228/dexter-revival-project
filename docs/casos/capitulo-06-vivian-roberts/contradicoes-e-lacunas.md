@@ -1,6 +1,6 @@
 # Contradições e lacunas — O Caso Vivian Roberts
 
-> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. As 116 capturas PNG receberam quatro passadas abrangentes; as páginas 70–116 receberam uma quinta conferência focalizada. Em 01/11/2026, 32 questões distintas foram classificadas: 10 já têm correção/cautela adequada, 20 permanecem lacunas abertas, 1 contradição de grafia segue aberta e 1 item é decisão de design não confirmada. Isso fecha a triagem, não a transcrição diplomática nem a confirmação factual das alegações. Ver seção 9.
+> **Estado:** registro de questões a resolver, não uma lista de erros comprovados. As 116 capturas PNG receberam quatro passadas abrangentes; as páginas 70–116 receberam uma quinta e uma sexta conferência focalizadas. Em 01/11/2026, 32 questões distintas foram classificadas: 10 já têm correção/cautela adequada, 20 permanecem lacunas abertas, 1 contradição de grafia segue aberta e 1 item é decisão de design não confirmada. Isso fecha a triagem, não a transcrição diplomática nem a confirmação factual das alegações. Ver seção 9.
 
 ## 1. Identidade, nascimento e destino de Sofia/Vincent/Scott
 
@@ -115,6 +115,10 @@ As sete seções foram cotejadas com as transcrições harmonizadas e os relató
 ### Harmonização de transcrição da quinta conferência
 
 Em `doc9.png` (p. 97), **“Roland Brown”** foi confirmado na camada inglesa subjacente e acrescentado a [`15-documents.md`](./transcricoes-imagens-zip/15-documents.md); o fecho equivalente já aparecia na camada portuguesa. Quatro propostas com confiança inferior a 0,90 foram mantidas fora do texto confirmado. Ver o [relatório da quinta conferência](./transcricoes-imagens-zip/quinta-conferencia-paginas-070-116.md).
+
+### Inclusão da sexta conferência
+
+No `outros3.png` (p. 107), o fragmento **“a missing security tape dated June 28,”** foi confirmado como integralmente legível na camada inglesa manuscrita/subjacente e acrescentado a [`16-other.md`](./transcricoes-imagens-zip/16-other.md). As palavras anteriores e a continuação permanecem encobertas; a página segue parcialmente em revisão. A sexta conferência cotejou as 47 capturas das pp. 70–116 e não promoveu outras leituras. Ver o [relatório da sexta conferência](./transcricoes-imagens-zip/sexta-conferencia-paginas-070-116.md).
 
 ## 10. Regra de fechamento
 
