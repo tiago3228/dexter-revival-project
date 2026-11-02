@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
+    "test:e2e": "python3 e2e/vivian-murdle-witness-route.py",
     "typecheck": "tsc --noEmit",
     "test:watch": "vitest"
   },

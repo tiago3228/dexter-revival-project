@@ -4,48 +4,88 @@ import { Button } from "@/components/ui/button";
 
 type Mark = "" | "x" | "o";
 type PairKey = `${string}|${string}`;
-
-type Props = {
-  solved?: boolean;
-  onSolved: () => void;
+type Level = {
+  id: "intro" | "advanced";
+  label: string;
+  description: string;
+  witnesses: readonly string[];
+  locations: readonly string[];
+  objects: readonly string[];
+  clues: readonly string[];
+  solution: Record<string, { location: string; object: string }>;
 };
 
-const WITNESSES = ["Scott", "Dorothy", "Wanda"] as const;
-const LOCATIONS = ["Arquivo", "Igreja", "Cais"] as const;
-const OBJECTS = ["Fita", "Carta", "Recibo"] as const;
+type Props = {
+  completedLevel?: number;
+  onSolved: (level: number) => void;
+};
 
-const SOLUTION = {
-  Scott: { location: "Cais", object: "Fita" },
-  Dorothy: { location: "Arquivo", object: "Recibo" },
-  Wanda: { location: "Igreja", object: "Carta" },
-} as const;
-
-const CLUES = [
-  "Scott não foi ouvido na igreja.",
-  "A carta foi registrada na igreja.",
-  "Dorothy não aparece associada ao cais.",
-  "O recibo não veio da igreja.",
-  "Wanda não estava com o recibo.",
+const LEVELS: readonly Level[] = [
+  {
+    id: "intro",
+    label: "Nível 1 · Rota básica",
+    description: "3 pessoas · 3 locais · 3 objetos",
+    witnesses: ["Scott", "Dorothy", "Wanda"],
+    locations: ["Arquivo", "Igreja", "Cais"],
+    objects: ["Fita", "Carta", "Recibo"],
+    clues: [
+      "Scott não foi ouvido na igreja.",
+      "A carta foi registrada na igreja.",
+      "Dorothy não aparece associada ao cais.",
+      "O recibo não veio da igreja.",
+      "Wanda não estava com o recibo.",
+    ],
+    solution: {
+      Scott: { location: "Cais", object: "Fita" },
+      Dorothy: { location: "Arquivo", object: "Recibo" },
+      Wanda: { location: "Igreja", object: "Carta" },
+    },
+  },
+  {
+    id: "advanced",
+    label: "Nível 2 · Rota cruzada",
+    description: "4 pessoas · 4 locais · 4 objetos",
+    witnesses: ["Scott", "Dorothy", "Wanda", "Mary"],
+    locations: ["Arquivo", "Hospital", "Igreja", "Lago"],
+    objects: ["Fita", "Carta", "Recibo", "Fotografia"],
+    clues: [
+      "Scott não aparece no hospital nem associado à fotografia.",
+      "Dorothy não foi ouvida na igreja.",
+      "Wanda foi ouvida na igreja e seu registro é uma carta.",
+      "Mary foi ouvida no hospital.",
+      "A fotografia não veio do lago.",
+      "O recibo não pertence ao hospital.",
+      "O registro do lago é a fita procurada.",
+    ],
+    solution: {
+      Scott: { location: "Lago", object: "Fita" },
+      Dorothy: { location: "Arquivo", object: "Recibo" },
+      Wanda: { location: "Igreja", object: "Carta" },
+      Mary: { location: "Hospital", object: "Fotografia" },
+    },
+  },
 ];
 
 function nextMark(mark: Mark): Mark {
   return mark === "" ? "x" : mark === "x" ? "o" : "";
 }
 
-function isCorrect(marks: Record<PairKey, Mark>) {
-  return WITNESSES.every(
+function isCorrect(level: Level, marks: Record<PairKey, Mark>) {
+  return level.witnesses.every(
     (witness) =>
-      marks[`${witness}|${SOLUTION[witness].location}`] === "o" &&
-      marks[`${witness}|${SOLUTION[witness].object}`] === "o",
+      marks[`${witness}|${level.solution[witness]!.location}`] === "o" &&
+      marks[`${witness}|${level.solution[witness]!.object}`] === "o",
   );
 }
 
 function RelationGrid({
+  witnesses,
   title,
   columns,
   marks,
   onMark,
 }: {
+  witnesses: readonly string[];
   title: string;
   columns: readonly string[];
   marks: Record<PairKey, Mark>;
@@ -68,7 +108,7 @@ function RelationGrid({
           </tr>
         </thead>
         <tbody>
-          {WITNESSES.map((witness) => (
+          {witnesses.map((witness) => (
             <tr key={witness}>
               <th className="border border-[#4b4439] p-2 text-left font-normal text-[#ead8b8]">
                 {witness}
@@ -97,31 +137,42 @@ function RelationGrid({
   );
 }
 
-export function VivianMurdleWitnessRoute({ solved = false, onSolved }: Props) {
+export function VivianMurdleWitnessRoute({ completedLevel = 0, onSolved }: Props) {
+  const [activeLevel, setActiveLevel] = useState(Math.min(completedLevel, LEVELS.length - 1));
   const [marks, setMarks] = useState<Record<PairKey, Mark>>({});
   const [feedback, setFeedback] = useState("");
-  const [complete, setComplete] = useState(solved);
+  const [completedThisLevel, setCompletedThisLevel] = useState<number | null>(null);
+  const level = LEVELS[activeLevel]!;
+  const levelComplete = completedLevel > activeLevel || completedThisLevel === activeLevel;
+
+  const selectLevel = (index: number) => {
+    if (index > completedLevel) return;
+    setActiveLevel(index);
+    setMarks({});
+    setFeedback("");
+    setCompletedThisLevel(null);
+  };
 
   const mark = (left: string, right: string) => {
-    if (complete) return;
+    if (levelComplete) return;
     const key = `${left}|${right}` as PairKey;
     setMarks((current) => ({ ...current, [key]: nextMark(current[key] ?? "") }));
     setFeedback("");
   };
 
   const reset = () => {
+    if (levelComplete) return;
     setMarks({});
     setFeedback("");
-    setComplete(false);
   };
 
   const check = () => {
-    if (isCorrect(marks)) {
-      setComplete(true);
+    if (isCorrect(level, marks)) {
+      setCompletedThisLevel(activeLevel);
       setFeedback(
-        "Rota reconstruída. Este exercício organiza hipóteses e não confirma autoria, localização ou conteúdo das fontes.",
+        `Nível ${activeLevel + 1} concluído. A grade organiza hipóteses e não confirma autoria, localização ou conteúdo das fontes.`,
       );
-      onSolved();
+      onSolved(activeLevel + 1);
       return;
     }
     setFeedback(
@@ -145,7 +196,7 @@ export function VivianMurdleWitnessRoute({ solved = false, onSolved }: Props) {
             eliminar, ● para confirmar e deixe vazio o que ainda não sabe.
           </p>
         </div>
-        {complete ? (
+        {levelComplete ? (
           <span className="flex items-center gap-1 font-mono text-xs text-emerald-200">
             <Check size={15} /> Conferido
           </span>
@@ -153,30 +204,74 @@ export function VivianMurdleWitnessRoute({ solved = false, onSolved }: Props) {
           <span className="font-mono text-xs text-[#a9a092]">Hipóteses</span>
         )}
       </div>
+      <div className="grid gap-2 sm:grid-cols-2" aria-label="Níveis da rota da fita">
+        {LEVELS.map((item, index) => (
+          <button
+            key={item.id}
+            type="button"
+            disabled={index > completedLevel}
+            onClick={() => selectLevel(index)}
+            className={`min-h-14 border p-3 text-left font-mono text-[10px] transition ${
+              index === activeLevel
+                ? "border-[#e1c18d] bg-[#c4a779]/15 text-[#ead8b8]"
+                : index < completedLevel
+                  ? "border-emerald-800/70 text-emerald-200"
+                  : "cursor-not-allowed border-[#4b4031] text-[#665b4b]"
+            }`}
+          >
+            <strong className="block">
+              {index < completedLevel ? "✓ " : ""}
+              {item.label}
+            </strong>
+            <span className="mt-1 block opacity-75">{item.description}</span>
+          </button>
+        ))}
+      </div>
+      <p className="text-xs leading-relaxed text-[#a9a092]">
+        Nível atual: <strong className="text-[#ead8b8]">{level.label}</strong>. O nível 2 só é
+        liberado depois da resolução completa do nível 1.
+      </p>
       <ol className="grid gap-2 text-xs leading-relaxed text-[#d5c9b5] md:grid-cols-2">
-        {CLUES.map((clue) => (
+        {level.clues.map((clue) => (
           <li key={clue} className="border-l border-[#79664c] pl-3">
             {clue}
           </li>
         ))}
       </ol>
       <div className="grid gap-4 lg:grid-cols-2">
-        <RelationGrid title="Pessoa × local" columns={LOCATIONS} marks={marks} onMark={mark} />
-        <RelationGrid title="Pessoa × objeto" columns={OBJECTS} marks={marks} onMark={mark} />
+        <RelationGrid
+          witnesses={level.witnesses}
+          title="Pessoa × local"
+          columns={level.locations}
+          marks={marks}
+          onMark={mark}
+        />
+        <RelationGrid
+          witnesses={level.witnesses}
+          title="Pessoa × objeto"
+          columns={level.objects}
+          marks={marks}
+          onMark={mark}
+        />
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        {!complete && (
+        {!levelComplete && (
           <Button type="button" variant="outline" onClick={check}>
             <FileQuestion /> Conferir rota
           </Button>
         )}
-        <Button type="button" variant="ghost" onClick={reset} disabled={complete}>
+        <Button type="button" variant="ghost" onClick={reset} disabled={levelComplete}>
           <RotateCcw /> Limpar grade
         </Button>
+        {levelComplete && activeLevel < LEVELS.length - 1 && (
+          <Button type="button" onClick={() => selectLevel(activeLevel + 1)}>
+            Avançar para o nível 2
+          </Button>
+        )}
       </div>
       {feedback && (
         <p
-          className={`text-sm leading-relaxed ${complete ? "text-emerald-200" : "text-[#d5c9b5]"}`}
+          className={`text-sm leading-relaxed ${levelComplete ? "text-emerald-200" : "text-[#d5c9b5]"}`}
           role="status"
         >
           {feedback}

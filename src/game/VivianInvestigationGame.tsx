@@ -113,7 +113,7 @@ type PendingHint = {
 type Place = { id: PlaceId; name: string; description: string; unlockHint: string };
 
 type SaveData = {
-  version: 8;
+  version: 9;
   found: ClueId[];
   readClues: ClueId[];
   solvedRiddles: RiddleId[];
@@ -135,6 +135,7 @@ type SaveData = {
   circuitPanelSolved: boolean;
   murdleDeductionSolved: boolean;
   murdleWitnessRouteSolved: boolean;
+  murdleWitnessRouteLevel: number;
   caseCompleted: boolean;
   accusation: { suspect: string; weapon: string; motive: string };
 };
@@ -847,15 +848,15 @@ function readSave(): SaveData | null {
     const raw = window.localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const value = JSON.parse(raw) as Omit<Partial<SaveData>, "version"> & {
-      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+      version?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     };
-    if (![1, 2, 3, 4, 5, 6, 7, 8].includes(value.version ?? 0)) return null;
+    if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(value.version ?? 0)) return null;
     const ids = normalizeSavedIds;
     const timelineCandidates = Array.isArray(value.timelineOrder)
       ? value.timelineOrder.map((id) => (id === "hospital-1956" ? "hospital-1996" : id))
       : value.timelineOrder;
     return {
-      version: 8,
+      version: 9,
       found: ids(
         value.found,
         CLUES.map((item) => item.id),
@@ -913,6 +914,12 @@ function readSave(): SaveData | null {
       circuitPanelSolved: value.circuitPanelSolved === true,
       murdleDeductionSolved: value.murdleDeductionSolved === true,
       murdleWitnessRouteSolved: value.murdleWitnessRouteSolved === true,
+      murdleWitnessRouteLevel:
+        typeof value.murdleWitnessRouteLevel === "number"
+          ? Math.max(0, Math.min(2, Math.floor(value.murdleWitnessRouteLevel)))
+          : value.murdleWitnessRouteSolved === true
+            ? 1
+            : 0,
       caseCompleted: value.caseCompleted === true,
       accusation: {
         suspect: typeof value.accusation?.suspect === "string" ? value.accusation.suspect : "",
@@ -996,6 +1003,9 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
   const [murdleWitnessRouteSolved, setMurdleWitnessRouteSolved] = useState(
     saved?.murdleWitnessRouteSolved ?? false,
   );
+  const [murdleWitnessRouteLevel, setMurdleWitnessRouteLevel] = useState(
+    saved?.murdleWitnessRouteLevel ?? (saved?.murdleWitnessRouteSolved ? 1 : 0),
+  );
   const [caseCompleted, setCaseCompleted] = useState(saved?.caseCompleted ?? false);
   const [accusation, setAccusation] = useState(
     saved?.accusation ?? { suspect: "", weapon: "", motive: "" },
@@ -1016,7 +1026,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const save: SaveData = {
-      version: 8,
+      version: 9,
       found,
       readClues,
       solvedRiddles,
@@ -1038,6 +1048,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
       circuitPanelSolved,
       murdleDeductionSolved,
       murdleWitnessRouteSolved,
+      murdleWitnessRouteLevel,
       caseCompleted,
       accusation,
     };
@@ -1065,6 +1076,7 @@ export function VivianInvestigationGame({ onBack }: { onBack: () => void }) {
     circuitPanelSolved,
     murdleDeductionSolved,
     murdleWitnessRouteSolved,
+    murdleWitnessRouteLevel,
     caseCompleted,
     accusation,
   ]);
@@ -1467,6 +1479,7 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
     setCircuitPanelSolved(false);
     setMurdleDeductionSolved(false);
     setMurdleWitnessRouteSolved(false);
+    setMurdleWitnessRouteLevel(0);
     setNameEntryModes({});
     setPlayerRanking(loadPlayerRanking());
     setSelectedClues([]);
@@ -2248,13 +2261,14 @@ Hipótese C: possível rota pelo dreno/esgoto — design não confirmado; não t
 
         {(phase === "explore" || phase === "board") && (
           <VivianMurdleWitnessRoute
-            solved={murdleWitnessRouteSolved}
-            onSolved={() => {
-              setMurdleWitnessRouteSolved(true);
+            completedLevel={murdleWitnessRouteLevel}
+            onSolved={(level) => {
+              setMurdleWitnessRouteLevel((current) => Math.max(current, level));
+              if (level >= 2) setMurdleWitnessRouteSolved(true);
               setInvestigationNotes((current) => {
                 const marker = "[EXERCÍCIO DE LÓGICA · A ROTA DA FITA]";
                 if (current.includes(marker)) return current;
-                const entry = `${marker}\nRota reconstruída como exercício editorial: pessoa × local × objeto.\nEstado editorial: associação de design, não prova canônica sobre autoria ou localização.`;
+                const entry = `${marker}\nNíveis 1 e 2 da rota reconstruídos como exercício editorial: pessoa × local × objeto.\nEstado editorial: associação de design, não prova canônica sobre autoria ou localização.`;
                 return current.trim() ? `${current.trim()}\n\n${entry}` : entry;
               });
               setNotice(
