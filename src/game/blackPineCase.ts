@@ -1,14 +1,14 @@
 export const BLACK_PINE_PEOPLE = [
-  { id: "arthur", name: "Arthur Holloway", role: "Dono da locadora" },
-  { id: "emily", name: "Emily Carter", role: "Conhece a história de Daniel" },
+  { id: "arthur", name: "Arthur", role: "Dono da Black Pine Video" },
+  { id: "emily", name: "Emily Carter", role: "Irmã de Daniel" },
   { id: "samuel", name: "Samuel Grady", role: "Guarda-florestal" },
-  { id: "eleanor", name: "Eleanor Vale", role: "Bibliotecária" },
-  { id: "margaret", name: "Margaret Morgan", role: "Herdeira da mansão" },
+  { id: "eleanor", name: "Eleanor Voss", role: "Bibliotecária desde 1951" },
+  { id: "margaret", name: "Margaret Morgan", role: "Moradora da Mansão Morgan" },
 ] as const;
 
 export const BLACK_PINE_LOCATIONS = [
   { id: "video", label: "Black Pine Video" },
-  { id: "cellar", label: "Porão dos Carter" },
+  { id: "black-cedar", label: "Black Cedar" },
   { id: "station", label: "Black Pine Station" },
   { id: "library", label: "Biblioteca Pública" },
   { id: "mansion", label: "Mansão Morgan" },
@@ -18,8 +18,8 @@ export const BLACK_PINE_ARTIFACTS = [
   { id: "tape", label: "Fita VHS de 1969" },
   { id: "toy", label: "Trem de brinquedo de Daniel" },
   { id: "map", label: "Mapa ferroviário raspado" },
-  { id: "diary", label: "Caderno de Whitmore" },
-  { id: "coin", label: "Moeda de prata" },
+  { id: "coin-3", label: "Moeda nº 3 · Eleanor Voss" },
+  { id: "coin-1", label: "Moeda nº 1 · família Morgan" },
 ] as const;
 
 export type BlackPinePersonId = (typeof BLACK_PINE_PEOPLE)[number]["id"];
@@ -27,124 +27,186 @@ export type BlackPineLocationId = (typeof BLACK_PINE_LOCATIONS)[number]["id"];
 export type BlackPineArtifactId = (typeof BLACK_PINE_ARTIFACTS)[number]["id"];
 export type BlackPineMark = "" | "x" | "o";
 
-export const BLACK_PINE_LOCATION_SOLUTION: Record<BlackPinePersonId, BlackPineLocationId> = {
-  arthur: "video",
-  emily: "cellar",
-  samuel: "station",
-  eleanor: "library",
-  margaret: "mansion",
+export const BLACK_PINE_COIN_MESSAGE = "WHITMORE SABIA";
+
+export const BLACK_PINE_TIMELINE = [
+  {
+    id: "ethan-room-17",
+    when: "13 out. 1987 · 18h42",
+    title: "Chegada de Ethan · Quarto 17",
+    text: "Whitmore indica o quarto 17 a Ethan quando ele não pede um número. A chave traz o pinheiro; a moeda e a fotografia revelam a marca 217. Este é o quarto de Ethan, não a cena do desaparecimento.",
+  },
+  {
+    id: "whitmore-room",
+    when: "Noite do desaparecimento · data e número do quarto não registrados",
+    title: "Quarto de Whitmore",
+    text: `A narrativa o situa no fim do corredor do segundo andar. O livro não informa o número. As dezessete moedas estão com os números para baixo; ao virá-las, a inscrição registrada tem treze letras: ${BLACK_PINE_COIN_MESSAGE}.`,
+  },
+  {
+    id: "station",
+    when: "Ainda naquela noite",
+    title: "Black Pine Station",
+    text: "Pegadas atribuídas a Whitmore seguem até a estação, sem trilha de volta. O chapéu e um bilhete são encontrados lá. É a pista física mais forte, não a confirmação do destino final.",
+  },
+] as const;
+
+export const BLACK_PINE_LOCATION_SOLUTION: Record<
+  BlackPinePersonId,
+  readonly BlackPineLocationId[]
+> = {
+  arthur: ["video"],
+  emily: ["station"],
+  samuel: ["station", "black-cedar"],
+  eleanor: ["library"],
+  margaret: ["mansion"],
 };
+
+export const BLACK_PINE_LOCATION_MATCH_COUNT = Object.values(BLACK_PINE_LOCATION_SOLUTION).reduce(
+  (total, locations) => total + locations.length,
+  0,
+);
 
 export const BLACK_PINE_ARTIFACT_SOLUTION: Record<BlackPinePersonId, BlackPineArtifactId> = {
   arthur: "tape",
   emily: "toy",
   samuel: "map",
-  eleanor: "diary",
-  margaret: "coin",
+  eleanor: "coin-3",
+  margaret: "coin-1",
 };
 
 export const BLACK_PINE_CLUES = [
-  "Arthur guardava a fita VHS na locadora, onde o relógio da cidade aparece marcando 02h17.",
-  "A pessoa que estava junto do trem de brinquedo não estava na biblioteca nem na estação.",
-  "Samuel foi visto na estação e conhecia o mapa com as cidades raspadas.",
-  "Eleanor consultou o caderno de Whitmore na biblioteca antes do desaparecimento.",
-  "A moeda de prata estava ligada à família Morgan, não à locadora ou ao arquivo público.",
-  "Emily estava no porão dos Carter quando falou pela última vez com Ethan naquela noite.",
-  "Cada pessoa e cada local aparecem uma única vez na reconstrução da última movimentação conhecida.",
+  "Arthur guarda a fita de 1969 na locadora; nela, o relógio da prefeitura marca 02h17 em pleno meio-dia.",
+  "Emily reconhece como sendo de Daniel o trem de brinquedo encontrado numa caixa na estação.",
+  "Samuel examina as pegadas na estação e conduz Ethan a Black Cedar; o mapa ferroviário com nomes raspados está na sala dos fundos da estação.",
+  "Eleanor Voss abre o arquivo restrito da biblioteca e revela possuir a moeda nº 3; o caderno de Whitmore não é atribuído a ela.",
+  "Margaret recebe Ethan na mansão da família; a moeda nº 1 pertence ao velho Morgan.",
+  "O Quarto 17 foi indicado por Whitmore para Ethan; Ethan não havia pedido um número, e o quarto não é identificado como o de Whitmore.",
+  "A grade reúne associações de cenas e evidências, não a última localização de cada pessoa. Mais de uma pessoa pode estar ligada ao mesmo local.",
 ] as const;
 
 export const BLACK_PINE_RECORDS = [
   {
-    id: "room",
-    title: "O quarto 17",
-    text: "Porta aberta, janela trancada por dentro, nenhuma luta e dezessete moedas em círculo.",
+    id: "ethan-room-17",
+    title: "Quarto 17 · registro de Ethan",
+    text: "Em 13 de outubro de 1987, Ethan diz que não pediu um número; a recepção confirma que não havia reserva e que Whitmore escolheu o quarto 17. A chave trazia o pinheiro; a moeda 17, comparada à fotografia, revelou 217. Este quarto pertence à chegada de Ethan e não deve ser confundido com o quarto do desaparecimento.",
+  },
+  {
+    id: "whitmore-room",
+    title: "Quarto de Whitmore · número não informado",
+    text: "O quarto ficava no fim do corredor do segundo andar. Cama feita, sapatos alinhados e um copo pela metade; não havia sinais de luta ou pressa. O manuscrito não informa o número desse quarto.",
   },
   {
     id: "coins",
     title: "As dezessete moedas",
-    text: "Viradas para cima, formam WHITMORE SABIA. A mensagem não prova morte nem autoria.",
+    text: `As moedas estavam com os números para baixo. Ao virá-las, a mensagem registrada é ${BLACK_PINE_COIN_MESSAGE} — treze letras, sem contar o espaço. A frase não prova morte nem autoria.`,
   },
   {
     id: "diary",
     title: "A última anotação",
-    text: "Whitmore esperava que alguém perguntasse sobre a estação.",
+    text: "Whitmore escreveu que esperava que Ethan perguntasse sobre a estação e que já estava pronto. Isso indica expectativa, mas não explica sozinho o desaparecimento nem prova que ele saiu voluntariamente.",
   },
   {
     id: "station",
-    title: "A estação",
-    text: "O chapéu e o bilhete de Whitmore foram encontrados ali; as pegadas só têm ida.",
+    title: "A estação · trilha posterior",
+    text: "Na noite da busca, pegadas de ida levam até a entrada da estação. O chapéu de Whitmore e um bilhete são encontrados na bilheteria; o telefone, dado como morto desde 1971, transmite uma voz.",
   },
   {
     id: "limits",
     title: "Limite da evidência",
-    text: "Nenhuma fonte prova que uma pessoa específica matou Whitmore ou que a floresta o matou.",
+    text: "A estação é a pista física mais forte, mas os registros não determinam o destino final de Whitmore, se ele saiu por vontade própria ou quem organizou as moedas.",
   },
 ] as const;
 
 export const BLACK_PINE_INTERVIEWS = [
   {
     id: "arthur",
-    name: "Arthur Holloway",
-    question: "Por que a fita de 1969 estava guardada na locadora?",
+    name: "Arthur",
+    question: "O que a fita de 1969 registra?",
     answer:
-      "Meu pai dizia que a figura aparecia em qualquer gravação de Black Pine. Eu guardei a fita porque ninguém mais queria admitir que ela existia.",
-    clue: "A fita liga Arthur ao registro audiovisual, mas não ao quarto 17 naquela noite.",
+      "A gravação mostra uma figura imóvel na rua. O relógio da prefeitura marca 02h17, embora seja meio-dia. Meu pai a chamava de Último Passageiro.",
+    clue: "A fita liga Arthur ao registro audiovisual; não o coloca no Quarto 17 nem no quarto de Whitmore.",
   },
   {
     id: "emily",
     name: "Emily Carter",
-    question: "O que você sabia sobre Daniel e a estação?",
+    question: "De quem era o trem de brinquedo encontrado na estação?",
     answer:
-      "Eu sabia que meu irmão voltou diferente e que a estação era uma das portas da história. Não sabia o que Whitmore pretendia fazer.",
-    clue: "Emily omite informações, mas a omissão não prova que ela preparou a cena.",
+      "Era de Daniel. Eu o reconheci quando o encontrei na caixa da sala dos fundos. Isso não me diz o que aconteceu com Whitmore.",
+    clue: "O vínculo com o brinquedo é confirmado; não prova que Emily tenha preparado o desaparecimento.",
   },
   {
     id: "samuel",
     name: "Samuel Grady",
-    question: "Por que as pegadas na estação eram importantes?",
+    question: "O que as pegadas permitem afirmar?",
     answer:
-      "Porque eram recentes, não tinham sangue e não havia pegadas de volta. Whitmore foi até lá; o resto é uma pergunta.",
-    clue: "Samuel confirma a última localização verificável, não um culpado.",
+      "Elas eram recentes e seguiam até a estação. Não havia pegadas de volta. O caminho aponta para lá; o que aconteceu depois continua sem resposta.",
+    clue: "A trilha sustenta a estação como pista, não a voluntariedade ou o destino final.",
   },
   {
     id: "eleanor",
-    name: "Eleanor Vale",
-    question: "O que o arquivo secreto prova?",
+    name: "Eleanor Voss",
+    question: "O que há no arquivo restrito da biblioteca?",
     answer:
-      "Prova que Black Pine esconde desaparecimentos há décadas. Não prova quem escreveu as moedas nem quem abriu a porta.",
-    clue: "O arquivo dá contexto histórico, mas não identifica autoria.",
+      "Registros sobre o incêndio de 1958, desaparecimentos e a família Holloway. Tenho a moeda nº 3. Nada disso identifica quem organizou as moedas de Whitmore.",
+    clue: "Eleanor é bibliotecária e guardiã de um arquivo histórico; o diário de Whitmore foi encontrado no quarto dele.",
   },
   {
     id: "margaret",
     name: "Margaret Morgan",
-    question: "Por que a moeda número 1 está na mansão?",
+    question: "O que a moeda da família Morgan significa?",
     answer:
-      "Porque minha família confundiu dinheiro com negociação. A moeda é uma memória de dívida, não um recibo de crime.",
-    clue: "A moeda liga Margaret à história Morgan, não ao desaparecimento de Whitmore.",
+      "Meu pai guardava a moeda nº 1. Para ele, ela lembrava um acordo antigo — não era um recibo de crime nem uma prova sobre Whitmore.",
+    clue: "A moeda liga a família Morgan à história da cidade, mas não coloca Margaret no quarto do desaparecimento.",
   },
 ] as const;
 
 export const BLACK_PINE_VERDICTS = [
   {
     id: "murder",
-    title: "Whitmore foi assassinado no quarto 17.",
-    text: "A cena não contém sangue, luta ou corpo. As moedas são uma mensagem, não prova suficiente.",
+    title: "Whitmore foi assassinado no Quarto 17.",
+    text: "O Quarto 17 foi atribuído a Ethan. O livro não identifica esse quarto como o de Whitmore; não há corpo nem marcas que provem assassinato.",
     correct: false,
   },
   {
     id: "supernatural",
     title: "A floresta levou Whitmore, e o caso está resolvido.",
-    text: "Essa é uma hipótese possível dentro da lenda, mas não é uma conclusão sustentada pelos documentos.",
+    text: "O romance contém fenômenos inexplicados, mas este dossiê não determina se a floresta levou Whitmore nem encerra seu destino.",
     correct: false,
   },
   {
     id: "supported",
-    title:
-      "Whitmore saiu voluntariamente para seguir a pista da estação; a cena foi usada para controlar a narrativa.",
-    text: "É a conclusão mais forte: o quarto foi encenado, a estação é a última localização verificável e a autoria da mensagem permanece aberta.",
+    title: "A estação é a pista mais forte; o destino de Whitmore permanece desconhecido.",
+    text: "O diário mostra que ele esperava que Ethan perguntasse sobre a estação; pegadas, chapéu e bilhete reforçam essa linha. É razoável inferir que Whitmore foi até lá, mas não concluir que saiu voluntariamente nem o que aconteceu depois.",
     correct: true,
   },
 ] as const;
+
+export type BlackPineActionCountsInput = {
+  recordsReviewed: number;
+  interviewsOpened: number;
+  locationGridSolved: boolean;
+  artifactGridSolved: boolean;
+  correctVerdict: boolean;
+  mistakes: number;
+};
+
+export function getBlackPineActionCounts(input: BlackPineActionCountsInput) {
+  const recordsReviewed = Number.isFinite(input.recordsReviewed)
+    ? Math.min(BLACK_PINE_RECORDS.length, Math.max(0, Math.floor(input.recordsReviewed)))
+    : 0;
+  const interviewsOpened = Number.isFinite(input.interviewsOpened)
+    ? Math.min(BLACK_PINE_INTERVIEWS.length, Math.max(0, Math.floor(input.interviewsOpened)))
+    : 0;
+  const mistakes = Number.isFinite(input.mistakes) ? Math.max(0, Math.floor(input.mistakes)) : 0;
+  const correctActions =
+    recordsReviewed +
+    interviewsOpened +
+    (input.locationGridSolved ? BLACK_PINE_LOCATION_MATCH_COUNT : 0) +
+    (input.artifactGridSolved ? BLACK_PINE_PEOPLE.length : 0) +
+    (input.correctVerdict ? 1 : 0);
+
+  return { correctActions, totalActions: correctActions + mistakes };
+}
 
 export function nextBlackPineMark(mark: BlackPineMark): BlackPineMark {
   return mark === "" ? "x" : mark === "x" ? "o" : "";
@@ -154,7 +216,8 @@ export function checkBlackPineGrid(marks: Record<string, BlackPineMark>) {
   return BLACK_PINE_PEOPLE.every((person) =>
     BLACK_PINE_LOCATIONS.every((location) => {
       const confirmed = marks[`${person.id}|${location.id}`] === "o";
-      return confirmed === (BLACK_PINE_LOCATION_SOLUTION[person.id] === location.id);
+      const expected = BLACK_PINE_LOCATION_SOLUTION[person.id].includes(location.id);
+      return confirmed === expected;
     }),
   );
 }

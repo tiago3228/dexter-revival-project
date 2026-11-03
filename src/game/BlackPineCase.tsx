@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { recordCaseCompletion } from "./achievements";
 import {
@@ -21,9 +22,11 @@ import {
   BLACK_PINE_LOCATIONS,
   BLACK_PINE_PEOPLE,
   BLACK_PINE_RECORDS,
+  BLACK_PINE_TIMELINE,
   BLACK_PINE_VERDICTS,
   checkBlackPineArtifactGrid,
   checkBlackPineGrid,
+  getBlackPineActionCounts,
   nextBlackPineMark,
   type BlackPineMark,
 } from "./blackPineCase";
@@ -34,11 +37,17 @@ type Props = {
   onBack: () => void;
   soundOn: boolean;
   onToggleSound: () => void;
+  musicVolume: number;
+  onMusicVolumeChange: (value: number) => void;
 };
 
-const HERO_SRC = "/images/case-black-pine.jpg";
-
-export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
+export function BlackPineCase({
+  onBack,
+  soundOn,
+  onToggleSound,
+  musicVolume,
+  onMusicVolumeChange,
+}: Props) {
   const [tab, setTab] = useState<Tab>("records");
   const [marks, setMarks] = useState<Record<string, BlackPineMark>>({});
   const [artifactMarks, setArtifactMarks] = useState<Record<string, BlackPineMark>>({});
@@ -96,6 +105,14 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
     if (!recordedRef.current) {
       recordedRef.current = true;
       const elapsedSeconds = finishCaseTimer("blackpine");
+      const actionCounts = getBlackPineActionCounts({
+        recordsReviewed: openedRecords.length,
+        interviewsOpened: openedInterviews.length,
+        locationGridSolved: gridSolved,
+        artifactGridSolved,
+        correctVerdict,
+        mistakes,
+      });
       recordCaseCompletion({
         caseId: "blackpine",
         score,
@@ -103,12 +120,7 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
         mistakes,
         correctConclusion: true,
         elapsedSeconds,
-        correctActions: openedRecords.length + openedInterviews.length + 2,
-        totalActions:
-          BLACK_PINE_RECORDS.length +
-          BLACK_PINE_INTERVIEWS.length +
-          BLACK_PINE_PEOPLE.length * 2 +
-          2,
+        ...actionCounts,
       });
     }
     setFinished(true);
@@ -132,8 +144,9 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
               Conclusão sustentada
             </p>
             <p className="mt-3 text-lg leading-relaxed">
-              Whitmore saiu voluntariamente para seguir a pista da estação. O quarto foi usado para
-              controlar a narrativa; a autoria da mensagem permanece sem prova.
+              O Quarto 17 era de Ethan. Whitmore desapareceu de outro quarto, sem número informado.
+              As pistas apontam para a estação, mas não confirmam o destino final nem que ele tenha
+              partido voluntariamente.
             </p>
           </div>
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
@@ -145,9 +158,8 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
             />
           </div>
           <p className="mt-8 border-l-2 border-primary px-4 text-sm leading-relaxed text-muted-foreground">
-            “O quarto foi encenado. A estação é a última localização comprovável. Whitmore sabia
-            mais do que registrou — e alguém queria que a cidade confundisse uma investigação com
-            uma lenda.”
+            “O Quarto 17 era o de Ethan. A estação é a última trilha material de Whitmore; o destino
+            final continua em aberto.”
           </p>
           <Button type="button" className="mt-8" onClick={onBack}>
             Voltar ao arquivo de casos
@@ -167,19 +179,12 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
             </p>
             <h1 className="mt-2 font-display text-4xl sm:text-6xl">O Quarto 17</h1>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Whitmore desapareceu do próprio quarto. Dezessete moedas deixaram uma mensagem, mas
-              não uma resposta. Reconstrua os fatos antes de acreditar na lenda.
+              O Quarto 17 foi atribuído a Ethan. Mais tarde, Whitmore desapareceu de um quarto
+              distinto, cujo número não é informado. Reconstrua a sequência antes de concluir o que
+              aconteceu.
             </p>
           </div>
           <div className="flex gap-2">
-            <button
-              type="button"
-              aria-label={soundOn ? "Desligar som" : "Ligar som"}
-              onClick={onToggleSound}
-              className="border border-border p-3 text-muted-foreground hover:border-primary hover:text-primary"
-            >
-              {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            </button>
             <button
               type="button"
               onClick={onBack}
@@ -190,26 +195,61 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
           </div>
         </header>
 
+        <CaseHeroImage
+          src="/images/black-pine-cover.webp"
+          alt="Capa de Black Pine: floresta enevoada, corvo e placa da cidade"
+          caption="Arquivo de cena · Black Pine · Maine · 1987"
+          orientation="portrait"
+        />
+
+        <div
+          className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
+          aria-label="Controles de áudio"
+        >
+          <button
+            type="button"
+            onClick={onToggleSound}
+            aria-pressed={soundOn}
+            className="min-h-10 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary hover:border-primary"
+          >
+            Trilha: {soundOn ? "ligada" : "desligada"}
+          </button>
+          <label className="flex min-h-10 items-center gap-2 border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            Música {Math.round(musicVolume * 100)}%
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={musicVolume}
+              onChange={(event) => onMusicVolumeChange(Number(event.target.value))}
+              aria-label="Volume da música do Caso Black Pine"
+              className="w-24 accent-primary"
+            />
+          </label>
+        </div>
+
         <section className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="border border-primary/30 bg-card/30 p-5 sm:p-6">
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-              <ShieldAlert size={16} /> Cena inicial
+              <ShieldAlert size={16} /> Linha do tempo do dossiê
             </div>
-            <div className="mt-5 border border-border bg-black/30 p-4 font-mono text-xs leading-relaxed text-muted-foreground">
-              <p>BLACK PINE INN · QUARTO 17</p>
-              <p className="mt-3">
-                Porta aberta. Janela trancada por dentro. Nenhum sinal de luta.
-              </p>
-              <p className="mt-3 text-primary">17 moedas dispostas em círculo sobre a cama.</p>
-              <p className="mt-3">
-                Quando viradas, formam: <strong className="text-foreground">WHITMORE SABIA</strong>
-              </p>
+            <div className="mt-5 space-y-3">
+              {BLACK_PINE_TIMELINE.map((event) => (
+                <article key={event.id} className="border border-border bg-black/30 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                    {event.when}
+                  </p>
+                  <h2 className="mt-2 font-display text-xl">{event.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{event.text}</p>
+                </article>
+              ))}
             </div>
             <div className="mt-5 grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
               <EvidenceStat
                 icon={<BookOpen size={15} />}
                 label="Registros"
-                value={`${openedRecords.length}/5`}
+                value={`${openedRecords.length}/${BLACK_PINE_RECORDS.length}`}
               />
               <EvidenceStat
                 icon={<Grid3X3 size={15} />}
@@ -246,8 +286,8 @@ export function BlackPineCase({ onBack, soundOn, onToggleSound }: Props) {
             </button>
             {showHint && (
               <p className="mt-4 border-l-2 border-primary px-3 text-sm text-muted-foreground">
-                Comece pela estação: o caderno, o chapéu, o bilhete e as pegadas apontam para a
-                última localização verificável.
+                Separe primeiro a chegada de Ethan ao Quarto 17 do desaparecimento posterior de
+                Whitmore. Depois, trate a estação como pista — não como prova de destino final.
               </p>
             )}
           </div>
@@ -358,7 +398,7 @@ function Records({
       <SectionHeading
         icon={<BookOpen size={18} />}
         title="Registros do arquivo"
-        detail="Abra os documentos antes de decidir o que eles provam."
+        detail="A ordem distingue o quarto de Ethan do quarto de Whitmore; abra as fontes antes de decidir o que provam."
       />
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         {BLACK_PINE_RECORDS.map((record) => {
@@ -413,7 +453,7 @@ function DeductionGrid({
       <SectionHeading
         icon={<Grid3X3 size={18} />}
         title="Grade de dedução"
-        detail="Como em uma grade Murdle: cruze pessoas com locais e objetos. 1 clique marca ✗, 2 confirmam ●, 3 limpam."
+        detail="Cruze pessoas com locais e objetos. Um local pode ligar mais de uma pessoa; a grade registra associações, não trajetos exclusivos. 1 clique marca ✗, 2 confirmam ●, 3 limpam."
       />
       <ol className="mt-5 list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
         {BLACK_PINE_CLUES.map((clue) => (
@@ -513,7 +553,8 @@ function DeductionGrid({
         </table>
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        As duas grades organizam a reconstrução documental. Elas não estabelecem culpa.
+        As duas grades organizam associações documentadas; uma célula vazia não prova ausência e
+        nenhuma associação estabelece culpa.
       </p>
     </div>
   );
@@ -525,7 +566,7 @@ function Interviews({ opened, onOpen }: { opened: string[]; onOpen: (id: string)
       <SectionHeading
         icon={<MessageSquare size={18} />}
         title="Interrogatórios"
-        detail="As respostas podem revelar omissões sem transformar suspeita em prova."
+        detail="Diálogos reconstruídos para o jogo a partir do romance; não são citações literais. Omissão não é prova de culpa."
       />
       <div className="mt-5 space-y-3">
         {BLACK_PINE_INTERVIEWS.map((interview) => {

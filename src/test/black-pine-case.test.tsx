@@ -34,7 +34,7 @@ function completeGrid() {
       const button = screen.getByRole("button", {
         name: `${person.name} e ${location.label}`,
       });
-      const shouldConfirm = BLACK_PINE_LOCATION_SOLUTION[person.id] === location.id;
+      const shouldConfirm = BLACK_PINE_LOCATION_SOLUTION[person.id].includes(location.id);
       fireEvent.click(button);
       if (shouldConfirm) fireEvent.click(button);
     }
@@ -52,12 +52,15 @@ function completeGrid() {
 }
 
 describe("Caso 01 · Black Pine", () => {
-  it("confere a solução da grade com relações exclusivas", () => {
+  it("confere a solução da grade com vínculos de lugar compartilhados", () => {
     const marks: Record<string, "x" | "o"> = {};
     for (const person of BLACK_PINE_PEOPLE) {
       for (const location of BLACK_PINE_LOCATIONS) {
-        marks[`${person.id}|${location.id}`] =
-          BLACK_PINE_LOCATION_SOLUTION[person.id] === location.id ? "o" : "x";
+        marks[`${person.id}|${location.id}`] = BLACK_PINE_LOCATION_SOLUTION[person.id].includes(
+          location.id,
+        )
+          ? "o"
+          : "x";
       }
     }
     expect(checkBlackPineGrid(marks)).toBe(true);
@@ -72,21 +75,37 @@ describe("Caso 01 · Black Pine", () => {
   });
 
   it("não encerra o dossiê com um veredicto sem grade conferida", () => {
-    render(<BlackPineCase onBack={vi.fn()} soundOn onToggleSound={vi.fn()} />);
+    render(
+      <BlackPineCase
+        onBack={vi.fn()}
+        soundOn
+        onToggleSound={vi.fn()}
+        musicVolume={0.6}
+        onMusicVolumeChange={vi.fn()}
+      />,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Veredicto" }));
-    fireEvent.click(screen.getByRole("button", { name: /Whitmore saiu voluntariamente/ }));
+    fireEvent.click(screen.getByRole("button", { name: /A estação é a pista mais forte/ }));
     fireEvent.click(screen.getByRole("button", { name: "Fechar dossiê e conferir conclusão" }));
     expect(screen.getByRole("status")).toHaveTextContent("As duas grades ainda têm relações");
     expect(recordCaseCompletion).not.toHaveBeenCalled();
   });
 
   it("registra a conclusão correta após grade e veredicto sustentados", () => {
-    render(<BlackPineCase onBack={vi.fn()} soundOn onToggleSound={vi.fn()} />);
+    render(
+      <BlackPineCase
+        onBack={vi.fn()}
+        soundOn
+        onToggleSound={vi.fn()}
+        musicVolume={0.6}
+        onMusicVolumeChange={vi.fn()}
+      />,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Grade de dedução" }));
     completeGrid();
     fireEvent.click(screen.getByRole("button", { name: "Veredicto" }));
-    fireEvent.click(screen.getByRole("button", { name: /Whitmore saiu voluntariamente/ }));
+    fireEvent.click(screen.getByRole("button", { name: /A estação é a pista mais forte/ }));
     fireEvent.click(screen.getByRole("button", { name: "Fechar dossiê e conferir conclusão" }));
 
     expect(recordCaseCompletion).toHaveBeenCalledWith(
@@ -94,6 +113,8 @@ describe("Caso 01 · Black Pine", () => {
         caseId: "blackpine",
         correctConclusion: true,
         elapsedSeconds: 42,
+        correctActions: 12,
+        totalActions: 12,
       }),
     );
     expect(screen.getByText("Conclusão sustentada")).toBeInTheDocument();
