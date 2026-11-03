@@ -199,6 +199,13 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
     }
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.3;
   });
+  const [blackPineMusicVolume, setBlackPineMusicVolume] = useState(() => {
+    if (typeof window === "undefined") return 0.6;
+    const stored = window.localStorage.getItem("dexter-blackpine-music-volume");
+    if (stored === null) return 0.6;
+    const saved = Number(stored);
+    return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.6;
+  });
   const [ambientVolume, setAmbientVolume] = useState(() => {
     if (typeof window === "undefined") return 0.28;
     const stored = window.localStorage.getItem("dexter-ortega-ambient-volume");
@@ -221,6 +228,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   const recordedEndingRef = useRef(false);
   const soundOnRef = useRef(soundOn);
   const musicVolumeRef = useRef(musicVolume);
+  const blackPineMusicVolumeRef = useRef(blackPineMusicVolume);
   const reflectionModalOpenRef = useRef(false);
   const sfxRef = useRef<AudioContext | null>(null);
 
@@ -231,6 +239,10 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   useEffect(() => {
     musicVolumeRef.current = musicVolume;
   }, [musicVolume]);
+
+  useEffect(() => {
+    blackPineMusicVolumeRef.current = blackPineMusicVolume;
+  }, [blackPineMusicVolume]);
 
   useEffect(() => {
     if (!modal) return;
@@ -313,16 +325,21 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
           ? "/audio/mentalist/red-john-theme.mp3"
           : !showMenu && caseMode === "winchester"
             ? "/audio/winchester/o-sangue-dos-condenados.mp3"
-            : introMusicActive
-              ? aberturaAudio.url
-              : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
+            : !showMenu && caseMode === "blackpine"
+              ? "/audio/blackpine/suspense-bardify-theme.mp3"
+              : introMusicActive
+                ? aberturaAudio.url
+                : "/audio/DexterEndingThemeSong-GhastlyCarrot-HomeoftheRandom.mp3";
     const trackUrl = new URL(track, window.location.href).href;
     if (audio.src !== trackUrl) {
       audio.pause();
       audio.src = track;
       audio.load();
     }
-    audio.volume = musicVolumeRef.current;
+    audio.volume =
+      !showMenu && caseMode === "blackpine"
+        ? blackPineMusicVolumeRef.current
+        : musicVolumeRef.current;
     if (introMusicActive) {
       audio.onerror = () => {
         // Mantém a abertura sonora mesmo se o arquivo personalizado ainda não estiver publicado.
@@ -350,8 +367,11 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   const fadingRef = useRef(false);
   useEffect(() => {
     if (fadingRef.current) return;
-    if (audioRef.current) audioRef.current.volume = musicVolume;
-  }, [musicVolume]);
+    if (audioRef.current) {
+      audioRef.current.volume =
+        !showMenu && caseMode === "blackpine" ? blackPineMusicVolume : musicVolume;
+    }
+  }, [blackPineMusicVolume, caseMode, musicVolume, showMenu]);
 
   useEffect(() => {
     window.localStorage.setItem("dexter-audio-defaults-v1", "true");
@@ -360,6 +380,10 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   useEffect(() => {
     window.localStorage.setItem("dexter-music-volume", String(musicVolume));
   }, [musicVolume]);
+
+  useEffect(() => {
+    window.localStorage.setItem("dexter-blackpine-music-volume", String(blackPineMusicVolume));
+  }, [blackPineMusicVolume]);
 
   useEffect(() => {
     window.localStorage.setItem("dexter-ortega-ambient-volume", String(ambientVolume));
@@ -526,6 +550,8 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
         onBack={() => setShowMenu(true)}
         soundOn={soundOn}
         onToggleSound={toggleSound}
+        musicVolume={blackPineMusicVolume}
+        onMusicVolumeChange={setBlackPineMusicVolume}
       />
     );
   }

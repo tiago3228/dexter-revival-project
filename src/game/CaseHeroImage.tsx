@@ -2,17 +2,29 @@ type CaseHeroImageProps = {
   src: string;
   alt: string;
   caption: string;
+  orientation?: "landscape" | "portrait";
 };
 
-export function CaseHeroImage({ src, alt, caption }: CaseHeroImageProps) {
+export function CaseHeroImage({
+  src,
+  alt,
+  caption,
+  orientation = "landscape",
+}: CaseHeroImageProps) {
+  const isPortrait = orientation === "portrait";
+
   return (
-    <figure className="mx-auto mt-6 w-full max-w-5xl overflow-hidden border border-primary/40 bg-black/80 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-      <div className="relative aspect-[3/2] w-full">
+    <figure
+      className={`mx-auto mt-6 w-full overflow-hidden border border-primary/40 bg-black/80 shadow-[0_20px_60px_rgba(0,0,0,0.45)] ${isPortrait ? "max-w-md" : "max-w-5xl"}`}
+    >
+      <div
+        className={`relative w-full ${isPortrait ? "aspect-[2/3] max-h-[75vh]" : "aspect-[3/2]"}`}
+      >
         <img
           src={src}
           alt={alt}
-          width={1536}
-          height={1024}
+          width={isPortrait ? 1024 : 1536}
+          height={isPortrait ? 1536 : 1024}
           loading="eager"
           decoding="async"
           className="h-full w-full object-contain"
