@@ -6,6 +6,14 @@ export type QuickCaseStep = {
   answer: string;
   explanation: string;
 };
+export type LogicGrid = {
+  people: readonly string[];
+  places: readonly string[];
+  objects: readonly string[];
+  clues: readonly string[];
+  solution: Readonly<Record<string, { place: string; object: string }>>;
+  explanation: string;
+};
 export type QuickCaseAudioSource = {
   id: string;
   title: string;
@@ -21,6 +29,7 @@ export type QuickCase = {
   briefing?: string;
   objective?: string;
   audioSources?: readonly QuickCaseAudioSource[];
+  logicGrid?: LogicGrid;
   steps: readonly QuickCaseStep[];
 };
 
@@ -475,6 +484,67 @@ export const VIVIAN_QUICK_CASES: readonly QuickCase[] = [
       },
     ],
   },
+  {
+    id: "observatory-heist-grid",
+    title: "O roubo no observatório",
+    summary: "Complete a tabela lógica para cruzar suspeito, local e objeto recuperado.",
+    requiredRecords: ["police-report"],
+    sourceReference: "Dossiê suplementar · exercício original de dedução",
+    briefing:
+      "Três pessoas foram vistas em três locais durante um apagão. Cada uma carregava um objeto diferente. As pistas abaixo são material original do jogo, inspirado na mecânica de tabelas lógicas tradicionais.",
+    objective:
+      "Marque ✗ para eliminar uma associação e ● para confirmar. Cada pessoa, local e objeto aparece uma única vez.",
+    logicGrid: {
+      people: ["Mara", "Jonas", "Iris"],
+      places: ["Observatório", "Píer", "Estação"],
+      objects: ["Lanterna", "Chave", "Mapa"],
+      clues: [
+        "Mara não estava no píer.",
+        "O mapa foi encontrado no píer.",
+        "Iris carregava a chave.",
+        "A lanterna não estava na estação.",
+        "Jonas não estava no observatório.",
+      ],
+      solution: {
+        Mara: { place: "Observatório", object: "Lanterna" },
+        Jonas: { place: "Píer", object: "Mapa" },
+        Iris: { place: "Estação", object: "Chave" },
+      },
+      explanation:
+        "A única combinação consistente é Mara no observatório com a lanterna, Jonas no píer com o mapa e Iris na estação com a chave. As pistas são um exercício de lógica, não uma prova documental do caso.",
+    },
+    steps: [],
+  },
+  {
+    id: "library-envelope-grid",
+    title: "O envelope da biblioteca",
+    summary: "Resolva uma segunda tabela lógica com novas conexões entre três testemunhas.",
+    requiredRecords: ["police-report", "charles-secret"],
+    sourceReference: "Dossiê suplementar · exercício original de dedução",
+    briefing:
+      "Um envelope, um relógio e uma medalha foram localizados em três pontos de Painscreek. Nora, Caio e Lena deram versões parciais sobre onde estiveram e o que encontraram.",
+    objective: "Cruze as pistas até restar uma única associação para cada pessoa, local e objeto.",
+    logicGrid: {
+      people: ["Nora", "Caio", "Lena"],
+      places: ["Biblioteca", "Jardim", "Torre"],
+      objects: ["Envelope", "Relógio", "Medalha"],
+      clues: [
+        "Nora foi vista na biblioteca.",
+        "O envelope estava na biblioteca.",
+        "Caio não estava na torre.",
+        "Lena encontrou a medalha.",
+        "O relógio não estava no jardim.",
+      ],
+      solution: {
+        Nora: { place: "Biblioteca", object: "Envelope" },
+        Caio: { place: "Jardim", object: "Relógio" },
+        Lena: { place: "Torre", object: "Medalha" },
+      },
+      explanation:
+        "A tabela fecha com Nora na biblioteca e o envelope, Caio no jardim e o relógio, e Lena na torre com a medalha. Trata-se de um caso ficcional criado para praticar dedução por exclusão.",
+    },
+    steps: [],
+  },
 ] as const;
 
 export const QUICK_CASE_IDS = [
@@ -502,6 +572,42 @@ export function getQuickCaseStats(completed: readonly string[]) {
 
 export type QuickCaseResult = "locked" | "supported" | "unsupported";
 
+function isLogicGridSolved(logicGrid: LogicGrid, marks: Readonly<Record<string, string>>): boolean {
+  const isConfirmed = (person: string, value: string) => marks[`${person}|${value}`] === "o";
+  const hasExactlyOne = (values: readonly string[], getPerson: (value: string) => string) => {
+    const assignments = values.map(getPerson);
+    return assignments.every(Boolean) && new Set(assignments).size === values.length;
+  };
+
+  const personPlace = (person: string) =>
+    logicGrid.places.find((place) => isConfirmed(person, place)) ?? "";
+  const personObject = (person: string) =>
+    logicGrid.objects.find((object) => isConfirmed(person, object)) ?? "";
+
+  const peopleCorrect = logicGrid.people.every((person) => {
+    const solution = logicGrid.solution[person];
+    const confirmedPlaces = logicGrid.places.filter((place) => isConfirmed(person, place));
+    const confirmedObjects = logicGrid.objects.filter((object) => isConfirmed(person, object));
+    return (
+      solution &&
+      confirmedPlaces.length === 1 &&
+      confirmedObjects.length === 1 &&
+      personPlace(person) === solution.place &&
+      personObject(person) === solution.object
+    );
+  });
+  const placesUnique = hasExactlyOne(
+    logicGrid.places,
+    (place) => logicGrid.people.find((person) => personPlace(person) === place) ?? "",
+  );
+  const objectsUnique = hasExactlyOne(
+    logicGrid.objects,
+    (object) => logicGrid.people.find((person) => personObject(person) === object) ?? "",
+  );
+
+  return peopleCorrect && placesUnique && objectsUnique;
+}
+
 export function evaluateWitnessClaim(
   selectedStatement: string,
   found: readonly string[],
@@ -518,6 +624,9 @@ export function evaluateQuickCase(
   const quickCase = VIVIAN_QUICK_CASES.find((item) => item.id === caseId);
   if (!quickCase) return "unsupported";
   if (!quickCase.requiredRecords.every((recordId) => found.includes(recordId))) return "locked";
+  if (quickCase.logicGrid) {
+    return isLogicGridSolved(quickCase.logicGrid, answers) ? "supported" : "unsupported";
+  }
   return quickCase.steps.every((step) => answers[step.id] === step.answer)
     ? "supported"
     : "unsupported";

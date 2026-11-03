@@ -20,11 +20,11 @@ describe("arquivo policial dos casos curtos", () => {
       />,
     );
 
-    expect(screen.getByText("1/7")).toBeInTheDocument();
-    expect(screen.getByText("100/700")).toBeInTheDocument();
+    expect(screen.getByText("1/9")).toBeInTheDocument();
+    expect(screen.getByText("100/900")).toBeInTheDocument();
     expect(screen.getByRole("progressbar", { name: "Progresso dos casos curtos" })).toHaveAttribute(
       "aria-valuenow",
-      "14",
+      "11",
     );
     expect(screen.getByText(/não altera a pontuação principal/)).toBeInTheDocument();
   });
@@ -69,8 +69,8 @@ describe("arquivo policial dos casos curtos", () => {
     fireEvent.click(within(runner).getByRole("button", { name: "Conferir caso" }));
 
     const stats = screen.getByLabelText("Estatísticas dos casos curtos");
-    expect(within(stats).getByText("2/7")).toBeInTheDocument();
-    expect(within(stats).getByText("200/700")).toBeInTheDocument();
+    expect(within(stats).getByText("2/9")).toBeInTheDocument();
+    expect(within(stats).getByText("200/900")).toBeInTheDocument();
     expect(within(runner).getByText(/\+100 pontos no arquivo/)).toBeInTheDocument();
 
     const saved = JSON.parse(window.localStorage.getItem(SAVE_KEY) ?? "{}");

@@ -96,6 +96,30 @@ describe("depoimento incompatível e casos curtos", () => {
   });
 
   it.each(VIVIAN_QUICK_CASES)("$id exige todos os passos corretos e os documentos", (quickCase) => {
+    if (quickCase.logicGrid) {
+      const completeMarks = Object.fromEntries(
+        Object.entries(quickCase.logicGrid.solution).flatMap(([person, assignment]) => [
+          [`${person}|${assignment.place}`, "o"],
+          [`${person}|${assignment.object}`, "o"],
+        ]),
+      );
+      expect(evaluateQuickCase(quickCase.id, completeMarks, [])).toBe("locked");
+      const firstPerson = quickCase.logicGrid.people[0]!;
+      expect(
+        evaluateQuickCase(
+          quickCase.id,
+          {
+            ...completeMarks,
+            [`${firstPerson}|${quickCase.logicGrid.solution[firstPerson]!.place}`]: "x",
+          },
+          quickCase.requiredRecords,
+        ),
+      ).toBe("unsupported");
+      expect(evaluateQuickCase(quickCase.id, completeMarks, quickCase.requiredRecords)).toBe(
+        "supported",
+      );
+      return;
+    }
     const completeAnswers = Object.fromEntries(
       quickCase.steps.map((step) => [step.id, step.answer]),
     );
