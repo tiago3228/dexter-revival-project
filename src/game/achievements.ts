@@ -8,6 +8,7 @@ export const CASE_IDS = [
   "winchester",
   "vivian",
   "blackpine",
+  "sparrowhollow",
 ] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 
@@ -57,14 +58,14 @@ export const ACHIEVEMENTS = [
   {
     id: "all-cases",
     title: "Arquivo completo",
-    description: "Conclua os sete capítulos disponíveis.",
+    description: "Conclua todos os casos do arquivo principal.",
     tier: "Ouro",
   },
   {
     id: "blood-slide-box",
     title: "Caixa de lâminas de sangue",
     description:
-      "Conclua os sete capítulos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
+      "Conclua todos os casos com 90 pontos ou mais em cada um e acerte sem erros os interrogatórios de Painscreek e Red John.",
     tier: "Lendário",
   },
 ] as const;
@@ -158,16 +159,19 @@ export function loadAchievementProgress(): AchievementProgress {
     const completedCases = Array.isArray(saved.completedCases)
       ? [...new Set(saved.completedCases.filter(isCaseId))]
       : [];
+    const allCasesCompleted = CASE_IDS.every((caseId) => completedCases.includes(caseId));
     const qualifiesForLegendary =
-      CASE_IDS.every((caseId) => completedCases.includes(caseId)) &&
+      allCasesCompleted &&
       CASE_IDS.every((caseId) => (bestScores[caseId] ?? 0) >= 90) &&
       unlockedIds.includes("master-interrogator") &&
       unlockedIds.includes("red-john-profiler");
 
     return {
-      unlockedIds: qualifiesForLegendary
-        ? unlockedIds
-        : unlockedIds.filter((id) => id !== "blood-slide-box"),
+      unlockedIds: unlockedIds.filter((id) => {
+        if (id === "all-cases" && !allCasesCompleted) return false;
+        if (id === "blood-slide-box" && !qualifiesForLegendary) return false;
+        return true;
+      }),
       completedCases,
       bestScores,
       caseStats,
@@ -203,6 +207,7 @@ export function applyCasePerformance(
     [performance.caseId]: Math.max(progress.bestScores[performance.caseId] ?? -1, score),
   };
   const unlocked = new Set(progress.unlockedIds);
+  unlocked.delete("all-cases");
   unlocked.delete("blood-slide-box");
   const previousStats = progress.caseStats[performance.caseId];
   const caseStats = {
