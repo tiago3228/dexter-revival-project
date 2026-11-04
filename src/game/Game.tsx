@@ -19,6 +19,7 @@ import { MentalistCase } from "./MentalistCase";
 import { WinchesterCase } from "./WinchesterCase";
 import { VivianRobertsCase } from "./VivianRobertsCase";
 import { BlackPineCase } from "./BlackPineCase";
+import { SparrowHollowCase } from "./SparrowHollowCase";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -216,9 +217,9 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
     }
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<
-    "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian" | "blackpine"
-  >(() => (resumePainscreekCase ? "vivian" : "ortega"));
+  const [caseMode, setCaseMode] = useState<CaseId>(() =>
+    resumePainscreekCase ? "vivian" : "ortega",
+  );
   const [showMenu, setShowMenu] = useState(() => !resumePainscreekCase);
   const [showIntro, setShowIntro] = useState(() => !resumePainscreekCase);
   const [showInvestigatorSetup, setShowInvestigatorSetup] = useState(false);
@@ -552,6 +553,18 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
         onToggleSound={toggleSound}
         musicVolume={blackPineMusicVolume}
         onMusicVolumeChange={setBlackPineMusicVolume}
+      />
+    );
+  }
+
+  if (caseMode === "sparrowhollow") {
+    return (
+      <SparrowHollowCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
       />
     );
   }
@@ -2075,10 +2088,7 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (
-    nextCase:
-      "ortega" | "monroe" | "painscreek" | "mentalist" | "winchester" | "vivian" | "blackpine",
-  ) => void;
+  onSelect: (nextCase: CaseId) => void;
   playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
@@ -2138,6 +2148,11 @@ function MainMenu({
       title: "O Quarto 17",
       detail: "Reconstruindo o desaparecimento de Whitmore sem confundir fatos com lendas.",
     },
+    sparrowhollow: {
+      index: "CAPÍTULO 08 · SPARROW HOLLOW",
+      title: "O Verão de 1986",
+      detail: "Abrindo os registros da antiga pedreira e as fontes de um verão em Sparrow Hollow.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -2153,6 +2168,7 @@ function MainMenu({
     winchester: "O Sangue dos Condenados",
     vivian: "The Painscreek Case",
     blackpine: "Black Pine · O Quarto 17",
+    sparrowhollow: "Sparrow Hollow · O Verão de 1986",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2346,8 +2362,8 @@ function MainMenu({
           Seleção de capítulos
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Escolha um capítulo para investigar. Você pode voltar a este menu e alternar entre os três
-          casos sempre que quiser.
+          Escolha um capítulo para investigar. Você pode voltar a este menu e alternar entre os
+          arquivos disponíveis sempre que quiser.
         </p>
         <button
           type="button"
@@ -2639,7 +2655,7 @@ function MainMenu({
                 <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-primary">
                   {bloodSlideUnlocked
                     ? "Conquistado"
-                    : "Bloqueado · requer excelência nos sete capítulos e interrogatórios perfeitos"}
+                    : "Bloqueado · requer excelência em todos os casos e interrogatórios perfeitos"}
                 </p>
               </div>
             </section>
@@ -2828,9 +2844,30 @@ function MainMenu({
               {chapterStatus("blackpine")}
             </span>
           </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("sparrowhollow")}
+            className="group border border-indigo-700/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-indigo-400 hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-indigo-300">
+              Capítulo 08 · Sparrow Hollow · 1986
+            </p>
+            <h2 className="mt-3 font-display text-3xl">O Verão de 1986</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Investigue os registros da pedreira velha. Separe documentos, testemunhos e hipóteses
+              antes de decidir o que as fontes permitem concluir.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-indigo-300 group-hover:underline">
+              Abrir dossiê →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("sparrowhollow")}
+            </span>
+          </button>
         </div>
         <div className="mt-8 border border-border p-5 font-mono text-xs text-muted-foreground">
-          <p>ARQUIVOS DISPONÍVEIS: 07</p>
+          <p>ARQUIVOS DISPONÍVEIS: {String(CASE_IDS.length).padStart(2, "0")}</p>
           <p className="mt-2">
             CAPÍTULOS CONCLUÍDOS: {achievementProgress.completedCases.length}/{CASE_IDS.length}
           </p>

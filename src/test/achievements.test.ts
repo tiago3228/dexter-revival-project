@@ -78,7 +78,7 @@ describe("game achievements", () => {
     expect(imperfect.unlockedIds).not.toContain("red-john-profiler");
   });
 
-  it("unlocks the collection trophy only after all seven chapters are completed", () => {
+  it("unlocks the collection trophy only after all eight main cases are completed", () => {
     let progress = emptyAchievementProgress();
     progress = applyCasePerformance(progress, performance);
     progress = applyCasePerformance(progress, { ...performance, caseId: "monroe" });
@@ -96,6 +96,9 @@ describe("game achievements", () => {
     expect(progress.unlockedIds).not.toContain("all-cases");
     progress = applyCasePerformance(progress, { ...performance, caseId: "blackpine" });
     expect(progress.completedCases).toHaveLength(7);
+    expect(progress.unlockedIds).not.toContain("all-cases");
+    progress = applyCasePerformance(progress, { ...performance, caseId: "sparrowhollow" });
+    expect(progress.completedCases).toHaveLength(8);
     expect(progress.unlockedIds).toContain("all-cases");
   });
 
@@ -135,6 +138,12 @@ describe("game achievements", () => {
       caseId: "blackpine",
       score: 90,
     });
+    expect(progress.unlockedIds).not.toContain("blood-slide-box");
+    progress = applyCasePerformance(progress, {
+      ...performance,
+      caseId: "sparrowhollow",
+      score: 90,
+    });
     expect(progress.unlockedIds).toContain("blood-slide-box");
 
     const incomplete = applyCasePerformance(emptyAchievementProgress(), {
@@ -171,7 +180,7 @@ describe("game achievements", () => {
 
   it("revalidates legacy saves before displaying the legendary trophy", () => {
     const oldProgress: AchievementProgress = {
-      unlockedIds: ["blood-slide-box", "master-interrogator"],
+      unlockedIds: ["all-cases", "blood-slide-box", "master-interrogator"],
       completedCases: ["ortega", "monroe", "painscreek", "mentalist"],
       bestScores: { ortega: 95, monroe: 92, painscreek: 91, mentalist: 95 },
       caseStats: {},
@@ -180,6 +189,7 @@ describe("game achievements", () => {
 
     const restored = loadAchievementProgress();
 
+    expect(restored.unlockedIds).not.toContain("all-cases");
     expect(restored.unlockedIds).not.toContain("blood-slide-box");
     vi.restoreAllMocks();
   });
