@@ -78,7 +78,7 @@ describe("game achievements", () => {
     expect(imperfect.unlockedIds).not.toContain("red-john-profiler");
   });
 
-  it("unlocks the collection trophy only after all eight main cases are completed", () => {
+  it("unlocks the collection trophy only after all nine main cases are completed", () => {
     let progress = emptyAchievementProgress();
     progress = applyCasePerformance(progress, performance);
     progress = applyCasePerformance(progress, { ...performance, caseId: "monroe" });
@@ -99,6 +99,9 @@ describe("game achievements", () => {
     expect(progress.unlockedIds).not.toContain("all-cases");
     progress = applyCasePerformance(progress, { ...performance, caseId: "sparrowhollow" });
     expect(progress.completedCases).toHaveLength(8);
+    expect(progress.unlockedIds).not.toContain("all-cases");
+    progress = applyCasePerformance(progress, { ...performance, caseId: "threshold" });
+    expect(progress.completedCases).toHaveLength(9);
     expect(progress.unlockedIds).toContain("all-cases");
   });
 
@@ -142,6 +145,12 @@ describe("game achievements", () => {
     progress = applyCasePerformance(progress, {
       ...performance,
       caseId: "sparrowhollow",
+      score: 90,
+    });
+    expect(progress.unlockedIds).not.toContain("blood-slide-box");
+    progress = applyCasePerformance(progress, {
+      ...performance,
+      caseId: "threshold",
       score: 90,
     });
     expect(progress.unlockedIds).toContain("blood-slide-box");
