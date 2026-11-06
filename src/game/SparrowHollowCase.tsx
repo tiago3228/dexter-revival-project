@@ -4,6 +4,7 @@ import { recordCaseCompletion } from "@/game/achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTimer";
 import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
+import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
@@ -293,6 +294,8 @@ export function SparrowHollowCase({
         caption="Arquivo 08 · Sparrow Hollow · ilustração original do Livro 2"
         orientation="portrait"
       />
+
+      <TrilogyCrossCluePanel currentBook="sparrow" />
 
       <section className="mt-5 grid gap-4 border border-border/70 bg-card/40 p-4 sm:grid-cols-[1fr_auto] sm:items-center sm:p-5">
         <div>

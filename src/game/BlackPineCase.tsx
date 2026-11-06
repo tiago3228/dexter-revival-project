@@ -17,6 +17,7 @@ import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { recordCaseCompletion } from "./achievements";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "./trilogyAudio";
+import { TrilogyCrossCluePanel } from "./TrilogyCrossCluePanel";
 import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
@@ -210,6 +211,8 @@ export function BlackPineCase({
           caption="Arquivo de cena · Black Pine · Maine · 1987"
           orientation="portrait"
         />
+
+        <TrilogyCrossCluePanel currentBook="blackpine" />
 
         <div
           className="mt-4 flex flex-wrap items-center gap-3 border border-border bg-card/30 p-3"
