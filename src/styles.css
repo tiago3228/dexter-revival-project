@@ -20,6 +20,31 @@
   animation: investigation-guidance-pulse 1.6s ease-in-out infinite;
 }
 
+@keyframes trilogy-book-purchase-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px color-mix(in oklch, var(--primary) 16%, transparent),
+      0 0 24px color-mix(in oklch, var(--primary) 28%, transparent);
+  }
+}
+
+.trilogy-book-purchase {
+  animation: trilogy-book-purchase-glow 2.8s ease-in-out infinite;
+}
+
+.trilogy-book-purchase:hover .trilogy-book-icon,
+.trilogy-book-purchase:focus-visible .trilogy-book-icon {
+  transform: translateY(-2px) rotate(-7deg) scale(1.08);
+}
+
+.trilogy-book-icon {
+  transition: transform 180ms ease;
+}
+
 @keyframes dot-connection-victory-board {
   0% {
     box-shadow: 0 0 0 rgb(255 196 201 / 0%);
@@ -122,6 +147,14 @@
     animation: none;
     outline: 2px solid var(--primary);
     outline-offset: 2px;
+  }
+
+  .trilogy-book-purchase {
+    animation: none;
+  }
+
+  .trilogy-book-icon {
+    transition: none;
   }
 
   .dot-connection-victory-board,
