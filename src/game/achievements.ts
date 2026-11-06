@@ -9,6 +9,7 @@ export const CASE_IDS = [
   "vivian",
   "blackpine",
   "sparrowhollow",
+  "threshold",
 ] as const;
 export type CaseId = (typeof CASE_IDS)[number];
 

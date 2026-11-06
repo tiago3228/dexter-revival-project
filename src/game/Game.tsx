@@ -20,6 +20,7 @@ import { WinchesterCase } from "./WinchesterCase";
 import { VivianRobertsCase } from "./VivianRobertsCase";
 import { BlackPineCase } from "./BlackPineCase";
 import { SparrowHollowCase } from "./SparrowHollowCase";
+import { ThresholdCase } from "./ThresholdCase";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -560,6 +561,18 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   if (caseMode === "sparrowhollow") {
     return (
       <SparrowHollowCase
+        onBack={() => setShowMenu(true)}
+        soundOn={soundOn}
+        onToggleSound={toggleSound}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+      />
+    );
+  }
+
+  if (caseMode === "threshold") {
+    return (
+      <ThresholdCase
         onBack={() => setShowMenu(true)}
         soundOn={soundOn}
         onToggleSound={toggleSound}
@@ -2153,6 +2166,11 @@ function MainMenu({
       title: "O Verão de 1986",
       detail: "Abrindo os registros da antiga pedreira e as fontes de um verão em Sparrow Hollow.",
     },
+    threshold: {
+      index: "CAPÍTULO 09 · ASHEN CREEK",
+      title: "Threshold",
+      detail: "Reconstruindo o Programa Limiar e separando observações de hipóteses.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -2169,6 +2187,7 @@ function MainMenu({
     vivian: "The Painscreek Case",
     blackpine: "Black Pine · O Quarto 17",
     sparrowhollow: "Sparrow Hollow · O Verão de 1986",
+    threshold: "Threshold · Ashen Creek, 1973",
   };
   const formatDuration = (seconds: number) => {
     const total = Math.max(0, Math.floor(seconds));
@@ -2863,6 +2882,27 @@ function MainMenu({
             </span>
             <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               {chapterStatus("sparrowhollow")}
+            </span>
+          </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("threshold")}
+            className="group border border-amber-700/70 bg-card/60 p-6 text-left transition hover:-translate-y-1 hover:border-amber-400 hover:bg-card sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-300">
+              Capítulo 09 · Ashen Creek · 1973
+            </p>
+            <h2 className="mt-3 font-display text-3xl">Threshold</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Abra o arquivo do Programa Limiar e investigue Ashen Creek. Separe o que as fontes
+              sustentam das perguntas que permanecem sem resposta.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-amber-300 group-hover:underline">
+              Abrir dossiê →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {chapterStatus("threshold")}
             </span>
           </button>
         </div>
