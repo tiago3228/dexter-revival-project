@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { recordCaseCompletion } from "./achievements";
+import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
@@ -161,9 +162,12 @@ export function BlackPineCase({
             “O Quarto 17 era o de Ethan. A estação é a última trilha material de Whitmore; o destino
             final continua em aberto.”
           </p>
-          <Button type="button" className="mt-8" onClick={onBack}>
-            Voltar ao arquivo de casos
-          </Button>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button type="button" onClick={onBack}>
+              Voltar ao arquivo de casos
+            </Button>
+            <TrilogyBookPurchaseButton chapter={7} />
+          </div>
         </div>
       </main>
     );
@@ -185,6 +189,7 @@ export function BlackPineCase({
             </p>
           </div>
           <div className="flex gap-2">
+            <TrilogyBookPurchaseButton chapter={7} compact />
             <button
               type="button"
               onClick={onBack}

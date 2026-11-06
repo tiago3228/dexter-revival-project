@@ -21,6 +21,7 @@ import { VivianRobertsCase } from "./VivianRobertsCase";
 import { BlackPineCase } from "./BlackPineCase";
 import { SparrowHollowCase } from "./SparrowHollowCase";
 import { ThresholdCase } from "./ThresholdCase";
+import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -2915,6 +2916,21 @@ function MainMenu({
             TROFÉUS CONQUISTADOS: {achievementProgress.unlockedIds.length}/{ACHIEVEMENTS.length}
           </p>
         </div>
+        <section className="mt-8 border border-primary/30 bg-primary/5 p-5 sm:p-6">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Livros da trilogia Black Pine
+          </p>
+          <h2 className="mt-2 font-display text-2xl">Continue a história fora do arquivo</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Os capítulos 7, 8 e 9 formam a trilogia Black Pine. Compre os livros na página oficial
+            de vendas para acompanhar as conexões entre Black Pine, Sparrow Hollow e Threshold.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <TrilogyBookPurchaseButton chapter={7} compact />
+            <TrilogyBookPurchaseButton chapter={8} compact />
+            <TrilogyBookPurchaseButton chapter={9} compact />
+          </div>
+        </section>
       </div>
     </main>
   );
