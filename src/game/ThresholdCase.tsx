@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CaseHeroImage } from "@/game/CaseHeroImage";
 import { recordCaseCompletion } from "@/game/achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTimer";
+import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
@@ -232,13 +233,16 @@ export function ThresholdCase({
             <Stat label="Precisão" value={`${finalAccuracy ?? 0}%`} />
             <Stat label="Erros registrados" value={mistakes} />
           </div>
-          <button
-            type="button"
-            onClick={onBack}
-            className="mt-8 border border-primary/50 bg-primary/10 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-primary transition hover:bg-primary/20"
-          >
-            Voltar ao arquivo de casos
-          </button>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="border border-primary/50 bg-primary/10 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-primary transition hover:bg-primary/20"
+            >
+              Voltar ao arquivo de casos
+            </button>
+            <TrilogyBookPurchaseButton chapter={9} />
+          </div>
         </section>
       </main>
     );
@@ -255,6 +259,7 @@ export function ThresholdCase({
           ← Voltar aos casos
         </button>
         <div className="flex flex-wrap items-center gap-3">
+          <TrilogyBookPurchaseButton chapter={9} compact />
           <button
             type="button"
             onClick={onToggleSound}

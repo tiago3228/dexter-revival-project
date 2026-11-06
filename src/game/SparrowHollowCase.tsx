@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CaseHeroImage } from "@/game/CaseHeroImage";
 import { recordCaseCompletion } from "@/game/achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTimer";
+import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
@@ -240,13 +241,16 @@ export function SparrowHollowCase({
             1949, o destino de Rex, a identidade dos homens da expedição ou a natureza definitiva da
             presença.
           </p>
-          <button
-            type="button"
-            onClick={onBack}
-            className="mt-7 min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
-          >
-            Voltar à seleção de capítulos
-          </button>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="min-h-11 border border-primary px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary transition hover:bg-primary/10"
+            >
+              Voltar à seleção de capítulos
+            </button>
+            <TrilogyBookPurchaseButton chapter={8} />
+          </div>
         </section>
       </main>
     );
@@ -266,13 +270,16 @@ export function SparrowHollowCase({
               avance apenas quando cada afirmação estiver sustentada pela fonte correta.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onBack}
-            className="min-h-11 border border-border px-4 py-3 font-mono text-xs uppercase tracking-wider text-foreground transition hover:border-primary hover:text-primary"
-          >
-            ← Seleção de capítulos
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <TrilogyBookPurchaseButton chapter={8} compact />
+            <button
+              type="button"
+              onClick={onBack}
+              className="min-h-11 border border-border px-4 py-3 font-mono text-xs uppercase tracking-wider text-foreground transition hover:border-primary hover:text-primary"
+            >
+              ← Seleção de capítulos
+            </button>
+          </div>
         </div>
       </header>
 
