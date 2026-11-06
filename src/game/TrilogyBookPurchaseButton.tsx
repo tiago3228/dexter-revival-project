@@ -1,4 +1,5 @@
 import { ExternalLink } from "lucide-react";
+import { playTrilogySfx } from "./trilogyAudio";
 
 export const TRILOGY_SALES_URL = "https://trilogia-blackpine.lovable.app";
 
@@ -62,9 +63,11 @@ function TrilogyChapterIcon({ chapter }: { chapter: Chapter }) {
 export function TrilogyBookPurchaseButton({
   chapter,
   compact = false,
+  soundOn = true,
 }: {
   chapter: Chapter;
   compact?: boolean;
+  soundOn?: boolean;
 }) {
   return (
     <a
@@ -72,6 +75,7 @@ export function TrilogyBookPurchaseButton({
       target="_blank"
       rel="noopener noreferrer"
       data-chapter={chapter}
+      onClick={() => playTrilogySfx("purchase", soundOn)}
       className={`trilogy-book-purchase group ${
         compact
           ? "inline-flex items-center gap-2 border border-primary/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-primary transition hover:bg-primary/10"

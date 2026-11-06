@@ -16,6 +16,7 @@ import { CaseHeroImage } from "./CaseHeroImage";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "./caseTimer";
 import { recordCaseCompletion } from "./achievements";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
+import { playTrilogySfx, startTrilogyAmbient } from "./trilogyAudio";
 import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
@@ -67,6 +68,8 @@ export function BlackPineCase({
     return () => pauseCaseTimer("blackpine");
   }, []);
 
+  useEffect(() => startTrilogyAmbient(7, soundOn), [soundOn]);
+
   const gridSolved = useMemo(() => checkBlackPineGrid(marks), [marks]);
   const artifactGridSolved = useMemo(
     () => checkBlackPineArtifactGrid(artifactMarks),
@@ -104,6 +107,7 @@ export function BlackPineCase({
       return;
     }
     if (!recordedRef.current) {
+      playTrilogySfx("puzzle-solved", soundOn);
       recordedRef.current = true;
       const elapsedSeconds = finishCaseTimer("blackpine");
       const actionCounts = getBlackPineActionCounts({
@@ -166,7 +170,7 @@ export function BlackPineCase({
             <Button type="button" onClick={onBack}>
               Voltar ao arquivo de casos
             </Button>
-            <TrilogyBookPurchaseButton chapter={7} />
+            <TrilogyBookPurchaseButton chapter={7} soundOn={soundOn} />
           </div>
         </div>
       </main>
@@ -189,7 +193,7 @@ export function BlackPineCase({
             </p>
           </div>
           <div className="flex gap-2">
-            <TrilogyBookPurchaseButton chapter={7} compact />
+            <TrilogyBookPurchaseButton chapter={7} compact soundOn={soundOn} />
             <button
               type="button"
               onClick={onBack}

@@ -3,6 +3,7 @@ import { CaseHeroImage } from "@/game/CaseHeroImage";
 import { recordCaseCompletion } from "@/game/achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTimer";
 import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
+import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
@@ -82,6 +83,8 @@ export function SparrowHollowCase({
     return () => pauseCaseTimer("sparrowhollow");
   }, []);
 
+  useEffect(() => startTrilogyAmbient(8, soundOn), [soundOn]);
+
   const currentStage = SPARROW_HOLLOW_STAGES[stageIndex] ?? SPARROW_HOLLOW_STAGES[0];
   const currentStageId = currentStage.id;
   const currentStageCompleted = completedStages.includes(currentStageId);
@@ -135,6 +138,7 @@ export function SparrowHollowCase({
       );
       return;
     }
+    playTrilogySfx("puzzle-solved", soundOn);
     setCompletedStages((current) =>
       current.includes(currentStageId) ? current : [...current, currentStageId],
     );
@@ -249,7 +253,7 @@ export function SparrowHollowCase({
             >
               Voltar à seleção de capítulos
             </button>
-            <TrilogyBookPurchaseButton chapter={8} />
+            <TrilogyBookPurchaseButton chapter={8} soundOn={soundOn} />
           </div>
         </section>
       </main>
@@ -271,7 +275,7 @@ export function SparrowHollowCase({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <TrilogyBookPurchaseButton chapter={8} compact />
+            <TrilogyBookPurchaseButton chapter={8} compact soundOn={soundOn} />
             <button
               type="button"
               onClick={onBack}

@@ -3,6 +3,7 @@ import { CaseHeroImage } from "@/game/CaseHeroImage";
 import { recordCaseCompletion } from "@/game/achievements";
 import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTimer";
 import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
+import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
@@ -83,6 +84,8 @@ export function ThresholdCase({
     return () => pauseCaseTimer("threshold");
   }, []);
 
+  useEffect(() => startTrilogyAmbient(9, soundOn), [soundOn]);
+
   const currentStage = THRESHOLD_STAGES[stageIndex] ?? THRESHOLD_STAGES[0];
   const currentStageId = currentStage.id;
   const currentStageCompleted = completedStages.includes(currentStageId);
@@ -133,6 +136,7 @@ export function ThresholdCase({
       );
       return;
     }
+    playTrilogySfx("puzzle-solved", soundOn);
     setCompletedStages((current) =>
       current.includes(currentStageId) ? current : [...current, currentStageId],
     );
@@ -241,7 +245,7 @@ export function ThresholdCase({
             >
               Voltar ao arquivo de casos
             </button>
-            <TrilogyBookPurchaseButton chapter={9} />
+            <TrilogyBookPurchaseButton chapter={9} soundOn={soundOn} />
           </div>
         </section>
       </main>
@@ -259,7 +263,7 @@ export function ThresholdCase({
           ← Voltar aos casos
         </button>
         <div className="flex flex-wrap items-center gap-3">
-          <TrilogyBookPurchaseButton chapter={9} compact />
+          <TrilogyBookPurchaseButton chapter={9} compact soundOn={soundOn} />
           <button
             type="button"
             onClick={onToggleSound}
