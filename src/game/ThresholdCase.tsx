@@ -5,6 +5,7 @@ import { beginCaseTimer, finishCaseTimer, pauseCaseTimer } from "@/game/caseTime
 import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
+import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
 import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
@@ -306,6 +307,7 @@ export function ThresholdCase({
       </header>
 
       <TrilogyCrossCluePanel currentBook="threshold" />
+      <AdvancedMurdlePuzzle chapter="threshold" />
 
       <section aria-label="Progresso do caso" className="mt-5 grid gap-2 sm:grid-cols-4">
         {THRESHOLD_STAGES.map((stage, index) => {
