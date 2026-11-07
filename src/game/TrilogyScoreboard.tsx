@@ -1,18 +1,14 @@
-import type { AchievementProgress } from "./achievements";
 import {
   TRILOGY_CASE_IDS,
   TRILOGY_CASE_LABELS,
   formatTrilogyTime,
-  getTrilogyCaseStat,
-  getTrilogyProgress,
+  getSavedTrilogyProgress,
+  loadTrilogySave,
 } from "./trilogyProgress";
 
-type TrilogyScoreboardProps = {
-  progress: AchievementProgress;
-};
-
-export function TrilogyScoreboard({ progress }: TrilogyScoreboardProps) {
-  const summary = getTrilogyProgress(progress);
+export function TrilogyScoreboard() {
+  const saved = loadTrilogySave();
+  const summary = getSavedTrilogyProgress(saved);
 
   return (
     <section
@@ -59,17 +55,17 @@ export function TrilogyScoreboard({ progress }: TrilogyScoreboardProps) {
           </thead>
           <tbody>
             {TRILOGY_CASE_IDS.map((caseId) => {
-              const stat = getTrilogyCaseStat(progress, caseId);
+              const stat = saved.chapters[caseId];
               return (
                 <tr key={caseId} className="border-b border-border/60 last:border-0">
                   <td className="px-3 py-3 font-display text-base">
                     {TRILOGY_CASE_LABELS[caseId]}
                   </td>
                   <td className="px-3 py-3 font-mono text-primary">
-                    {stat.score === null ? "—" : `${stat.score}/100`}
+                    {stat.completed ? `${stat.bestScore}/100` : "—"}
                   </td>
                   <td className="px-3 py-3 font-mono text-muted-foreground">
-                    {formatTrilogyTime(stat.bestTime)}
+                    {formatTrilogyTime(stat.bestElapsedSeconds)}
                   </td>
                   <td className="px-3 py-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                     {stat.completed ? "Concluído" : "Disponível"}

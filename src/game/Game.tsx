@@ -2936,7 +2936,7 @@ function MainMenu({
         {(["blackpine", "sparrowhollow", "threshold"] as const).every((caseId) =>
           achievementProgress.completedCases.includes(caseId),
         ) && <TrilogyCompletionCelebration />}
-        <TrilogyScoreboard progress={achievementProgress} />
+        <TrilogyScoreboard />
       </div>
     </main>
   );

@@ -6,9 +6,56 @@ import {
   formatTrilogyTime,
   getTrilogyPerformanceBonus,
   getTrilogyProgress,
+  loadTrilogySave,
+  recordTrilogyPerformance,
 } from "@/game/trilogyProgress";
 
 describe("placar da trilogia", () => {
+  it("salva tentativas, bônus e melhores resultados no localStorage", () => {
+    window.localStorage.clear();
+    recordTrilogyPerformance({
+      caseId: "blackpine",
+      score: 96,
+      hints: 0,
+      mistakes: 0,
+      correctConclusion: true,
+      elapsedSeconds: 240,
+      correctActions: 10,
+      totalActions: 10,
+    });
+    recordTrilogyPerformance({
+      caseId: "blackpine",
+      score: 80,
+      hints: 1,
+      mistakes: 2,
+      correctConclusion: true,
+      elapsedSeconds: 700,
+      correctActions: 8,
+      totalActions: 10,
+    });
+
+    const saved = loadTrilogySave();
+    expect(saved.version).toBe(1);
+    expect(saved.chapters.blackpine).toMatchObject({
+      completed: true,
+      attempts: 2,
+      lastScore: 80,
+      bestScore: 96,
+      lastElapsedSeconds: 700,
+      bestElapsedSeconds: 240,
+      lastBonus: 1,
+      bestBonus: 10,
+    });
+    expect(saved.updatedAt).toEqual(expect.any(String));
+  });
+
+  it("descarta versões inválidas e retorna um save vazio", () => {
+    window.localStorage.setItem("dexter-trilogy-progress-v1", JSON.stringify({ version: 99 }));
+    const saved = loadTrilogySave();
+    expect(saved.chapters.blackpine.completed).toBe(false);
+    expect(saved.chapters.threshold.attempts).toBe(0);
+  });
+
   it("concede bônus por rapidez e ausência de erros", () => {
     expect(getTrilogyPerformanceBonus(240, 0)).toEqual({
       speedBonus: 5,

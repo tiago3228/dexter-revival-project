@@ -1,4 +1,5 @@
 import { loadCurrentPlayerName, recordPlayerPerformance } from "./playerRanking";
+import { recordTrilogyPerformance } from "./trilogyProgress";
 
 export const CASE_IDS = [
   "ortega",
@@ -271,6 +272,7 @@ export function recordCaseCompletion(performance: CasePerformance): AchievementP
       mistakes: performance.mistakes,
       hints: performance.hints,
     });
+    recordTrilogyPerformance(performance);
   }
   return progress;
 }

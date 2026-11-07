@@ -1,4 +1,4 @@
-import type { AchievementProgress, CaseId } from "./achievements";
+import type { AchievementProgress, CaseId, CasePerformance } from "./achievements";
 
 export const TRILOGY_CASE_IDS = ["blackpine", "sparrowhollow", "threshold"] as const;
 export type TrilogyCaseId = (typeof TRILOGY_CASE_IDS)[number];
@@ -8,6 +8,162 @@ export const TRILOGY_CASE_LABELS: Record<TrilogyCaseId, string> = {
   sparrowhollow: "Capítulo 08 · Sparrow Hollow",
   threshold: "Capítulo 09 · Threshold",
 };
+
+const TRILOGY_SAVE_KEY = "dexter-trilogy-progress-v1";
+
+export type TrilogyChapterSave = {
+  completed: boolean;
+  attempts: number;
+  lastScore: number;
+  bestScore: number;
+  lastElapsedSeconds: number;
+  bestElapsedSeconds: number;
+  lastBonus: number;
+  bestBonus: number;
+  lastCompletedAt: string | null;
+};
+
+export type TrilogySaveData = {
+  version: 1;
+  updatedAt: string | null;
+  chapters: Record<TrilogyCaseId, TrilogyChapterSave>;
+};
+
+function emptyChapterSave(): TrilogyChapterSave {
+  return {
+    completed: false,
+    attempts: 0,
+    lastScore: 0,
+    bestScore: 0,
+    lastElapsedSeconds: 0,
+    bestElapsedSeconds: 0,
+    lastBonus: 0,
+    bestBonus: 0,
+    lastCompletedAt: null,
+  };
+}
+
+export function emptyTrilogySave(): TrilogySaveData {
+  return {
+    version: 1,
+    updatedAt: null,
+    chapters: {
+      blackpine: emptyChapterSave(),
+      sparrowhollow: emptyChapterSave(),
+      threshold: emptyChapterSave(),
+    },
+  };
+}
+
+function isTrilogyCaseId(value: unknown): value is TrilogyCaseId {
+  return typeof value === "string" && TRILOGY_CASE_IDS.includes(value as TrilogyCaseId);
+}
+
+function normalizeChapterSave(value: unknown): TrilogyChapterSave {
+  const raw = value && typeof value === "object" ? (value as Partial<TrilogyChapterSave>) : {};
+  const numberOrZero = (input: unknown) =>
+    typeof input === "number" ? Math.max(0, Math.floor(input)) : 0;
+  return {
+    completed: raw.completed === true,
+    attempts: numberOrZero(raw.attempts),
+    lastScore: Math.min(100, numberOrZero(raw.lastScore)),
+    bestScore: Math.min(100, numberOrZero(raw.bestScore)),
+    lastElapsedSeconds: numberOrZero(raw.lastElapsedSeconds),
+    bestElapsedSeconds: numberOrZero(raw.bestElapsedSeconds),
+    lastBonus: numberOrZero(raw.lastBonus),
+    bestBonus: numberOrZero(raw.bestBonus),
+    lastCompletedAt: typeof raw.lastCompletedAt === "string" ? raw.lastCompletedAt : null,
+  };
+}
+
+export function loadTrilogySave(): TrilogySaveData {
+  const fallback = emptyTrilogySave();
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = JSON.parse(
+      window.localStorage.getItem(TRILOGY_SAVE_KEY) ?? "null",
+    ) as Partial<TrilogySaveData> | null;
+    if (!raw || raw.version !== 1 || !raw.chapters) return fallback;
+    return {
+      version: 1,
+      updatedAt: typeof raw.updatedAt === "string" ? raw.updatedAt : null,
+      chapters: {
+        blackpine: normalizeChapterSave(raw.chapters.blackpine),
+        sparrowhollow: normalizeChapterSave(raw.chapters.sparrowhollow),
+        threshold: normalizeChapterSave(raw.chapters.threshold),
+      },
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+export function recordTrilogyPerformance(performance: CasePerformance) {
+  if (!isTrilogyCaseId(performance.caseId) || typeof window === "undefined") {
+    return loadTrilogySave();
+  }
+  const current = loadTrilogySave();
+  const previous = current.chapters[performance.caseId];
+  const bonus = getTrilogyPerformanceBonus(performance.elapsedSeconds, performance.mistakes);
+  const score = Math.min(100, Math.max(0, Math.floor(performance.score)));
+  const elapsedSeconds = Math.max(0, Math.floor(performance.elapsedSeconds));
+  const completedAt = new Date().toISOString();
+  const next: TrilogySaveData = {
+    ...current,
+    updatedAt: completedAt,
+    chapters: {
+      ...current.chapters,
+      [performance.caseId]: {
+        completed: true,
+        attempts: previous.attempts + 1,
+        lastScore: score,
+        bestScore: Math.max(previous.bestScore, score),
+        lastElapsedSeconds: elapsedSeconds,
+        bestElapsedSeconds:
+          previous.bestElapsedSeconds > 0
+            ? Math.min(previous.bestElapsedSeconds, elapsedSeconds)
+            : elapsedSeconds,
+        lastBonus: bonus.totalBonus,
+        bestBonus: Math.max(previous.bestBonus, bonus.totalBonus),
+        lastCompletedAt: completedAt,
+      },
+    },
+  };
+  try {
+    window.localStorage.setItem(TRILOGY_SAVE_KEY, JSON.stringify(next));
+  } catch {
+    // O jogo continua funcional quando o navegador bloqueia o localStorage.
+  }
+  return next;
+}
+
+export function getSavedTrilogyProgress(save: TrilogySaveData) {
+  const completed = TRILOGY_CASE_IDS.filter((caseId) => save.chapters[caseId].completed).length;
+  const totalScore = TRILOGY_CASE_IDS.reduce(
+    (sum, caseId) => sum + save.chapters[caseId].bestScore,
+    0,
+  );
+  const averageScore = completed > 0 ? Math.round(totalScore / completed) : 0;
+  const times = TRILOGY_CASE_IDS.map((caseId) => save.chapters[caseId].bestElapsedSeconds).filter(
+    (time) => time > 0,
+  );
+  return {
+    completed,
+    totalScore,
+    averageScore,
+    totalBestTime:
+      times.length === TRILOGY_CASE_IDS.length ? times.reduce((sum, time) => sum + time, 0) : null,
+    completionPercent: Math.round((completed / TRILOGY_CASE_IDS.length) * 100),
+    rank:
+      completed === 3 && averageScore >= 90
+        ? "ARQUIVISTA DA TRILOGIA"
+        : completed === 3
+          ? "DETETIVE DA TRILOGIA"
+          : completed > 0
+            ? "INVESTIGADOR EM PROGRESSO"
+            : "ARQUIVO ABERTO",
+  };
+}
 
 export type TrilogyPerformanceBonus = {
   speedBonus: number;
