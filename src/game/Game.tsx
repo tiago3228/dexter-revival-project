@@ -21,6 +21,7 @@ import { VivianRobertsCase } from "./VivianRobertsCase";
 import { BlackPineCase } from "./BlackPineCase";
 import { SparrowHollowCase } from "./SparrowHollowCase";
 import { ThresholdCase } from "./ThresholdCase";
+import { BlackPineDlcCase } from "./BlackPineDlcCase";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { TrilogyScoreboard } from "./TrilogyScoreboard";
 import { TrilogyCompletionCelebration } from "./TrilogyCompletionCelebration";
@@ -49,6 +50,8 @@ import {
   type PlayerRankingEntry,
 } from "./playerRanking";
 import aberturaAudio from "@/assets/abertura-dexter.mp3.asset.json";
+
+type PlayableCaseId = CaseId | "blackpine-dlc";
 
 type PuzzleId =
   | "sangue"
@@ -222,7 +225,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
     }
     return Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.28;
   });
-  const [caseMode, setCaseMode] = useState<CaseId>(() =>
+  const [caseMode, setCaseMode] = useState<PlayableCaseId>(() =>
     resumePainscreekCase ? "vivian" : "ortega",
   );
   const [showMenu, setShowMenu] = useState(() => !resumePainscreekCase);
@@ -280,7 +283,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
   }, [ending, s]);
 
   useEffect(() => {
-    if (showIntro || showMenu) return;
+    if (showIntro || showMenu || caseMode === "blackpine-dlc") return;
     beginCaseTimer(caseMode, caseMode === "monroe");
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") pauseCaseTimer(caseMode);
@@ -331,7 +334,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
           ? "/audio/mentalist/red-john-theme.mp3"
           : !showMenu && caseMode === "winchester"
             ? "/audio/winchester/o-sangue-dos-condenados.mp3"
-            : !showMenu && caseMode === "blackpine"
+            : !showMenu && (caseMode === "blackpine" || caseMode === "blackpine-dlc")
               ? "/audio/blackpine/suspense-bardify-theme.mp3"
               : introMusicActive
                 ? aberturaAudio.url
@@ -343,7 +346,7 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
       audio.load();
     }
     audio.volume =
-      !showMenu && caseMode === "blackpine"
+      !showMenu && (caseMode === "blackpine" || caseMode === "blackpine-dlc")
         ? blackPineMusicVolumeRef.current
         : musicVolumeRef.current;
     if (introMusicActive) {
@@ -548,6 +551,10 @@ export function Game({ resumePainscreekCase = false }: { resumePainscreekCase?: 
         onMusicVolumeChange={setMusicVolume}
       />
     );
+  }
+
+  if (caseMode === "blackpine-dlc") {
+    return <BlackPineDlcCase onBack={() => setShowMenu(true)} />;
   }
 
   if (caseMode === "blackpine") {
@@ -2105,7 +2112,7 @@ function MainMenu({
   onToggleSound,
   onReflectionModalOpenChange,
 }: {
-  onSelect: (nextCase: CaseId) => void;
+  onSelect: (nextCase: PlayableCaseId) => void;
   playerName: string;
   musicVolume: number;
   onMusicVolumeChange: (value: number) => void;
@@ -2123,14 +2130,17 @@ function MainMenu({
   const [showRanking, setShowRanking] = useState(false);
   const [showMinigames, setShowMinigames] = useState(false);
   const [showQuickCasesArchive, setShowQuickCasesArchive] = useState(false);
-  const [transitionChapter, setTransitionChapter] = useState<CaseId | null>(null);
+  const [transitionChapter, setTransitionChapter] = useState<PlayableCaseId | null>(null);
   const [achievementProgress] = useState(() => loadAchievementProgress());
   const [playerRanking] = useState<PlayerRankingEntry[]>(() => loadPlayerRanking());
   const bloodSlideTrophy = ACHIEVEMENTS.find(
     (achievement) => achievement.id === "blood-slide-box",
   )!;
   const bloodSlideUnlocked = achievementProgress.unlockedIds.includes("blood-slide-box");
-  const chapterTransitionCopy: Record<CaseId, { index: string; title: string; detail: string }> = {
+  const chapterTransitionCopy: Record<
+    PlayableCaseId,
+    { index: string; title: string; detail: string }
+  > = {
     ortega: {
       index: "CAPÍTULO 01 · MIAMI",
       title: "Turno da Noite",
@@ -2176,6 +2186,12 @@ function MainMenu({
       title: "Threshold",
       detail: "Reconstruindo o Programa Limiar e separando observações de hipóteses.",
     },
+    "blackpine-dlc": {
+      index: "EXPANSÃO DLC · CAPÍTULO 10",
+      title: "A Moeda 217",
+      detail:
+        "Reabrindo o armário da estação e seguindo um sinal que ficou fora do arquivo principal.",
+    },
   };
 
   const chapterStatus = (caseId: CaseId) => {
@@ -2204,7 +2220,7 @@ function MainMenu({
       : `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
   };
 
-  const selectChapter = (caseId: CaseId) => {
+  const selectChapter = (caseId: PlayableCaseId) => {
     if (transitionChapter !== null) return;
     setTransitionChapter(caseId);
     if (soundOn) {
@@ -2919,6 +2935,27 @@ function MainMenu({
             </span>
             <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
               {chapterStatus("threshold")}
+            </span>
+          </button>
+          <button
+            type="button"
+            disabled={transitionChapter !== null}
+            onClick={() => selectChapter("blackpine-dlc")}
+            className="group border border-slate-300/70 bg-slate-950/50 p-6 text-left transition hover:-translate-y-1 hover:border-slate-100 hover:bg-slate-900 sm:p-8"
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-slate-200">
+              Expansão DLC · Capítulo 10
+            </p>
+            <h2 className="mt-3 font-display text-3xl">A Moeda 217</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Uma pista esquecida na estação reaparece anos depois. Reconstrua a rota da moeda sem
+              transformar uma lacuna do arquivo em certeza.
+            </p>
+            <span className="mt-8 block font-mono text-xs text-slate-200 group-hover:underline">
+              Abrir expansão →
+            </span>
+            <span className="mt-3 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              DLC INDEPENDENTE · NÃO ALTERA OS 9 CASOS PRINCIPAIS
             </span>
           </button>
         </div>
