@@ -6,6 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
+import { formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
@@ -79,6 +80,7 @@ export function ThresholdCase({
   const [finished, setFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
+  const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -205,6 +207,7 @@ export function ThresholdCase({
 
     recordedRef.current = true;
     const elapsedSeconds = finishCaseTimer("threshold");
+    setFinalElapsedSeconds(elapsedSeconds);
     recordCaseCompletion({
       caseId: "threshold",
       score,
@@ -234,8 +237,9 @@ export function ThresholdCase({
             registra o fechamento da passagem, mas não transforma as perguntas restantes em
             certezas.
           </p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 sm:grid-cols-4">
             <Stat label="Pontuação" value={`${finalScore ?? 0}/100`} />
+            <Stat label="Tempo" value={formatTrilogyTime(finalElapsedSeconds)} />
             <Stat label="Precisão" value={`${finalAccuracy ?? 0}%`} />
             <Stat label="Erros registrados" value={mistakes} />
           </div>

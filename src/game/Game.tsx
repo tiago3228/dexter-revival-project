@@ -22,6 +22,7 @@ import { BlackPineCase } from "./BlackPineCase";
 import { SparrowHollowCase } from "./SparrowHollowCase";
 import { ThresholdCase } from "./ThresholdCase";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
+import { TrilogyScoreboard } from "./TrilogyScoreboard";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -2931,6 +2932,7 @@ function MainMenu({
             <TrilogyBookPurchaseButton chapter={9} compact />
           </div>
         </section>
+        <TrilogyScoreboard progress={achievementProgress} />
       </div>
     </main>
   );

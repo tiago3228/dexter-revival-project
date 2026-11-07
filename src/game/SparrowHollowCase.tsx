@@ -6,6 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
+import { formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
@@ -78,6 +79,7 @@ export function SparrowHollowCase({
   const [finished, setFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
+  const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -204,6 +206,7 @@ export function SparrowHollowCase({
 
     recordedRef.current = true;
     const elapsedSeconds = finishCaseTimer("sparrowhollow");
+    setFinalElapsedSeconds(elapsedSeconds);
     recordCaseCompletion({
       caseId: "sparrowhollow",
       score,
@@ -237,8 +240,9 @@ export function SparrowHollowCase({
             reduz o ocorrido a baixa visibilidade e desorientação coletiva. O romance não declara
             que a ameaça foi destruída.
           </p>
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
+          <div className="mt-7 grid gap-3 sm:grid-cols-4">
             <Stat label="Pontuação" value={finalScore ?? 0} />
+            <Stat label="Tempo" value={formatTrilogyTime(finalElapsedSeconds)} />
             <Stat label="Precisão" value={`${finalAccuracy ?? 0}%`} />
             <Stat label="Erros" value={mistakes} />
           </div>

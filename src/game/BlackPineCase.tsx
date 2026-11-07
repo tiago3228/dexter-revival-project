@@ -18,6 +18,7 @@ import { recordCaseCompletion } from "./achievements";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "./trilogyAudio";
 import { TrilogyCrossCluePanel } from "./TrilogyCrossCluePanel";
+import { formatTrilogyTime } from "./trilogyProgress";
 import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
@@ -62,6 +63,7 @@ export function BlackPineCase({
   const [hints, setHints] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -111,6 +113,7 @@ export function BlackPineCase({
       playTrilogySfx("puzzle-solved", soundOn);
       recordedRef.current = true;
       const elapsedSeconds = finishCaseTimer("blackpine");
+      setFinalElapsedSeconds(elapsedSeconds);
       const actionCounts = getBlackPineActionCounts({
         recordsReviewed: openedRecords.length,
         interviewsOpened: openedInterviews.length,
@@ -155,8 +158,9 @@ export function BlackPineCase({
               partido voluntariamente.
             </p>
           </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 sm:grid-cols-4">
             <Stat label="Pontuação" value={`${score}/100`} />
+            <Stat label="Tempo" value={formatTrilogyTime(finalElapsedSeconds)} />
             <Stat label="Erros" value={String(mistakes)} />
             <Stat
               label="Pistas consultadas"
