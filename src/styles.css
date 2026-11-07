@@ -45,6 +45,105 @@
   transition: transform 180ms ease;
 }
 
+@keyframes trilogy-completion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes trilogy-celebration-spark {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) rotate(0deg) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(120px) rotate(180deg) scale(1);
+  }
+}
+
+.trilogy-completion-celebration {
+  position: relative;
+  isolation: isolate;
+  animation: trilogy-completion-enter 700ms ease-out both;
+}
+
+.trilogy-celebration-sparks {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.trilogy-celebration-sparks span {
+  position: absolute;
+  top: -0.5rem;
+  left: 5%;
+  width: 0.45rem;
+  height: 0.85rem;
+  background: #f5c86b;
+  opacity: 0;
+  transform: rotate(24deg);
+  animation: trilogy-celebration-spark 2.4s ease-in infinite;
+}
+
+.trilogy-celebration-sparks span:nth-child(2) {
+  left: 14%;
+}
+.trilogy-celebration-sparks span:nth-child(3) {
+  left: 23%;
+}
+.trilogy-celebration-sparks span:nth-child(4) {
+  left: 32%;
+}
+.trilogy-celebration-sparks span:nth-child(5) {
+  left: 41%;
+}
+.trilogy-celebration-sparks span:nth-child(6) {
+  left: 50%;
+}
+.trilogy-celebration-sparks span:nth-child(7) {
+  left: 59%;
+}
+.trilogy-celebration-sparks span:nth-child(8) {
+  left: 68%;
+}
+.trilogy-celebration-sparks span:nth-child(9) {
+  left: 77%;
+}
+.trilogy-celebration-sparks span:nth-child(10) {
+  left: 86%;
+}
+.trilogy-celebration-sparks span:nth-child(11) {
+  left: 18%;
+}
+.trilogy-celebration-sparks span:nth-child(12) {
+  left: 72%;
+}
+
+.trilogy-celebration-sparks span:nth-child(2n) {
+  background: #c5a6ff;
+  animation-delay: 180ms;
+}
+
+.trilogy-celebration-sparks span:nth-child(3n) {
+  background: #8ce3d0;
+  animation-delay: 360ms;
+}
+
+.trilogy-celebration-sparks span:nth-child(4n) {
+  animation-delay: 540ms;
+}
+
 @keyframes dot-connection-victory-board {
   0% {
     box-shadow: 0 0 0 rgb(255 196 201 / 0%);
@@ -155,6 +254,14 @@
 
   .trilogy-book-icon {
     transition: none;
+  }
+
+  .trilogy-completion-celebration {
+    animation: none;
+  }
+
+  .trilogy-celebration-sparks {
+    display: none;
   }
 
   .dot-connection-victory-board,

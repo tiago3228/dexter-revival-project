@@ -6,7 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
-import { formatTrilogyTime } from "@/game/trilogyProgress";
+import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
@@ -80,6 +80,7 @@ export function SparrowHollowCase({
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
+  const [finalBonus, setFinalBonus] = useState(0);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -178,7 +179,7 @@ export function SparrowHollowCase({
     }
     if (recordedRef.current) return;
 
-    const score = getSparrowHollowScore({
+    const baseScore = getSparrowHollowScore({
       recordsOpened: openedRecords.length,
       interviewsOpened: openedInterviews.length,
       claimsCorrect: SPARROW_HOLLOW_CLAIMS.filter(
@@ -207,9 +208,11 @@ export function SparrowHollowCase({
     recordedRef.current = true;
     const elapsedSeconds = finishCaseTimer("sparrowhollow");
     setFinalElapsedSeconds(elapsedSeconds);
+    const scored = applyTrilogyPerformanceBonus(baseScore, elapsedSeconds, mistakes);
+    setFinalBonus(scored.bonus.totalBonus);
     recordCaseCompletion({
       caseId: "sparrowhollow",
-      score,
+      score: scored.score,
       hints,
       mistakes,
       correctConclusion: true,
@@ -217,7 +220,7 @@ export function SparrowHollowCase({
       correctActions: actions.correctActions,
       totalActions: actions.totalActions,
     });
-    setFinalScore(score);
+    setFinalScore(scored.score);
     setFinalAccuracy(accuracy);
     setFinished(true);
     setFeedback("");
@@ -246,6 +249,9 @@ export function SparrowHollowCase({
             <Stat label="Precisão" value={`${finalAccuracy ?? 0}%`} />
             <Stat label="Erros" value={mistakes} />
           </div>
+          <p className="mt-4 font-mono text-xs text-primary">
+            Bônus de desempenho: +{finalBonus} pontos
+          </p>
           <p className="mt-5 text-xs leading-6 text-muted-foreground">
             A leitura preserva as lacunas do manuscrito: não determina a causa do fechamento em
             1949, o destino de Rex, a identidade dos homens da expedição ou a natureza definitiva da

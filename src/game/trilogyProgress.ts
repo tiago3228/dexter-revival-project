@@ -9,6 +9,33 @@ export const TRILOGY_CASE_LABELS: Record<TrilogyCaseId, string> = {
   threshold: "Capítulo 09 · Threshold",
 };
 
+export type TrilogyPerformanceBonus = {
+  speedBonus: number;
+  errorFreeBonus: number;
+  totalBonus: number;
+};
+
+export function getTrilogyPerformanceBonus(
+  elapsedSeconds: number,
+  mistakes: number,
+): TrilogyPerformanceBonus {
+  const seconds = Number.isFinite(elapsedSeconds) ? Math.max(0, elapsedSeconds) : 0;
+  const normalizedMistakes = Number.isFinite(mistakes) ? Math.max(0, Math.floor(mistakes)) : 0;
+  const speedBonus = seconds <= 300 ? 5 : seconds <= 600 ? 3 : seconds <= 900 ? 1 : 0;
+  const errorFreeBonus = normalizedMistakes === 0 ? 5 : 0;
+  return { speedBonus, errorFreeBonus, totalBonus: speedBonus + errorFreeBonus };
+}
+
+export function applyTrilogyPerformanceBonus(
+  baseScore: number,
+  elapsedSeconds: number,
+  mistakes: number,
+) {
+  const safeBaseScore = Number.isFinite(baseScore) ? Math.max(0, Math.floor(baseScore)) : 0;
+  const bonus = getTrilogyPerformanceBonus(elapsedSeconds, mistakes);
+  return { score: Math.min(100, safeBaseScore + bonus.totalBonus), bonus };
+}
+
 export function formatTrilogyTime(seconds: number | null | undefined) {
   if (!Number.isFinite(seconds) || !seconds || seconds < 0) return "—";
   const safeSeconds = Math.floor(seconds);

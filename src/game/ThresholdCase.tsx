@@ -6,7 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
-import { formatTrilogyTime } from "@/game/trilogyProgress";
+import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
@@ -81,6 +81,7 @@ export function ThresholdCase({
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
+  const [finalBonus, setFinalBonus] = useState(0);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -184,7 +185,7 @@ export function ThresholdCase({
     }
     if (recordedRef.current) return;
 
-    const score = getThresholdScore({
+    const baseScore = getThresholdScore({
       recordsOpened: openedRecords.length,
       interviewsOpened: openedInterviews.length,
       claimsCorrect: correctClaims,
@@ -208,9 +209,11 @@ export function ThresholdCase({
     recordedRef.current = true;
     const elapsedSeconds = finishCaseTimer("threshold");
     setFinalElapsedSeconds(elapsedSeconds);
+    const scored = applyTrilogyPerformanceBonus(baseScore, elapsedSeconds, mistakes);
+    setFinalBonus(scored.bonus.totalBonus);
     recordCaseCompletion({
       caseId: "threshold",
-      score,
+      score: scored.score,
       hints,
       mistakes,
       correctConclusion: true,
@@ -218,7 +221,7 @@ export function ThresholdCase({
       correctActions: actions.correctActions,
       totalActions: actions.totalActions,
     });
-    setFinalScore(score);
+    setFinalScore(scored.score);
     setFinalAccuracy(accuracy);
     setFinished(true);
     setFeedback("");
@@ -243,6 +246,9 @@ export function ThresholdCase({
             <Stat label="Precisão" value={`${finalAccuracy ?? 0}%`} />
             <Stat label="Erros registrados" value={mistakes} />
           </div>
+          <p className="mt-4 font-mono text-xs text-primary">
+            Bônus de desempenho: +{finalBonus} pontos
+          </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <button
               type="button"

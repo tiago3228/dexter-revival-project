@@ -18,7 +18,7 @@ import { recordCaseCompletion } from "./achievements";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "./trilogyAudio";
 import { TrilogyCrossCluePanel } from "./TrilogyCrossCluePanel";
-import { formatTrilogyTime } from "./trilogyProgress";
+import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "./trilogyProgress";
 import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
@@ -63,7 +63,9 @@ export function BlackPineCase({
   const [hints, setHints] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
+  const [finalBonus, setFinalBonus] = useState(0);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export function BlackPineCase({
   const allGridsSolved = gridSolved && artifactGridSolved;
   const interviewsSolved = openedInterviews.length === BLACK_PINE_INTERVIEWS.length;
   const correctVerdict = verdictId === "supported";
-  const score = Math.max(
+  const baseScore = Math.max(
     0,
     Math.min(
       100,
@@ -114,6 +116,9 @@ export function BlackPineCase({
       recordedRef.current = true;
       const elapsedSeconds = finishCaseTimer("blackpine");
       setFinalElapsedSeconds(elapsedSeconds);
+      const scored = applyTrilogyPerformanceBonus(baseScore, elapsedSeconds, mistakes);
+      setFinalScore(scored.score);
+      setFinalBonus(scored.bonus.totalBonus);
       const actionCounts = getBlackPineActionCounts({
         recordsReviewed: openedRecords.length,
         interviewsOpened: openedInterviews.length,
@@ -124,7 +129,7 @@ export function BlackPineCase({
       });
       recordCaseCompletion({
         caseId: "blackpine",
-        score,
+        score: scored.score,
         hints,
         mistakes,
         correctConclusion: true,
@@ -159,7 +164,7 @@ export function BlackPineCase({
             </p>
           </div>
           <div className="mt-8 grid gap-3 sm:grid-cols-4">
-            <Stat label="Pontuação" value={`${score}/100`} />
+            <Stat label="Pontuação" value={`${finalScore ?? 0}/100`} />
             <Stat label="Tempo" value={formatTrilogyTime(finalElapsedSeconds)} />
             <Stat label="Erros" value={String(mistakes)} />
             <Stat
@@ -167,6 +172,9 @@ export function BlackPineCase({
               value={`${openedRecords.length}/${BLACK_PINE_RECORDS.length}`}
             />
           </div>
+          <p className="mt-4 font-mono text-xs text-primary">
+            Bônus de desempenho: +{finalBonus} pontos
+          </p>
           <p className="mt-8 border-l-2 border-primary px-4 text-sm leading-relaxed text-muted-foreground">
             “O Quarto 17 era o de Ethan. A estação é a última trilha material de Whitmore; o destino
             final continua em aberto.”

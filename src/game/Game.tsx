@@ -23,6 +23,7 @@ import { SparrowHollowCase } from "./SparrowHollowCase";
 import { ThresholdCase } from "./ThresholdCase";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { TrilogyScoreboard } from "./TrilogyScoreboard";
+import { TrilogyCompletionCelebration } from "./TrilogyCompletionCelebration";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -2932,6 +2933,9 @@ function MainMenu({
             <TrilogyBookPurchaseButton chapter={9} compact />
           </div>
         </section>
+        {(["blackpine", "sparrowhollow", "threshold"] as const).every((caseId) =>
+          achievementProgress.completedCases.includes(caseId),
+        ) && <TrilogyCompletionCelebration />}
         <TrilogyScoreboard progress={achievementProgress} />
       </div>
     </main>

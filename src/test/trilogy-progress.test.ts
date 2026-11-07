@@ -1,9 +1,24 @@
 import { describe, expect, it } from "vitest";
 
 import { emptyAchievementProgress } from "@/game/achievements";
-import { formatTrilogyTime, getTrilogyProgress } from "@/game/trilogyProgress";
+import {
+  applyTrilogyPerformanceBonus,
+  formatTrilogyTime,
+  getTrilogyPerformanceBonus,
+  getTrilogyProgress,
+} from "@/game/trilogyProgress";
 
 describe("placar da trilogia", () => {
+  it("concede bônus por rapidez e ausência de erros", () => {
+    expect(getTrilogyPerformanceBonus(240, 0)).toEqual({
+      speedBonus: 5,
+      errorFreeBonus: 5,
+      totalBonus: 10,
+    });
+    expect(getTrilogyPerformanceBonus(720, 2).totalBonus).toBe(1);
+    expect(applyTrilogyPerformanceBonus(94, 240, 0).score).toBe(100);
+  });
+
   it("formata tempos curtos e longos para o placar", () => {
     expect(formatTrilogyTime(125)).toBe("2min 05s");
     expect(formatTrilogyTime(3665)).toBe("1h 01min");
