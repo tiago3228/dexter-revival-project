@@ -20,6 +20,10 @@ export type TrilogyChapterSave = {
   bestElapsedSeconds: number;
   lastBonus: number;
   bestBonus: number;
+  lastMistakes: number;
+  bestMistakes: number;
+  lastHints: number;
+  bestHints: number;
   lastCompletedAt: string | null;
 };
 
@@ -39,6 +43,10 @@ function emptyChapterSave(): TrilogyChapterSave {
     bestElapsedSeconds: 0,
     lastBonus: 0,
     bestBonus: 0,
+    lastMistakes: 0,
+    bestMistakes: 0,
+    lastHints: 0,
+    bestHints: 0,
     lastCompletedAt: null,
   };
 }
@@ -72,6 +80,10 @@ function normalizeChapterSave(value: unknown): TrilogyChapterSave {
     bestElapsedSeconds: numberOrZero(raw.bestElapsedSeconds),
     lastBonus: numberOrZero(raw.lastBonus),
     bestBonus: numberOrZero(raw.bestBonus),
+    lastMistakes: numberOrZero(raw.lastMistakes),
+    bestMistakes: numberOrZero(raw.bestMistakes),
+    lastHints: numberOrZero(raw.lastHints),
+    bestHints: numberOrZero(raw.bestHints),
     lastCompletedAt: typeof raw.lastCompletedAt === "string" ? raw.lastCompletedAt : null,
   };
 }
@@ -107,6 +119,8 @@ export function recordTrilogyPerformance(performance: CasePerformance) {
   const bonus = getTrilogyPerformanceBonus(performance.elapsedSeconds, performance.mistakes);
   const score = Math.min(100, Math.max(0, Math.floor(performance.score)));
   const elapsedSeconds = Math.max(0, Math.floor(performance.elapsedSeconds));
+  const mistakes = Math.max(0, Math.floor(performance.mistakes));
+  const hints = Math.max(0, Math.floor(performance.hints));
   const completedAt = new Date().toISOString();
   const next: TrilogySaveData = {
     ...current,
@@ -125,6 +139,10 @@ export function recordTrilogyPerformance(performance: CasePerformance) {
             : elapsedSeconds,
         lastBonus: bonus.totalBonus,
         bestBonus: Math.max(previous.bestBonus, bonus.totalBonus),
+        lastMistakes: mistakes,
+        bestMistakes: previous.attempts > 0 ? Math.min(previous.bestMistakes, mistakes) : mistakes,
+        lastHints: hints,
+        bestHints: previous.attempts > 0 ? Math.min(previous.bestHints, hints) : hints,
         lastCompletedAt: completedAt,
       },
     },

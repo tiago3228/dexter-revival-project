@@ -24,6 +24,7 @@ import { ThresholdCase } from "./ThresholdCase";
 import { TrilogyBookPurchaseButton } from "./TrilogyBookPurchaseButton";
 import { TrilogyScoreboard } from "./TrilogyScoreboard";
 import { TrilogyCompletionCelebration } from "./TrilogyCompletionCelebration";
+import { TrilogyDashboard } from "./TrilogyDashboard";
 import { VivianQuickCasesArchive } from "./VivianQuickCasesArchive";
 import { VIVIAN_QUICK_CASES } from "./vivianQuickCases";
 import { StoryDialogue, type StoryDialogueScene } from "./StoryDialogue";
@@ -2118,6 +2119,7 @@ function MainMenu({
   const [activeVideo, setActiveVideo] = useState<1 | 2 | null>(null);
   const [showTrophies, setShowTrophies] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
+  const [showTrilogyDashboard, setShowTrilogyDashboard] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
   const [showMinigames, setShowMinigames] = useState(false);
   const [showQuickCasesArchive, setShowQuickCasesArchive] = useState(false);
@@ -2635,6 +2637,17 @@ function MainMenu({
               Escarlate.
             </p>
           </section>
+        )}
+        <button
+          type="button"
+          onClick={() => setShowTrilogyDashboard((visible) => !visible)}
+          aria-expanded={showTrilogyDashboard}
+          className="mt-6 min-h-11 border border-amber-300/70 px-5 py-3 font-mono text-xs uppercase tracking-wider text-amber-200 transition hover:bg-amber-950/30"
+        >
+          {showTrilogyDashboard ? "Fechar dashboard" : "Abrir dashboard da trilogia"}
+        </button>
+        {showTrilogyDashboard && (
+          <TrilogyDashboard onClose={() => setShowTrilogyDashboard(false)} />
         )}
         <button
           type="button"
