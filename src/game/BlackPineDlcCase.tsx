@@ -4,38 +4,16 @@ import {
   BLACK_PINE_DLC_LOCATIONS,
   BLACK_PINE_DLC_OBJECTS,
   BLACK_PINE_DLC_RECORDS,
+  BLACK_PINE_DLC_SAVE_KEY,
   BLACK_PINE_DLC_SOLUTION,
   BLACK_PINE_DLC_SUSPECTS,
   checkBlackPineDlcSolution,
+  loadBlackPineDlcSave,
   type BlackPineDlcSelection,
 } from "./blackPineDlcCase";
 
 type Props = { onBack: () => void };
 type Tab = "records" | "grid" | "verdict";
-type DlcSave = { completed: boolean; attempts: number; bestScore: number; bestTime: number };
-const DLC_SAVE_KEY = "dexter-blackpine-dlc-moeda-217-v1";
-
-function loadDlcSave(): DlcSave {
-  if (typeof window === "undefined")
-    return { completed: false, attempts: 0, bestScore: 0, bestTime: 0 };
-  try {
-    const raw = JSON.parse(
-      window.localStorage.getItem(DLC_SAVE_KEY) ?? "null",
-    ) as Partial<DlcSave> | null;
-    return {
-      completed: raw?.completed === true,
-      attempts: typeof raw?.attempts === "number" ? Math.max(0, Math.floor(raw.attempts)) : 0,
-      bestScore:
-        typeof raw?.bestScore === "number"
-          ? Math.max(0, Math.min(100, Math.floor(raw.bestScore)))
-          : 0,
-      bestTime: typeof raw?.bestTime === "number" ? Math.max(0, Math.floor(raw.bestTime)) : 0,
-    };
-  } catch {
-    return { completed: false, attempts: 0, bestScore: 0, bestTime: 0 };
-  }
-}
-
 function formatTime(seconds: number) {
   const safe = Math.max(0, Math.floor(seconds));
   return `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`;
@@ -104,7 +82,7 @@ export function BlackPineDlcCase({ onBack }: Props) {
       100,
       Math.max(0, baseScore + (elapsed <= 300 ? 10 : elapsed <= 600 ? 5 : 0)),
     );
-    const previous = loadDlcSave();
+    const previous = loadBlackPineDlcSave();
     const next = {
       completed: true,
       attempts: previous.attempts + 1,
@@ -112,7 +90,7 @@ export function BlackPineDlcCase({ onBack }: Props) {
       bestTime: previous.bestTime > 0 ? Math.min(previous.bestTime, elapsed) : elapsed,
     };
     try {
-      window.localStorage.setItem(DLC_SAVE_KEY, JSON.stringify(next));
+      window.localStorage.setItem(BLACK_PINE_DLC_SAVE_KEY, JSON.stringify(next));
     } catch {
       // O DLC continua jogável mesmo quando o storage está bloqueado.
     }

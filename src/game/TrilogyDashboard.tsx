@@ -6,6 +6,7 @@ import {
   getSavedTrilogyProgress,
   loadTrilogySave,
 } from "./trilogyProgress";
+import { loadBlackPineDlcSave } from "./blackPineDlcCase";
 
 type TrilogyDashboardProps = {
   onClose: () => void;
@@ -15,6 +16,7 @@ export function TrilogyDashboard({ onClose }: TrilogyDashboardProps) {
   const save = loadTrilogySave();
   const summary = getSavedTrilogyProgress(save);
   const badgeSummary = getTrilogyBadgeSummary(save);
+  const dlcSave = loadBlackPineDlcSave();
   const totalAttempts = TRILOGY_CASE_IDS.reduce(
     (total, caseId) => total + save.chapters[caseId].attempts,
     0,
@@ -27,6 +29,14 @@ export function TrilogyDashboard({ onClose }: TrilogyDashboardProps) {
     (caseId) => save.chapters[caseId].lastCompletedAt,
   ).filter((date): date is string => Boolean(date));
   const lastActivity = completedDates.sort().at(-1);
+  const totalMistakes = TRILOGY_CASE_IDS.reduce(
+    (total, caseId) => total + save.chapters[caseId].totalMistakes,
+    0,
+  );
+  const totalHints = TRILOGY_CASE_IDS.reduce(
+    (total, caseId) => total + save.chapters[caseId].totalHints,
+    0,
+  );
 
   return (
     <section
@@ -53,12 +63,14 @@ export function TrilogyDashboard({ onClose }: TrilogyDashboardProps) {
         </button>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
         <DashboardStat label="Capítulos" value={`${summary.completed}/3`} />
         <DashboardStat label="Pontos" value={`${summary.totalScore}/300`} />
         <DashboardStat label="Média" value={`${summary.averageScore}/100`} />
         <DashboardStat label="Tentativas" value={String(totalAttempts)} />
         <DashboardStat label="Bônus acumulado" value={`+${totalBonus}`} />
+        <DashboardStat label="Erros totais" value={String(totalMistakes)} />
+        <DashboardStat label="Dicas totais" value={String(totalHints)} />
       </div>
 
       <div className="mt-7 grid gap-4 lg:grid-cols-3">
@@ -98,6 +110,37 @@ export function TrilogyDashboard({ onClose }: TrilogyDashboardProps) {
           );
         })}
       </div>
+
+      <section
+        className="mt-7 border border-slate-400/60 bg-slate-950/40 p-4 sm:p-5"
+        aria-label="Progresso da expansão DLC"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-300">
+              Expansão independente · DLC
+            </p>
+            <h3 className="mt-1 font-display text-2xl">Capítulo 10 · A Moeda 217</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Estatísticas separadas. A expansão não altera a contagem, a pontuação ou as conquistas
+              da trilogia principal.
+            </p>
+          </div>
+          <p className="font-mono text-xs uppercase tracking-wider text-slate-300">
+            {dlcSave.completed ? "Concluído" : "Ainda não concluído"}
+          </p>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <DashboardStat label="Tentativas" value={String(dlcSave.attempts)} />
+          <DashboardStat
+            label="Melhor pontuação"
+            value={dlcSave.completed ? `${dlcSave.bestScore}/100` : "—"}
+          />
+          <DashboardStat label="Melhor tempo" value={formatTrilogyTime(dlcSave.bestTime)} />
+          <DashboardStat label="Status" value={dlcSave.completed ? "100%" : "Em aberto"} />
+          <DashboardStat label="Contagem principal" value="Não altera" />
+        </div>
+      </section>
 
       <div className="mt-7 border border-primary/30 bg-primary/5 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">

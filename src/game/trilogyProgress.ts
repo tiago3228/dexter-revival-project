@@ -24,6 +24,8 @@ export type TrilogyChapterSave = {
   bestMistakes: number;
   lastHints: number;
   bestHints: number;
+  totalMistakes: number;
+  totalHints: number;
   lastCompletedAt: string | null;
 };
 
@@ -47,6 +49,8 @@ function emptyChapterSave(): TrilogyChapterSave {
     bestMistakes: 0,
     lastHints: 0,
     bestHints: 0,
+    totalMistakes: 0,
+    totalHints: 0,
     lastCompletedAt: null,
   };
 }
@@ -84,6 +88,8 @@ function normalizeChapterSave(value: unknown): TrilogyChapterSave {
     bestMistakes: numberOrZero(raw.bestMistakes),
     lastHints: numberOrZero(raw.lastHints),
     bestHints: numberOrZero(raw.bestHints),
+    totalMistakes: numberOrZero(raw.totalMistakes),
+    totalHints: numberOrZero(raw.totalHints),
     lastCompletedAt: typeof raw.lastCompletedAt === "string" ? raw.lastCompletedAt : null,
   };
 }
@@ -143,6 +149,8 @@ export function recordTrilogyPerformance(performance: CasePerformance) {
         bestMistakes: previous.attempts > 0 ? Math.min(previous.bestMistakes, mistakes) : mistakes,
         lastHints: hints,
         bestHints: previous.attempts > 0 ? Math.min(previous.bestHints, hints) : hints,
+        totalMistakes: previous.totalMistakes + mistakes,
+        totalHints: previous.totalHints + hints,
         lastCompletedAt: completedAt,
       },
     },

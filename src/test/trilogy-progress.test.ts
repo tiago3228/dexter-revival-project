@@ -45,6 +45,8 @@ describe("placar da trilogia", () => {
       bestElapsedSeconds: 240,
       lastBonus: 1,
       bestBonus: 10,
+      totalMistakes: 2,
+      totalHints: 1,
     });
     expect(saved.updatedAt).toEqual(expect.any(String));
   });
