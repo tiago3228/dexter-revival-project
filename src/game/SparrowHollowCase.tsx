@@ -56,6 +56,8 @@ type SparrowHollowProgress = {
   hints: number;
   showHint: boolean;
   feedback: string;
+  checkedStageId: SparrowHollowStageId | null;
+  lastCheckCorrect: boolean;
 };
 
 const tabs: { id: CaseTab; label: string }[] = [
@@ -101,6 +103,8 @@ export function SparrowHollowCase({
   const [hints, setHints] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [checkedStageId, setCheckedStageId] = useState<SparrowHollowStageId | null>(null);
+  const [lastCheckCorrect, setLastCheckCorrect] = useState(false);
   const [finished, setFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
@@ -140,6 +144,8 @@ export function SparrowHollowCase({
       hints,
       showHint,
       feedback,
+      checkedStageId,
+      lastCheckCorrect,
     });
   }, [
     answers,
@@ -148,6 +154,7 @@ export function SparrowHollowCase({
     expandedRecords,
     feedback,
     finished,
+    checkedStageId,
     hints,
     mistakes,
     openedInterviews,
@@ -157,6 +164,7 @@ export function SparrowHollowCase({
     showHint,
     stageIndex,
     tab,
+    lastCheckCorrect,
   ]);
 
   const currentStage = SPARROW_HOLLOW_STAGES[stageIndex] ?? SPARROW_HOLLOW_STAGES[0];
@@ -207,12 +215,16 @@ export function SparrowHollowCase({
     }
     if (!checkSparrowHollowStageClaims(currentStageId, answers)) {
       setMistakes((current) => current + 1);
+      setCheckedStageId(currentStageId);
+      setLastCheckCorrect(false);
       setFeedback(
         "A etapa ainda contém uma classificação incompatível com as fontes. Releia os registros e diferencie documento, testemunho, relato e hipótese.",
       );
       return;
     }
     playTrilogySfx("puzzle-solved", soundOn);
+    setCheckedStageId(currentStageId);
+    setLastCheckCorrect(true);
     setCompletedStages((current) =>
       current.includes(currentStageId) ? current : [...current, currentStageId],
     );
@@ -225,6 +237,8 @@ export function SparrowHollowCase({
     setShowHint(false);
     if (stageIndex < SPARROW_HOLLOW_STAGES.length - 1) {
       setStageIndex((current) => current + 1);
+      setCheckedStageId(null);
+      setLastCheckCorrect(false);
       setTab("timeline");
       return;
     }
@@ -312,6 +326,8 @@ export function SparrowHollowCase({
     setHints(state.hints);
     setShowHint(state.showHint);
     setFeedback(state.feedback);
+    setCheckedStageId(state.checkedStageId);
+    setLastCheckCorrect(state.lastCheckCorrect);
     setResumePrompt(false);
     setProgressReady(true);
   }
@@ -332,6 +348,8 @@ export function SparrowHollowCase({
     setHints(0);
     setShowHint(false);
     setFeedback("");
+    setCheckedStageId(null);
+    setLastCheckCorrect(false);
     setResumePrompt(false);
     setProgressReady(true);
   }
@@ -789,12 +807,51 @@ export function SparrowHollowCase({
               </div>
               <div className="space-y-3">
                 {currentClaims.map((claim, index) => (
-                  <fieldset key={claim.id} className="border border-border/70 bg-background/50 p-4">
+                  <fieldset
+                    key={claim.id}
+                    className={`border bg-background/50 p-4 ${
+                      checkedStageId === currentStageId && answers[claim.id]
+                        ? answers[claim.id] === claim.correctClass
+                          ? "border-emerald-500/60"
+                          : "border-rose-500/60"
+                        : answers[claim.id]
+                          ? "border-amber-400/50"
+                          : "border-border/70"
+                    }`}
+                  >
                     <legend className="max-w-full px-1 font-display text-base leading-6 sm:text-lg">
                       {String(index + 1).padStart(2, "0")} · {claim.statement}
                     </legend>
                     <p className="mt-2 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
                       Fonte-base · {claim.source}
+                    </p>
+                    <p
+                      className={`mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider ${
+                        checkedStageId === currentStageId && answers[claim.id]
+                          ? answers[claim.id] === claim.correctClass
+                            ? "text-emerald-300"
+                            : "text-rose-300"
+                          : answers[claim.id]
+                            ? "text-amber-200"
+                            : "text-muted-foreground"
+                      }`}
+                    >
+                      <span aria-hidden="true">
+                        {!answers[claim.id]
+                          ? "—"
+                          : checkedStageId === currentStageId
+                            ? answers[claim.id] === claim.correctClass
+                              ? "✓"
+                              : "×"
+                            : "?"}
+                      </span>
+                      {!answers[claim.id]
+                        ? "Não analisada"
+                        : checkedStageId === currentStageId
+                          ? answers[claim.id] === claim.correctClass
+                            ? "Classificação correta"
+                            : "Classificação incorreta"
+                          : "Classificação escolhida · confira a etapa"}
                     </p>
                     <label className="mt-4 block font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
                       Tipo de evidência
@@ -809,6 +866,8 @@ export function SparrowHollowCase({
                             ...current,
                             [claim.id]: selectedClass,
                           }));
+                          setCheckedStageId(null);
+                          setLastCheckCorrect(false);
                           setFeedback("");
                         }}
                         className="mt-2 min-h-11 w-full border border-border bg-background px-3 font-sans text-sm text-foreground outline-none focus:border-primary sm:max-w-md"

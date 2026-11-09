@@ -57,6 +57,8 @@ type ThresholdProgress = {
   hintedStages: ThresholdStageId[];
   showHint: boolean;
   feedback: string;
+  checkedStageId: ThresholdStageId | null;
+  lastCheckCorrect: boolean;
 };
 
 const tabs: { id: CaseTab; label: string }[] = [
@@ -103,6 +105,8 @@ export function ThresholdCase({
   const [hintedStages, setHintedStages] = useState<ThresholdStageId[]>([]);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [checkedStageId, setCheckedStageId] = useState<ThresholdStageId | null>(null);
+  const [lastCheckCorrect, setLastCheckCorrect] = useState(false);
   const [finished, setFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
@@ -143,6 +147,8 @@ export function ThresholdCase({
       hintedStages,
       showHint,
       feedback,
+      checkedStageId,
+      lastCheckCorrect,
     });
   }, [
     answers,
@@ -151,6 +157,7 @@ export function ThresholdCase({
     expandedRecord,
     feedback,
     finished,
+    checkedStageId,
     hintedStages,
     hints,
     mistakes,
@@ -161,6 +168,7 @@ export function ThresholdCase({
     showHint,
     stageIndex,
     tab,
+    lastCheckCorrect,
   ]);
 
   const currentStage = THRESHOLD_STAGES[stageIndex] ?? THRESHOLD_STAGES[0];
@@ -208,12 +216,16 @@ export function ThresholdCase({
     }
     if (!checkThresholdStageClaims(currentStageId, answers)) {
       setMistakes((current) => current + 1);
+      setCheckedStageId(currentStageId);
+      setLastCheckCorrect(false);
       setFeedback(
         "Há uma classificação incompatível com as fontes. Releia os registros e separe observação, relato e hipótese.",
       );
       return;
     }
     playTrilogySfx("puzzle-solved", soundOn);
+    setCheckedStageId(currentStageId);
+    setLastCheckCorrect(true);
     setCompletedStages((current) =>
       current.includes(currentStageId) ? current : [...current, currentStageId],
     );
@@ -226,6 +238,8 @@ export function ThresholdCase({
     setShowHint(false);
     if (stageIndex < THRESHOLD_STAGES.length - 1) {
       setStageIndex((current) => current + 1);
+      setCheckedStageId(null);
+      setLastCheckCorrect(false);
       setTab("timeline");
       return;
     }
@@ -317,6 +331,8 @@ export function ThresholdCase({
     setHintedStages(state.hintedStages);
     setShowHint(state.showHint);
     setFeedback(state.feedback);
+    setCheckedStageId(state.checkedStageId);
+    setLastCheckCorrect(state.lastCheckCorrect);
     setResumePrompt(false);
     setProgressReady(true);
   }
@@ -338,6 +354,8 @@ export function ThresholdCase({
     setHintedStages([]);
     setShowHint(false);
     setFeedback("");
+    setCheckedStageId(null);
+    setLastCheckCorrect(false);
     setResumePrompt(false);
     setProgressReady(true);
   }
@@ -692,18 +710,52 @@ export function ThresholdCase({
             {currentClaims.map((claim, index) => (
               <div
                 key={claim.id}
-                className="grid gap-3 border border-border/70 bg-background/40 p-4 md:grid-cols-[1fr_15rem] md:items-center"
+                className={`grid gap-3 border bg-background/40 p-4 md:grid-cols-[1fr_15rem] md:items-center ${
+                  checkedStageId === currentStageId && answers[claim.id]
+                    ? answers[claim.id] === claim.correctClass
+                      ? "border-emerald-500/60"
+                      : "border-rose-500/60"
+                    : answers[claim.id]
+                      ? "border-amber-400/50"
+                      : "border-border/70"
+                }`}
               >
                 <div>
                   <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-primary">
                     Afirmação {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-2 text-sm leading-relaxed">{claim.statement}</p>
-                  {answers[claim.id] === claim.correctClass && (
-                    <p className="mt-2 text-xs text-emerald-300">
-                      Classificação sustentada pela fonte.
-                    </p>
-                  )}
+                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                    Fonte relacionada · registros e depoimentos de {currentStage.title}
+                  </p>
+                  <p
+                    className={`mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider ${
+                      checkedStageId === currentStageId && answers[claim.id]
+                        ? answers[claim.id] === claim.correctClass
+                          ? "text-emerald-300"
+                          : "text-rose-300"
+                        : answers[claim.id]
+                          ? "text-amber-200"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    <span aria-hidden="true">
+                      {!answers[claim.id]
+                        ? "—"
+                        : checkedStageId === currentStageId
+                          ? answers[claim.id] === claim.correctClass
+                            ? "✓"
+                            : "×"
+                          : "?"}
+                    </span>
+                    {!answers[claim.id]
+                      ? "Não analisada"
+                      : checkedStageId === currentStageId
+                        ? answers[claim.id] === claim.correctClass
+                          ? "Classificação correta"
+                          : "Classificação incorreta"
+                        : "Classificação escolhida · confira a etapa"}
+                  </p>
                 </div>
                 <label className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   Classificação: {claim.statement}
@@ -714,6 +766,8 @@ export function ThresholdCase({
                       const value = event.currentTarget.value as ThresholdEvidenceClass | "";
                       if (!value) return;
                       setAnswers((current) => ({ ...current, [claim.id]: value }));
+                      setCheckedStageId(null);
+                      setLastCheckCorrect(false);
                       setFeedback("");
                     }}
                     className="mt-2 block w-full border border-border bg-background px-3 py-2 text-xs normal-case tracking-normal text-foreground"
