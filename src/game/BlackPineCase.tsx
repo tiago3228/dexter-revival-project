@@ -364,6 +364,21 @@ export function BlackPineCase({
               className="w-24 accent-primary"
             />
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Reiniciar a investigação de Black Pine? O progresso salvo será apagado.",
+                )
+              ) {
+                restartInvestigation();
+              }
+            }}
+            className="min-h-10 border border-destructive/60 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-destructive hover:border-destructive"
+          >
+            Reiniciar investigação
+          </button>
         </div>
 
         <section className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">

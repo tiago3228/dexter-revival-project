@@ -484,6 +484,21 @@ export function SparrowHollowCase({
               className="w-28 accent-primary"
             />
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Reiniciar a investigação de Sparrow Hollow? O progresso salvo será apagado.",
+                )
+              ) {
+                restartInvestigation();
+              }
+            }}
+            className="min-h-11 border border-destructive/60 px-4 py-2 font-mono text-xs uppercase tracking-wider text-destructive hover:border-destructive"
+          >
+            Reiniciar investigação
+          </button>
         </div>
       </section>
 

@@ -445,6 +445,21 @@ export function ThresholdCase({
             />
             <span>{Math.round(musicVolume * 100)}%</span>
           </label>
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Reiniciar a investigação de Threshold? O progresso salvo será apagado.",
+                )
+              ) {
+                restartInvestigation();
+              }
+            }}
+            className="border border-destructive/60 bg-card/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-destructive hover:border-destructive"
+          >
+            Reiniciar investigação
+          </button>
         </div>
       </div>
 
