@@ -25,6 +25,7 @@ vi.mock("@/game/caseTimer", () => ({
 
 afterEach(() => {
   cleanup();
+  window.localStorage.clear();
   vi.clearAllMocks();
 });
 

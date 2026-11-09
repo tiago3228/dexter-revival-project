@@ -8,6 +8,12 @@ import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
 import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
+  clearCaseProgress,
+  formatSavedAt,
+  readCaseProgress,
+  writeCaseProgress,
+} from "@/game/caseProgress";
+import {
   THRESHOLD_CLAIMS,
   THRESHOLD_EVIDENCE_CLASSES,
   THRESHOLD_INTERVIEWS,
@@ -32,6 +38,24 @@ type ThresholdCaseProps = {
 };
 
 type CaseTab = "timeline" | "records" | "classification" | "interviews" | "verdict";
+
+const THRESHOLD_PROGRESS_KEY = "dexter-case-progress-threshold-v1";
+type ThresholdProgress = {
+  tab: CaseTab;
+  stageIndex: number;
+  answers: ThresholdClaimAnswers;
+  openedRecords: string[];
+  expandedRecord: string | null;
+  openedInterviews: string[];
+  expandedInterview: string | null;
+  completedStages: ThresholdStageId[];
+  selectedVerdict: string | null;
+  mistakes: number;
+  hints: number;
+  hintedStages: ThresholdStageId[];
+  showHint: boolean;
+  feedback: string;
+};
 
 const tabs: { id: CaseTab; label: string }[] = [
   { id: "timeline", label: "Linha do tempo" },
@@ -82,6 +106,11 @@ export function ThresholdCase({
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const [finalBonus, setFinalBonus] = useState(0);
+  const [savedProgress] = useState(() =>
+    readCaseProgress<ThresholdProgress>(THRESHOLD_PROGRESS_KEY),
+  );
+  const [resumePrompt, setResumePrompt] = useState(() => Boolean(savedProgress));
+  const [progressReady, setProgressReady] = useState(() => !savedProgress);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -90,6 +119,43 @@ export function ThresholdCase({
   }, []);
 
   useEffect(() => startTrilogyAmbient(9, soundOn), [soundOn]);
+
+  useEffect(() => {
+    if (!progressReady || finished) return;
+    writeCaseProgress(THRESHOLD_PROGRESS_KEY, {
+      tab,
+      stageIndex,
+      answers,
+      openedRecords,
+      expandedRecord,
+      openedInterviews,
+      expandedInterview,
+      completedStages,
+      selectedVerdict,
+      mistakes,
+      hints,
+      hintedStages,
+      showHint,
+      feedback,
+    });
+  }, [
+    answers,
+    completedStages,
+    expandedInterview,
+    expandedRecord,
+    feedback,
+    finished,
+    hintedStages,
+    hints,
+    mistakes,
+    openedInterviews,
+    openedRecords,
+    progressReady,
+    selectedVerdict,
+    showHint,
+    stageIndex,
+    tab,
+  ]);
 
   const currentStage = THRESHOLD_STAGES[stageIndex] ?? THRESHOLD_STAGES[0];
   const currentStageId = currentStage.id;
@@ -221,10 +287,53 @@ export function ThresholdCase({
       correctActions: actions.correctActions,
       totalActions: actions.totalActions,
     });
+    clearCaseProgress(THRESHOLD_PROGRESS_KEY);
     setFinalScore(scored.score);
     setFinalAccuracy(accuracy);
     setFinished(true);
     setFeedback("");
+  }
+
+  function continueInvestigation() {
+    const state = savedProgress?.state;
+    if (!state) return;
+    setTab(state.tab);
+    setStageIndex(state.stageIndex);
+    setAnswers(state.answers);
+    setOpenedRecords(state.openedRecords);
+    setExpandedRecord(state.expandedRecord);
+    setOpenedInterviews(state.openedInterviews);
+    setExpandedInterview(state.expandedInterview);
+    setCompletedStages(state.completedStages);
+    setSelectedVerdict(state.selectedVerdict);
+    setMistakes(state.mistakes);
+    setHints(state.hints);
+    setHintedStages(state.hintedStages);
+    setShowHint(state.showHint);
+    setFeedback(state.feedback);
+    setResumePrompt(false);
+    setProgressReady(true);
+  }
+
+  function restartInvestigation() {
+    clearCaseProgress(THRESHOLD_PROGRESS_KEY);
+    beginCaseTimer("threshold", true);
+    setTab("timeline");
+    setStageIndex(0);
+    setAnswers({});
+    setOpenedRecords([]);
+    setExpandedRecord(null);
+    setOpenedInterviews([]);
+    setExpandedInterview(null);
+    setCompletedStages([]);
+    setSelectedVerdict(null);
+    setMistakes(0);
+    setHints(0);
+    setHintedStages([]);
+    setShowHint(false);
+    setFeedback("");
+    setResumePrompt(false);
+    setProgressReady(true);
   }
 
   if (finished) {
@@ -258,6 +367,46 @@ export function ThresholdCase({
               Voltar ao arquivo de casos
             </button>
             <TrilogyBookPurchaseButton chapter={9} soundOn={soundOn} />
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (resumePrompt && savedProgress) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-8 sm:px-6">
+        <section className="w-full border border-primary/50 bg-card/70 p-6 shadow-2xl sm:p-10">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Capítulo 09 · Threshold
+          </p>
+          <h1 className="mt-3 font-display text-4xl">Continuar investigação?</h1>
+          <p className="mt-4 text-sm leading-7 text-muted-foreground">
+            Encontramos um progresso salvo em {formatSavedAt(savedProgress.savedAt)}. Retome a etapa{" "}
+            {savedProgress.state.stageIndex + 1} ou comece novamente.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={continueInvestigation}
+              className="min-h-11 border border-primary bg-primary/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary"
+            >
+              Continuar investigação
+            </button>
+            <button
+              type="button"
+              onClick={restartInvestigation}
+              className="min-h-11 border border-border px-5 py-3 font-mono text-xs uppercase tracking-wider text-foreground"
+            >
+              Começar do zero
+            </button>
+            <button
+              type="button"
+              onClick={onBack}
+              className="min-h-11 px-4 py-3 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:text-primary"
+            >
+              Voltar aos casos
+            </button>
           </div>
         </section>
       </main>

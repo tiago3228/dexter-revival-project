@@ -23,6 +23,7 @@ vi.mock("@/game/caseTimer", () => ({ beginCaseTimer, pauseCaseTimer, finishCaseT
 
 afterEach(() => {
   cleanup();
+  window.localStorage.clear();
   vi.clearAllMocks();
 });
 

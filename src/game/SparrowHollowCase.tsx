@@ -8,6 +8,12 @@ import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
 import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
+  clearCaseProgress,
+  formatSavedAt,
+  readCaseProgress,
+  writeCaseProgress,
+} from "@/game/caseProgress";
+import {
   SPARROW_HOLLOW_CLAIMS,
   SPARROW_HOLLOW_EVIDENCE_CLASSES,
   SPARROW_HOLLOW_INTERVIEWS,
@@ -32,6 +38,23 @@ type SparrowHollowCaseProps = {
 };
 
 type CaseTab = "timeline" | "records" | "classification" | "interviews" | "verdict";
+
+const SPARROW_HOLLOW_PROGRESS_KEY = "dexter-case-progress-sparrowhollow-v1";
+type SparrowHollowProgress = {
+  tab: CaseTab;
+  stageIndex: number;
+  answers: SparrowHollowClaimAnswers;
+  openedRecords: string[];
+  expandedRecords: string[];
+  openedInterviews: string[];
+  expandedInterviews: string[];
+  completedStages: SparrowHollowStageId[];
+  selectedVerdict: string | null;
+  mistakes: number;
+  hints: number;
+  showHint: boolean;
+  feedback: string;
+};
 
 const tabs: { id: CaseTab; label: string }[] = [
   { id: "timeline", label: "Linha do tempo" },
@@ -81,6 +104,11 @@ export function SparrowHollowCase({
   const [finalAccuracy, setFinalAccuracy] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const [finalBonus, setFinalBonus] = useState(0);
+  const [savedProgress] = useState(() =>
+    readCaseProgress<SparrowHollowProgress>(SPARROW_HOLLOW_PROGRESS_KEY),
+  );
+  const [resumePrompt, setResumePrompt] = useState(() => Boolean(savedProgress));
+  const [progressReady, setProgressReady] = useState(() => !savedProgress);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -89,6 +117,41 @@ export function SparrowHollowCase({
   }, []);
 
   useEffect(() => startTrilogyAmbient(8, soundOn), [soundOn]);
+
+  useEffect(() => {
+    if (!progressReady || finished) return;
+    writeCaseProgress(SPARROW_HOLLOW_PROGRESS_KEY, {
+      tab,
+      stageIndex,
+      answers,
+      openedRecords,
+      expandedRecords,
+      openedInterviews,
+      expandedInterviews,
+      completedStages,
+      selectedVerdict,
+      mistakes,
+      hints,
+      showHint,
+      feedback,
+    });
+  }, [
+    answers,
+    completedStages,
+    expandedInterviews,
+    expandedRecords,
+    feedback,
+    finished,
+    hints,
+    mistakes,
+    openedInterviews,
+    openedRecords,
+    progressReady,
+    selectedVerdict,
+    showHint,
+    stageIndex,
+    tab,
+  ]);
 
   const currentStage = SPARROW_HOLLOW_STAGES[stageIndex] ?? SPARROW_HOLLOW_STAGES[0];
   const currentStageId = currentStage.id;
@@ -220,10 +283,51 @@ export function SparrowHollowCase({
       correctActions: actions.correctActions,
       totalActions: actions.totalActions,
     });
+    clearCaseProgress(SPARROW_HOLLOW_PROGRESS_KEY);
     setFinalScore(scored.score);
     setFinalAccuracy(accuracy);
     setFinished(true);
     setFeedback("");
+  }
+
+  function continueInvestigation() {
+    const state = savedProgress?.state;
+    if (!state) return;
+    setTab(state.tab);
+    setStageIndex(state.stageIndex);
+    setAnswers(state.answers);
+    setOpenedRecords(state.openedRecords);
+    setExpandedRecords(state.expandedRecords);
+    setOpenedInterviews(state.openedInterviews);
+    setExpandedInterviews(state.expandedInterviews);
+    setCompletedStages(state.completedStages);
+    setSelectedVerdict(state.selectedVerdict);
+    setMistakes(state.mistakes);
+    setHints(state.hints);
+    setShowHint(state.showHint);
+    setFeedback(state.feedback);
+    setResumePrompt(false);
+    setProgressReady(true);
+  }
+
+  function restartInvestigation() {
+    clearCaseProgress(SPARROW_HOLLOW_PROGRESS_KEY);
+    beginCaseTimer("sparrowhollow", true);
+    setTab("timeline");
+    setStageIndex(0);
+    setAnswers({});
+    setOpenedRecords([]);
+    setExpandedRecords([]);
+    setOpenedInterviews([]);
+    setExpandedInterviews([]);
+    setCompletedStages([]);
+    setSelectedVerdict(null);
+    setMistakes(0);
+    setHints(0);
+    setShowHint(false);
+    setFeedback("");
+    setResumePrompt(false);
+    setProgressReady(true);
   }
 
   if (finished) {
@@ -266,6 +370,46 @@ export function SparrowHollowCase({
               Voltar à seleção de capítulos
             </button>
             <TrilogyBookPurchaseButton chapter={8} soundOn={soundOn} />
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (resumePrompt && savedProgress) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-8 sm:px-6">
+        <section className="w-full border border-primary/50 bg-card/70 p-6 shadow-2xl sm:p-10">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Capítulo 08 · Sparrow Hollow
+          </p>
+          <h1 className="mt-3 font-display text-4xl">Continuar investigação?</h1>
+          <p className="mt-4 text-sm leading-7 text-muted-foreground">
+            Encontramos um progresso salvo em {formatSavedAt(savedProgress.savedAt)}. Retome a etapa{" "}
+            {savedProgress.state.stageIndex + 1} ou comece novamente.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={continueInvestigation}
+              className="min-h-11 border border-primary bg-primary/10 px-5 py-3 font-mono text-xs uppercase tracking-wider text-primary"
+            >
+              Continuar investigação
+            </button>
+            <button
+              type="button"
+              onClick={restartInvestigation}
+              className="min-h-11 border border-border px-5 py-3 font-mono text-xs uppercase tracking-wider text-foreground"
+            >
+              Começar do zero
+            </button>
+            <button
+              type="button"
+              onClick={onBack}
+              className="min-h-11 px-4 py-3 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:text-primary"
+            >
+              Voltar aos casos
+            </button>
           </div>
         </section>
       </main>

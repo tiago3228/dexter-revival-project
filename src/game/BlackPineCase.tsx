@@ -20,6 +20,12 @@ import { playTrilogySfx, startTrilogyAmbient } from "./trilogyAudio";
 import { TrilogyCrossCluePanel } from "./TrilogyCrossCluePanel";
 import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "./trilogyProgress";
 import {
+  clearCaseProgress,
+  formatSavedAt,
+  readCaseProgress,
+  writeCaseProgress,
+} from "./caseProgress";
+import {
   BLACK_PINE_ARTIFACTS,
   BLACK_PINE_CLUES,
   BLACK_PINE_INTERVIEWS,
@@ -45,6 +51,19 @@ type Props = {
   onMusicVolumeChange: (value: number) => void;
 };
 
+const BLACK_PINE_PROGRESS_KEY = "dexter-case-progress-blackpine-v1";
+type BlackPineProgress = {
+  tab: Tab;
+  marks: Record<string, BlackPineMark>;
+  artifactMarks: Record<string, BlackPineMark>;
+  openedRecords: string[];
+  openedInterviews: string[];
+  verdictId: string | null;
+  mistakes: number;
+  hints: number;
+  showHint: boolean;
+};
+
 export function BlackPineCase({
   onBack,
   soundOn,
@@ -66,6 +85,11 @@ export function BlackPineCase({
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [finalElapsedSeconds, setFinalElapsedSeconds] = useState<number | null>(null);
   const [finalBonus, setFinalBonus] = useState(0);
+  const [savedProgress] = useState(() =>
+    readCaseProgress<BlackPineProgress>(BLACK_PINE_PROGRESS_KEY),
+  );
+  const [resumePrompt, setResumePrompt] = useState(() => Boolean(savedProgress));
+  const [progressReady, setProgressReady] = useState(() => !savedProgress);
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -74,6 +98,33 @@ export function BlackPineCase({
   }, []);
 
   useEffect(() => startTrilogyAmbient(7, soundOn), [soundOn]);
+
+  useEffect(() => {
+    if (!progressReady || finished) return;
+    writeCaseProgress(BLACK_PINE_PROGRESS_KEY, {
+      tab,
+      marks,
+      artifactMarks,
+      openedRecords,
+      openedInterviews,
+      verdictId,
+      mistakes,
+      hints,
+      showHint,
+    });
+  }, [
+    artifactMarks,
+    finished,
+    hints,
+    marks,
+    mistakes,
+    openedInterviews,
+    openedRecords,
+    progressReady,
+    showHint,
+    tab,
+    verdictId,
+  ]);
 
   const gridSolved = useMemo(() => checkBlackPineGrid(marks), [marks]);
   const artifactGridSolved = useMemo(
@@ -136,6 +187,7 @@ export function BlackPineCase({
         elapsedSeconds,
         ...actionCounts,
       });
+      clearCaseProgress(BLACK_PINE_PROGRESS_KEY);
     }
     setFinished(true);
   };
@@ -143,6 +195,39 @@ export function BlackPineCase({
   const revealHint = () => {
     setHints((value) => value + 1);
     setShowHint(true);
+  };
+
+  const continueInvestigation = () => {
+    const state = savedProgress?.state;
+    if (!state) return;
+    setTab(state.tab);
+    setMarks(state.marks);
+    setArtifactMarks(state.artifactMarks);
+    setOpenedRecords(state.openedRecords);
+    setOpenedInterviews(state.openedInterviews);
+    setVerdictId(state.verdictId);
+    setMistakes(state.mistakes);
+    setHints(state.hints);
+    setShowHint(state.showHint);
+    setResumePrompt(false);
+    setProgressReady(true);
+  };
+
+  const restartInvestigation = () => {
+    clearCaseProgress(BLACK_PINE_PROGRESS_KEY);
+    beginCaseTimer("blackpine", true);
+    setTab("records");
+    setMarks({});
+    setArtifactMarks({});
+    setOpenedRecords([]);
+    setOpenedInterviews([]);
+    setVerdictId(null);
+    setMistakes(0);
+    setHints(0);
+    setShowHint(false);
+    setFeedback("");
+    setResumePrompt(false);
+    setProgressReady(true);
   };
 
   if (finished) {
@@ -186,6 +271,34 @@ export function BlackPineCase({
             <TrilogyBookPurchaseButton chapter={7} soundOn={soundOn} />
           </div>
         </div>
+      </main>
+    );
+  }
+
+  if (resumePrompt && savedProgress) {
+    return (
+      <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-8">
+        <section className="mx-auto max-w-2xl border border-primary/50 bg-card/70 p-6 shadow-2xl sm:p-10">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Capítulo 07 · Black Pine
+          </p>
+          <h1 className="mt-3 font-display text-4xl">Continuar investigação?</h1>
+          <p className="mt-4 text-sm leading-7 text-muted-foreground">
+            Encontramos um progresso salvo em {formatSavedAt(savedProgress.savedAt)}. Você pode
+            retomar de onde parou ou iniciar uma nova investigação.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Button type="button" onClick={continueInvestigation}>
+              Continuar investigação
+            </Button>
+            <Button type="button" variant="outline" onClick={restartInvestigation}>
+              Começar do zero
+            </Button>
+            <Button type="button" variant="ghost" onClick={onBack}>
+              Voltar aos casos
+            </Button>
+          </div>
+        </section>
       </main>
     );
   }
