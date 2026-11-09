@@ -527,7 +527,10 @@ export function ThresholdCase({
       <TrilogyCrossCluePanel currentBook="threshold" />
       <AdvancedMurdlePuzzle chapter="threshold" />
 
-      <section aria-label="Progresso do caso" className="mt-5 grid gap-2 sm:grid-cols-4">
+      <section
+        aria-label="Progresso do caso"
+        className="sticky top-2 z-20 mt-5 grid gap-2 bg-background/95 py-2 shadow-lg backdrop-blur sm:static sm:bg-transparent sm:py-0 sm:shadow-none sm:backdrop-blur-0 sm:grid-cols-4"
+      >
         {THRESHOLD_STAGES.map((stage, index) => {
           const completed = completedStages.includes(stage.id);
           const active = index === stageIndex;
@@ -596,7 +599,7 @@ export function ThresholdCase({
 
         <nav
           aria-label="Seções do dossiê"
-          className="mt-5 flex flex-wrap gap-2 border-b border-border pb-4"
+          className="mt-5 flex flex-nowrap gap-2 overflow-x-auto border-b border-border pb-4"
         >
           {tabs.map((item) => {
             const locked = item.id === "verdict" && !verdictUnlocked;
@@ -611,7 +614,7 @@ export function ThresholdCase({
                     setFeedback("");
                   }
                 }}
-                className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] transition disabled:cursor-not-allowed disabled:opacity-40 ${tab === item.id ? "border-primary/60 bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                className={`min-h-11 shrink-0 border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] transition disabled:cursor-not-allowed disabled:opacity-40 ${tab === item.id ? "border-primary/60 bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
               >
                 {item.id === "verdict" && !verdictUnlocked ? "Veredito · bloqueado" : item.label}
               </button>
@@ -770,7 +773,7 @@ export function ThresholdCase({
                       setLastCheckCorrect(false);
                       setFeedback("");
                     }}
-                    className="mt-2 block w-full border border-border bg-background px-3 py-2 text-xs normal-case tracking-normal text-foreground"
+                    className="mt-2 block min-h-11 w-full border border-border bg-background px-3 py-2 text-xs normal-case tracking-normal text-foreground"
                   >
                     <option value="">Selecione…</option>
                     {THRESHOLD_EVIDENCE_CLASSES.map((evidenceClass) => (

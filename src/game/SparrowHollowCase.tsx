@@ -547,7 +547,7 @@ export function SparrowHollowCase({
       </section>
 
       <section
-        className="mt-5 border border-primary/30 bg-background/70 p-4 sm:p-5"
+        className="sticky top-2 z-20 mt-5 border border-primary/30 bg-background/95 p-4 shadow-lg backdrop-blur sm:static sm:bg-background/70 sm:p-5 sm:shadow-none sm:backdrop-blur-0"
         aria-label="Progresso do arquivo"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -629,7 +629,7 @@ export function SparrowHollowCase({
           )}
 
           <nav
-            className="mt-6 flex flex-wrap gap-2 border-b border-border pb-4"
+            className="mt-6 flex flex-nowrap gap-2 overflow-x-auto border-b border-border pb-4"
             aria-label="Seções do dossiê"
           >
             {tabs.map((item) => {
@@ -644,7 +644,7 @@ export function SparrowHollowCase({
                     setTab(item.id);
                     setFeedback("");
                   }}
-                  className={`min-h-11 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider transition sm:px-4 ${
+                  className={`min-h-11 shrink-0 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider transition sm:px-4 ${
                     tab === item.id
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border text-muted-foreground hover:border-primary/60 hover:text-foreground"

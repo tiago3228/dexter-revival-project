@@ -446,7 +446,7 @@ export function BlackPineCase({
         </section>
 
         <nav
-          className="mt-8 flex flex-wrap gap-2 border-b border-border pb-3"
+          className="mt-8 flex flex-nowrap gap-2 overflow-x-auto border-b border-border pb-3"
           aria-label="Etapas do caso"
         >
           <TabButton
@@ -834,7 +834,7 @@ function TabButton({
       type="button"
       aria-current={active ? "step" : undefined}
       onClick={onClick}
-      className={`inline-flex items-center gap-2 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider transition ${active ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
+      className={`inline-flex min-h-11 shrink-0 items-center gap-2 border px-3 py-2 font-mono text-[10px] uppercase tracking-wider transition ${active ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
     >
       {icon}
       {children}
