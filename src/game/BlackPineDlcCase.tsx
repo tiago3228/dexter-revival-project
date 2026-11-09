@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  clearCaseProgress,
+  formatSavedAt,
+  readCaseProgress,
+  writeCaseProgress,
+} from "./caseProgress";
+import {
   BLACK_PINE_DLC_LOCATIONS,
+  BLACK_PINE_DLC_PROGRESS_KEY,
   BLACK_PINE_DLC_OBJECTS,
   BLACK_PINE_DLC_RECORDS,
   BLACK_PINE_DLC_SAVE_KEY,
@@ -14,6 +21,15 @@ import {
 
 type Props = { onBack: () => void };
 type Tab = "records" | "grid" | "verdict";
+type DlcProgressState = {
+  tab: Tab;
+  openedRecords: string[];
+  selection: BlackPineDlcSelection;
+  mistakes: number;
+  hints: number;
+  feedback: string;
+  elapsedSeconds: number;
+};
 function formatTime(seconds: number) {
   const safe = Math.max(0, Math.floor(seconds));
   return `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`;
@@ -33,7 +49,12 @@ export function BlackPineDlcCase({ onBack }: Props) {
   const [finished, setFinished] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const [finalTime, setFinalTime] = useState(0);
-  const [startedAt] = useState(() => Date.now());
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [elapsedBeforePause, setElapsedBeforePause] = useState(0);
+  const [progressReady, setProgressReady] = useState(false);
+  const [resumePrompt, setResumePrompt] = useState(false);
+  const [savedProgress, setSavedProgress] =
+    useState<ReturnType<typeof readCaseProgress<DlcProgressState>>>(null);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -42,6 +63,60 @@ export function BlackPineDlcCase({ onBack }: Props) {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onBack]);
+
+  useEffect(() => {
+    const saved = readCaseProgress<DlcProgressState>(BLACK_PINE_DLC_PROGRESS_KEY);
+    setSavedProgress(saved);
+    setResumePrompt(Boolean(saved));
+    setProgressReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!progressReady || resumePrompt || finished) return;
+    writeCaseProgress<DlcProgressState>(BLACK_PINE_DLC_PROGRESS_KEY, {
+      tab,
+      openedRecords,
+      selection,
+      mistakes,
+      hints,
+      feedback,
+      elapsedSeconds: elapsedBeforePause + Math.floor((Date.now() - startedAt) / 1000),
+    });
+  }, [
+    elapsedBeforePause,
+    feedback,
+    finished,
+    hints,
+    mistakes,
+    openedRecords,
+    progressReady,
+    resumePrompt,
+    selection,
+    startedAt,
+    tab,
+  ]);
+
+  const continueInvestigation = () => {
+    const state = savedProgress?.state;
+    if (!state) return;
+    setTab(state.tab);
+    setOpenedRecords(state.openedRecords);
+    setSelection(state.selection);
+    setMistakes(state.mistakes);
+    setHints(state.hints);
+    setFeedback(state.feedback);
+    setElapsedBeforePause(state.elapsedSeconds);
+    setStartedAt(Date.now());
+    setResumePrompt(false);
+  };
+
+  const startNewInvestigation = () => {
+    clearCaseProgress(BLACK_PINE_DLC_PROGRESS_KEY);
+    setResumePrompt(false);
+    setSavedProgress(null);
+    setElapsedBeforePause(0);
+    setStartedAt(Date.now());
+  };
 
   const allRecordsOpened = openedRecords.length === BLACK_PINE_DLC_RECORDS.length;
   const baseScore = useMemo(
@@ -77,7 +152,7 @@ export function BlackPineDlcCase({ onBack }: Props) {
       setMistakes((value) => value + 1);
       return;
     }
-    const elapsed = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+    const elapsed = Math.max(1, elapsedBeforePause + Math.floor((Date.now() - startedAt) / 1000));
     const score = Math.min(
       100,
       Math.max(0, baseScore + (elapsed <= 300 ? 10 : elapsed <= 600 ? 5 : 0)),
@@ -94,6 +169,7 @@ export function BlackPineDlcCase({ onBack }: Props) {
     } catch {
       // O DLC continua jogável mesmo quando o storage está bloqueado.
     }
+    clearCaseProgress(BLACK_PINE_DLC_PROGRESS_KEY);
     setFinalScore(score);
     setFinalTime(elapsed);
     setFinished(true);
@@ -125,6 +201,34 @@ export function BlackPineDlcCase({ onBack }: Props) {
             Voltar ao arquivo
           </Button>
         </div>
+      </main>
+    );
+  }
+
+  if (resumePrompt && savedProgress) {
+    return (
+      <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-8">
+        <section className="mx-auto max-w-2xl border border-slate-400/70 bg-card/70 p-6 shadow-2xl sm:p-10">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-slate-300">
+            Rascunho encontrado · DLC
+          </p>
+          <h1 className="mt-3 font-display text-4xl">Retomar A Moeda 217?</h1>
+          <p className="mt-4 text-sm leading-6 text-muted-foreground">
+            O arquivo guardou fontes examinadas, escolhas, dicas, erros e tempo acumulado em{" "}
+            {formatSavedAt(savedProgress.savedAt)}.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Button type="button" onClick={continueInvestigation}>
+              Continuar investigação
+            </Button>
+            <Button type="button" variant="outline" onClick={startNewInvestigation}>
+              Começar do zero
+            </Button>
+            <Button type="button" variant="ghost" onClick={onBack}>
+              Voltar ao arquivo
+            </Button>
+          </div>
+        </section>
       </main>
     );
   }

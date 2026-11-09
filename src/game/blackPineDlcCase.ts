@@ -46,6 +46,7 @@ export const BLACK_PINE_DLC_SOLUTION = {
 } as const;
 
 export const BLACK_PINE_DLC_SAVE_KEY = "dexter-blackpine-dlc-moeda-217-v1";
+export const BLACK_PINE_DLC_PROGRESS_KEY = "dexter-blackpine-dlc-moeda-217-progress-v1";
 
 export type BlackPineDlcSave = {
   completed: boolean;
