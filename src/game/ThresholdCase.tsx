@@ -6,6 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
+import { InvestigationTutorial } from "@/game/InvestigationTutorial";
 import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   clearCaseProgress,
@@ -40,6 +41,7 @@ type ThresholdCaseProps = {
 type CaseTab = "timeline" | "records" | "classification" | "interviews" | "verdict";
 
 const THRESHOLD_PROGRESS_KEY = "dexter-case-progress-threshold-v1";
+const THRESHOLD_TUTORIAL_KEY = "dexter-case-tutorial-threshold-v1";
 type ThresholdProgress = {
   tab: CaseTab;
   stageIndex: number;
@@ -111,6 +113,10 @@ export function ThresholdCase({
   );
   const [resumePrompt, setResumePrompt] = useState(() => Boolean(savedProgress));
   const [progressReady, setProgressReady] = useState(() => !savedProgress);
+  const [showTutorial, setShowTutorial] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem(THRESHOLD_TUTORIAL_KEY) !== "seen";
+  });
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -336,6 +342,15 @@ export function ThresholdCase({
     setProgressReady(true);
   }
 
+  function closeTutorial() {
+    try {
+      window.localStorage.setItem(THRESHOLD_TUTORIAL_KEY, "seen");
+    } catch {
+      // O tutorial pode ser dispensado mesmo quando o storage está bloqueado.
+    }
+    setShowTutorial(false);
+  }
+
   if (finished) {
     return (
       <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -413,6 +428,10 @@ export function ThresholdCase({
     );
   }
 
+  if (showTutorial) {
+    return <InvestigationTutorial chapter={9} onClose={closeTutorial} />;
+  }
+
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -431,6 +450,13 @@ export function ThresholdCase({
             className="border border-border bg-card/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground hover:border-primary/50 hover:text-primary"
           >
             {soundOn ? "Som ligado" : "Som desligado"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowTutorial(true)}
+            className="border border-border bg-card/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground hover:border-primary/50 hover:text-primary"
+          >
+            Rever instruções
           </button>
           <label className="flex items-center gap-2 border border-border bg-card/70 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             Música

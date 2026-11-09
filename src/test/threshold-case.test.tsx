@@ -37,6 +37,7 @@ function renderCase(onToggleSound = vi.fn(), onMusicVolumeChange = vi.fn()) {
       onMusicVolumeChange={onMusicVolumeChange}
     />,
   );
+  fireEvent.click(screen.getByRole("button", { name: "Entendi, iniciar investigação" }));
   return { onToggleSound, onMusicVolumeChange };
 }
 
@@ -74,6 +75,23 @@ function solveCurrentStage(stageId: (typeof THRESHOLD_STAGES)[number]["id"], las
 }
 
 describe("Caso 09 · Threshold", () => {
+  it("apresenta as três regras antes da primeira etapa", () => {
+    render(
+      <ThresholdCase
+        onBack={vi.fn()}
+        soundOn
+        onToggleSound={vi.fn()}
+        musicVolume={0.6}
+        onMusicVolumeChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Threshold · Ashen Creek" })).toBeInTheDocument();
+    expect(screen.getByText("Leia antes de classificar")).toBeInTheDocument();
+    expect(screen.getByText("Separe fato, testemunho e hipótese")).toBeInTheDocument();
+    expect(screen.getByText("Use apenas evidências comprovadas")).toBeInTheDocument();
+  });
+
   it("oculta acontecimentos posteriores e mantém controles do áudio compartilhado", () => {
     const { onToggleSound, onMusicVolumeChange } = renderCase();
 

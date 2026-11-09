@@ -37,6 +37,7 @@ function renderCase(onToggleSound = vi.fn(), onMusicVolumeChange = vi.fn()) {
       onMusicVolumeChange={onMusicVolumeChange}
     />,
   );
+  fireEvent.click(screen.getByRole("button", { name: "Entendi, iniciar investigação" }));
   return { onToggleSound, onMusicVolumeChange };
 }
 
@@ -70,6 +71,23 @@ function solveCurrentStage(stageId: (typeof SPARROW_HOLLOW_STAGES)[number]["id"]
 }
 
 describe("Caso 08 · Sparrow Hollow", () => {
+  it("apresenta as três regras antes da primeira etapa", () => {
+    render(
+      <SparrowHollowCase
+        onBack={vi.fn()}
+        soundOn
+        onToggleSound={vi.fn()}
+        musicVolume={0.6}
+        onMusicVolumeChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "O verão de 1986" })).toBeInTheDocument();
+    expect(screen.getByText("Leia antes de classificar")).toBeInTheDocument();
+    expect(screen.getByText("Separe fato, testemunho e hipótese")).toBeInTheDocument();
+    expect(screen.getByText("Use apenas evidências comprovadas")).toBeInTheDocument();
+  });
+
   it("oculta o equinócio até a progressão e oferece controles do áudio compartilhado", () => {
     const { onToggleSound, onMusicVolumeChange } = renderCase();
 

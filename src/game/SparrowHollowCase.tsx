@@ -6,6 +6,7 @@ import { TrilogyBookPurchaseButton } from "@/game/TrilogyBookPurchaseButton";
 import { playTrilogySfx, startTrilogyAmbient } from "@/game/trilogyAudio";
 import { TrilogyCrossCluePanel } from "@/game/TrilogyCrossCluePanel";
 import { AdvancedMurdlePuzzle } from "@/game/AdvancedMurdlePuzzle";
+import { InvestigationTutorial } from "@/game/InvestigationTutorial";
 import { applyTrilogyPerformanceBonus, formatTrilogyTime } from "@/game/trilogyProgress";
 import {
   clearCaseProgress,
@@ -40,6 +41,7 @@ type SparrowHollowCaseProps = {
 type CaseTab = "timeline" | "records" | "classification" | "interviews" | "verdict";
 
 const SPARROW_HOLLOW_PROGRESS_KEY = "dexter-case-progress-sparrowhollow-v1";
+const SPARROW_HOLLOW_TUTORIAL_KEY = "dexter-case-tutorial-sparrowhollow-v1";
 type SparrowHollowProgress = {
   tab: CaseTab;
   stageIndex: number;
@@ -109,6 +111,10 @@ export function SparrowHollowCase({
   );
   const [resumePrompt, setResumePrompt] = useState(() => Boolean(savedProgress));
   const [progressReady, setProgressReady] = useState(() => !savedProgress);
+  const [showTutorial, setShowTutorial] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem(SPARROW_HOLLOW_TUTORIAL_KEY) !== "seen";
+  });
   const recordedRef = useRef(false);
 
   useEffect(() => {
@@ -330,6 +336,15 @@ export function SparrowHollowCase({
     setProgressReady(true);
   }
 
+  function closeTutorial() {
+    try {
+      window.localStorage.setItem(SPARROW_HOLLOW_TUTORIAL_KEY, "seen");
+    } catch {
+      // O tutorial pode ser dispensado mesmo quando o storage está bloqueado.
+    }
+    setShowTutorial(false);
+  }
+
   if (finished) {
     return (
       <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -416,6 +431,10 @@ export function SparrowHollowCase({
     );
   }
 
+  if (showTutorial) {
+    return <InvestigationTutorial chapter={8} onClose={closeTutorial} />;
+  }
+
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <header className="border-b border-primary/30 pb-5">
@@ -470,6 +489,13 @@ export function SparrowHollowCase({
             className="min-h-11 border border-primary/50 px-4 py-2 font-mono text-xs uppercase tracking-wider text-primary hover:bg-primary/10"
           >
             Música {soundOn ? "ligada" : "desligada"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowTutorial(true)}
+            className="min-h-11 border border-border px-4 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:border-primary hover:text-primary"
+          >
+            Rever instruções
           </button>
           <label className="flex min-h-11 items-center gap-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
             Volume {Math.round(musicVolume * 100)}%
