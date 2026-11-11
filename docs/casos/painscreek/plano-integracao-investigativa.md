@@ -9,8 +9,9 @@ Conectar ao ciclo jogável de Vivian apenas as referências documentais já marc
 - [x] Organizar documentos e análises das páginas 80–116.
 - [x] Consolidar cronologia documental das páginas 80–116.
 - [x] Criar registro de pistas P-001–P-012 com fontes e pendências.
-- [ ] Conferir visualmente cada transcrição contra o PDF original, sobretudo páginas com cortes, baixa legibilidade ou OCR ambíguo. Não iniciar essa auditoria enquanto a suspensão do usuário estiver vigente.
-- [ ] Cruzar os novos itens com os lotes 1–79 e deduplicar usando IDs estáveis, somente após autorização para a auditoria documental correspondente.
+- [x] Executar o ciclo autorizado de auditoria individual de P-001–P-047 sem refazer trabalho concluído: P-001/P-002 foram confirmados pelo usuário como concluídos; P-003–P-047 foram processados em relatórios individuais e permanecem parciais.
+- [ ] Conferir visualmente cada transcrição que ainda tenha lacunas contra o PDF original, sobretudo páginas com cortes, baixa legibilidade ou OCR ambíguo; não preencher por inferência.
+- [x] Cruzar os itens já cobertos pelos artefatos históricos e deduplicar usando IDs estáveis, preservando as pendências e as sobreposições não conclusivas.
 - [ ] Definir quais evidências do catálogo completo pertencem ao caso jogável e quais são apenas notas de pesquisa.
 - [x] Integrar um subconjunto de sete pistas a registros específicos já marcados `visually-checked`, com detalhes opcionais e limites de interpretação explícitos.
 - [x] Adicionar testes automatizados para os vínculos, a ausência de fichas em pistas sem vínculo, a correção da data de fechamento para 1996 e a migração de saves antigos.
@@ -61,14 +62,14 @@ A função de vínculo só exibe a ficha quando o registro está marcado `visual
 5. Nenhum puzzle deve depender de uma palavra/código cuja leitura visual ainda não tenha sido confirmada; P-003 está conectado apenas como referência documental, não como solução.
 6. A integração já implementada limita-se a páginas e registros previamente marcados como conferidos; os vínculos restantes não podem ser deduzidos por similaridade de tema.
 7. Só descrever como integrada a parte exata que tenha mudança real no código, testes e verificação de funcionamento. O catálogo completo não está integrado.
-8. A auditoria de `P-001`–`P-047` não deve ser iniciada ou retomada sem ordem explícita do usuário.
+8. O ciclo de auditoria de `P-001`–`P-047` foi autorizado explicitamente em 2026-10-13. Seus resultados devem permanecer separados entre concluído, parcial, pendente e inconclusivo; `visually-checked` não equivale a auditoria integral.
 
 ## Próxima sequência de trabalho
 
 1. Concluir revisão técnica, testes, commit, push e abertura de PR para este subconjunto validado.
 2. Acompanhar o CI remoto e corrigir eventuais falhas sem ampliar o escopo documental.
 3. Manter sem vínculo as pistas sem correspondência de página já conferida; registrar pendências sem resolver divergências por inferência.
-4. Deixar a auditoria individual de `P-001`–`P-047` para a etapa final e só iniciá-la mediante autorização explícita do usuário.
+4. Trabalhar apenas nas pendências dos relatórios individuais de `P-003`–`P-047`; não refazer `P-001`/`P-002` nem cotejos já concluídos sem motivo documental específico.
 5. Após a autorização, validar as fontes e decidir separadamente se a p. 43 de Scott Brooks funciona como pista independente, referência cruzada ou permanece sem uso.
 
 ## Limitação atual
